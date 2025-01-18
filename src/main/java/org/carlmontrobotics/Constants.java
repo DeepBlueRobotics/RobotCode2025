@@ -149,6 +149,17 @@ public final class Constants {
 				kBackwardAccels, drivekP, drivekI, drivekD, turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, turnZeroDeg,
 				driveInversion, reversed, driveModifier, turnInversion);
 
+		//Constants for Normaldrive
+		public static final double kNormalDriveRotation = 0;
+		public static final double kNormalDriveSpeed = 0;
+		//Constants for slowDrive
+		public static final double kSlowDriveRotation = 0;
+		public static final double kSlowDriveSpeed = 0;
+		//Constants for babymode
+		public static final double kBabyDriveRotation = 0;
+		public static final double kBabyDriveSpeed = 0;
+		
+
 		public static final class Autoc {
 		}
 	}
