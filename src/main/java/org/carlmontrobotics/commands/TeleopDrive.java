@@ -96,10 +96,10 @@ public class TeleopDrive extends Command {
 
     double driveMultiplier = slow.getAsBoolean() ? kSlowDriveSpeed : kNormalDriveSpeed;
     double rotationMultiplier = slow.getAsBoolean() ? kSlowDriveRotation : kNormalDriveRotation;
-    if(babyMode == true){
-      driveMultiplier = kBabyDriveSpeed;
-      rotationMultiplier = kBabyDriveRotation;
-    }
+    //if(babyMode == true){
+      //driveMultiplier = kBabyDriveSpeed; also gone, need to be setup
+      //rotationMultiplier = kBabyDriveRotation; kBabyRotation is gone need set it up
+    //}
     // double driveMultiplier = kNormalDriveSpeed;
     // double rotationMultiplier = kNormalDriveRotation;
 
