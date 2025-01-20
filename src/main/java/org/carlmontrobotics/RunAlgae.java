@@ -21,10 +21,10 @@ public class RunAlgae extends Command {
   @Override
   public void execute() {
     if (inverted) {
-        algaeEffector.RunAlgaeMotors(0.5, -0.5)
+        algaeEffector.RunAlgaeMotors(0.5, -0.5);
     }
     else {
-        algaeEffector.RunAlgaeMotors(0.5, 0.5)
+        algaeEffector.RunAlgaeMotors(0.5, 0.5);
     }
   }
 
