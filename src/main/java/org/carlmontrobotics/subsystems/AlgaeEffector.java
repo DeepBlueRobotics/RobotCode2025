@@ -7,12 +7,14 @@ import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import static org.carlmontrobotics.RobotContainer.*;
 
+import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
@@ -44,8 +46,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class AlgaeEffector extends SubsystemBase {
-    private SparkFlex upperMotor = new SparkFlex(Constants.AlgaeEffectorc.upperMotorID, MotorType kBrushless);
-    private SparkFlex lowerMotor = new SparkFlex(Constants.AlgaeEffectorc.lowerMotorID, MotorType kBrushless);
+    private SparkFlex upperMotor = new SparkFlex(Constants.AlgaeEffectorc.upperMotorID, MotorType.kBrushless);
+    private SparkFlex lowerMotor = new SparkFlex(Constants.AlgaeEffectorc.lowerMotorID, MotorType.kBrushless);
     public void RunAlgaeMotors(double upperMotorSpeed, double lowerMotorSpeed) {
    
         upperMotor.set(upperMotorSpeed);
