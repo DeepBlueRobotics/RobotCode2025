@@ -1,17 +1,9 @@
 package org.carlmontrobotics.subsystems;
 
-import static edu.wpi.first.units.MutableMeasure.mutable;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
-import static org.carlmontrobotics.Constants.Armc.*;
-import static org.carlmontrobotics.Constants.Armc.NEO_BUILTIN_ENCODER_CPR; // (42) explicit import
 
-import org.carlmontrobotics.commands.TeleopArm;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
-import org.carlmontrobotics.lib199.sim.MockedEncoder;
+
 
 import static org.carlmontrobotics.RobotContainer.*;
 
