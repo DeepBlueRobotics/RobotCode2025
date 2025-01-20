@@ -6,12 +6,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunAlgae extends Command {
   AlgaeEffector algaeEffector;
-  Boolean inverted;
+  boolean stop;
+  int direction;
 
 
-  public RunAlgae(AlgaeEffector algaeEffector, boolean inverted, boolean stop) {
+
+  public RunAlgae(AlgaeEffector algaeEffector, int direction, boolean stop) {
     addRequirements(this.algaeEffector = algaeEffector);
-    this.inverted = inverted;
+    this.direction = direction;
+    this.stop = stop;
     
   }
 
@@ -27,11 +30,14 @@ public class RunAlgae extends Command {
       algaeEffector.RunAlgaeMotors(0,0);
     }
     else {
-      if (inverted) {
-        algaeEffector.RunAlgaeMotors(0.5, -0.5);
+      if (direction == 1) {
+        algaeEffector.RunAlgaeMotors(0.5, 0.5);
       }
-      else {
-          algaeEffector.RunAlgaeMotors(0.5, 0.5);
+      else if (direction == 2) {
+          algaeEffector.RunAlgaeMotors(-0.5, -0.5);
+      }
+      else if (direction == 3) {
+        algaeEffector.RunAlgaeMotors(-0.5, 0.5);
       }
     }
   }
