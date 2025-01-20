@@ -45,8 +45,9 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
-    new Trigger(() -> driverController.getRawButton(OI.X)).onTrue(new RunAlgae(algaeEffector, false, false));
-    new Trigger(() -> driverController.getRawButton(OI.Y)).onTrue(new RunAlgae(algaeEffector, true, false));
+    new Trigger(() -> driverController.getRawButton(OI.X)).onTrue(new RunAlgae(algaeEffector, 1, false));
+    new Trigger(() -> driverController.getRawButton(OI.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
+    new Trigger(() -> driverController.getRawButton(OI.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
     new Trigger(() -> driverController.getRawButton(OI.A)).onTrue(new RunAlgae(algaeEffector, false, true));
 
   }
