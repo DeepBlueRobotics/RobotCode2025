@@ -1,5 +1,5 @@
 package org.carlmontrobotics.commands;
-import org.carlmontrobotics.subsystems.IntakeShooter;
+import org.carlmontrobotics.subsystems.AlgaeEffector;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,4 +37,5 @@ public class RunAlgae extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false}
+    return false;
+  }
