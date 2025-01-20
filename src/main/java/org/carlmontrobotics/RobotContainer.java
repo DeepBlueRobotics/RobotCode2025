@@ -45,6 +45,9 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
+    new Trigger(() -> driverController.getRawButton(OI.X)).onTrue(new RunAlgae(algaeEffector, false, false));
+    new Trigger(() -> driverController.getRawButton(OI.Y)).onTrue(new RunAlgae(algaeEffector, true, false));
+    new Trigger(() -> driverController.getRawButton(OI.A)).onTrue(new RunAlgae(algaeEffector, false, true));
 
   }
   private void setBindingsManipulator() {}
