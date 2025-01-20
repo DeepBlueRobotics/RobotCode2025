@@ -55,6 +55,7 @@ public class AlgaeEffector extends SubsystemBase {
     private SparkFlex upperMotor = new SparkFlex(Constants.AlgaeEffectorc.upperMotorID, MotorType kBrushless);
     private SparkFlex lowerMotor = new SparkFlex(Constants.AlgaeEffectorc.lowerMotorID, MotorType kBrushless);
     public void RunAlgaeMotors(double upperMotorSpeed, double lowerMotorSpeed) {
+   
         upperMotor.set(upperMotorSpeed);
         lowerMotor.set(lowerMotorSpeed);
     }

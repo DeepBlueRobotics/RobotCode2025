@@ -9,6 +9,7 @@ public class RunAlgae extends Command {
   public RunAlgae(AlgaeEffector algaeEffector, boolean inverted) {
     addRequirements(this.algaeEffector = algaeEffector);
     this.inverted = inverted;
+    
   }
 
   @Override
