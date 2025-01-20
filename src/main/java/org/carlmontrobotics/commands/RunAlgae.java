@@ -8,6 +8,7 @@ public class RunAlgae extends Command {
   AlgaeEffector algaeEffector;
   Boolean inverted;
 
+
   public RunAlgae(AlgaeEffector algaeEffector, boolean inverted, boolean stop) {
     addRequirements(this.algaeEffector = algaeEffector);
     this.inverted = inverted;

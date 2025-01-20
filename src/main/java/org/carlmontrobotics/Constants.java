@@ -17,6 +17,7 @@ public final class Constants {
         public static final class Manipulator {
             public static final int port = 1;
         }
+        public static final int X = 0;
     }
 	public static final class AlgaeEffectorc {
 		public static final int upperMotorID = 1;
