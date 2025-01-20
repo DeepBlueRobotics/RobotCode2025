@@ -30,13 +30,9 @@ public class RobotContainer {
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
   public final GenericHID driverController = new GenericHID(OI.Driver.port);
-  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
-
+  private final AlgaeEffector algaeEffector = new AlgaeEffector();
   public RobotContainer() {
-
-    setDefaultCommands();
     setBindingsDriver();
-    setBindingsManipulator();
   }
 
   private void setDefaultCommands() {
@@ -48,7 +44,9 @@ public class RobotContainer {
     //   () -> driverController.getRawButton(OI.Driver.slowDriveButton)
     // ));
   }
-  private void setBindingsDriver() {}
+  private void setBindingsDriver() {
+
+  }
   private void setBindingsManipulator() {}
 
   public Command getAutonomousCommand() {
