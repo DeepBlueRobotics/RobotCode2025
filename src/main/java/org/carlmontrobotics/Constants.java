@@ -12,4 +12,8 @@ public final class Constants {
             public static final int port = 1;
         }
     }
+	public static final class AlgaeEffectorc {
+		public static int upperMotorID = 1;
+		public static int lowerMotorID = 2;
+	}
 }
