@@ -8,6 +8,8 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.subsystems.*;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
+
+import org.carlmontrobotics.commands.RunAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
@@ -45,10 +47,10 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
-    new Trigger(() -> driverController.getRawButton(OI.X)).onTrue(new RunAlgae(algaeEffector, 1, false));
-    new Trigger(() -> driverController.getRawButton(OI.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
-    new Trigger(() -> driverController.getRawButton(OI.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
-    new Trigger(() -> driverController.getRawButton(OI.A)).onTrue(new RunAlgae(algaeEffector, false, true));
+    new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false)); //wrong
+    new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
+    new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
+    new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true));
 
   }
   private void setBindingsManipulator() {}
