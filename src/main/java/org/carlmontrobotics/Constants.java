@@ -23,4 +23,15 @@ public final class Constants {
 		public static final int upperMotorID = 1;
 		public static final int lowerMotorID = 2;
 	}
+    public static final class CoralEffectorc {
+		public static final int effectorMotorID = 3;
+        public static final int effectorDistanceSensorID = 4;
+        public static final double kP = 0.0;
+		public static final double kI = 0.0;
+		public static final double kD = 0.0;
+		public static final double kS = 0.0;
+
+        public static final double feedforward[] = {0.0};
+
+	}
 }
