@@ -9,8 +9,15 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
+import org.carlmontrobotics.Constants.OI.Manipulator.*;
+import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.RunAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
+import org.carlmontrobotics.subsystems.CoralEffector;
+import org.carlmontrobotics.commands.IntakeCoral;
+import org.carlmontrobotics.commands.OuttakeCoral;
+
+
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController.Axis;
@@ -18,11 +25,13 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 //control bindings
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -32,9 +41,12 @@ public class RobotContainer {
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
   public final GenericHID driverController = new GenericHID(OI.Driver.port);
+  public final GenericHID manipulatorController = new GenericHID(OI.Driver.port);
   private final AlgaeEffector algaeEffector = new AlgaeEffector();
+  private final CoralEffector coralEffector = new CoralEffector();
   public RobotContainer() {
     setBindingsDriver();
+    setBindingsManipulator();
   }
 
   private void setDefaultCommands() {
@@ -53,7 +65,23 @@ public class RobotContainer {
     new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true));
 
   }
-  private void setBindingsManipulator() {}
+
+
+  private void setBindingsManipulator() {
+    axisTrigger(manipulatorController, OuttakeTrigger)
+      .whileTrue(new IntakeCoral(coralEffector));
+
+    axisTrigger(manipulatorController, IntakeTrigger)
+      .whileTrue(new OuttakeCoral(coralEffector));
+    }
+
+    
+
+    private Trigger axisTrigger(GenericHID controller, Axis axis) {
+      return new Trigger(() -> Math
+              .abs(getStickValue(controller, axis)) > Constants.OI.Manipulator.MIN_AXIS_TRIGGER_VALUE);
+    }
+
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

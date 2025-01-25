@@ -8,27 +8,25 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunCoral extends Command {
-  // intake until sees game peice or 4sec has passed
+public class IntakeCoral extends Command {
   private final CoralEffector Coral;
-  private double initSpeed = 2100;  
+  int increaseSpeed;
 
-  public RunCoral(CoralEffector Coral) {
+  private double Speed = 1000;  
+
+  public IntakeCoral(CoralEffector Coral) {
     addRequirements(this.Coral = Coral);
   }
 
   @Override
   public void initialize() {
-    Coral.setRPMEffector(initSpeed); 
+    Coral.setRPM(Speed); 
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    increaseSpeed = SmartDashboard.getNumber("Increase speed", 0);
-    slowSpeed = SmartDashboard.getNumber("Slow intake speed", 0);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -39,6 +37,8 @@ public class RunCoral extends Command {
   @Override
   public boolean isFinished() {
     //distance sensor doesn't detect coral
-    return Coral.outtakeDetectsNote();
+    //TODO: make distance sensor stuff
+    //TODO: add smartdashboard
+    return Coral.coralDetects() == true;
   }
 }
