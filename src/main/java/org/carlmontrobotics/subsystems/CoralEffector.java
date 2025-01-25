@@ -34,7 +34,7 @@ import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
 
 public class CoralEffector extends SubsystemBase {
-    private SparkFlex effectorMotor = new SparkFlex(Constants.CoralEffectorc.effectorMotorID, MotorType.kBrushless);
+    private SparkFlex effectorMotor = new SparkFlex(Constants.CoralEffectorc.effectorMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
     private final RelativeEncoder effectorEncoder = effectorMotor.getEncoder();
     private final SparkClosedLoopController pidControllerEffector = effectorMotor.getClosedLoopController();
     // private final SimpleMotorFeedforward effectorFeedforward = new SimpleMotorFeedforward(kS[OUTTAKE], kV[OUTTAKE], kA[OUTTAKE]);
