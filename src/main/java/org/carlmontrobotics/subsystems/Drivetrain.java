@@ -19,7 +19,7 @@ import static org.carlmontrobotics.Config.CONFIG;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 // import com.kauailabs.navx.frc.AHRS;
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 // import com.pathplanner.lib.util.PIDConstants;
