@@ -47,10 +47,14 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
-    new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false)); //wrong
-    new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
-    new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
-    new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true));
+    new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false,1)); //wrong
+    new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false,1));
+    new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false,1));
+    new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true,1));
+    new Trigger(() -> driverController.getPOV()==0).onTrue(new RunAlgae(algaeEffector, 3, false, 2));
+    new Trigger(() -> driverController.getPOV()==90).onTrue(new RunAlgae(algaeEffector, 3, false, 3));
+    //new Trigger(() -> driverController.getPOV() ==180).onTrue(new RunAlgae(algaeEffector, 3, false, 4));
+    
 
   }
   private void setBindingsManipulator() {}
@@ -93,4 +97,8 @@ public class RobotContainer {
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
   }
-}
+//   private Trigger axisTrigger(GenericHID controller, Axis axis) {
+//     return new Trigger(() -> Math.abs(getStickValue(controller, axis)) > OI.MIN_AXIS_TRIGGER_VALUE);
+//   }
+ }
+

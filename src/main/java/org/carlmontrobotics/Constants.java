@@ -13,6 +13,7 @@ public final class Constants {
 	    	public static final int Y = 4;
         	public static final int leftBumper = 5;
         	public static final int rightBumper = 6;
+            public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;
         }
         public static final class Manipulator {
             public static final int port = 1;
