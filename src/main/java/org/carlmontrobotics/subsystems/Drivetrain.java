@@ -1,3 +1,5 @@
+//Resolve 71 errors starting from Holonomics
+
 package org.carlmontrobotics.subsystems;
 
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
@@ -13,6 +15,7 @@ import org.carlmontrobotics.Robot;
 import org.carlmontrobotics.commands.TeleopDrive;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
+import org.carlmontrobotics.lib199.MotorErrors;
 import org.carlmontrobotics.lib199.SensorFactory;
 import org.carlmontrobotics.lib199.swerve.SwerveModule;
 import static org.carlmontrobotics.Config.CONFIG;
@@ -21,10 +24,18 @@ import com.ctre.phoenix6.hardware.CANcoder;
 // import com.kauailabs.navx.frc.AHRS;
 import com.studica.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 // import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-// import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+
 import org.carlmontrobotics.lib199.swerve.SwerveModuleSim;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.math.MathUtil;
@@ -78,7 +89,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.MutableMeasure.mutable;
+// Make sure this code is extraneous
+// import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
 public class Drivetrain extends SubsystemBase {
     private final AHRS gyro = new AHRS(SerialPort.Port.kMXP); // Also try kUSB and kUSB2
@@ -172,27 +184,27 @@ public class Drivetrain extends SubsystemBase {
             // Supplier<Float> rollSupplier = () -> gyro.getRoll();
 
             moduleFL = new SwerveModule(swerveConfig, SwerveModule.ModuleType.FL,
-                    driveMotors[0] = MotorControllerFactory.createSparkMax(driveFrontLeftPort, MotorConfig.NEO),
-                    turnMotors[0] = MotorControllerFactory.createSparkMax(turnFrontLeftPort, MotorConfig.NEO),
+                    driveMotors[0] = MotorControllerFactory.createSparkMax(driveFrontLeftPort, MotorErrors.TemperatureLimit.NEO),
+                    turnMotors[0] = MotorControllerFactory.createSparkMax(turnFrontLeftPort, MotorErrors.TemperatureLimit.NEO),
                     turnEncoders[0] = SensorFactory.createCANCoder(canCoderPortFL), 0,
                     pitchSupplier, rollSupplier);
             // Forward-Right
             moduleFR = new SwerveModule(swerveConfig, SwerveModule.ModuleType.FR,
-                    driveMotors[1] = MotorControllerFactory.createSparkMax(driveFrontRightPort, MotorConfig.NEO),
-                    turnMotors[1] = MotorControllerFactory.createSparkMax(turnFrontRightPort, MotorConfig.NEO),
+                    driveMotors[1] = MotorControllerFactory.createSparkMax(driveFrontRightPort, MotorErrors.TemperatureLimit.NEO),
+                    turnMotors[1] = MotorControllerFactory.createSparkMax(turnFrontRightPort, MotorErrors.TemperatureLimit.NEO),
                     turnEncoders[1] = SensorFactory.createCANCoder(canCoderPortFR), 1,
                     pitchSupplier, rollSupplier);
 
             // Backward-Left
             moduleBL = new SwerveModule(swerveConfig, SwerveModule.ModuleType.BL,
-                    driveMotors[2] = MotorControllerFactory.createSparkMax(driveBackLeftPort, MotorConfig.NEO),
-                    turnMotors[2] = MotorControllerFactory.createSparkMax(turnBackLeftPort, MotorConfig.NEO),
+                    driveMotors[2] = MotorControllerFactory.createSparkMax(driveBackLeftPort, MotorErrors.TemperatureLimit.NEO),
+                    turnMotors[2] = MotorControllerFactory.createSparkMax(turnBackLeftPort, MotorErrors.TemperatureLimit.NEO),
                     turnEncoders[2] = SensorFactory.createCANCoder(canCoderPortBL), 2,
                     pitchSupplier, rollSupplier);
             // Backward-Right
             moduleBR = new SwerveModule(swerveConfig, SwerveModule.ModuleType.BR,
-                    driveMotors[3] = MotorControllerFactory.createSparkMax(driveBackRightPort, MotorConfig.NEO),
-                    turnMotors[3] = MotorControllerFactory.createSparkMax(turnBackRightPort, MotorConfig.NEO),
+                    driveMotors[3] = MotorControllerFactory.createSparkMax(driveBackRightPort, MotorErrors.TemperatureLimit.NEO),
+                    turnMotors[3] = MotorControllerFactory.createSparkMax(turnBackRightPort, MotorErrors.TemperatureLimit.NEO),
                     turnEncoders[3] = SensorFactory.createCANCoder(canCoderPortBR), 3,
                     pitchSupplier, rollSupplier);
             modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
@@ -203,21 +215,28 @@ public class Drivetrain extends SubsystemBase {
                 };
                 gyroYawSim = new SimDeviceSim("navX-Sensor[0]").getDouble("Yaw");
             }
+            
+            SparkMaxConfig driveConfig = new SparkMaxConfig();
+            driveConfig.openLoopRampRate(secsPer12Volts);
+            driveConfig.encoder.positionConversionFactor(wheelDiameterMeters * Math.PI / driveGearing);
+            driveConfig.encoder.velocityConversionFactor(wheelDiameterMeters * Math.PI / driveGearing / 60);
+            driveConfig.encoder.uvwAverageDepth(2);
+            driveConfig.encoder.uvwMeasurementPeriod(16);
+            driveConfig.smartCurrentLimit(MotorConfig.NEO.currentLimitAmps);
 
             for (SparkMax driveMotor : driveMotors) {
-                driveMotor.setOpenLoopRampRate(secsPer12Volts);
-                driveMotor.getEncoder().setPositionConversionFactor(wheelDiameterMeters * Math.PI / driveGearing);
-                driveMotor.getEncoder().setVelocityConversionFactor(wheelDiameterMeters * Math.PI / driveGearing / 60);
-                driveMotor.getEncoder().setAverageDepth(2);
-                driveMotor.getEncoder().setMeasurementPeriod(16);
-                driveMotor.setSmartCurrentLimit(MotorConfig.NEO.currentLimitAmps);
+                driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
             }
+            SparkMaxConfig turnConfig = new SparkMaxConfig();
+            turnConfig.encoder.positionConversionFactor(360/turnGearing);
+            turnConfig.encoder.positionConversionFactor(360/turnGearing/60);
+            turnConfig.encoder.uvwAverageDepth(2);
+            turnConfig.encoder.uvwMeasurementPeriod(16);
+
             for (SparkMax turnMotor : turnMotors) {
-                turnMotor.getEncoder().setPositionConversionFactor(360 / turnGearing);
-                turnMotor.getEncoder().setVelocityConversionFactor(360 / turnGearing / 60);
-                turnMotor.getEncoder().setAverageDepth(2);
-                turnMotor.getEncoder().setMeasurementPeriod(16);
+                turnMotor.configure(turnConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
             }
+
             for (CANcoder coder : turnEncoders) {
                 coder.getAbsolutePosition().setUpdateFrequency(500);
                 coder.getPosition().setUpdateFrequency(500);
@@ -434,10 +453,10 @@ public class Drivetrain extends SubsystemBase {
      * Max Vel: 1.54, Max Accel: 6.86
      * Max Angvel: 360, Max AngAccel: 180 (guesses!)
      */
-    AutoBuilder.configureHolonomic(
-        this::getPose,
-        this::setPose,
-        this::getSpeeds,
+    AutoBuilder.configure(
+        this::getPose, // :D
+        this::setPose, // :D
+        this::getSpeeds, // :D
         (ChassisSpeeds cs) -> {
             //cs.vxMetersPerSecond = -cs.vxMetersPerSecond;
             // SmartDashboard.putNumber("chassis speeds x", cs.vxMetersPerSecond);
@@ -445,26 +464,24 @@ public class Drivetrain extends SubsystemBase {
             // SmartDashboard.putNumber("chassis speeds theta", cs.omegaRadiansPerSecond);
 
             drive(kinematics.toSwerveModuleStates(cs));  
-        },
-        new HolonomicPathFollowerConfig(
-        new PIDConstants(xPIDController[0], xPIDController[1], xPIDController[2], 0), //translation (drive) pid vals
-        new PIDConstants(thetaPIDController[0], thetaPIDController[1], thetaPIDController[2], 0), //rotation pid vals
-        maxSpeed,
-        swerveRadius,
-        Autoc.replanningConfig,
-        Robot.robot.getPeriod()//robot period
-    ),
-    () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent())
-            return alliance.get() == DriverStation.Alliance.Red;
-        //else:
-        return false;
-      },
-      this
+        }, // :D
+        new PPHolonomicDriveController(
+            new PIDConstants(xPIDController[0], xPIDController[1], xPIDController[2], 0), //translation (drive) pid vals
+            new PIDConstants(thetaPIDController[0], thetaPIDController[1], thetaPIDController[2], 0), //rotation pid vals
+            Robot.kDefaultPeriod//robot period
+        ), 
+        Autoc.robotConfig,
+        () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent())
+                return alliance.get() == DriverStation.Alliance.Red;
+            //else:
+            return false;
+        }, // :D
+        this // :D
     );
 
     /*
