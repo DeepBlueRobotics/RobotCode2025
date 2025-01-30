@@ -38,9 +38,11 @@ public final class Constants {
         public static final double l1 = 0;
         public static final double l2 = 0;
         public static final double l3 = 0;
-        public static final double l4 =0;
+        public static final double l4 = 0;
         public static final double net = 0;
         public static final double processor = 0;
+        public static final double bottomAlgaeRemoval = 0;
+        public static final double uppperAlgaeRemoval = 0;
         //ScoreENUM
         public enum ElevatorPos {
             DOWN(downPos),
@@ -49,7 +51,9 @@ public final class Constants {
             L3(l3),
             L4(l4),
             NET(net),
-            PROCESSOR(processor);
+            PROCESSOR(processor),
+            BOTTOMALGAE(bottomAlgaeRemoval),
+            UPPERALGAE(uppperAlgaeRemoval);
 
             public final double positionInches;
             ElevatorPos(double positionInches) {
