@@ -25,6 +25,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
+import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
@@ -81,7 +82,6 @@ public class Elevator extends SubsystemBase {
     //follow thingy
     //followerMotor.follow(masterMotor);
   }
-
 
   public void setGoal(double goal) {
     heightGoal = goal;

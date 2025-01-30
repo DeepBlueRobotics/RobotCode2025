@@ -33,6 +33,31 @@ public final class Constants {
         public static final double kP = 1;
         public static final double kI = 0;
         public static final double kD = 0;
+        //Positions
+        public static final double downPos = 0;
+        public static final double l1 = 0;
+        public static final double l2 = 0;
+        public static final double l3 = 0;
+        public static final double l4 =0;
+        public static final double net = 0;
+        public static final double processor = 0;
+        //ScoreENUM
+        public enum ElevatorPos {
+            DOWN(downPos),
+            L1(l1),
+            L2(l2),
+            L3(l3),
+            L4(l4),
+            NET(net),
+            PROCESSOR(processor);
+
+            public final double positionInches;
+            ElevatorPos(double positionInches) {
+                this.positionInches = positionInches;
+            }
+        }
+        //Tolerance
+        public static final double elevatorTolerance = 0.4;
         
     }
 }
