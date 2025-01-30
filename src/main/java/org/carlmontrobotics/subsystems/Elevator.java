@@ -17,6 +17,7 @@ import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -39,28 +40,75 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
+  //Master
   private SparkMax masterMotor = new SparkMax(Constants.Elevatorc.masterPort, MotorType.kBrushless);
   private SparkMaxConfig masterConfig = new SparkMaxConfig();
+  private RelativeEncoder masterEncoder = masterMotor.getEncoder();
+  //Follower
   private SparkMax followerMotor = new SparkMax(Constants.Elevatorc.followerPort, MotorType.kBrushless);
   private SparkMaxConfig followerConfig = new SparkMaxConfig();
-  
-  public Elevator() {}
-    //Not working :(
-    // followerMotor.follow(masterMotor, followerInverted);
-    // masterConfig
-    //     .inverted(masterInverted)
-    //     .IdleMode(masterIdleMode);
-    // masterConfig.encoder
-    //     .positionConversionFactor(masterPositionConversionFactor)
-    //     .velocityConversionFactor(masterVelocityConversionFactor);
-    // masterConfig.closedLoop
-    //     .pid(Constants.Elevatorc.kP,Constants.Elevatorc.kI,Constants.Elevatorc.kD)
-    //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    // masterMotor.configure(masterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  private RelativeEncoder followerEncoder = followerMotor.getEncoder();
 
+  //Absolute Encoder
+  private AbsoluteEncoder primaryEncoder = masterMotor.getAbsoluteEncoder();
+
+  //Vars
+  private double heightGoal;
+  //PID
+  private final SparkClosedLoopController pidElevatorController = masterMotor.getClosedLoopController();
+  
+  public Elevator() {
+    //Master Config
+    masterConfig
+        .inverted(Constants.Elevatorc.masterInverted)
+        .idleMode(Constants.Elevatorc.masterIdleMode);
+    masterConfig.encoder
+        .positionConversionFactor(Constants.Elevatorc.masterPositionConversionFactor)
+        .velocityConversionFactor(Constants.Elevatorc.masterVelocityConversionFactor);
+    masterConfig.closedLoop
+        .pid(Constants.Elevatorc.kP, Constants.Elevatorc.kI,Constants.Elevatorc.kD)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    masterMotor.configure(masterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //I don't know if this is needed
+    //Follower Config
+    followerConfig
+      .inverted(Constants.Elevatorc.followerInverted)
+      .idleMode(Constants.Elevatorc.followerIdleMode);
+    followerConfig.encoder
+      .positionConversionFactor(Constants.Elevatorc.followerPositionConversionFactor)
+      .velocityConversionFactor(Constants.Elevatorc.followerVelocityConversionFactor);
+    followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //follow thingy
+    //followerMotor.follow(masterMotor);
+  }
+
+
+  public void setGoal(double goal) {
+    heightGoal = goal;
+  }
+  
+  public double getGoal() {
+    return heightGoal;
+  }
+
+  public void getToGoal() {
+    pidElevatorController.setReference(heightGoal, ControlType.kPosition);
+  }
+
+  public void setSpeed(double speed){
+    masterMotor.set(speed);
+  }
+
+  public void stopElevator(){
+    masterMotor.set(0);
+  }
+
+  public double getEncoderValue() {
+    return masterEncoder.getPosition();
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    getToGoal();
   }
 }
