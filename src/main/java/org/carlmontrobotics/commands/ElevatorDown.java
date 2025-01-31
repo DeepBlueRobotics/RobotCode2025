@@ -1,10 +1,15 @@
 package org.carlmontrobotics.commands;
 
+import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
+import org.carlmontrobotics.subsystems.Elevator;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ElevatorDown extends Command {
-    public ElevatorDown() {
-
+    Elevator elevator;
+    
+    public ElevatorDown(Elevator elevator) {
+        addRequirements(this.elevator = elevator);
     }
     @Override
     public void initialize() {
@@ -13,7 +18,7 @@ public class ElevatorDown extends Command {
 
     @Override
     public void execute() {
-
+        elevator.setGoal(ElevatorPos.DOWN);
     }
     @Override
     public void end(boolean interrupted) {

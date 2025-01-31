@@ -59,6 +59,10 @@ public final class Constants {
             ElevatorPos(double positionInches) {
                 this.positionInches = positionInches;
             }
+
+            public double getPosition() {
+                return positionInches;
+            }
         }
         //Tolerance
         public static final double elevatorTolerance = 0.4;

@@ -5,6 +5,7 @@
 package org.carlmontrobotics.subsystems;
 
 import org.carlmontrobotics.Constants;
+import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
@@ -68,6 +69,10 @@ public class Elevator extends SubsystemBase {
   
   public void setGoal(double goal) {
     heightGoal = goal;
+  }
+
+  public void setGoal(ElevatorPos goal) {
+    heightGoal = goal.getPosition();
   }
   
   public double getGoal() {
