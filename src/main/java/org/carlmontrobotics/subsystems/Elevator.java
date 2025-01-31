@@ -6,38 +6,18 @@ package org.carlmontrobotics.subsystems;
 
 import org.carlmontrobotics.Constants;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import org.carlmontrobotics.lib199.MotorConfig;
-import org.carlmontrobotics.lib199.MotorControllerFactory;
-
-import com.playingwithfusion.TimeOfFlight;
-import com.playingwithfusion.TimeOfFlight.RangingMode;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
-import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
-
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.datalog.DataLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -59,6 +39,10 @@ public class Elevator extends SubsystemBase {
   private final SparkClosedLoopController pidElevatorController = masterMotor.getClosedLoopController();
   
   public Elevator() {
+    configureMotors();
+  }
+
+  private void configureMotors () {
     //Master Config
     masterConfig
         .inverted(Constants.Elevatorc.masterInverted)
@@ -78,11 +62,10 @@ public class Elevator extends SubsystemBase {
     followerConfig.encoder
       .positionConversionFactor(Constants.Elevatorc.followerPositionConversionFactor)
       .velocityConversionFactor(Constants.Elevatorc.followerVelocityConversionFactor);
+    followerConfig.follow(Constants.Elevatorc.masterPort, Constants.Elevatorc.followerInverted);
     followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    //follow thingy
-    //followerMotor.follow(masterMotor);
   }
-
+  
   public void setGoal(double goal) {
     heightGoal = goal;
   }
