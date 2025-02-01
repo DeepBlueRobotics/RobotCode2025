@@ -24,10 +24,10 @@ public class RunAlgae extends Command {
     this.direction = direction;
     this.stop = stop;
     this.speed = speed;
-    lowSpeed = 0.3;
-    mediumSpeed = 0.4;
-    highSpeed = 0.5;
-    intakeSpeed = 0.10;
+    lowSpeed = 0.8;
+    mediumSpeed = 0.9;
+    highSpeed = 1;
+    intakeSpeed = 0.15;
 
   }
 
@@ -60,7 +60,13 @@ public class RunAlgae extends Command {
           algaeEffector.RunAlgaeMotors(-intakeSpeed, -intakeSpeed);
       }
       else if (direction == 3) {
-        algaeEffector.RunAlgaeMotors(currentSpeed, -currentSpeed);
+        algaeEffector.RunAlgaeMotors(0.4, -0.4);
+      }
+      else if (direction == 4) {
+        algaeEffector.RunAlgaeMotors(-0.37, 0.37);
+      }
+      else if (direction == 5) {
+        algaeEffector.RunAlgaeMotors(-0.4,0.4);
       }
     }
   }

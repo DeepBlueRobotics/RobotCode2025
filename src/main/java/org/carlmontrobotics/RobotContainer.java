@@ -53,7 +53,8 @@ public class RobotContainer {
     new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true,1));
     new Trigger(() -> driverController.getPOV()==0).onTrue(new RunAlgae(algaeEffector, 3, false, 2));
     new Trigger(() -> driverController.getPOV()==90).onTrue(new RunAlgae(algaeEffector, 3, false, 3));
-    //new Trigger(() -> driverController.getPOV() ==180).onTrue(new RunAlgae(algaeEffector, 3, false, 4));
+    new Trigger(() -> driverController.getPOV() ==180).onTrue(new RunAlgae(algaeEffector, 4, false, 1));
+    new Trigger(() -> driverController.getPOV() == 270).onTrue(new RunAlgae(algaeEffector, 5,false, 1));
     
 
   }
