@@ -23,6 +23,7 @@ import static org.carlmontrobotics.Config.CONFIG;
 import com.ctre.phoenix6.hardware.CANcoder;
 // import com.kauailabs.navx.frc.AHRS;
 import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
@@ -94,7 +95,7 @@ import static edu.wpi.first.units.Units.Seconds;
 // import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
 public class Drivetrain extends SubsystemBase {
-    private final AHRS gyro = new AHRS(SerialPort.Port.kMXP); // Also try kUSB and kUSB2
+    private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI); // Also try kUSB and kUSB2
     private Pose2d autoGyroOffset = new Pose2d(0., 0., new Rotation2d(0.));
     // ^used by PathPlanner for chaining paths
 
