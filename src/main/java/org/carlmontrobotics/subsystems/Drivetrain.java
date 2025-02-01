@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
 import org.carlmontrobotics.Robot;
 // import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
@@ -35,6 +36,7 @@ import org.carlmontrobotics.lib199.swerve.SwerveModuleSim;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -109,7 +111,7 @@ public class Drivetrain extends SubsystemBase {
     private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
     private Pose2d autoGyroOffset = new Pose2d(0., 0., new Rotation2d(0.));
     // ^used by PathPlanner for chaining paths
-
+    
     private SwerveDriveKinematics kinematics = null;
     // private SwerveDriveOdometry odometry = null;
     private SwerveDrivePoseEstimator poseEstimator = null;
@@ -121,7 +123,7 @@ public class Drivetrain extends SubsystemBase {
     private SparkMax[] driveMotors = new SparkMax[] { null, null, null, null };
     private SparkMax[] turnMotors = new SparkMax[] { null, null, null, null };
     private CANcoder[] turnEncoders = new CANcoder[] { null, null, null, null };
-
+    
     // gyro
     public final float initPitch;
     public final float initRoll;
@@ -141,6 +143,7 @@ public class Drivetrain extends SubsystemBase {
     private double lastSetX = 0, lastSetY = 0, lastSetTheta = 0;
 
     public Drivetrain() {
+        
         // SmartDashboard.putNumber("Pose Estimator set x (m)", lastSetX);
         // SmartDashboard.putNumber("Pose Estimator set y (m)", lastSetY);
         // SmartDashboard.putNumber("Pose Estimator set rotation (deg)",
@@ -195,30 +198,26 @@ public class Drivetrain extends SubsystemBase {
             // Supplier<Float> pitchSupplier = () -> gyro.getPitch();
             // Supplier<Float> rollSupplier = () -> gyro.getRoll();
 
-            moduleFL = new SwerveModule(swerveConfig, SwerveModule.ModuleType.FL,
-                    driveMotors[0] = MotorControllerFactory.createSparkMax(driveFrontLeftPort, MotorErrors.TemperatureLimit.NEO),
-                    turnMotors[0] = MotorControllerFactory.createSparkMax(turnFrontLeftPort, MotorErrors.TemperatureLimit.NEO),
-                    turnEncoders[0] = SensorFactory.createCANCoder(canCoderPortFL), 0,
-                    pitchSupplier, rollSupplier);
-            // Forward-Right
-            moduleFR = new SwerveModule(swerveConfig, SwerveModule.ModuleType.FR,
-                    driveMotors[1] = MotorControllerFactory.createSparkMax(driveFrontRightPort, MotorErrors.TemperatureLimit.NEO),
-                    turnMotors[1] = MotorControllerFactory.createSparkMax(turnFrontRightPort, MotorErrors.TemperatureLimit.NEO),
-                    turnEncoders[1] = SensorFactory.createCANCoder(canCoderPortFR), 1,
-                    pitchSupplier, rollSupplier);
 
-            // Backward-Left
-            moduleBL = new SwerveModule(swerveConfig, SwerveModule.ModuleType.BL,
-                    driveMotors[2] = MotorControllerFactory.createSparkMax(driveBackLeftPort, MotorErrors.TemperatureLimit.NEO),
-                    turnMotors[2] = MotorControllerFactory.createSparkMax(turnBackLeftPort, MotorErrors.TemperatureLimit.NEO),
-                    turnEncoders[2] = SensorFactory.createCANCoder(canCoderPortBL), 2,
-                    pitchSupplier, rollSupplier);
-            // Backward-Right
-            moduleBR = new SwerveModule(swerveConfig, SwerveModule.ModuleType.BR,
-                    driveMotors[3] = MotorControllerFactory.createSparkMax(driveBackRightPort, MotorErrors.TemperatureLimit.NEO),
-                    turnMotors[3] = MotorControllerFactory.createSparkMax(turnBackRightPort, MotorErrors.TemperatureLimit.NEO),
-                    turnEncoders[3] = SensorFactory.createCANCoder(canCoderPortBR), 3,
-                    pitchSupplier, rollSupplier);
+            moduleFL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FL, 
+            driveMotors[0] = new SparkMax(0, MotorType.kBrushless), 
+            turnMotors[0] = new SparkMax(1, MotorType.kBrushless), 
+            turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL), 0, pitchSupplier, rollSupplier);
+
+            moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
+            driveMotors[1] = new SparkMax(2, MotorType.kBrushless), 
+            turnMotors[1] = new SparkMax(3, MotorType.kBrushless), 
+            turnEncoders[1] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFR), 1, pitchSupplier, rollSupplier);
+
+            moduleBL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BL, 
+            driveMotors[2] = new SparkMax(4, MotorType.kBrushless), 
+            turnMotors[2] = new SparkMax(5, MotorType.kBrushless), 
+            turnEncoders[2] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBL), 2, pitchSupplier, rollSupplier);
+
+            moduleBR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BR, 
+            driveMotors[3] = new SparkMax(6, MotorType.kBrushless), 
+            turnMotors[3] = new SparkMax(7, MotorType.kBrushless), 
+            turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR), 3, pitchSupplier, rollSupplier);
             modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
 
             if (RobotBase.isSimulation()) {
@@ -329,6 +328,9 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.getNumber("Velocity FL: ", turnEncoders[0].getVelocity().getValueAsDouble());
+        turnMotors[0].setVoltage(SmartDashboard.getNumber("goal Velocity", 0));
+        
         // for (CANcoder coder : turnEncoders) {
         // SignalLogger.writeDouble("Regular position " + coder.toString(),
         // coder.getPosition().getValue());
@@ -450,7 +452,7 @@ public class Drivetrain extends SubsystemBase {
             moduleStates[i] = SwerveModuleState.optimize(moduleStates[i],
                     Rotation2d.fromDegrees(modules[i].getModuleAngle()));
             // SmartDashboard.putNumber("moduleOT" + Integer.toString(i), moduleStates[i].angle.getDegrees());
-
+            
             modules[i].move(moduleStates[i].speedMetersPerSecond, moduleStates[i].angle.getDegrees());
         }
     }
