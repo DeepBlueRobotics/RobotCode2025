@@ -93,9 +93,12 @@ import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volt;
+import static edu.wpi.first.units.Units.Meter;
 // Make sure this code is extraneous
 // import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
@@ -898,14 +901,14 @@ public class Drivetrain extends SubsystemBase {
             sysIdTab.add(this);
 
             for (int i = 0; i < 8; i++) {// first four are drive, next 4 are turn motors
-                m_appliedVoltage[i] = mutable(Volts.of(0));
+                m_appliedVoltage[i] = Volt.mutable(0);
             }
             for (int i = 0; i < 4; i++) {
-                m_distance[i] = mutable(Meters.of(0));
-                m_velocity[i] = mutable(MetersPerSecond.of(0));
+                m_distance[i] = Meter.mutable(0);
+                m_velocity[i] = MetersPerSecond.mutable(0);
 
-                m_revs[i] = mutable(Rotations.of(0));
-                m_revs_vel[i] = mutable(RotationsPerSecond.of(0));
+                m_revs[i] = Rotation.mutable(0);
+                m_revs_vel[i] = RotationsPerSecond.mutable(0);
             }
 
             // SmartDashboard.putNumber("Desired Angle", 0);
