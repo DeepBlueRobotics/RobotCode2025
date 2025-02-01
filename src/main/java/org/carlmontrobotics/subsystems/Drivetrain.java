@@ -21,9 +21,8 @@ import org.carlmontrobotics.lib199.swerve.SwerveModule;
 import static org.carlmontrobotics.Config.CONFIG;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-// import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
 import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
@@ -104,7 +103,7 @@ import static edu.wpi.first.units.Units.Meter;
 // import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
 public class Drivetrain extends SubsystemBase {
-    private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI); // Also try kUSB and kUSB2
+    private final AHRS gyro = new AHRS(SerialPort.Port.kMXP); // Also try kUSB and kUSB2
     private Pose2d autoGyroOffset = new Pose2d(0., 0., new Rotation2d(0.));
     // ^used by PathPlanner for chaining paths
 
@@ -725,7 +724,7 @@ public class Drivetrain extends SubsystemBase {
     // private SysIdRoutine.Config defaultSysIdConfig = new
     // SysIdRoutine.Config(Volts.of(.1).per(Seconds.of(.1)), Volts.of(.6),
     // Seconds.of(5));
-    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(1).per(Seconds),
+    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(1).per(Seconds.of(1)),
             Volts.of(2.891), Seconds.of(10));
 
     // DRIVE
