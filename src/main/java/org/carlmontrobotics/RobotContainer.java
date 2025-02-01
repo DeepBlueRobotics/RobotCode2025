@@ -47,13 +47,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 public class RobotContainer {
   private static boolean babyMode = false;
 
   // 1. using GenericHID allows us to use different kinds of controllers
   // 2. Use absolute paths from constants to reduce confusion
-  public final GenericHID driverController = new GenericHID(Driver.port);
+  public final GenericHID driverController = new GenericHID(OI.Driver.port);
   public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
 
   private final Drivetrain drivetrain = new Drivetrain();
@@ -112,7 +111,7 @@ public class RobotContainer {
             () -> ProcessedAxisValue(driverController, Axis.kLeftY),
             () -> ProcessedAxisValue(driverController, Axis.kLeftX),
             () -> ProcessedAxisValue(driverController, Axis.kRightX),
-            () -> driverController.getRawButton(Driver.slowDriveButton)));
+            () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
   }
   private void setBindingsDriver() {}
   private void setBindingsManipulator() {}
