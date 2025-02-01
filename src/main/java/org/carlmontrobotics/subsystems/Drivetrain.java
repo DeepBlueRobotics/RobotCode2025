@@ -722,7 +722,7 @@ public class Drivetrain extends SubsystemBase {
     // private SysIdRoutine.Config defaultSysIdConfig = new
     // SysIdRoutine.Config(Volts.of(.1).per(Seconds.of(.1)), Volts.of(.6),
     // Seconds.of(5));
-    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(1).per(Seconds.of(1)),
+    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(1).per(Seconds),
             Volts.of(2.891), Seconds.of(10));
 
     // DRIVE
