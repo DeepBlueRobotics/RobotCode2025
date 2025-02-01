@@ -30,9 +30,6 @@ import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
-
-
-
 public class CoralEffector extends SubsystemBase {
     private SparkFlex effectorMotor = new SparkFlex(Constants.CoralEffectorc.effectorMotorID, MotorType.kBrushless);
     private final RelativeEncoder effectorEncoder = effectorMotor.getEncoder();
@@ -44,6 +41,14 @@ public class CoralEffector extends SubsystemBase {
     private TimeOfFlight effectorDistanceSensor = new TimeOfFlight(Constants.CoralEffectorc.effectorDistanceSensorID);
     
     private double lastValidDistance = Double.POSITIVE_INFINITY;
+
+    public boolean coralDetects() {
+        return lastValidDistance < DETECT_DISTANCE_INCHES;
+    }
+
+    public boolean limitDetects() {
+        return limitSwitch.get(); 
+    }
 
     public CoralEffector() {
         SparkFlexConfig c = new SparkFlexConfig();
@@ -73,15 +78,6 @@ public class CoralEffector extends SubsystemBase {
         setRPM(2100);
     }
 
-
-    public boolean coralDetects() {
-        return lastValidDistance < DETECT_DISTANCE_INCHES;
-    }
-
-    public boolean limitDetects() {
-        return limitSwitch.get(); 
-    }
-
     public void updateValues() {
         if (effectorDistanceSensor.isRangeValid()) {
             if (lastValidDistance != 5.75) {
@@ -91,7 +87,6 @@ public class CoralEffector extends SubsystemBase {
                 lastValidDistance = Units.metersToInches(effectorDistanceSensor.getRange());
         }
     }
-
 
     @Override
     public void periodic() {

@@ -7,8 +7,9 @@ package org.carlmontrobotics;
 //199 files
 // import org.carlmontrobotics.subsystems.*;
 // import org.carlmontrobotics.commands.*;
-import static org.carlmontrobotics.Constants.OI;
+import static org.carlmontrobotics.Constants.OI.*;
 
+import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator.*;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.RunAlgae;
@@ -40,8 +41,8 @@ public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
-  public final GenericHID driverController = new GenericHID(OI.Driver.port);
-  public final GenericHID manipulatorController = new GenericHID(OI.Driver.port);
+  public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
+  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
   private final AlgaeEffector algaeEffector = new AlgaeEffector();
   private final CoralEffector coralEffector = new CoralEffector();
   public RobotContainer() {
@@ -59,19 +60,19 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
-    new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false)); //wrong
-    new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
-    new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
-    new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true));
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false)); //wrong
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true));
 
   }
 
 
   private void setBindingsManipulator() {
-    axisTrigger(manipulatorController, OuttakeTrigger)
+    axisTrigger(manipulatorController, OI.Manipulator.OuttakeTrigger)
       .whileTrue(new IntakeCoral(coralEffector));
 
-    axisTrigger(manipulatorController, IntakeTrigger)
+    axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
       .whileTrue(new OuttakeCoral(coralEffector));
     }
 
@@ -79,7 +80,7 @@ public class RobotContainer {
 
     private Trigger axisTrigger(GenericHID controller, Axis axis) {
       return new Trigger(() -> Math
-              .abs(getStickValue(controller, axis)) > Constants.OI.Manipulator.MIN_AXIS_TRIGGER_VALUE);
+              .abs(getStickValue(controller, axis)) > Constants.OI.MIN_AXIS_TRIGGER_VALUE);
     }
 
 

@@ -2,6 +2,7 @@ package org.carlmontrobotics.commands;
 
 import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
+import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -11,14 +12,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class OuttakeCoral extends Command {
   private final CoralEffector Coral;
-  int increaseSpeed;  private double Speed = 2100;  
   public OuttakeCoral(CoralEffector Coral) {
     addRequirements(this.Coral = Coral);
   }
 
   @Override
   public void initialize() {
-    Coral.setRPM(Speed);
+    Coral.setRPM(Constants.CoralEffectorc.outtakeRPM);
   }
 
 
@@ -37,6 +37,6 @@ public class OuttakeCoral extends Command {
     //distance sensor doesn't detect coral
     //TODO: make distance sensor stuff
     //TODO: add smartdashboard
-    return Coral.coralDetects() == false;
+    return !Coral.coralDetects() && !Coral.limitDetects();
   }
 }
