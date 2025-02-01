@@ -8,6 +8,7 @@ import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -31,7 +32,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
 public class CoralEffector extends SubsystemBase {
-    private SparkFlex effectorMotor = new SparkFlex(Constants.CoralEffectorc.effectorMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
+    private SparkMax effectorMotor = new SparkMax(Constants.CoralEffectorc.effectorMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
     private final RelativeEncoder effectorEncoder = effectorMotor.getEncoder();
     private final SparkClosedLoopController pidControllerEffector = effectorMotor.getClosedLoopController();
     // private final SimpleMotorFeedforward effectorFeedforward = new SimpleMotorFeedforward(kS[OUTTAKE], kV[OUTTAKE], kA[OUTTAKE]);
