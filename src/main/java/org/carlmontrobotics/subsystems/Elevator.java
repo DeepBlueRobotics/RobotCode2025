@@ -82,6 +82,14 @@ public class Elevator extends SubsystemBase {
   public double getGoal() {
     return heightGoal;
   }
+  
+  public double getCurrentHeight() {
+    return masterEncoder.getPosition() * Constants.Elevatorc.masterPositionConversionFactor;
+  }
+  
+  public void updateEncoders() {
+    masterEncoder.setPosition(primaryEncoder.getPosition()*Constants.Elevatorc.masterGearRatio);
+  }
 
   public void getToGoal() {
     pidElevatorController.setReference(heightGoal, ControlType.kPosition);

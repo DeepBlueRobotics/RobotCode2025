@@ -29,6 +29,7 @@ public final class Constants {
         public static final double followerPositionConversionFactor = 1000;
         public static final double masterVelocityConversionFactor = 1000;
         public static final double followerVelocityConversionFactor = 1000;
+		public static final double masterGearRatio = 1000;
 
         //PID
         public static final double kP = 1;
