@@ -10,7 +10,9 @@ import org.carlmontrobotics.subsystems.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 
 import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
 import org.carlmontrobotics.Constants.OI;
@@ -19,8 +21,6 @@ import org.carlmontrobotics.Constants.OI.Manipulator.*;
 import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
-import java.io.ObjectInputFilter.Config;
-import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -220,9 +220,9 @@ public class RobotContainer {
             // NOTHING
             autoCommands.add(0, new PrintCommand("Running NULL Auto!"));
             // RAW FORWARD command
-            autoCommands.add(1, new SequentialCommandGroup(
-                            new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), new WaitCommand(0.5),
-                            new LastResortAuto(drivetrain)));
+            // autoCommands.add(1, new SequentialCommandGroup(
+            //                 new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), new WaitCommand(0.5),
+            //                 new LastResortAuto(drivetrain)));
             // dumb PP forward command
             autoCommands.add(2, new PrintCommand("PPSimpleAuto not Configured!"));
         }
@@ -249,11 +249,11 @@ public class RobotContainer {
                         ? currPos.transformBy(new Transform2d(1, 0, new Rotation2d(0)))
                         : currPos.transformBy(new Transform2d(-1, 0, new Rotation2d(0)));
 
-        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(currPos, endPos);
+        List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currPos, endPos);
 
         // Create the path using the bezier points created above, /* m/s, m/s^2, rad/s, rad/s^2 */
         PathPlannerPath path = new PathPlannerPath(bezierPoints,
-                Autoc.pathConstraints, new GoalEndState(0, currPos.getRotation()));
+                Autoc.pathConstraints, null, new GoalEndState(0, currPos.getRotation()));
         
         path.preventFlipping = false;// don't flip, we do that manually already.
 

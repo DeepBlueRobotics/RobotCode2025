@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class TeleopDrive extends Command {
 
-  private static double robotPeriod = Robot.robot.getPeriod();
+  private static double robotPeriod = Robot.kDefaultPeriod;
   private final Drivetrain drivetrain;
   private DoubleSupplier fwd;
   private DoubleSupplier str;
