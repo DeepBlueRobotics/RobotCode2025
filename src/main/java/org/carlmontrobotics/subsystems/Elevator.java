@@ -18,6 +18,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
@@ -30,6 +31,9 @@ public class Elevator extends SubsystemBase {
   private SparkMax followerMotor = new SparkMax(Constants.Elevatorc.followerPort, MotorType.kBrushless);
   private SparkMaxConfig followerConfig = new SparkMaxConfig();
   private RelativeEncoder followerEncoder = followerMotor.getEncoder();
+
+  //Servo
+  private Servo climbServo = new Servo(Constants.Elevatorc.climbServoPort);
 
   //Absolute Encoder
   private AbsoluteEncoder primaryEncoder = masterMotor.getAbsoluteEncoder();
@@ -66,7 +70,7 @@ public class Elevator extends SubsystemBase {
     followerConfig.follow(Constants.Elevatorc.masterPort, Constants.Elevatorc.followerInverted);
     followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
-  
+
   public void setGoal(double goal) {
     heightGoal = goal;
   }
@@ -95,6 +99,13 @@ public class Elevator extends SubsystemBase {
     return masterEncoder.getPosition();
   }
 
+  public void lockClimb() {
+    climbServo.set(1);
+  }
+
+  public void unlockClimb(){
+    climbServo.set(0);
+  }
   @Override
   public void periodic() {
     getToGoal();

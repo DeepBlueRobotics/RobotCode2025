@@ -18,6 +18,7 @@ public final class Constants {
         //ports
         public static final int masterPort = 19;
         public static final int followerPort = 20;
+		public static final int climbServoPort = 1;
 
         //Config
         public static final IdleMode masterIdleMode = IdleMode.kBrake;
