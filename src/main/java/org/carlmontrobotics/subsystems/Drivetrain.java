@@ -54,8 +54,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 // import edu.wpi.first.units.Angle;
 // import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.units.measure.MutDistance;
+import edu.wpi.first.units.measure.MutLinearVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 // import edu.wpi.first.units.Velocity;
@@ -684,17 +690,17 @@ public class Drivetrain extends SubsystemBase {
     // #region SysId Code
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
-    private final Voltage[] m_appliedVoltage = new Voltage[8];
+    private final MutVoltage[] m_appliedVoltage = new MutVoltage[8];
 
     // Mutable holder for unit-safe linear distance values, persisted to avoid
     // reallocation.
-    private final Distance[] m_distance = new Distance[4];
+    private final MutDistance[] m_distance = new MutDistance[4];
     // Mutable holder for unit-safe linear velocity values, persisted to avoid
     // reallocation.
-    private final LinearVelocity[] m_velocity = new LinearVelocity[4];
+    private final MutLinearVelocity[] m_velocity = new MutLinearVelocity[4];
     // edu.wpi.first.math.util.Units.Rotations beans;
-    private final Angle[] m_revs = new Angle[4];
-    private final MutableMeasure<Velocity<Angle>>[] m_revs_vel = new MutableMeasure[4];
+    private final MutAngle[] m_revs = new MutAngle[4];
+    private final MutAngularVelocity[] m_revs_vel = new MutAngularVelocity[4];
 
     private enum SysIdTest {
         FRONT_DRIVE,
@@ -792,7 +798,7 @@ public class Drivetrain extends SubsystemBase {
                                         // ^because drivemotors take up the first 4 slots of the unit holders
                                         turnMotors[id].getBusVoltage() * turnMotors[id].getAppliedOutput(), Volts))
                                 .angularPosition(
-                                        m_revs[id].mut_replace(turnEncoders[id].getPosition().getValue(), Rotations))
+                                        m_revs[id].mut_replace(turnEncoders[id].getPosition().getValue()))
                                 .angularVelocity(m_revs_vel[id].mut_replace(
                                         turnEncoders[id].getVelocity().getValueAsDouble(), RotationsPerSecond)),
                         this));
