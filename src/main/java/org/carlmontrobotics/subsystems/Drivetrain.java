@@ -278,7 +278,7 @@ public class Drivetrain extends SubsystemBase {
                 new Pose2d());
 
         // Setup autopath builder
-        configurePPLAutoBuilder();
+        //configurePPLAutoBuilder();
         // SmartDashboard.putNumber("chassis speeds x", 0);
         //                 SmartDashboard.putNumber("chassis speeds y", 0);
 
@@ -358,7 +358,7 @@ public class Drivetrain extends SubsystemBase {
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
         //odometry.update(Rotation2d.fromDegrees(getHeading()), getModulePositions());
 
-        updateMT2PoseEstimator();
+        // updateMT2PoseEstimator();
 
         // double currSetX =
         // SmartDashboard.getNumber("Pose Estimator set x (m)", lastSetX);
@@ -455,46 +455,46 @@ public class Drivetrain extends SubsystemBase {
         }
     }
     
-   public void configurePPLAutoBuilder() {
-    /**
-     * PATHPLANNER SETTINGS
-     * Robot Width (m): .91
-     * Robot Length(m): .94
-     * Max Module Spd (m/s): 4.30
-     * Default Constraints
-     * Max Vel: 1.54, Max Accel: 6.86
-     * Max Angvel: 360, Max AngAccel: 180 (guesses!)
-     */
-    AutoBuilder.configure(
-        this::getPose, // :D
-        this::setPose, // :D
-        this::getSpeeds, // :D
-        (ChassisSpeeds cs) -> {
-            //cs.vxMetersPerSecond = -cs.vxMetersPerSecond;
-            // SmartDashboard.putNumber("chassis speeds x", cs.vxMetersPerSecond);
-            // SmartDashboard.putNumber("chassis speeds y", cs.vyMetersPerSecond);
-            // SmartDashboard.putNumber("chassis speeds theta", cs.omegaRadiansPerSecond);
+//    public void configurePPLAutoBuilder() {
+//     /**
+//      * PATHPLANNER SETTINGS
+//      * Robot Width (m): .91
+//      * Robot Length(m): .94
+//      * Max Module Spd (m/s): 4.30
+//      * Default Constraints
+//      * Max Vel: 1.54, Max Accel: 6.86
+//      * Max Angvel: 360, Max AngAccel: 180 (guesses!)
+//      */
+//     AutoBuilder.configure(
+//         this::getPose, // :D
+//         this::setPose, // :D
+//         this::getSpeeds, // :D
+//         (ChassisSpeeds cs) -> {
+//             //cs.vxMetersPerSecond = -cs.vxMetersPerSecond;
+//             // SmartDashboard.putNumber("chassis speeds x", cs.vxMetersPerSecond);
+//             // SmartDashboard.putNumber("chassis speeds y", cs.vyMetersPerSecond);
+//             // SmartDashboard.putNumber("chassis speeds theta", cs.omegaRadiansPerSecond);
 
-            drive(kinematics.toSwerveModuleStates(cs));  
-        }, // :D
-        new PPHolonomicDriveController(
-            new PIDConstants(xPIDController[0], xPIDController[1], xPIDController[2], 0), //translation (drive) pid vals
-            new PIDConstants(thetaPIDController[0], thetaPIDController[1], thetaPIDController[2], 0), //rotation pid vals
-            Robot.kDefaultPeriod//robot period
-        ), 
-        Autoc.robotConfig,
-        () -> {
-            // Boolean supplier that controls when the path will be mirrored for the red alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-            var alliance = DriverStation.getAlliance();
-            if (alliance.isPresent())
-                return alliance.get() == DriverStation.Alliance.Red;
-            //else:
-            return false;
-        }, // :D
-        this // :D
-    );
+//             drive(kinematics.toSwerveModuleStates(cs));  
+//         }, // :D
+//         new PPHolonomicDriveController(
+//             new PIDConstants(xPIDController[0], xPIDController[1], xPIDController[2], 0), //translation (drive) pid vals
+//             new PIDConstants(thetaPIDController[0], thetaPIDController[1], thetaPIDController[2], 0), //rotation pid vals
+//             Robot.kDefaultPeriod//robot period
+//         ), 
+//         Autoc.robotConfig,
+//         () -> {
+//             // Boolean supplier that controls when the path will be mirrored for the red alliance
+//             // This will flip the path being followed to the red side of the field.
+//             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+//             var alliance = DriverStation.getAlliance();
+//             if (alliance.isPresent())
+//                 return alliance.get() == DriverStation.Alliance.Red;
+//             //else:
+//             return false;
+//         }, // :D
+//         this // :D
+//     );
 
     /*
      AutoBuilder.configureHolonomic(
@@ -528,7 +528,7 @@ public class Drivetrain extends SubsystemBase {
       this
     );
     */
-   }
+//  }
 
    public void autoCancelDtCommand() {
        if(!(getDefaultCommand() instanceof TeleopDrive) || DriverStation.isAutonomous()) return;
@@ -1091,30 +1091,30 @@ public class Drivetrain extends SubsystemBase {
 
     // pose estimator stuff
 
-    public void updateMT2PoseEstimator() {
-        boolean rejectVisionUpdate = false;
+    // public void updateMT2PoseEstimator() {
+    //     boolean rejectVisionUpdate = false;
 
-        LimelightHelpers.SetRobotOrientation(SHOOTER_LL_NAME,
-                poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate visionPoseEstimate = LimelightHelpers
-                .getBotPoseEstimate_wpiBlue_MegaTag2(SHOOTER_LL_NAME);
+    //     LimelightHelpers.SetRobotOrientation(SHOOTER_LL_NAME,
+    //             poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    //     LimelightHelpers.PoseEstimate visionPoseEstimate = LimelightHelpers
+    //             .getBotPoseEstimate_wpiBlue_MegaTag2(SHOOTER_LL_NAME);
 
-        if (Math.abs(getGyroRate()) > MAX_TRUSTED_ANG_VEL_DEG_PER_SEC) { // degrees per second
-            rejectVisionUpdate = true;
-        }
+    //     if (Math.abs(getGyroRate()) > MAX_TRUSTED_ANG_VEL_DEG_PER_SEC) { // degrees per second
+    //         rejectVisionUpdate = true;
+    //     }
 
-        if (visionPoseEstimate.tagCount == 0) {
-            rejectVisionUpdate = true;
-        }
+    //     if (visionPoseEstimate.tagCount == 0) {
+    //         rejectVisionUpdate = true;
+    //     }
 
-        if (!rejectVisionUpdate) {
-            poseEstimator
-                    .setVisionMeasurementStdDevs(
-                            VecBuilder.fill(STD_DEV_X_METERS, STD_DEV_Y_METERS,
-                                    STD_DEV_HEADING_RADS));
-            poseEstimator.addVisionMeasurement(visionPoseEstimate.pose, visionPoseEstimate.timestampSeconds);
-        }
-    }
+    //     if (!rejectVisionUpdate) {
+    //         poseEstimator
+    //                 .setVisionMeasurementStdDevs(
+    //                         VecBuilder.fill(STD_DEV_X_METERS, STD_DEV_Y_METERS,
+    //                                 STD_DEV_HEADING_RADS));
+    //         poseEstimator.addVisionMeasurement(visionPoseEstimate.pose, visionPoseEstimate.timestampSeconds);
+    //     }
+    // }
 
     public double getGyroRate() {
         return gyro.getRate();

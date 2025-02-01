@@ -51,8 +51,8 @@ public final class Constants {
 
 	public static final class Drivetrainc {
 	// #region Subsystem Constants
-	public static final double wheelBase = CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
-	public static final double trackWidth = CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
+	public static final double wheelBase = 24.75; //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
+	public static final double trackWidth = 24.75;//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
 	// "swerveRadius" is the distance from the center of the robot to one of the
 	// modules
 	public static final double swerveRadius = Math.sqrt(Math.pow(wheelBase / 2, 2) + Math.pow(trackWidth / 2, 2));
@@ -212,15 +212,15 @@ public final class Constants {
 	public static final double driveIzone = .1;
 
 	public static final class Autoc {
-		public static final RobotConfig robotConfig = new RobotConfig( /*
-																			 * put in
-																			 * Constants.Drivetrain.Auto
-																			 */
-		false, // replan at start of path if robot not at start of path?
-		false, // replan if total error surpasses total error/spike threshold?
-		1.5, // total error threshold in meters that will cause the path to be replanned
-		0.8 // error spike threshold, in meters, that will cause the path to be replanned
-		);
+		// public static final RobotConfig robotConfig = new RobotConfig( /*
+		// 																	 * put in
+		// 																	 * Constants.Drivetrain.Auto
+		// 																	 */
+		// false, // replan at start of path if robot not at start of path?
+		// false, // replan if total error surpasses total error/spike threshold?
+		// 1.5, // total error threshold in meters that will cause the path to be replanned
+		// 0.8 // error spike threshold, in meters, that will cause the path to be replanned
+		// );
 		public static final PathConstraints pathConstraints = new PathConstraints(1.54, 6.86, 2 * Math.PI,
 		2 * Math.PI); // The constraints for this path. If using a differential drivetrain, the
 					// angular constraints have no effect.
