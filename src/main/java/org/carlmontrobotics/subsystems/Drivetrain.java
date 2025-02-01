@@ -55,6 +55,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 // import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 // import edu.wpi.first.units.Velocity;
@@ -683,16 +684,16 @@ public class Drivetrain extends SubsystemBase {
     // #region SysId Code
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
-    private final MutableMeasure<Voltage>[] m_appliedVoltage = new MutableMeasure[8];
+    private final Voltage[] m_appliedVoltage = new Voltage[8];
 
     // Mutable holder for unit-safe linear distance values, persisted to avoid
     // reallocation.
-    private final MutableMeasure<Distance>[] m_distance = new MutableMeasure[4];
+    private final Distance[] m_distance = new Distance[4];
     // Mutable holder for unit-safe linear velocity values, persisted to avoid
     // reallocation.
-    private final MutableMeasure<Velocity<Distance>>[] m_velocity = new MutableMeasure[4];
+    private final LinearVelocity[] m_velocity = new LinearVelocity[4];
     // edu.wpi.first.math.util.Units.Rotations beans;
-    private final MutableMeasure<Angle>[] m_revs = new MutableMeasure[4];
+    private final Angle[] m_revs = new Angle[4];
     private final MutableMeasure<Velocity<Angle>>[] m_revs_vel = new MutableMeasure[4];
 
     private enum SysIdTest {
@@ -734,7 +735,7 @@ public class Drivetrain extends SubsystemBase {
             defaultSysIdConfig,
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to give the driving voltage to the motors.
-                    (Measure<Voltage> volts) -> {
+                    (Voltage volts) -> {
                         driveMotors[0].setVoltage(volts.in(Volts));
                         driveMotors[1].setVoltage(volts.in(Volts));
                         modules[2].coast();
@@ -749,7 +750,7 @@ public class Drivetrain extends SubsystemBase {
     private SysIdRoutine backOnlyDriveRoutine = new SysIdRoutine(
             defaultSysIdConfig,
             new SysIdRoutine.Mechanism(
-                    (Measure<Voltage> volts) -> {
+                    (Voltage volts) -> {
                         modules[0].coast();
                         modules[1].coast();
                         modules[2].brake();
@@ -766,7 +767,7 @@ public class Drivetrain extends SubsystemBase {
     private SysIdRoutine allWheelsDriveRoutine = new SysIdRoutine(
             defaultSysIdConfig,
             new SysIdRoutine.Mechanism(
-                    (Measure<Voltage> volts) -> {
+                    (Voltage volts) -> {
                         for (SparkMax dm : driveMotors) {
                             dm.setVoltage(volts.in(Volts));
                         }
@@ -785,7 +786,7 @@ public class Drivetrain extends SubsystemBase {
                 // new SysIdRoutine.Config(Volts.of(.1).per(Seconds.of(.1)), Volts.of(.6),
                 // Seconds.of(3)),
                 new SysIdRoutine.Mechanism(
-                        (Measure<Voltage> volts) -> turnMotors[id].setVoltage(volts.in(Volts)),
+                        (Voltage volts) -> turnMotors[id].setVoltage(volts.in(Volts)),
                         log -> log.motor(logname + "_turn")
                                 .voltage(m_appliedVoltage[id + 4].mut_replace(
                                         // ^because drivemotors take up the first 4 slots of the unit holders
