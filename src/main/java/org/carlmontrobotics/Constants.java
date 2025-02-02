@@ -6,6 +6,19 @@ public final class Constants {
     // public static final class Drivetrain {
     //     public static final double MAX_SPEED_MPS = 2;
     // }
+
+    public static final int top = 1;
+    public static final int bottom = 1;
+    public static final int pincher = 1;
+
+    public static final double[] kP = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0};
+    public static final double[] kI = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0};
+    public static final double[] kD = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0};
+
+    public static final double[] kS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0};
+    public static final double[] kV = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0};
+    public static final double[] kA = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0};
+
     public static final class OI {
         public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;
 

@@ -12,7 +12,7 @@ import static org.carlmontrobotics.Constants.OI.*;
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator.*;
 import org.carlmontrobotics.Constants.OI.Manipulator;
-import org.carlmontrobotics.commands.RunAlgae;
+import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
 import org.carlmontrobotics.subsystems.CoralEffector;
 import org.carlmontrobotics.commands.IntakeCoral;
