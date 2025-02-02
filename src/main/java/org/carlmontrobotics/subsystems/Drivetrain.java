@@ -3,11 +3,9 @@
 package org.carlmontrobotics.subsystems;
 
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
-import static org.carlmontrobotics.Constants.Limelightc.*;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.carlmontrobotics.Constants;
@@ -104,12 +102,10 @@ import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Rotation;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volt;
 import static edu.wpi.first.units.Units.Meter;
-import org.carlmontrobotics.subsystems.LimelightHelpers;
 import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
 // Make sure this code is extraneous
 // import static edu.wpi.first.units.MutableMeasure.mutable;
@@ -1106,33 +1102,6 @@ public class Drivetrain extends SubsystemBase {
             module.move(0.0000000000001, angle);
         }
     }
-
-    // pose estimator stuff
-
-    // public void updateMT2PoseEstimator() {
-    //     boolean rejectVisionUpdate = false;
-
-    //     LimelightHelpers.SetRobotOrientation(SHOOTER_LL_NAME,
-    //             poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-    //     LimelightHelpers.PoseEstimate visionPoseEstimate = LimelightHelpers
-    //             .getBotPoseEstimate_wpiBlue_MegaTag2(SHOOTER_LL_NAME);
-
-    //     if (Math.abs(getGyroRate()) > MAX_TRUSTED_ANG_VEL_DEG_PER_SEC) { // degrees per second
-    //         rejectVisionUpdate = true;
-    //     }
-
-    //     if (visionPoseEstimate.tagCount == 0) {
-    //         rejectVisionUpdate = true;
-    //     }
-
-    //     if (!rejectVisionUpdate) {
-    //         poseEstimator
-    //                 .setVisionMeasurementStdDevs(
-    //                         VecBuilder.fill(STD_DEV_X_METERS, STD_DEV_Y_METERS,
-    //                                 STD_DEV_HEADING_RADS));
-    //         poseEstimator.addVisionMeasurement(visionPoseEstimate.pose, visionPoseEstimate.timestampSeconds);
-    //     }
-    // }
 
     public double getGyroRate() {
         return gyro.getRate();
