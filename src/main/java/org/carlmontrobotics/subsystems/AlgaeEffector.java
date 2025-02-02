@@ -78,23 +78,23 @@ public class AlgaeEffector extends SubsystemBase {
         SparkFlexConfig c = new SparkFlexConfig();
 
         a.closedLoop.pid(
-            Constants.kP[top],
-            Constants.kI[top],
-            Constants.kD[top]
+            Constants.kP[Constants.top],
+            Constants.kI[Constants.top],
+            Constants.kD[Constants.top]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         topMotor.configure(a, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         
         b.closedLoop.pid(
-            Constants.kP[bottom],
-            Constants.kI[bottom],
-            Constants.kD[bottom]
+            Constants.kP[Constants.bottom],
+            Constants.kI[Constants.bottom],
+            Constants.kD[Constants.bottom]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         bottomMotor.configure(b, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);   
     
         a.closedLoop.pid(
-            Constants.AlgaeEffectorc.kP[pincher],
-            Constants.AlgaeEffectorc.kI[pincher],
-            Constants.AlgaeEffectorc.kD[pincher]
+            Constants.kP[Constants.pincher],
+            Constants.kI[Constants.pincher],
+            Constants.kD[Constants.pincher]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(a, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
