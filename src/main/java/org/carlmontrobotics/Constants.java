@@ -42,6 +42,15 @@ public final class Constants {
 	public static final class AlgaeEffectorc {
 		public static final int upperMotorID = 1;
 		public static final int lowerMotorID = 2;
+
+        public static double intakeTopRPM = 1000;  
+        public static double intakeBottomRPM = 1000;  
+        public static double intakePincherRPM = 1000;  
+
+        public static double outtakeTopRPM = 2100;  
+        public static double outtakeBottomRPM = 2100;  
+        public static double outtakePincherRPM = 2100;  
+
 	}
     public static final class CoralEffectorc {
 		public static final int effectorMotorID = 3;

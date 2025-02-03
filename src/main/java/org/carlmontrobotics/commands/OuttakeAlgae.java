@@ -1,23 +1,22 @@
 package org.carlmontrobotics.commands;
+import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class OuttakeAlgae extends Command {
-  AlgaeEffector algaeEffector;
-  boolean stop;
-  int direction;
+  AlgaeEffector Algae;
 
-  public OuttakeAlgae(AlgaeEffector algaeEffector, int direction, boolean stop) {
-    addRequirements(this.algaeEffector = algaeEffector);
-    this.direction = direction;
-    this.stop = stop;    
+  public OuttakeAlgae(AlgaeEffector algaeEffector) {
+    addRequirements(this.Algae = algaeEffector);
   }
 
   @Override
   public void initialize() {
-    
+    Algae.setTopRPM(Constants.AlgaeEffectorc.outtakeTopRPM); 
+    Algae.setBottomRPM(Constants.AlgaeEffectorc.outtakeBottomRPM); 
+    Algae.setPincherRPM(Constants.AlgaeEffectorc.outtakePincherRPM); 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -28,12 +27,12 @@ public class OuttakeAlgae extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    Algae.stopMotors();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Algae.limitDetects();
   }
 }

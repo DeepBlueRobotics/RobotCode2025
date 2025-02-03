@@ -61,9 +61,9 @@ public class AlgaeEffector extends SubsystemBase {
     private final SparkClosedLoopController pidControllerBottom = bottomMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerPincher = pincherMotor.getClosedLoopController();
     
-    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(kS[top], kV[top], kA[top]);
-    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(kS[bottom], kV[bottom], kA[bottom]);
-    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(kS[pincher], kV[pincher], kA[pincher]);
+    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.top], Constants.kV[Constants.top], Constants.kA[Constants.top]);
+    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.bottom], Constants.kV[Constants.bottom], Constants.kA[Constants.bottom]);
+    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.pincher], Constants.kV[Constants.pincher], Constants.kA[Constants.pincher]);
     //TODO: add feedforward
 
     DigitalInput limitSwitch = new DigitalInput(1); 

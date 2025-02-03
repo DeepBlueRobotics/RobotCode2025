@@ -1,39 +1,46 @@
 package org.carlmontrobotics.commands;
+
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
+
+import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
+import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeAlgae extends Command {
-  AlgaeEffector algaeEffector;
-  boolean stop;
-  int direction;
+  private final AlgaeEffector Algae;
 
-  public IntakeAlgae(AlgaeEffector algaeEffector) {
-    addRequirements(this.algaeEffector = algaeEffector);
-    this.direction = direction;
-    this.stop = stop;    
+  public IntakeAlgae(AlgaeEffector Algae) {
+    addRequirements(this.Algae = Algae);
   }
 
   @Override
   public void initialize() {
-    
+    Algae.setTopRPM(Constants.AlgaeEffectorc.intakeTopRPM); 
+    Algae.setBottomRPM(Constants.AlgaeEffectorc.intakeBottomRPM); 
+    Algae.setPincherRPM(Constants.AlgaeEffectorc.intakePincherRPM); 
   }
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    Algae.stopMotors();
+    //TODO: Test different times
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    //distance sensor doesn't detect coral
+    //TODO: make distance sensor stuff
+    //TODO: add smartdashboard
+    return Algae.limitDetects();
   }
 }
