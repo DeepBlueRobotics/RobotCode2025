@@ -1,6 +1,7 @@
 package org.carlmontrobotics;
 
 import edu.wpi.first.wpilibj.XboxController.Axis;
+import edu.wpi.first.wpilibj.XboxController.Button;
 
 public final class Constants {
     // public static final class Drivetrain {
@@ -37,6 +38,8 @@ public final class Constants {
             //public static final int X = 0;
             public static final Axis OuttakeTrigger = Axis.kRightTrigger;
             public static final Axis IntakeTrigger = Axis.kLeftTrigger;
+            public static final int OuttakeBumper = Button.kRightBumper.value;
+            public static final int IntakeBumper = Button.kLeftBumper.value;
         }
     }
 	public static final class AlgaeEffectorc {

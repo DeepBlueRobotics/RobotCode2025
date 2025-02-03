@@ -15,12 +15,14 @@ import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
 import org.carlmontrobotics.subsystems.CoralEffector;
+import org.carlmontrobotics.commands.IntakeAlgae;
 import org.carlmontrobotics.commands.IntakeCoral;
 import org.carlmontrobotics.commands.OuttakeCoral;
 
 
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PS5Controller.Button;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 
 //commands
@@ -74,8 +76,13 @@ public class RobotContainer {
 
     axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
       .whileTrue(new OuttakeCoral(coralEffector));
+    
+    new JoystickButton(manipulatorController, OI.Manipulator.IntakeBumper)
+      .whileTrue(new IntakeAlgae(algaeEffector));
+    
+    new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
+      .whileTrue(new OuttakeAlgae(algaeEffector));
     }
-
     
 
     private Trigger axisTrigger(GenericHID controller, Axis axis) {
