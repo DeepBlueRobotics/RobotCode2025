@@ -143,7 +143,7 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModule moduleBR;
 
     private final Field2d field = new Field2d();
-    private final SparkClosedLoopController pidController = turnMotors[0].getClosedLoopController();
+    private final SparkClosedLoopController[] turnpidController = new SparkClosedLoopController[4];
     private SwerveModuleSim[] moduleSims;
     private SimDouble gyroYawSim;
     private Timer simTimer = new Timer();
@@ -260,6 +260,10 @@ public class Drivetrain extends SubsystemBase {
                 turnMotor.configure(turnConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
             }
 
+            for (int i=0; i<4; i++){
+                turnpidController[i] = turnMotors[i].getClosedLoopController();
+            }
+
             for (CANcoder coder : turnEncoders) {
                 coder.getAbsolutePosition().setUpdateFrequency(500);
                 coder.getPosition().setUpdateFrequency(500);
@@ -346,7 +350,10 @@ public class Drivetrain extends SubsystemBase {
         kP = SmartDashboard.getNumber("kP", 0);
         kI = SmartDashboard.getNumber("kI", 0);
         kD = SmartDashboard.getNumber("kD", 0);
-        pidController.setReference(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+
+        for (int i=0; i<4; i++){
+            turnpidController[i].setReference(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+        }
         
         // for (CANcoder coder : turnEncoders) {
         // SignalLogger.writeDouble("Regular position " + coder.toString(),
@@ -411,7 +418,6 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("back left encoder", moduleBL.getModuleAngle());
         SmartDashboard.putNumber("back right encoder", moduleBR.getModuleAngle());
     }
-
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
