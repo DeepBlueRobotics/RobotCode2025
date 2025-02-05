@@ -126,8 +126,7 @@ public class Drivetrain extends SubsystemBase {
     private SparkMax[] driveMotors = new SparkMax[] { null, null, null, null };
     private SparkMax[] turnMotors = new SparkMax[] { null, null, null, null };
     private CANcoder[] turnEncoders = new CANcoder[] { null, null, null, null };
-    
-    // gyro
+    private final SparkClosedLoopController pidController;
     public final float initPitch;
     public final float initRoll;
 
@@ -138,7 +137,6 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModule moduleBR;
 
     private final Field2d field = new Field2d();
-    private final SparkClosedLoopController pidController = turnMotors[0].getClosedLoopController();
     private SwerveModuleSim[] moduleSims;
     private SimDouble gyroYawSim;
     private Timer simTimer = new Timer();
@@ -148,10 +146,8 @@ public class Drivetrain extends SubsystemBase {
     double kI = 0;
     double kD = 0;
     public Drivetrain() {
-        SparkMaxConfig c = new SparkMaxConfig();
-        c.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        turnMotors[0].configure(c, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        // SmartDashboard.putNumber("Pose Estimator set x (m)", lastSetX);
+        
+        // SmartDashboard.putNumber("Pose Estimator t x (m)", lastSetX);
         // SmartDashboard.putNumber("Pose Estimator set y (m)", lastSetY);
         // SmartDashboard.putNumber("Pose Estimator set rotation (deg)",
         // lastSetTheta);
@@ -226,7 +222,7 @@ public class Drivetrain extends SubsystemBase {
             turnMotors[3] = new SparkMax(7, MotorType.kBrushless), 
             turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR), 3, pitchSupplier, rollSupplier);
             modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
-
+            pidController = turnMotors[0].getClosedLoopController();
             if (RobotBase.isSimulation()) {
                 moduleSims = new SwerveModuleSim[] {
                     moduleFL.createSim(), moduleFR.createSim(), moduleBL.createSim(), moduleBR.createSim()
@@ -243,7 +239,7 @@ public class Drivetrain extends SubsystemBase {
             driveConfig.smartCurrentLimit(MotorConfig.NEO.currentLimitAmps);
 
             for (SparkMax driveMotor : driveMotors) {
-                driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+                driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
             }
             SparkMaxConfig turnConfig = new SparkMaxConfig();
             turnConfig.encoder.positionConversionFactor(360/turnGearing);
@@ -261,7 +257,7 @@ public class Drivetrain extends SubsystemBase {
                 coder.getVelocity().setUpdateFrequency(500);
 
             }
-
+            turnConfig.closedLoop.pid(kP, kI, kD).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
             SmartDashboard.putData("Field", field);
 
             // for(SparkMax driveMotor : driveMotors)
