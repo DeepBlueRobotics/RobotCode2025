@@ -6,6 +6,9 @@ import static org.carlmontrobotics.Constants.Drivetrainc.*;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.carlmontrobotics.Constants;
@@ -27,7 +30,8 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
+import com.pathplanner.lib.controllers.PathFollowingController;
+import com.pathplanner.lib.util.DriveFeedforwards;
 // import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -93,6 +97,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -123,9 +128,9 @@ public class Drivetrain extends SubsystemBase {
     private boolean fieldOriented = true;
     private double fieldOffset = 0;
     // FIXME not for permanent use!!
-    private SparkMax[] driveMotors = new SparkMax[] { null, null, null, null };
-    private SparkMax[] turnMotors = new SparkMax[] { null, null, null, null };
-    private CANcoder[] turnEncoders = new CANcoder[] { null, null, null, null };
+    private SparkMax[] driveMotors  = new SparkMax[4];
+    private SparkMax[] turnMotors   = new SparkMax[4];
+    private CANcoder[] turnEncoders = new CANcoder[4];
     
     // gyro
     public final float initPitch;
@@ -401,10 +406,10 @@ public class Drivetrain extends SubsystemBase {
         // SmartDashboard.putNumber("Gyro Compass Heading", gyro.getCompassHeading());
         // SmartDashboard.putNumber("Compass Offset", compassOffset);
         // SmartDashboard.putBoolean("Current Magnetic Field Disturbance", gyro.isMagneticDisturbance());
-        // SmartDashboard.putNumber("front left encoder", moduleFL.getModuleAngle());
-        // SmartDashboard.putNumber("front right encoder", moduleFR.getModuleAngle());
-        // SmartDashboard.putNumber("back left encoder", moduleBL.getModuleAngle());
-        // SmartDashboard.putNumber("back right encoder", moduleBR.getModuleAngle());
+        SmartDashboard.putNumber("front left encoder", moduleFL.getModuleAngle());
+        SmartDashboard.putNumber("front right encoder", moduleFR.getModuleAngle());
+        SmartDashboard.putNumber("back left encoder", moduleBL.getModuleAngle());
+        SmartDashboard.putNumber("back right encoder", moduleBR.getModuleAngle());
     }
 
     @Override
@@ -479,6 +484,43 @@ public class Drivetrain extends SubsystemBase {
 //      * Max Vel: 1.54, Max Accel: 6.86
 //      * Max Angvel: 360, Max AngAccel: 180 (guesses!)
 //      */
+//     AutoBuilder.configure(
+//             this::getPose, // Robot pose supplier
+//             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+//             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+//             (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+//             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+//                 new PIDConstants(xPIDController[0], xPIDController[1], xPIDController[2], 0), //translation (drive) pid vals
+//                 new PIDConstants(thetaPIDController[0], thetaPIDController[1], thetaPIDController[2], 0), //rotation pid vals
+//                 Robot.kDefaultPeriod//robot period
+//             ),
+//             Autoc.robotConfig, // The robot configuration
+//             () -> {
+//               // Boolean supplier that controls when the path will be mirrored for the red alliance
+//               // This will flip the path being followed to the red side of the field.
+//               // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+//               var alliance = DriverStation.getAlliance();
+//               if (alliance.isPresent()) {
+//                 return alliance.get() == DriverStation.Alliance.Red;
+//               }
+//               return false;
+//             },
+//             this // Reference to this subsystem to set requirements
+//     );
+//     public static void configure(
+//         // Supplier<Pose2d> poseSupplier,
+//         this::getPose,
+//         // Consumer<Pose2d> resetPose,
+//         this::resetPoseEstimator,//FIXME not the right thing but ok
+//         // Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+//         this::getSpeeds, // :D
+//         // BiConsumer<ChassisSpeeds,DriveFeedforwards> output,
+//         // PathFollowingController controller,
+//         // RobotConfig robotConfig,
+//         // BooleanSupplier shouldFlipPath,
+//         // Subsystem... driveRequirements
+//     )
 //     AutoBuilder.configure(
 //         this::getPose, // :D
 //         this::setPose, // :D
