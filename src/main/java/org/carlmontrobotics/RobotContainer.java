@@ -47,13 +47,21 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
+    //intake
     new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false,1)); //wrong
+    //outake
     new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false,1));
+    //shooting
     new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false,1));
+    //STOP
     new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true,1));
+    //shoot
     new Trigger(() -> driverController.getPOV()==0).onTrue(new RunAlgae(algaeEffector, 3, false, 2));
+    //shoot
     new Trigger(() -> driverController.getPOV()==90).onTrue(new RunAlgae(algaeEffector, 3, false, 3));
+    //reverse shooting/ intake from reef
     new Trigger(() -> driverController.getPOV() ==180).onTrue(new RunAlgae(algaeEffector, 4, false, 1));
+    //reverse shooting/ intake from reef
     new Trigger(() -> driverController.getPOV() == 270).onTrue(new RunAlgae(algaeEffector, 5,false, 1));
     
 
