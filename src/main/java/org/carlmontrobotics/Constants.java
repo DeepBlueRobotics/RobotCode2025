@@ -89,8 +89,9 @@ public final class Constants {
 	// public static final boolean[] reversed = {true, true, true, true};
 	// Determine correct turnZero constants (FL, FR, BL, BR)
 	public static final double[] turnZeroDeg = RobotBase.isSimulation() ? new double[] {-90.0, -90.0, -90.0, -90.0 }
-	: (CONFIG.isSwimShady() ? new double[] { 85.7812, 85.0782, -96.9433, -162.9492 }
-		: new double[] { -48.6914, 63.3691, 94.1309, -6.7676 });/* real values here */
+	: new double[] {-162.9492, 85.0782, -96.9433, 85.7812};
+	//: (CONFIG.isSwimShady() ? new double[] { 85.7812, 85.0782, -96.9433, -162.9492 }
+	//	: new double[] { -48.6914, 63.3691, 94.1309, -6.7676 });/* real values here */
 
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
@@ -120,7 +121,7 @@ public final class Constants {
 	public static final boolean[] driveInversion = (CONFIG.isSwimShady()
 	? new boolean[] { false, false, false, false }
 	: new boolean[] { true, false, true, false });
-	public static final boolean[] turnInversion = { true, true, true, true };
+	public static final boolean[] turnInversion = { false, false, false, false };
 	// kS
 	public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
 	public static final double[] kBackwardVolts = kForwardVolts;
@@ -159,20 +160,20 @@ public final class Constants {
 
 	// #region Ports
 	//I think all of these are right
-	public static final int driveFrontLeftPort = 1;
-	public static final int driveFrontRightPort = 2;
-	public static final int driveBackLeftPort = 3;
-	public static final int driveBackRightPort = 4;
+	public static final int driveFrontLeftPort = 11;
+	public static final int driveFrontRightPort = 12;
+	public static final int driveBackLeftPort = 13;
+	public static final int driveBackRightPort = 14;
 
-	public static final int turnFrontLeftPort = 11;
-	public static final int turnFrontRightPort = 12;
-	public static final int turnBackLeftPort = 13;
-	public static final int turnBackRightPort = 14;
+	public static final int turnFrontLeftPort = 1;
+	public static final int turnFrontRightPort = 2;
+	public static final int turnBackLeftPort = 3;
+	public static final int turnBackRightPort = 4;
 	//to be configured
-	public static final int canCoderPortFL = 0;
-	public static final int canCoderPortFR = 3;
-	public static final int canCoderPortBL = 2;
-	public static final int canCoderPortBR = 1;
+	public static final int canCoderPortFL = 1;//0;
+	public static final int canCoderPortFR = 2;//3;
+	public static final int canCoderPortBL = 3;//2;
+	public static final int canCoderPortBR = 0;//1;
 
 	// #endregion
 
