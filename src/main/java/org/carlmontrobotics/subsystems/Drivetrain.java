@@ -132,7 +132,9 @@ public class Drivetrain extends SubsystemBase {
     //private SparkClosedLoopController[] turnEncoders = new SparkClosedLoopController[4];
     private SparkMax[] turnMotors   = new SparkMax[4];
     private CANcoder[] turnEncoders = new CANcoder[4];
-    
+    private double[] tempkPTurnArray = new double[4];
+    private double[] tempkITurnArray = new double[4];
+    private double[] tempkDTurnArray = new double[4];
     // gyro
     public final float initPitch;
     public final float initRoll;
@@ -257,6 +259,7 @@ public class Drivetrain extends SubsystemBase {
                 SparkMax driveMotor = driveMotors[i];
                 SparkMaxConfig tempConfig = new SparkMaxConfig().apply(driveConfig);
                 tempConfig.closedLoop.pid(
+                
                     Drivetrainc.drivekP[i],
                     Drivetrainc.drivekI[i],
                     Drivetrainc.drivekD[i]
@@ -276,9 +279,9 @@ public class Drivetrain extends SubsystemBase {
                 SparkMax turnMotor = turnMotors[i];
                 SparkMaxConfig tempConfig = new SparkMaxConfig().apply(turnConfig);
                 tempConfig.closedLoop.pid(
-                    Drivetrainc.turnkP[i],
-                    Drivetrainc.turnkI[i],
-                    Drivetrainc.turnkD[i]
+                    tempkPTurnArray[i],
+                    tempkITurnArray[i],
+                    tempkDTurnArray[i]
                 ).minOutput(Drivetrainc.turnkS[i])
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
                 // tempConfig.absoluteEncoder.positionConversionFactor(Drivetrainc.turnGearing);
@@ -398,6 +401,9 @@ public class Drivetrain extends SubsystemBase {
                 turnMotors[i].getClosedLoopController().setReference(gtp, ControlType.kPosition);
                 driveMotors[i].getClosedLoopController().setReference(gdv, ControlType.kVelocity);
             }
+            tempkPTurnArray[i] = SmartDashboard.getNumber("kP"+i, 0);
+            tempkITurnArray[i] = SmartDashboard.getNumber("kI"+i, 0);
+            tempkDTurnArray[i] = SmartDashboard.getNumber("kD"+i, 0);
             CANcoder cc = turnEncoders[i];
             SmartDashboard.putNumber("CANcoder"+i, cc.getAbsolutePosition().getValue().magnitude());
             SmartDashboard.putNumber("turnCoder"+i, turnMotors[i].getEncoder().getPosition());
