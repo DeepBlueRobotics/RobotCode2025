@@ -134,7 +134,7 @@ public class AlgaeEffector extends SubsystemBase {
         return topEncoder.getVelocity() == rpm;
     }
 
-    public boolean checkIfAtBottomRPM() {
+    public boolean checkIfAtBottomRPM(double rpm) {
         return bottomEncoder.getVelocity() == rpm;
     }
 
