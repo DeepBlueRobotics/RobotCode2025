@@ -218,23 +218,23 @@ public class Drivetrain extends SubsystemBase {
 
 
             //moduleFL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FL, 
-            driveMotors[0] = new SparkMax(0, MotorType.kBrushless); 
-            turnMotors[0] = new SparkMax(1, MotorType.kBrushless);
+            driveMotors[0] = new SparkMax(Drivetrainc.driveFrontLeftPort, MotorType.kBrushless); 
+            turnMotors[0] = new SparkMax(Drivetrainc.turnFrontLeftPort, MotorType.kBrushless);
             turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL);
 
             //moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
-            driveMotors[1] = new SparkMax(2, MotorType.kBrushless);
-            turnMotors[1] = new SparkMax(3, MotorType.kBrushless);
+            driveMotors[1] = new SparkMax(Drivetrainc.driveFrontRightPort, MotorType.kBrushless);
+            turnMotors[1] = new SparkMax(Drivetrainc.turnFrontRightPort, MotorType.kBrushless);
             turnEncoders[1] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFR);
 
             //moduleBL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BL, 
-            driveMotors[2] = new SparkMax(4, MotorType.kBrushless);
-            turnMotors[2] = new SparkMax(5, MotorType.kBrushless);
+            driveMotors[2] = new SparkMax(Drivetrainc.driveBackLeftPort, MotorType.kBrushless);
+            turnMotors[2] = new SparkMax(Drivetrainc.turnBackLeftPort, MotorType.kBrushless);
             turnEncoders[2] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBL);
 
             //moduleBR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BR, 
-            driveMotors[3] = new SparkMax(6, MotorType.kBrushless);
-            turnMotors[3] = new SparkMax(7, MotorType.kBrushless);
+            driveMotors[3] = new SparkMax(Drivetrainc.driveBackRightPort, MotorType.kBrushless);
+            turnMotors[3] = new SparkMax(Drivetrainc.turnBackRightPort, MotorType.kBrushless);
             turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR);
             //modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
 
@@ -375,15 +375,28 @@ public class Drivetrain extends SubsystemBase {
         double dkP = SmartDashboard.getNumber("dkP", 0);
         double dkI = SmartDashboard.getNumber("dkI", 0);
         double dkD = SmartDashboard.getNumber("dkD", 0);
+        // for (int i=0;i<4;i++) {
+        //     SparkMax turnMotor = turnMotors[i];
+        //     SparkMaxConfig tempConfig = new SparkMaxConfig().apply(turnConfig);
+        //     tempConfig.closedLoop.pid(
+        //         Drivetrainc.turnkP[i],
+        //         Drivetrainc.turnkI[i],
+        //         Drivetrainc.turnkD[i]
+        //     ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+        //     //turnConfig.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        //     turnMotor.configure(turnConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        //     // turnpidController[i]=turnMotor.getClosedLoopController();
+        // }
 
-        for (int i=0; i<4; i++){
+        for (int i=0; i<3; i++){
             turnMotors[i].getClosedLoopController().setReference(gtp, ControlType.kPosition, ClosedLoopSlot.kSlot0);
 
             CANcoder cc = turnEncoders[i];
             SmartDashboard.putNumber("CANcoder"+i, cc.getAbsolutePosition().getValue().magnitude());
             SmartDashboard.putNumber("turnCoder"+i, turnMotors[i].getEncoder().getPosition());
             SmartDashboard.putNumber("driveCoder"+i, driveMotors[i].getEncoder().getPosition());
-        }      
+        }     
+        turnMotors[3].set(.2); 
         // for (CANcoder coder : turnEncoders) {
         // SignalLogger.writeDouble("Regular position " + coder.toString(),
         // coder.getPosition().getValue());
