@@ -112,8 +112,7 @@ public final class Constants {
 	// Forward: 1.72, 1.71, 1.92, 1.94
 	// Backward: 1.92, 1.92, 2.11, 1.89
 	// Order of modules: (FL, FR, BL, BR)
-	public static final double[] drivekP = CONFIG.isSwimShady() ? new double[] { 2.8, 2.8, 2.8, 2.8 }
-	: new double[] { 1.75, 1.75, 1.75, .75 }; // {1.82/100, 1.815/100, 2.015/100,
+	public static final double[] drivekP = new double[] { 1.75, 1.75, 1.75, .75 }; // {1.82/100, 1.815/100, 2.015/100,
 															// 1.915/100};
 	public static final double[] drivekI = { 0, 0, 0, 0 };
 	public static final double[] drivekD = { 0, 0, 0, 0 };

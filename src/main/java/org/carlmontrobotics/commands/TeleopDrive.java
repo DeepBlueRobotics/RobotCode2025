@@ -64,9 +64,9 @@ public class TeleopDrive extends Command {
     // kNormalDriveRotation = SmartDashboard.getNumber("normal turn const", kNormalDriveRotation);
     // kNormalDriveSpeed = SmartDashboard.getNumber("normal speed const", kNormalDriveSpeed);
 
-    // SmartDashboard.putNumber("fwd", speeds[0]);
-    // SmartDashboard.putNumber("strafe", speeds[1]);
-    // SmartDashboard.putNumber("turn", speeds[2]);
+    SmartDashboard.putNumber("fwd", speeds[0]);
+    SmartDashboard.putNumber("strafe", speeds[1]);
+    SmartDashboard.putNumber("turn", speeds[2]);
     drivetrain.drive(speeds[0], speeds[1], speeds[2]);
   }
 
