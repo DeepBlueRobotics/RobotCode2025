@@ -8,9 +8,7 @@ public final class Constants {
     //     public static final double MAX_SPEED_MPS = 2;
     // }
 
-    public static final int top = 1;
-    public static final int bottom = 1;
-    public static final int pincher = 1;
+
 
     public static final double[] kP = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0};
     public static final double[] kI = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0};
@@ -34,7 +32,7 @@ public final class Constants {
         	public static final int rightBumper = 6;
         }
         public static final class Manipulator {
-            public static final int manipulatorPort =  5;
+            public static final int manipulatorPort =  2;
             //public static final int X = 0;
             public static final Axis OuttakeTrigger = Axis.kRightTrigger;
             public static final Axis IntakeTrigger = Axis.kLeftTrigger;
@@ -45,6 +43,10 @@ public final class Constants {
 	public static final class AlgaeEffectorc {
 		public static final int upperMotorID = 1;
 		public static final int lowerMotorID = 2;
+        public static final int pinchMotorID = 3;
+		public static final int TopkS = 1;
+		public static final int BottomkS = 1;
+		public static final int PincherkS = 1;
 
         public static double intakeTopRPM = 1000;  
         public static double intakeBottomRPM = 1000;  
@@ -56,12 +58,12 @@ public final class Constants {
 
 	}
     public static final class CoralEffectorc {
-		public static final int effectorMotorID = 3;
-        public static final int effectorDistanceSensorID = 4;
+		public static final int effectorMotorID = 4;
+        public static final int effectorDistanceSensorID = 5;
         public static final double kP = 0.0;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0;
-        public static double intakeRPM = 1000;  
+        public static double intakeRPM = -1000;  
         public static double outtakeRPM = 2100;  
         //TODO: Change after testing
         public static final int DETECT_DISTANCE_INCHES = 3;

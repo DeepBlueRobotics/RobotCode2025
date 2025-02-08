@@ -49,9 +49,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class AlgaeEffector extends SubsystemBase {
-    private SparkFlex topMotor = new SparkFlex(Constants.CoralEffectorc.effectorMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
-    private SparkMax bottomMotor = new SparkMax(Constants.CoralEffectorc.effectorMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
-    private SparkFlex pincherMotor = new SparkFlex(Constants.CoralEffectorc.effectorMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
+    private SparkFlex topMotor = new SparkFlex(Constants.AlgaeEffectorc.upperMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
+    private SparkMax bottomMotor = new SparkMax(Constants.AlgaeEffectorc.lowerMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
+    private SparkFlex pincherMotor = new SparkFlex(Constants.AlgaeEffectorc.pinchMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
     
     private final RelativeEncoder topEncoder = topMotor.getEncoder();
     private final RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
@@ -61,9 +61,9 @@ public class AlgaeEffector extends SubsystemBase {
     private final SparkClosedLoopController pidControllerBottom = bottomMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerPincher = pincherMotor.getClosedLoopController();
     
-    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.top], Constants.kV[Constants.top], Constants.kA[Constants.top]);
-    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.bottom], Constants.kV[Constants.bottom], Constants.kA[Constants.bottom]);
-    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.pincher], Constants.kV[Constants.pincher], Constants.kA[Constants.pincher]);
+    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.TopkS], Constants.kV[Constants.AlgaeEffectorc.TopkS], Constants.kA[Constants.AlgaeEffectorc.TopkS]);
+    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.BottomkS], Constants.kV[Constants.AlgaeEffectorc.BottomkS], Constants.kA[Constants.AlgaeEffectorc.BottomkS]);
+    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.PincherkS], Constants.kV[Constants.AlgaeEffectorc.PincherkS], Constants.kA[Constants.AlgaeEffectorc.PincherkS]);
     //TODO: add feedforward
 
     DigitalInput limitSwitch = new DigitalInput(1); 
@@ -73,30 +73,30 @@ public class AlgaeEffector extends SubsystemBase {
     }
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
-        SparkFlexConfig a = new SparkFlexConfig();
-        SparkFlexConfig b = new SparkFlexConfig();
-        SparkFlexConfig c = new SparkFlexConfig();
-
-        a.closedLoop.pid(
-            Constants.kP[Constants.top],
-            Constants.kI[Constants.top],
-            Constants.kD[Constants.top]
-            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        topMotor.configure(a, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
+        SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
         
-        b.closedLoop.pid(
-            Constants.kP[Constants.bottom],
-            Constants.kI[Constants.bottom],
-            Constants.kD[Constants.bottom]
+
+        pincherMotorConfig.closedLoop.pid(
+            Constants.kP[Constants.AlgaeEffectorc.TopkS],
+            Constants.kI[Constants.AlgaeEffectorc.TopkS],
+            Constants.kD[Constants.AlgaeEffectorc.TopkS]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        bottomMotor.configure(b, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);   
+        topMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        
+        bottomMotorConfig.closedLoop.pid(
+            Constants.kP[Constants.AlgaeEffectorc.BottomkS],
+            Constants.kI[Constants.AlgaeEffectorc.BottomkS],
+            Constants.kD[Constants.AlgaeEffectorc.BottomkS]
+            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        bottomMotor.configure(bottomMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);   
     
-        a.closedLoop.pid(
-            Constants.kP[Constants.pincher],
-            Constants.kI[Constants.pincher],
-            Constants.kD[Constants.pincher]
+        pincherMotorConfig.closedLoop.pid(
+            Constants.kP[Constants.AlgaeEffectorc.PincherkS],
+            Constants.kI[Constants.AlgaeEffectorc.PincherkS],
+            Constants.kD[Constants.AlgaeEffectorc.PincherkS]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        pincherMotor.configure(a, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
     //----------------------------------------------------------------------------------------
 

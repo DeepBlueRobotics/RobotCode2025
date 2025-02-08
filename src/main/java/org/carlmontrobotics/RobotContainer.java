@@ -71,10 +71,10 @@ public class RobotContainer {
 
 
   private void setBindingsManipulator() {
-    axisTrigger(manipulatorController, OI.Manipulator.OuttakeTrigger)
+    axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
       .whileTrue(new IntakeCoral(coralEffector));
 
-    axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
+    axisTrigger(manipulatorController, OI.Manipulator.OuttakeTrigger)
       .whileTrue(new OuttakeCoral(coralEffector));
     
     new JoystickButton(manipulatorController, OI.Manipulator.IntakeBumper)

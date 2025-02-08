@@ -12,12 +12,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class OuttakeCoral extends Command {
   private final CoralEffector Coral;
+  private final Timer timer = new Timer();
   public OuttakeCoral(CoralEffector Coral) {
     addRequirements(this.Coral = Coral);
   }
 
   @Override
   public void initialize() {
+    timer.reset();
+    timer.start();
     Coral.setRPM(Constants.CoralEffectorc.outtakeRPM);
   }
 
@@ -37,6 +40,6 @@ public class OuttakeCoral extends Command {
     //distance sensor doesn't detect coral
     //TODO: make distance sensor stuff
     //TODO: add smartdashboard
-    return !Coral.coralDetects() && !Coral.limitDetects();
+    return (!Coral.coralDetects() && !Coral.limitDetects()) || timer.get() > 4;
   }
 }

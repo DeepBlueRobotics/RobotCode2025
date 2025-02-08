@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class OuttakeAlgae extends Command {
   AlgaeEffector Algae;
-
+  private final Timer timer = new Timer(); 
   public OuttakeAlgae(AlgaeEffector algaeEffector) {
     addRequirements(this.Algae = algaeEffector);
   }
@@ -17,6 +17,7 @@ public class OuttakeAlgae extends Command {
     Algae.setTopRPM(Constants.AlgaeEffectorc.outtakeTopRPM); 
     Algae.setBottomRPM(Constants.AlgaeEffectorc.outtakeBottomRPM); 
     Algae.setPincherRPM(Constants.AlgaeEffectorc.outtakePincherRPM); 
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,6 +34,6 @@ public class OuttakeAlgae extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Algae.limitDetects();
+    return Algae.limitDetects() || timer.get() > 1;
   }
 }
