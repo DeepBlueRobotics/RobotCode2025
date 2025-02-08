@@ -20,6 +20,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.hal.SimDouble;
@@ -74,15 +75,16 @@ public class AlgaeEffector extends SubsystemBase {
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
         SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
-        SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
+        SparkMaxConfig bottomMotorConfig = new SparkMaxConfig();
+        SparkFlexConfig topMotorConfig = new SparkFlexConfig();
         
 
-        pincherMotorConfig.closedLoop.pid(
+        topMotorConfig.closedLoop.pid(
             Constants.kP[Constants.AlgaeEffectorc.TopkS],
             Constants.kI[Constants.AlgaeEffectorc.TopkS],
             Constants.kD[Constants.AlgaeEffectorc.TopkS]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        topMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        topMotor.configure(topMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         
         bottomMotorConfig.closedLoop.pid(
             Constants.kP[Constants.AlgaeEffectorc.BottomkS],
@@ -126,6 +128,14 @@ public class AlgaeEffector extends SubsystemBase {
         setTopRPM(0);
         setBottomRPM(0);
         setPincherRPM(0);
+    }
+
+    public boolean checkIfAtTopRPM(double rpm) {
+        return topEncoder.getVelocity() == rpm;
+    }
+
+    public boolean checkIfAtBottomRPM() {
+        return bottomEncoder.getVelocity() == rpm;
     }
 
     public void setSpeed(double speed) {
