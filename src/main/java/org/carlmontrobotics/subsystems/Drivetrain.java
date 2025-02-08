@@ -132,9 +132,6 @@ public class Drivetrain extends SubsystemBase {
     //private SparkClosedLoopController[] turnEncoders = new SparkClosedLoopController[4];
     private SparkMax[] turnMotors   = new SparkMax[4];
     private CANcoder[] turnEncoders = new CANcoder[4];
-    private double[] tempkPTurnArray = new double[4];
-    private double[] tempkITurnArray = new double[4];
-    private double[] tempkDTurnArray = new double[4];
     // gyro
     public final float initPitch;
     public final float initRoll;
@@ -258,11 +255,11 @@ public class Drivetrain extends SubsystemBase {
             for (int i=0;i<4;i++) {
                 SparkMax driveMotor = driveMotors[i];
                 SparkMaxConfig tempConfig = new SparkMaxConfig().apply(driveConfig);
-                tempConfig.closedLoop.pid(
-                
+                tempConfig.closedLoop.pidf(
                     Drivetrainc.drivekP[i],
                     Drivetrainc.drivekI[i],
-                    Drivetrainc.drivekD[i]
+                    Drivetrainc.drivekD[i],
+                    Drivetrainc.drivekS[i]
                 ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
                 tempConfig.absoluteEncoder.positionConversionFactor(Drivetrainc.driveGearing);
                 //driveConfig.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
@@ -278,11 +275,12 @@ public class Drivetrain extends SubsystemBase {
             for (int i=0;i<4;i++) {
                 SparkMax turnMotor = turnMotors[i];
                 SparkMaxConfig tempConfig = new SparkMaxConfig().apply(turnConfig);
-                tempConfig.closedLoop.pid(
-                    tempkPTurnArray[i],
-                    tempkITurnArray[i],
-                    tempkDTurnArray[i]
-                ).minOutput(Drivetrainc.turnkS[i])
+                tempConfig.closedLoop.pidf(
+                    Drivetrainc.turnkP[i],
+                    Drivetrainc.turnkI[i],
+                    Drivetrainc.turnkD[i],
+                    Drivetrainc.turnkS[i]
+                )
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
                 // tempConfig.absoluteEncoder.positionConversionFactor(Drivetrainc.turnGearing);
                 //turnConfig.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
@@ -382,28 +380,11 @@ public class Drivetrain extends SubsystemBase {
         // double dkI = SmartDashboard.getNumber("dkI", 0);
         // double dkD = SmartDashboard.getNumber("dkD", 0);
 
-        //TODO ADD SMARTDASHOARD FUNCTIONALITY TO TUNE!!!
-        // for (int i=0;i<4;i++) {
-        //     SparkMax turnMotor = turnMotors[i];
-        //     SparkMaxConfig tempConfig = new SparkMaxConfig().apply(turnConfig);
-        //     tempConfig.closedLoop.pid(
-        //         Drivetrainc.turnkP[i],
-        //         Drivetrainc.turnkI[i],
-        //         Drivetrainc.turnkD[i]
-        //     ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-        //     //turnConfig.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        //     turnMotor.configure(turnConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-        //     // turnpidController[i]=turnMotor.getClosedLoopController();
-        // }
-
         for (int i=0; i<4; i++){
             if (i!=3){
                 turnMotors[i].getClosedLoopController().setReference(gtp, ControlType.kPosition);
                 driveMotors[i].getClosedLoopController().setReference(gdv, ControlType.kVelocity);
             }
-            tempkPTurnArray[i] = SmartDashboard.getNumber("kP"+i, 0);
-            tempkITurnArray[i] = SmartDashboard.getNumber("kI"+i, 0);
-            tempkDTurnArray[i] = SmartDashboard.getNumber("kD"+i, 0);
             CANcoder cc = turnEncoders[i];
             SmartDashboard.putNumber("CANcoder"+i, cc.getAbsolutePosition().getValue().magnitude());
             SmartDashboard.putNumber("turnCoder"+i, turnMotors[i].getEncoder().getPosition());
@@ -412,6 +393,43 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("turnSet"+i, turnMotors[i].get());
         }     
         turnMotors[3].set(.2); 
+
+        //update new pid values
+        for (int i=0;i<4;i++) {
+            SparkMax turn = turnMotors[i];
+            SparkMax drive = driveMotors[i];
+            SparkMaxConfig ttconfig = new SparkMaxConfig();
+            SparkMaxConfig tdconfig = new SparkMaxConfig();
+            ttconfig.closedLoop.pidf(//t for turn
+                SmartDashboard.getNumber("t-p-"+i, 0),
+                SmartDashboard.getNumber("t-i-"+i, 0),
+                SmartDashboard.getNumber("t-d-"+i, 0),
+                SmartDashboard.getNumber("t-kS-"+i, 0)
+            );
+            tdconfig.closedLoop.pidf(//d for drive
+                SmartDashboard.getNumber("d-p-"+i, 0),
+                SmartDashboard.getNumber("d-i-"+i, 0),
+                SmartDashboard.getNumber("d-d-"+i, 0),
+                SmartDashboard.getNumber("d-kS-"+i, 0)
+            );
+            turn.configure(ttconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+            drive.configure(tdconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        }
+
+        //smartdashboard pid puts
+        for (int i=0;i<4;i++) {
+            SparkMax turn = turnMotors[i];
+            SparkMax drive = driveMotors[i];
+            SmartDashboard.putNumber("t-p-"+i, turn.configAccessor.closedLoop.getP());
+            SmartDashboard.putNumber("t-i-"+i, turn.configAccessor.closedLoop.getP());
+            SmartDashboard.putNumber("t-d-"+i, turn.configAccessor.closedLoop.getP());
+            SmartDashboard.putNumber("t-kS-"+i, turn.configAccessor.closedLoop.getFF());
+
+            SmartDashboard.putNumber("d-p-"+i, drive.configAccessor.closedLoop.getP());
+            SmartDashboard.putNumber("d-i-"+i, drive.configAccessor.closedLoop.getP());
+            SmartDashboard.putNumber("d-d-"+i, drive.configAccessor.closedLoop.getP());
+            SmartDashboard.putNumber("d-kS-"+i, drive.configAccessor.closedLoop.getFF());
+        }
         // for (CANcoder coder : turnEncoders) {
         // SignalLogger.writeDouble("Regular position " + coder.toString(),
         // coder.getPosition().getValue());

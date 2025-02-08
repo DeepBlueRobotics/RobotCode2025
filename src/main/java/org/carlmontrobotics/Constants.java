@@ -116,6 +116,7 @@ public final class Constants {
 															// 1.915/100};
 	public static final double[] drivekI = { 1, 1, 1, 1 };
 	public static final double[] drivekD = { 0, 0, 0, 0 };
+	public static final double[] drivekS = { 0, 0, 0, 0 };
 	public static final boolean[] driveInversion = (CONFIG.isSwimShady()
 	? new boolean[] { false, false, false, false }
 	: new boolean[] { true, false, true, false });
