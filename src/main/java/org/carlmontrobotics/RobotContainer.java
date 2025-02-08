@@ -81,7 +81,7 @@ public class RobotContainer {
       .whileTrue(new IntakeAlgae(algaeEffector));
     
     new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
-      .whileTrue(new OuttakeAlgae(algaeEffector));
+      .whileFalse(new OuttakeAlgae(algaeEffector));
     }
     
 

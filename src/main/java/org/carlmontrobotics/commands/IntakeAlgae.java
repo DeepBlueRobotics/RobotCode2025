@@ -12,13 +12,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeAlgae extends Command {
   private final AlgaeEffector Algae;
-
+  private final Timer timer = new Timer();
   public IntakeAlgae(AlgaeEffector Algae) {
     addRequirements(this.Algae = Algae);
   }
 
   @Override
   public void initialize() {
+    timer.reset();
+    timer.start();
     Algae.setTopRPM(Constants.AlgaeEffectorc.intakeTopRPM); 
     Algae.setBottomRPM(Constants.AlgaeEffectorc.intakeBottomRPM); 
     Algae.setPincherRPM(Constants.AlgaeEffectorc.intakePincherRPM); 
@@ -41,6 +43,6 @@ public class IntakeAlgae extends Command {
     //distance sensor doesn't detect coral
     //TODO: make distance sensor stuff
     //TODO: add smartdashboard
-    return Algae.limitDetects();
+    return Algae.limitDetects() || timer.get() > 1; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }
