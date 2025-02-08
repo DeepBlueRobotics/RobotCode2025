@@ -261,13 +261,14 @@ public class Drivetrain extends SubsystemBase {
                     Drivetrainc.drivekI[i],
                     Drivetrainc.drivekD[i]
                 ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+                tempConfig.absoluteEncoder.positionConversionFactor(Drivetrainc.driveGearing);
                 //driveConfig.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-                driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+                driveMotor.configure(tempConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
                 //drivepidController[i]=driveMotor.getClosedLoopController();
             }
             SparkMaxConfig turnConfig = new SparkMaxConfig();
-            turnConfig.encoder.positionConversionFactor(360/turnGearing);
-            turnConfig.encoder.positionConversionFactor(360/turnGearing/60);
+            turnConfig.absoluteEncoder.positionConversionFactor(360/turnGearing);
+            // turnConfig.encoder.positionConversionFactor(360/turnGearing/60);
             turnConfig.encoder.uvwAverageDepth(2);
             turnConfig.encoder.uvwMeasurementPeriod(16);
 
@@ -278,9 +279,11 @@ public class Drivetrain extends SubsystemBase {
                     Drivetrainc.turnkP[i],
                     Drivetrainc.turnkI[i],
                     Drivetrainc.turnkD[i]
-                ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+                ).minOutput(Drivetrainc.turnkS[i])
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+                // tempConfig.absoluteEncoder.positionConversionFactor(Drivetrainc.turnGearing);
                 //turnConfig.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-                turnMotor.configure(turnConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+                turnMotor.configure(tempConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
                 // turnpidController[i]=turnMotor.getClosedLoopController();
             }
 
@@ -365,16 +368,18 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.getNumber("Velocity FL: ", turnEncoders[0].getVelocity().getValueAsDouble());
-        double gtp = SmartDashboard.getNumber("g tp", 0);
-        double gdp = SmartDashboard.getNumber("g dp", 0);
-        double gdv = SmartDashboard.getNumber("g dv", 0);
+        double gtp = SmartDashboard.getNumber("g tp", 0);//goal turn pos
+        double gdp = SmartDashboard.getNumber("g dp", 0);//goal drive pos
+        double gdv = SmartDashboard.getNumber("g dv", 0);//goal drive vel
 
-        double tkP = SmartDashboard.getNumber("tkP", 0);
-        double tkI = SmartDashboard.getNumber("tkI", 0);
-        double tkD = SmartDashboard.getNumber("tkD", 0);
-        double dkP = SmartDashboard.getNumber("dkP", 0);
-        double dkI = SmartDashboard.getNumber("dkI", 0);
-        double dkD = SmartDashboard.getNumber("dkD", 0);
+        // double tkP = SmartDashboard.getNumber("tkP", 0);
+        // double tkI = SmartDashboard.getNumber("tkI", 0);
+        // double tkD = SmartDashboard.getNumber("tkD", 0);
+        // double dkP = SmartDashboard.getNumber("dkP", 0);
+        // double dkI = SmartDashboard.getNumber("dkI", 0);
+        // double dkD = SmartDashboard.getNumber("dkD", 0);
+
+        //TODO ADD SMARTDASHOARD FUNCTIONALITY TO TUNE!!!
         // for (int i=0;i<4;i++) {
         //     SparkMax turnMotor = turnMotors[i];
         //     SparkMaxConfig tempConfig = new SparkMaxConfig().apply(turnConfig);
@@ -388,13 +393,17 @@ public class Drivetrain extends SubsystemBase {
         //     // turnpidController[i]=turnMotor.getClosedLoopController();
         // }
 
-        for (int i=0; i<3; i++){
-            turnMotors[i].getClosedLoopController().setReference(gtp, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-
+        for (int i=0; i<4; i++){
+            if (i!=3){
+                turnMotors[i].getClosedLoopController().setReference(gtp, ControlType.kPosition);
+                driveMotors[i].getClosedLoopController().setReference(gdv, ControlType.kVelocity);
+            }
             CANcoder cc = turnEncoders[i];
             SmartDashboard.putNumber("CANcoder"+i, cc.getAbsolutePosition().getValue().magnitude());
             SmartDashboard.putNumber("turnCoder"+i, turnMotors[i].getEncoder().getPosition());
             SmartDashboard.putNumber("driveCoder"+i, driveMotors[i].getEncoder().getPosition());
+            SmartDashboard.putNumber("turnCurr"+i, turnMotors[i].getOutputCurrent());
+            SmartDashboard.putNumber("turnSet"+i, turnMotors[i].get());
         }     
         turnMotors[3].set(.2); 
         // for (CANcoder coder : turnEncoders) {
