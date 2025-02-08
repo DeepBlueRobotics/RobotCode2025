@@ -73,30 +73,30 @@ public class AlgaeEffector extends SubsystemBase {
     }
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
-        SparkFlexConfig a = new SparkFlexConfig();
-        SparkFlexConfig b = new SparkFlexConfig();
-        SparkFlexConfig c = new SparkFlexConfig();
+        SparkFlexConfig topConfig = new SparkFlexConfig();
+        SparkFlexConfig bottomConfig = new SparkFlexConfig();
+        SparkFlexConfig pincherConfig = new SparkFlexConfig();
 
-        a.closedLoop.pid(
+        topConfig.closedLoop.pid(
             Constants.kP[Constants.top],
             Constants.kI[Constants.top],
             Constants.kD[Constants.top]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        topMotor.configure(a, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        topMotor.configure(topConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         
-        b.closedLoop.pid(
+        bottomConfig.closedLoop.pid(
             Constants.kP[Constants.bottom],
             Constants.kI[Constants.bottom],
             Constants.kD[Constants.bottom]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        bottomMotor.configure(b, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);   
+        bottomMotor.configure(bottomConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);   
     
-        a.closedLoop.pid(
+        pincherConfig.closedLoop.pid(
             Constants.kP[Constants.pincher],
             Constants.kI[Constants.pincher],
             Constants.kD[Constants.pincher]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        pincherMotor.configure(a, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        pincherMotor.configure(pincherConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
     //----------------------------------------------------------------------------------------
 

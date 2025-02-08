@@ -52,13 +52,13 @@ public class CoralEffector extends SubsystemBase {
     }
 
     public CoralEffector() {
-        SparkFlexConfig c = new SparkFlexConfig();
-        c.closedLoop.pid(
+        SparkFlexConfig effectorConfig = new SparkFlexConfig();
+        effectorConfig.closedLoop.pid(
             Constants.CoralEffectorc.kP,
             Constants.CoralEffectorc.kI,
             Constants.CoralEffectorc.kD
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        effectorMotor.configure(c, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        effectorMotor.configure(effectorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         //Will add distance sensor later
 
     }
