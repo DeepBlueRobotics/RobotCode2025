@@ -1,0 +1,10 @@
+[
+  {
+    "name": "/SmartDashboard/babymode",
+    "type": "boolean",
+    "value": false,
+    "properties": {
+      "persistent": true
+    }
+  }
+]
