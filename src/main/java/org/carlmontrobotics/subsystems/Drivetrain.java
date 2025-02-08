@@ -126,7 +126,7 @@ public class Drivetrain extends SubsystemBase {
     private SparkMax[] driveMotors = new SparkMax[] { null, null, null, null };
     private SparkMax[] turnMotors = new SparkMax[] { null, null, null, null };
     private CANcoder[] turnEncoders = new CANcoder[] { null, null, null, null };
-    private final SparkClosedLoopController pidController;
+    private final SparkClosedLoopController[] turnPidControllers = new SparkClosedLoopController[] {null, null, null, null};
     public final float initPitch;
     public final float initRoll;
 
@@ -222,7 +222,10 @@ public class Drivetrain extends SubsystemBase {
             turnMotors[3] = new SparkMax(7, MotorType.kBrushless), 
             turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR), 3, pitchSupplier, rollSupplier);
             modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
-            pidController = turnMotors[0].getClosedLoopController();
+            turnPidControllers[0] = turnMotors[0].getClosedLoopController();
+            turnPidControllers[1] = turnMotors[1].getClosedLoopController();
+            turnPidControllers[2] = turnMotors[2].getClosedLoopController();
+            turnPidControllers[3] = turnMotors[3].getClosedLoopController();
             if (RobotBase.isSimulation()) {
                 moduleSims = new SwerveModuleSim[] {
                     moduleFL.createSim(), moduleFR.createSim(), moduleBL.createSim(), moduleBR.createSim()
@@ -337,7 +340,7 @@ public class Drivetrain extends SubsystemBase {
         kP = SmartDashboard.getNumber("kP", 0);
         kI = SmartDashboard.getNumber("kI", 0);
         kD = SmartDashboard.getNumber("kD", 0);
-        pidController.setReference(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+        turnPidControllers[0].setReference(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
         
         // for (CANcoder coder : turnEncoders) {
         // SignalLogger.writeDouble("Regular position " + coder.toString(),
