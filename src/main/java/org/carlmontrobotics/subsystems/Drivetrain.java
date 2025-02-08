@@ -211,6 +211,11 @@ public class Drivetrain extends SubsystemBase {
             // Supplier<Float> pitchSupplier = () -> gyro.getPitch();
             // Supplier<Float> rollSupplier = () -> gyro.getRoll();
 
+            SmartDashboard.putNumber("g tp", 0);
+            SmartDashboard.putNumber("g dp", 0);
+            SmartDashboard.putNumber("g dv", 0);
+
+
 
             //moduleFL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FL, 
             driveMotors[0] = new SparkMax(0, MotorType.kBrushless); 
@@ -360,7 +365,9 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.getNumber("Velocity FL: ", turnEncoders[0].getVelocity().getValueAsDouble());
-        double goalp = SmartDashboard.getNumber("Goal Pos", 0);
+        double gtp = SmartDashboard.getNumber("g tp", 0);
+        double gdp = SmartDashboard.getNumber("g dp", 0);
+        double gdv = SmartDashboard.getNumber("g dv", 0);
 
         double tkP = SmartDashboard.getNumber("tkP", 0);
         double tkI = SmartDashboard.getNumber("tkI", 0);
@@ -370,7 +377,7 @@ public class Drivetrain extends SubsystemBase {
         double dkD = SmartDashboard.getNumber("dkD", 0);
 
         for (int i=0; i<4; i++){
-            turnMotors[i].getClosedLoopController().setReference(goalp, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+            turnMotors[i].getClosedLoopController().setReference(gtp, ControlType.kPosition, ClosedLoopSlot.kSlot0);
 
             CANcoder cc = turnEncoders[i];
             SmartDashboard.putNumber("CANcoder"+i, cc.getAbsolutePosition().getValue().magnitude());
