@@ -323,6 +323,28 @@ public class Drivetrain extends SubsystemBase {
 
         //                             SmartDashboard.putNumber("chassis speeds theta", 0);
         // SmartDashboard.putData(this);
+        SmartDashboard.putData(new InstantCommand(()-> {
+            for (int i=0;i<4;i++) {
+            SparkMax turn = turnMotors[i];
+            SparkMax drive = driveMotors[i];
+            SparkMaxConfig ttconfig = new SparkMaxConfig();
+            SparkMaxConfig tdconfig = new SparkMaxConfig();
+            ttconfig.closedLoop.pidf(//t for turn
+                SmartDashboard.getNumber("t-p-"+i, 0),
+                SmartDashboard.getNumber("t-i-"+i, 0),
+                SmartDashboard.getNumber("t-d-"+i, 0),
+                SmartDashboard.getNumber("t-kS-"+i, 0)
+            );
+            tdconfig.closedLoop.pidf(//d for drive
+                SmartDashboard.getNumber("d-p-"+i, 0),
+                SmartDashboard.getNumber("d-i-"+i, 0),
+                SmartDashboard.getNumber("d-d-"+i, 0),
+                SmartDashboard.getNumber("d-kS-"+i, 0)
+            );
+            turn.configure(ttconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+            drive.configure(tdconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        }
+        }));
 
     }
 
@@ -381,40 +403,43 @@ public class Drivetrain extends SubsystemBase {
         // double dkD = SmartDashboard.getNumber("dkD", 0);
 
         for (int i=0; i<4; i++){
-            if (i!=3){
-                turnMotors[i].getClosedLoopController().setReference(gtp, ControlType.kPosition);
-                driveMotors[i].getClosedLoopController().setReference(gdv, ControlType.kVelocity);
-            }
+            turnMotors[i].getClosedLoopController().setReference(5000, ControlType.kPosition);
+            // if (i!=4){
+                
+            //     // driveMotors[i].getClosedLoopController().setReference(gdv, ControlType.kVelocity);
+            // }
             CANcoder cc = turnEncoders[i];
             SmartDashboard.putNumber("CANcoder"+i, cc.getAbsolutePosition().getValue().magnitude());
             SmartDashboard.putNumber("turnCoder"+i, turnMotors[i].getEncoder().getPosition());
-            SmartDashboard.putNumber("driveCoder"+i, driveMotors[i].getEncoder().getPosition());
+            SmartDashboard.putNumber("driveVel"+i, driveMotors[i].getEncoder().getVelocity());
             SmartDashboard.putNumber("turnCurr"+i, turnMotors[i].getOutputCurrent());
-            SmartDashboard.putNumber("turnSet"+i, turnMotors[i].get());
-        }     
-        turnMotors[3].set(.2); 
+            SmartDashboard.putNumber("turnOut"+i, turnMotors[i].get());
 
-        //update new pid values
-        for (int i=0;i<4;i++) {
-            SparkMax turn = turnMotors[i];
-            SparkMax drive = driveMotors[i];
-            SparkMaxConfig ttconfig = new SparkMaxConfig();
-            SparkMaxConfig tdconfig = new SparkMaxConfig();
-            ttconfig.closedLoop.pidf(//t for turn
-                SmartDashboard.getNumber("t-p-"+i, 0),
-                SmartDashboard.getNumber("t-i-"+i, 0),
-                SmartDashboard.getNumber("t-d-"+i, 0),
-                SmartDashboard.getNumber("t-kS-"+i, 0)
-            );
-            tdconfig.closedLoop.pidf(//d for drive
-                SmartDashboard.getNumber("d-p-"+i, 0),
-                SmartDashboard.getNumber("d-i-"+i, 0),
-                SmartDashboard.getNumber("d-d-"+i, 0),
-                SmartDashboard.getNumber("d-kS-"+i, 0)
-            );
-            turn.configure(ttconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-            drive.configure(tdconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-        }
+            // turnMotors[i].set(gtv);
+        }     
+        // turnMotors[3].set(.2);
+
+        // //update new pid values
+        // for (int i=0;i<4;i++) {
+        //     SparkMax turn = turnMotors[i];
+        //     SparkMax drive = driveMotors[i];
+        //     SparkMaxConfig ttconfig = new SparkMaxConfig();
+        //     SparkMaxConfig tdconfig = new SparkMaxConfig();
+        //     ttconfig.closedLoop.pidf(//t for turn
+        //         SmartDashboard.getNumber("t-p-"+i, 0),
+        //         SmartDashboard.getNumber("t-i-"+i, 0),
+        //         SmartDashboard.getNumber("t-d-"+i, 0),
+        //         SmartDashboard.getNumber("t-kS-"+i, 0)
+        //     );
+        //     tdconfig.closedLoop.pidf(//d for drive
+        //         SmartDashboard.getNumber("d-p-"+i, 0),
+        //         SmartDashboard.getNumber("d-i-"+i, 0),
+        //         SmartDashboard.getNumber("d-d-"+i, 0),
+        //         SmartDashboard.getNumber("d-kS-"+i, 0)
+        //     );
+        //     turn.configure(ttconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        //     drive.configure(tdconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        // }
 
         //smartdashboard pid puts
         for (int i=0;i<4;i++) {

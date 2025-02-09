@@ -89,19 +89,17 @@ public final class Constants {
 	// public static final boolean[] reversed = {true, true, true, true};
 	// Determine correct turnZero constants (FL, FR, BL, BR)
 	public static final double[] turnZeroDeg = RobotBase.isSimulation() ? new double[] {-90.0, -90.0, -90.0, -90.0 }
-	: new double[] {-162.9492, 85.0782, -96.9433, 85.7812};
+	: new double[] {0.05005*360, -.2708*360, -.2673*360, .2361*360};
 	//: (CONFIG.isSwimShady() ? new double[] { 85.7812, 85.0782, -96.9433, -162.9492 }
 	//	: new double[] { -48.6914, 63.3691, 94.1309, -6.7676 });/* real values here */
 
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
-	public static final double[] turnkP = { 1, 1, 1, 0 }; // {0.00374, 0.00374, 0.00374,
-																	// 0.00374};
-	public static final double[] turnkI = { 1, 1, 0, 0 };
-	public static final double[] turnkD = { 1/* dont edit */, 0, 0, 0}; // todo: use d
-	// public static final double[] turnkS = {0.2, 0.2, 0.2, 0.2};
-	public static final double[] turnkS = { 5, 5, 5, 5 };
+	public static final double[] turnkP = { 100, 1, 1, 1 };
+	public static final double[] turnkI = { 100, 0, 0, 0 };
+	public static final double[] turnkD = { 1000, 0, 0, 0 };
+	public static final double[] turnkS = { 100, .1, .15, .2 };
 
 	// V = kS + kV * v + kA * a
 	// 12 = 0.2 + 0.00463 * v
@@ -113,9 +111,9 @@ public final class Constants {
 	// Forward: 1.72, 1.71, 1.92, 1.94
 	// Backward: 1.92, 1.92, 2.11, 1.89
 	// Order of modules: (FL, FR, BL, BR)
-	public static final double[] drivekP = new double[] { 1.75, 2, 8, .75 }; // {1.82/100, 1.815/100, 2.015/100,
+	public static final double[] drivekP = new double[] { 0, 0, 0, 0}; // {1.82/100, 1.815/100, 2.015/100,
 															// 1.915/100};
-	public static final double[] drivekI = { 1, 1, 1, 1 };
+	public static final double[] drivekI = { 0, 0, 0, 0 };
 	public static final double[] drivekD = { 0, 0, 0, 0 };
 	public static final double[] drivekS = { 0, 0, 0, 0 };
 	public static final boolean[] driveInversion = (CONFIG.isSwimShady()
