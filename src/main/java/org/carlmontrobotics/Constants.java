@@ -23,6 +23,8 @@ public final class Constants {
 
         public static final class Driver {
             public static final int driverPort = 0;
+            public static final int effectorMotorID = 4;
+            public static final int effectorDistanceSensorID = 5;
 			/*public static final int A = 1;
 	    	public static final int B = 2;
 	 		public static final int X = 3;
@@ -58,8 +60,7 @@ public final class Constants {
 
 	}
     public static final class CoralEffectorc {
-		public static final int effectorMotorID = 4;
-        public static final int effectorDistanceSensorID = 5;
+		
         public static final double kP = 0.0;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0;
