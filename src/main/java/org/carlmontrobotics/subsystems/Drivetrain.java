@@ -144,7 +144,7 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModule moduleBR;
 
     private final Field2d field = new Field2d();
-    // private final SparkClosedLoopController[] turnpidController = new SparkClosedLoopController[4];
+    private final SparkClosedLoopController[] turnpidController = new SparkClosedLoopController[4];
     private SwerveModuleSim[] moduleSims;
     private SimDouble gyroYawSim;
     private Timer simTimer = new Timer();
@@ -153,7 +153,20 @@ public class Drivetrain extends SubsystemBase {
     double kP = 0;
     double kI = 0;
     double kD = 0;
+    //SparkClosedLoopController pid = driveMotors[0].getClosedLoopController();
     public Drivetrain() {
+        for (int i=0;i<4;i++) {
+            SmartDashboard.putNumber("t-p-"+i, 0);
+            SmartDashboard.putNumber("t-i-"+i, 0);
+            SmartDashboard.putNumber("t-d-"+i, 0);
+            SmartDashboard.putNumber("t-kS-"+i, 0);
+
+            SmartDashboard.putNumber("d-p-"+i, 0);
+            SmartDashboard.putNumber("d-i-"+i, 0);
+            SmartDashboard.putNumber("d-d-"+i, 0);
+            SmartDashboard.putNumber("d-kS-"+i, 0);
+        }
+       SmartDashboard.putNumber("bigoal", 0);
         // SparkMaxConfig c = new SparkMaxConfig();
         // c.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         //turnMotors[0].configure(c, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -199,7 +212,7 @@ public class Drivetrain extends SubsystemBase {
 
             kinematics = new SwerveDriveKinematics(locationFL, locationFR, locationBL, locationBR);
         }
-
+        //SmartDashboard.putNumber("bigoal", 180);
         // Initialize modules
         {
             // initPitch = 0;
@@ -259,7 +272,7 @@ public class Drivetrain extends SubsystemBase {
                 //driveConfig.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
                 driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
                 //drivepidController[i]=driveMotor.getClosedLoopController();
-            }
+            } 
             SparkMaxConfig turnConfig = new SparkMaxConfig();
             turnConfig.encoder.positionConversionFactor(360/turnGearing);
             turnConfig.encoder.positionConversionFactor(360/turnGearing/60);
@@ -356,21 +369,25 @@ public class Drivetrain extends SubsystemBase {
     // }
     // return new PrintCommand("Invalid Command");
     // }
-
+    private void turnMotorTest(int pos) {
+        for(SparkMax motor:turnMotors) {
+            motor.getClosedLoopController().setReference(pos, ControlType.kPosition);
+        }
+    }
     @Override
     public void periodic() {
         SmartDashboard.getNumber("Velocity FL: ", turnEncoders[0].getVelocity().getValueAsDouble());
         double goalp = SmartDashboard.getNumber("Goal Pos", 0);
 
-        // double tkP = SmartDashboard.getNumber("tkP", 0);
-        // double tkI = SmartDashboard.getNumber("tkI", 0);
-        // double tkD = SmartDashboard.getNumber("tkD", 0);
-        // double dkP = SmartDashboard.getNumber("dkP", 0);
-        // double dkI = SmartDashboard.getNumber("dkI", 0);
-        // double dkD = SmartDashboard.getNumber("dkD", 0);
+        double tkP = SmartDashboard.getNumber("tkP", 0);
+        double tkI = SmartDashboard.getNumber("tkI", 0);
+        double tkD = SmartDashboard.getNumber("tkD", 0);
+        double dkP = SmartDashboard.getNumber("dkP", 0);
+        double dkI = SmartDashboard.getNumber("dkI", 0);
+        double dkD = SmartDashboard.getNumber("dkD", 0);
 
-        // for (int i=0; i<4; i++){
-        //     turnpidController[i].setReference(goalp, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        // for (int i=0; i<4; i++) {
+        //     [i].setReference(goalp, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         // }
         
         // for (CANcoder coder : turnEncoders) {
@@ -387,11 +404,34 @@ public class Drivetrain extends SubsystemBase {
         // moduleFR.periodic();
         // moduleBL.periodic();
         // moduleBR.periodic();
-        // double goal = SmartDashboard.getNumber("bigoal", 0);
-        for (SwerveModule module : modules) {
-            module.periodic();
-            // module.move(0, goal);
+        double goal = SmartDashboard.getNumber("bigoal", 0);
+        turnMotorTest((int)goal);
+         for (SwerveModule module : modules) {
+             //module.periodic();
+            module.move(5, goal);
         }
+        for (int i=0;i<4;i++) {
+            SparkMax turn = turnMotors[i];
+            SparkMax drive = driveMotors[i];
+            SparkMaxConfig ttconfig = new SparkMaxConfig();
+            SparkMaxConfig tdconfig = new SparkMaxConfig();
+            ttconfig.closedLoop.pidf(//t for turn
+                SmartDashboard.getNumber("t-p-"+i, 0),
+                SmartDashboard.getNumber("t-i-"+i, 0),
+                SmartDashboard.getNumber("t-d-"+i, 0),
+                SmartDashboard.getNumber("t-kS-"+i, 0)
+            );
+            tdconfig.closedLoop.pidf(//d for drive
+                SmartDashboard.getNumber("d-p-"+i, 0),
+                SmartDashboard.getNumber("d-i-"+i, 0),
+                SmartDashboard.getNumber("d-d-"+i, 0),
+                SmartDashboard.getNumber("d-kS-"+i, 0)
+            );
+            turn.configure(ttconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+            drive.configure(tdconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+            
+        }
+        
 
         // field.setRobotPose(odometry.getPoseMeters());
 

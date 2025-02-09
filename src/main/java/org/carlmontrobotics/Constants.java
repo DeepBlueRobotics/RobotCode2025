@@ -96,10 +96,10 @@ public final class Constants {
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
-	public static final double[] turnkP = { 100, 1, 1, 1 };
-	public static final double[] turnkI = { 100, 0, 0, 0 };
-	public static final double[] turnkD = { 1000, 0, 0, 0 };
-	public static final double[] turnkS = { 100, .1, .15, .2 };
+	public static final double[] turnkP = { 10, 1, 1, 30 };
+	public static final double[] turnkI = { 10, 0, 0, 10 };
+	public static final double[] turnkD = { 10, 0, 0, 10 };
+	public static final double[] turnkS = { 10, .1, .15, .2 };
 
 	// V = kS + kV * v + kA * a
 	// 12 = 0.2 + 0.00463 * v
