@@ -15,8 +15,8 @@ import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Drivetrainc;
 import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
 import org.carlmontrobotics.Robot;
-// import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
-// import org.carlmontrobotics.commands.TeleopDrive;
+import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
+import org.carlmontrobotics.commands.TeleopDrive;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
 import org.carlmontrobotics.lib199.MotorErrors;
@@ -111,7 +111,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volt;
 import static edu.wpi.first.units.Units.Meter;
-// import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
+import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
 // Make sure this code is extraneous
 // import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
@@ -143,7 +143,7 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModule moduleBR;
 
     private final Field2d field = new Field2d();
-    // private final SparkClosedLoopController[] turnpidController = new SparkClosedLoopController[4];
+    private final SparkClosedLoopController[] turnpidController = new SparkClosedLoopController[4];
     private SwerveModuleSim[] moduleSims;
     private SimDouble gyroYawSim;
     private Timer simTimer = new Timer();
@@ -216,26 +216,30 @@ public class Drivetrain extends SubsystemBase {
 
 
 
-            //moduleFL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FL, 
-            driveMotors[0] = new SparkMax(Drivetrainc.driveFrontLeftPort, MotorType.kBrushless); 
-            turnMotors[0] = new SparkMax(Drivetrainc.turnFrontLeftPort, MotorType.kBrushless);
-            turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL);
+            moduleFL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FL, 
+            driveMotors[0] = new SparkMax(Drivetrainc.driveFrontLeftPort, MotorType.kBrushless), 
+            turnMotors[0] = new SparkMax(Drivetrainc.turnFrontLeftPort, MotorType.kBrushless),
+            turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL),
+            0, pitchSupplier, rollSupplier);
 
-            //moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
-            driveMotors[1] = new SparkMax(Drivetrainc.driveFrontRightPort, MotorType.kBrushless);
-            turnMotors[1] = new SparkMax(Drivetrainc.turnFrontRightPort, MotorType.kBrushless);
-            turnEncoders[1] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFR);
+            moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
+            driveMotors[1] = new SparkMax(Drivetrainc.driveFrontRightPort, MotorType.kBrushless),
+            turnMotors[1] = new SparkMax(Drivetrainc.turnFrontRightPort, MotorType.kBrushless),
+            turnEncoders[1] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFR),
+            1, pitchSupplier, rollSupplier );
 
-            //moduleBL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BL, 
-            driveMotors[2] = new SparkMax(Drivetrainc.driveBackLeftPort, MotorType.kBrushless);
-            turnMotors[2] = new SparkMax(Drivetrainc.turnBackLeftPort, MotorType.kBrushless);
-            turnEncoders[2] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBL);
+            moduleBL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BL, 
+            driveMotors[2] = new SparkMax(Drivetrainc.driveBackLeftPort, MotorType.kBrushless),
+            turnMotors[2] = new SparkMax(Drivetrainc.turnBackLeftPort, MotorType.kBrushless),
+            turnEncoders[2] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBL),
+            2, pitchSupplier, rollSupplier);
 
-            //moduleBR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BR, 
-            driveMotors[3] = new SparkMax(Drivetrainc.driveBackRightPort, MotorType.kBrushless);
-            turnMotors[3] = new SparkMax(Drivetrainc.turnBackRightPort, MotorType.kBrushless);
-            turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR);
-            //modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
+            moduleBR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BR, 
+            driveMotors[3] = new SparkMax(Drivetrainc.driveBackRightPort, MotorType.kBrushless),
+            turnMotors[3] = new SparkMax(Drivetrainc.turnBackRightPort, MotorType.kBrushless),
+            turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR),
+            3, pitchSupplier, rollSupplier);
+            modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
 
             // if (RobotBase.isSimulation()) {
             //     moduleSims = new SwerveModuleSim[] {
@@ -281,11 +285,11 @@ public class Drivetrain extends SubsystemBase {
                     Drivetrainc.turnkD[i],
                     Drivetrainc.turnkS[i]
                 )
-                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
                 // tempConfig.absoluteEncoder.positionConversionFactor(Drivetrainc.turnGearing);
                 //turnConfig.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
                 turnMotor.configure(tempConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-                // turnpidController[i]=turnMotor.getClosedLoopController();
+                turnpidController[i]=turnMotor.getClosedLoopController();
             }
 
             for (CANcoder coder : turnEncoders) {
@@ -310,11 +314,11 @@ public class Drivetrain extends SubsystemBase {
         // Rotation2d.fromDegrees(getHeading()), getModulePositions(),
         // new Pose2d());
 
-        // poseEstimator = new SwerveDrivePoseEstimator(
-        //         getKinematics(),
-        //         Rotation2d.fromDegrees(getHeading()),
-        //         getModulePositions(),
-        //         new Pose2d());
+        poseEstimator = new SwerveDrivePoseEstimator(
+                getKinematics(),
+                Rotation2d.fromDegrees(getHeading()),
+                getModulePositions(),
+                new Pose2d());
 
         // Setup autopath builder
         //configurePPLAutoBuilder();
