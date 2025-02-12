@@ -406,10 +406,22 @@ public class Drivetrain extends SubsystemBase {
         // moduleBR.periodic();
         double goal = SmartDashboard.getNumber("bigoal", 0);
         turnMotorTest((int)goal);
-         for (SwerveModule module : modules) {
-             //module.periodic();
-            module.move(5, goal);
-        }
+        SparkMaxConfig ttconfig = new SparkMaxConfig();
+            //SparkMaxConfig tdconfig = new SparkMaxConfig();
+            ttconfig.closedLoop.pidf(//t for turn
+                SmartDashboard.getNumber("t-p", 0),
+                SmartDashboard.getNumber("t-i", 0),
+                SmartDashboard.getNumber("t-d", 0),
+                SmartDashboard.getNumber("t-kS", 0)
+            );
+        //Front Left
+        turnMotors[0].configure(ttconfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        turnMotors[0].getClosedLoopController().setReference(goal, ControlType.kPosition);
+        //  for (SwerveModule module : modules) {
+        //      //module.periodic();
+        //     module.move(5, goal);
+        // }
+        /* 
         for (int i=0;i<4;i++) {
             SparkMax turn = turnMotors[i];
             SparkMax drive = driveMotors[i];
@@ -432,7 +444,7 @@ public class Drivetrain extends SubsystemBase {
             
         }
         
-
+*/
         // field.setRobotPose(odometry.getPoseMeters());
 
         field.setRobotPose(poseEstimator.getEstimatedPosition());
