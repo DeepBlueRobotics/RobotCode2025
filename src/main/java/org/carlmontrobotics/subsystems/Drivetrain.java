@@ -155,17 +155,10 @@ public class Drivetrain extends SubsystemBase {
     double kD = 0;
     //SparkClosedLoopController pid = driveMotors[0].getClosedLoopController();
     public Drivetrain() {
-        for (int i=0;i<4;i++) {
-            SmartDashboard.putNumber("t-p-"+i, 0);
-            SmartDashboard.putNumber("t-i-"+i, 0);
-            SmartDashboard.putNumber("t-d-"+i, 0);
-            SmartDashboard.putNumber("t-kS-"+i, 0);
-
-            SmartDashboard.putNumber("d-p-"+i, 0);
-            SmartDashboard.putNumber("d-i-"+i, 0);
-            SmartDashboard.putNumber("d-d-"+i, 0);
-            SmartDashboard.putNumber("d-kS-"+i, 0);
-        }
+        SmartDashboard.putNumber("t-p", 0);
+        SmartDashboard.putNumber("t-i", 0);
+        SmartDashboard.putNumber("t-d", 0);
+        SmartDashboard.putNumber("t-kS", 0);
        SmartDashboard.putNumber("bigoal", 0);
         // SparkMaxConfig c = new SparkMaxConfig();
         // c.closedLoop.pid(kP, kI, kP).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
@@ -369,22 +362,25 @@ public class Drivetrain extends SubsystemBase {
     // }
     // return new PrintCommand("Invalid Command");
     // }
-    private void turnMotorTest(int pos) {
+    private void turnMotorTest(int pos, SparkMaxConfig shit) {
         for(SparkMax motor:turnMotors) {
-            motor.getClosedLoopController().setReference(pos, ControlType.kPosition);
+            motor.configure(shit, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+            motor.getClosedLoopController().setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+            //motor.getClosedLoopController().
         }
     }
     @Override
+    
     public void periodic() {
         SmartDashboard.getNumber("Velocity FL: ", turnEncoders[0].getVelocity().getValueAsDouble());
         double goalp = SmartDashboard.getNumber("Goal Pos", 0);
 
-        double tkP = SmartDashboard.getNumber("tkP", 0);
-        double tkI = SmartDashboard.getNumber("tkI", 0);
-        double tkD = SmartDashboard.getNumber("tkD", 0);
-        double dkP = SmartDashboard.getNumber("dkP", 0);
-        double dkI = SmartDashboard.getNumber("dkI", 0);
-        double dkD = SmartDashboard.getNumber("dkD", 0);
+        // double tkP = SmartDashboard.getNumber("tkP", 0);
+        // double tkI = SmartDashboard.getNumber("tkI", 0);
+        // double tkD = SmartDashboard.getNumber("tkD", 0);
+        // double dkP = SmartDashboard.getNumber("dkP", 0);
+        // double dkI = SmartDashboard.getNumber("dkI", 0);
+        // double dkD = SmartDashboard.getNumber("dkD", 0);
 
         // for (int i=0; i<4; i++) {
         //     [i].setReference(goalp, ControlType.kPosition, ClosedLoopSlot.kSlot0);
@@ -405,7 +401,7 @@ public class Drivetrain extends SubsystemBase {
         // moduleBL.periodic();
         // moduleBR.periodic();
         double goal = SmartDashboard.getNumber("bigoal", 0);
-        turnMotorTest((int)goal);
+        //turnMotorTest((int)goal);
         SparkMaxConfig ttconfig = new SparkMaxConfig();
             //SparkMaxConfig tdconfig = new SparkMaxConfig();
             ttconfig.closedLoop.pidf(//t for turn
@@ -414,9 +410,12 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.getNumber("t-d", 0),
                 SmartDashboard.getNumber("t-kS", 0)
             );
+            turnMotorTest((int)goal, ttconfig);
         //Front Left
-        turnMotors[0].configure(ttconfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        turnMotors[0].getClosedLoopController().setReference(goal, ControlType.kPosition);
+        // turnMotors[0].configure(ttconfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        // turnMotors[0].getClosedLoopController().setReference(goal, ControlType.kVelocity);
+        
+        //turnMotorTest(180);
         //  for (SwerveModule module : modules) {
         //      //module.periodic();
         //     module.move(5, goal);
@@ -488,6 +487,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("back left encoder", moduleBL.getModuleAngle());
         SmartDashboard.putNumber("back right encoder", moduleBR.getModuleAngle());
     }
+    
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
