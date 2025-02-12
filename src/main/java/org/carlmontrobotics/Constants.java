@@ -68,5 +68,7 @@ public final class Constants {
         public static double outtakeRPM = 2100;  
         //TODO: Change after testing
         public static final int DETECT_DISTANCE_INCHES = 3;
+        public static final int effectorMotorID = 0;
+        public static final int effectorDistanceSensorID = 0;
 	}
 }
