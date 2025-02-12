@@ -146,7 +146,10 @@ public class Drivetrain extends SubsystemBase {
     double kI = 0;
     double kD = 0;
     public Drivetrain() {
-        
+        SmartDashboard.putNumber("Goal Velocity", 0);
+        SmartDashboard.putNumber("kP", 0);
+        SmartDashboard.putNumber("kI", 0);
+        SmartDashboard.putNumber("kD", 0);
         // SmartDashboard.putNumber("Pose Estimator t x (m)", lastSetX);
         // SmartDashboard.putNumber("Pose Estimator set y (m)", lastSetY);
         // SmartDashboard.putNumber("Pose Estimator set rotation (deg)",
@@ -154,7 +157,7 @@ public class Drivetrain extends SubsystemBase {
 
         // SmartDashboard.putNumber("pose estimator std dev x", STD_DEV_X_METERS);
         // SmartDashboard.putNumber("pose estimator std dev y", STD_DEV_Y_METERS);
-
+        SmartDashboard.putNumber("GoalPos", 0);
         // Calibrate Gyro
         {
 
@@ -203,23 +206,23 @@ public class Drivetrain extends SubsystemBase {
 
 
             moduleFL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FL, 
-            driveMotors[0] = new SparkMax(0, MotorType.kBrushless), 
-            turnMotors[0] = new SparkMax(1, MotorType.kBrushless), 
+            driveMotors[0] = new SparkMax(driveFrontLeftPort, MotorType.kBrushless), 
+            turnMotors[0] = new SparkMax(turnFrontLeftPort, MotorType.kBrushless), 
             turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL), 0, pitchSupplier, rollSupplier);
 
             moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
-            driveMotors[1] = new SparkMax(2, MotorType.kBrushless), 
-            turnMotors[1] = new SparkMax(3, MotorType.kBrushless), 
+            driveMotors[1] = new SparkMax(driveFrontRightPort, MotorType.kBrushless), 
+            turnMotors[1] = new SparkMax(turnFrontRightPort, MotorType.kBrushless), 
             turnEncoders[1] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFR), 1, pitchSupplier, rollSupplier);
 
             moduleBL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BL, 
-            driveMotors[2] = new SparkMax(4, MotorType.kBrushless), 
-            turnMotors[2] = new SparkMax(5, MotorType.kBrushless), 
+            driveMotors[2] = new SparkMax(driveBackLeftPort, MotorType.kBrushless), 
+            turnMotors[2] = new SparkMax(turnBackLeftPort, MotorType.kBrushless), 
             turnEncoders[2] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBL), 2, pitchSupplier, rollSupplier);
 
             moduleBR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BR, 
-            driveMotors[3] = new SparkMax(6, MotorType.kBrushless), 
-            turnMotors[3] = new SparkMax(7, MotorType.kBrushless), 
+            driveMotors[3] = new SparkMax(driveBackRightPort, MotorType.kBrushless), 
+            turnMotors[3] = new SparkMax(turnBackRightPort, MotorType.kBrushless), 
             turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR), 3, pitchSupplier, rollSupplier);
             modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
             turnPidControllers[0] = turnMotors[0].getClosedLoopController();
@@ -334,13 +337,18 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.getNumber("Velocity FL: ", turnEncoders[0].getVelocity().getValueAsDouble());
-        double velocity = SmartDashboard.getNumber("Goal Velocity", 0);
+        SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
+        double velocity = SmartDashboard.getNumber("GoalPos", 0);
 
         kP = SmartDashboard.getNumber("kP", 0);
         kI = SmartDashboard.getNumber("kI", 0);
         kD = SmartDashboard.getNumber("kD", 0);
-        turnPidControllers[0].setReference(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.closedLoop.pidf(kP,kI,kD,10);
+
+        turnMotors[0].configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        turnPidControllers[0].setReference(velocity, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         
         // for (CANcoder coder : turnEncoders) {
         // SignalLogger.writeDouble("Regular position " + coder.toString(),
@@ -400,10 +408,10 @@ public class Drivetrain extends SubsystemBase {
         // SmartDashboard.putNumber("Gyro Compass Heading", gyro.getCompassHeading());
         // SmartDashboard.putNumber("Compass Offset", compassOffset);
         // SmartDashboard.putBoolean("Current Magnetic Field Disturbance", gyro.isMagneticDisturbance());
-        // SmartDashboard.putNumber("front left encoder", moduleFL.getModuleAngle());
-        // SmartDashboard.putNumber("front right encoder", moduleFR.getModuleAngle());
-        // SmartDashboard.putNumber("back left encoder", moduleBL.getModuleAngle());
-        // SmartDashboard.putNumber("back right encoder", moduleBR.getModuleAngle());
+        SmartDashboard.putNumber("front left encoder", moduleFL.getModuleAngle());
+        SmartDashboard.putNumber("front right encoder", moduleFR.getModuleAngle());
+        SmartDashboard.putNumber("back left encoder", moduleBL.getModuleAngle());
+        SmartDashboard.putNumber("back right encoder", moduleBR.getModuleAngle());
     }
 
     @Override
