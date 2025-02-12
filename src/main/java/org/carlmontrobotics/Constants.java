@@ -159,15 +159,15 @@ public final class Constants {
 
 	// #region Ports
 	//I think all of these are right
-	public static final int driveFrontLeftPort = 1;
-	public static final int driveFrontRightPort = 2;
-	public static final int driveBackLeftPort = 3;
-	public static final int driveBackRightPort = 4;
+	public static final int driveFrontLeftPort = 11;
+	public static final int driveFrontRightPort = 12;
+	public static final int driveBackLeftPort = 13;
+	public static final int driveBackRightPort = 14;
 
-	public static final int turnFrontLeftPort = 11;
-	public static final int turnFrontRightPort = 12;
-	public static final int turnBackLeftPort = 13;
-	public static final int turnBackRightPort = 14;
+	public static final int turnFrontLeftPort = 1;
+	public static final int turnFrontRightPort = 2;
+	public static final int turnBackLeftPort = 3;
+	public static final int turnBackRightPort = 4;
 	//to be configured
 	public static final int canCoderPortFL = 0;
 	public static final int canCoderPortFR = 3;
