@@ -351,6 +351,9 @@ public class Drivetrain extends SubsystemBase {
         turnMotors[0].configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         turnPidControllers[0].setReference(360*5000/239
         , ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        moduleFL.move(0, 90);
+        
+        
         // 167 -> -200
         // 138 -> 360
         // for (CANcoder coder : turnEncoders) {
