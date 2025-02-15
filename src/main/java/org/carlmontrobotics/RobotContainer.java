@@ -9,6 +9,10 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
+import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.commands.CoralIntake;
+import org.carlmontrobotics.subsystems.CoralEffector;
+
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController.Axis;
@@ -31,6 +35,8 @@ public class RobotContainer {
   //2. Use absolute paths from constants to reduce confusion
   public final GenericHID driverController = new GenericHID(OI.Driver.port);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
+  public final CoralEffector coralEffector = new CoralEffector();
+  public final CoralIntake coralIntake = new CoralIntake();
 
   public RobotContainer() {
 
