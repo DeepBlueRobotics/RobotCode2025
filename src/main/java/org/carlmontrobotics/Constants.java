@@ -15,6 +15,6 @@ public final class Constants {
     public static final class CoralEffectorConstants{
         public final static int coralMotorPort = 1;
         public final static int coralLimitSwitchPort = 0;
-        public final static int coralDistanceSensorPort = 2;
+        public final static int coralDistanceSensorPort = 5;
     }
 }

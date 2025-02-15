@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.carlmontrobotics.Constants.*;
@@ -27,7 +28,10 @@ public class CoralEffector extends SubsystemBase {
 
   @Override
   public void periodic() {
-     distanceSensorSees = distanceSensor.getRange() < 100;
-     limitSwitchSees = coralLimitSwitch.get();
+     distanceSensorSees = distanceSensor.getRange() < 140;
+     limitSwitchSees = !coralLimitSwitch.get();
+     SmartDashboard.putBoolean("Distance sensor", distanceSensorSees);
+     SmartDashboard.putNumber("distance", distanceSensor.getRange());
+     SmartDashboard.putBoolean("limit switch", limitSwitchSees);
   }
 }

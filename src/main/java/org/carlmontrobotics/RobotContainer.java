@@ -16,7 +16,7 @@ import org.carlmontrobotics.subsystems.CoralEffector;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -39,7 +39,7 @@ public class RobotContainer {
   public final CoralIntake coralIntake = new CoralIntake();
 
   public RobotContainer() {
-
+    SmartDashboard.putData("Coral Intake", new CoralIntake());
     setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
