@@ -1,12 +1,15 @@
 package org.carlmontrobotics.commands;
 
+import org.carlmontrobotics.Constants.CoralEffectorConstants;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class CoralIntake extends Command {
-    public static int spin;
+    public static double spin;
     public CoralIntake() {
         // Use addRequirements() here to declare subsystem dependencies.
         // addRequirements(this.CoralEffector = CoralEffector);    
@@ -23,12 +26,12 @@ public class CoralIntake extends Command {
     if (CoralEffector.distanceSensorSees){
 
         if (CoralEffector.limitSwitchSees){
-            CoralEffector.coralMotor.set(0.08);
-            spin = 5;
+            CoralEffector.coralMotor.set(CoralEffectorConstants.coralEffectorMotorSlowSpeed);
+            spin = CoralEffectorConstants.coralEffectorMotorSlowSpeed;
         }
         else{
-            CoralEffector.coralMotor.set(0.1);
-            spin = 10;
+            CoralEffector.coralMotor.set(CoralEffectorConstants.coralEffectorMotorFastSpeed);
+            spin = CoralEffectorConstants.coralEffectorMotorFastSpeed;
         }
     }
     else{

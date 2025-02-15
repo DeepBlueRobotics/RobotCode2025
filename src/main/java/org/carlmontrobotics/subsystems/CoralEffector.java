@@ -28,7 +28,7 @@ public class CoralEffector extends SubsystemBase {
 
   @Override
   public void periodic() {
-     distanceSensorSees = distanceSensor.getRange() < 140;
+     distanceSensorSees = distanceSensor.getRange() < CoralEffectorConstants.coralDistanceSensorDistance;
      limitSwitchSees = !coralLimitSwitch.get();
      SmartDashboard.putBoolean("Distance sensor", distanceSensorSees);
      SmartDashboard.putNumber("distance", distanceSensor.getRange());
