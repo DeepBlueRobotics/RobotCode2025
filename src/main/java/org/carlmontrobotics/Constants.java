@@ -169,10 +169,10 @@ public final class Constants {
 	public static final int turnBackLeftPort = 3;
 	public static final int turnBackRightPort = 4;
 	//to be configured
-	public static final int canCoderPortFL = 0;
+	public static final int canCoderPortFL = 1; //0
 	public static final int canCoderPortFR = 3;
 	public static final int canCoderPortBL = 2;
-	public static final int canCoderPortBR = 1;
+	public static final int canCoderPortBR = 0; //1
 
 	// #endregion
 

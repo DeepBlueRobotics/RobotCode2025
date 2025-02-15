@@ -345,11 +345,14 @@ public class Drivetrain extends SubsystemBase {
         kD = SmartDashboard.getNumber("kD", 0);
 
         SparkMaxConfig config = new SparkMaxConfig();
-        config.closedLoop.pidf(kP,kI,kD,10);
-
-        turnMotors[0].configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-        turnPidControllers[0].setReference(velocity, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        
+        config.closedLoop.pid(0.05
+        ,0.0001,0.6);
+        config.encoder.positionConversionFactor(360*Constants.Drivetrainc.turnGearing);
+        turnMotors[0].configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        turnPidControllers[0].setReference(360*5000/239
+        , ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        // 167 -> -200
+        // 138 -> 360
         // for (CANcoder coder : turnEncoders) {
         // SignalLogger.writeDouble("Regular position " + coder.toString(),
         // coder.getPosition().getValue());
@@ -366,7 +369,7 @@ public class Drivetrain extends SubsystemBase {
         // moduleBR.periodic();
         // double goal = SmartDashboard.getNumber("bigoal", 0);
         for (SwerveModule module : modules) {
-            module.periodic();
+            //module.periodic();
             // module.move(0, goal);
         }
 
