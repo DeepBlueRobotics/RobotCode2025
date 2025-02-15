@@ -9,7 +9,7 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
-import org.carlmontrobotics.Subsystems.Motor;
+import org.carlmontrobotics.subsystems.Motor;
 
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
