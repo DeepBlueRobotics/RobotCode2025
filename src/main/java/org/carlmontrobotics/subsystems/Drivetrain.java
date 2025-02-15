@@ -347,7 +347,7 @@ public class Drivetrain extends SubsystemBase {
         SparkMaxConfig config = new SparkMaxConfig();
         config.closedLoop.pid(0.05
         ,0.0001,0.6);
-        config.encoder.positionConversionFactor(360*Constants.Drivetrainc.turnGearing);
+        config.encoder.positionConversionFactor(360/Constants.Drivetrainc.turnGearing);
         turnMotors[0].configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         turnPidControllers[0].setReference(360*5000/239
         , ControlType.kPosition, ClosedLoopSlot.kSlot0);
