@@ -45,6 +45,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
@@ -150,6 +151,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("kP", 0);
         SmartDashboard.putNumber("kI", 0);
         SmartDashboard.putNumber("kD", 0);
+
         // SmartDashboard.putNumber("Pose Estimator t x (m)", lastSetX);
         // SmartDashboard.putNumber("Pose Estimator set y (m)", lastSetY);
         // SmartDashboard.putNumber("Pose Estimator set rotation (deg)",
@@ -339,17 +341,17 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         double velocity = SmartDashboard.getNumber("GoalPos", 0);
-
+        PIDController pid = new PIDController(kP, kI, kD);        
         kP = SmartDashboard.getNumber("kP", 0);
         kI = SmartDashboard.getNumber("kI", 0);
         kD = SmartDashboard.getNumber("kD", 0);
-
+        pid.setIZone(50);
         SparkMaxConfig config = new SparkMaxConfig();
-        config.closedLoop.pid(0.05
-        ,0.0001,0.6);
+        config.closedLoop.pid(51
+        ,0.0001,0);
         config.encoder.positionConversionFactor(360/Constants.Drivetrainc.turnGearing);
         turnMotors[0].configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        turnPidControllers[0].setReference(360*5000/239
+        turnPidControllers[0].setReference(0
         , ControlType.kPosition, ClosedLoopSlot.kSlot0);
         // 167 -> -200
         // 138 -> 360
@@ -520,8 +522,8 @@ public class Drivetrain extends SubsystemBase {
 //         this // :D
 //     );
 
-    /*
-     AutoBuilder.configureHolonomic(
+    
+    /*  AutoBuilder.configureHolonomic(
     () -> getPose().plus(new Transform2d(autoGyroOffset.getTranslation(),autoGyroOffset.getRotation())),//position supplier
     (Pose2d pose) -> { autoGyroOffset=pose.times(-1); }, //position reset (by subtracting current pos)
     this::getSpeeds, //chassisSpeed supplier
@@ -552,6 +554,7 @@ public class Drivetrain extends SubsystemBase {
       this
     );
     */
+   
 //  }
 
    public void autoCancelDtCommand() {
