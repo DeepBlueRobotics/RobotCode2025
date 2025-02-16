@@ -347,14 +347,17 @@ public class Drivetrain extends SubsystemBase {
         kP = SmartDashboard.getNumber("kP", 0);
         kI = SmartDashboard.getNumber("kI", 0);
         kD = SmartDashboard.getNumber("kD", 0);
-        pid.setIZone(0.1);
+        pid.setIZone(20);
         SparkMaxConfig config = new SparkMaxConfig();
         //config.closedLoop.feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder);
-        config.closedLoop.pid(1
-        ,0,0.4);
-        //config.encoder.positionConversionFactor(Constants.Drivetrainc.turnGearing);
+        config.closedLoop.pid(0.2
+        ,0,0.2);
+        config.encoder.positionConversionFactor(360/Constants.Drivetrainc.turnGearing);
         turnMotors[0].configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        turnPidControllers[0].setReference(180*(150/7)
+        //moduleFL.move(0.0000001, 180);
+        //moduleFL.move(0.01, 180);
+        turnPidControllers[0].setReference(320
+
         , ControlType.kPosition, ClosedLoopSlot.kSlot0);
         
         

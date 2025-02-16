@@ -57,7 +57,7 @@ public final class Constants {
 	// modules
 	public static final double swerveRadius = Math.sqrt(Math.pow(wheelBase / 2, 2) + Math.pow(trackWidth / 2, 2));
 	// The gearing reduction from the drive motor controller to the wheels
-	// Gearing for the Swerve Modules is 6.75 : 1
+	// Gearing for the Swerve Modules is 6.75 : 1e
 	public static final double driveGearing = 6.75;
 	// Turn motor shaft to "module shaft"
 	public static final double turnGearing = 150 / 7;
@@ -95,10 +95,10 @@ public final class Constants {
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
-	public static final double[] turnkP = { 0, 0, 0, 0 }; // {0.00374, 0.00374, 0.00374,
+	public static final double[] turnkP = { 0.2, 0, 0, 0 }; // {0.00374, 0.00374, 0.00374,
 																	// 0.00374};
 	public static final double[] turnkI = { 0, 0, 0, 0 };
-	public static final double[] turnkD = { 0/* dont edit */, 0, 0, 0}; // todo: use d
+	public static final double[] turnkD = { 0.2/* dont edit */, 0, 0, 0}; // todo: use d
 	// public static final double[] turnkS = {0.2, 0.2, 0.2, 0.2};
 	public static final double[] turnkS = { 0, 0, 0, 0 };
 
