@@ -94,4 +94,8 @@ public class RobotContainer {
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
   }
+  public Command CoralIntake(){
+    return new SequentialCommandGroup(new CoralIntake());
+
+  }
 }

@@ -4,8 +4,11 @@ import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import com.playingwithfusion.TimeOfFlight;
+import com.revrobotics.servohub.ServoHub.ResetMode;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -25,6 +28,12 @@ public class CoralEffector extends SubsystemBase {
 
     public static boolean distanceSensorSees;
     public static boolean limitSwitchSees;
+  
+    public CoralEffector(){
+      // SparkFlexConfig config = new SparkFexConfig();
+      // /*config.closedLoop.*/
+      // coralMotor.configure(confi, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    }
 
   @Override
   public void periodic() {
