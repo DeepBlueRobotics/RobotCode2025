@@ -8,7 +8,10 @@ import com.revrobotics.servohub.ServoHub.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -20,6 +23,12 @@ import static org.carlmontrobotics.Constants.*;
 
 import org.carlmontrobotics.Constants.CoralEffectorConstants;
 
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkBase;
+
 public class CoralEffector extends SubsystemBase {
   
     public static SparkFlex coralMotor = new SparkFlex(CoralEffectorConstants.coralMotorPort, MotorType.kBrushless);
@@ -29,10 +38,19 @@ public class CoralEffector extends SubsystemBase {
     public static boolean distanceSensorSees;
     public static boolean limitSwitchSees;
   
+    SparkFlexConfig config = new SparkFlexConfig();
     public CoralEffector(){
-      // SparkFlexConfig config = new SparkFexConfig();
-      // /*config.closedLoop.*/
-      // coralMotor.configure(confi, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    config
+        .inverted(true)
+        .idleMode(IdleMode.kBrake);
+    config.encoder
+        .positionConversionFactor(1000)
+        .velocityConversionFactor(1000);
+    config.closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(1.0, 0.0, 0.0);
+        
+    coralMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
   @Override
