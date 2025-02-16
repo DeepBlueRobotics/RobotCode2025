@@ -43,6 +43,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -211,7 +212,7 @@ public class Drivetrain extends SubsystemBase {
             driveMotors[0] = new SparkMax(driveFrontLeftPort, MotorType.kBrushless), 
             turnMotors[0] = new SparkMax(turnFrontLeftPort, MotorType.kBrushless), 
             turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL), 0, pitchSupplier, rollSupplier);
-
+            SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
             moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
             driveMotors[1] = new SparkMax(driveFrontRightPort, MotorType.kBrushless), 
             turnMotors[1] = new SparkMax(turnFrontRightPort, MotorType.kBrushless), 
@@ -340,20 +341,21 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         double velocity = SmartDashboard.getNumber("GoalPos", 0);
         PIDController pid = new PIDController(kP, kI, kD);        
         kP = SmartDashboard.getNumber("kP", 0);
         kI = SmartDashboard.getNumber("kI", 0);
         kD = SmartDashboard.getNumber("kD", 0);
-        pid.setIZone(50);
+        pid.setIZone(0.1);
         SparkMaxConfig config = new SparkMaxConfig();
-        config.closedLoop.pid(51
-        ,0.0001,0);
-        config.encoder.positionConversionFactor(360/Constants.Drivetrainc.turnGearing);
+        //config.closedLoop.feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder);
+        config.closedLoop.pid(1
+        ,0,0.4);
+        //config.encoder.positionConversionFactor(Constants.Drivetrainc.turnGearing);
         turnMotors[0].configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        turnPidControllers[0].setReference(0
+        turnPidControllers[0].setReference(180*(150/7)
         , ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        moduleFL.move(0, 90);
         
         
         // 167 -> -200
