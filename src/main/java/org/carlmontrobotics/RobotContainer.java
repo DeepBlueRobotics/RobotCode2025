@@ -36,7 +36,6 @@ public class RobotContainer {
   public final GenericHID driverController = new GenericHID(OI.Driver.port);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
   public final CoralEffector coralEffector = new CoralEffector();
-  public final CoralIntake coralIntake = new CoralIntake();
 
   public RobotContainer() {
     SmartDashboard.putData("Coral Intake", new CoralIntake());
