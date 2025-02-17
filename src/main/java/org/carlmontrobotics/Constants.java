@@ -113,17 +113,17 @@ public final class Constants {
 	// Backward: 1.92, 1.92, 2.11, 1.89
 	// Order of modules: (FL, FR, BL, BR)
 	public static final double[] drivekP = CONFIG.isSwimShady() ? new double[] { 2.8, 2.8, 2.8, 2.8 }
-	: new double[] { 1.75, 1.75, 1.75, .75 }; // {1.82/100, 1.815/100, 2.015/100,
+	: new double[] { 0, 0, 0, 0 }; // {1.82/100, 1.815/100, 2.015/100,
 															// 1.915/100};
 	public static final double[] drivekI = { 0, 0, 0, 0 };
 	public static final double[] drivekD = { 0, 0, 0, 0 };
 	public static final boolean[] driveInversion = (CONFIG.isSwimShady()
 	? new boolean[] { false, false, false, false }
-	: new boolean[] { true, false, true, false });
+	: new boolean[] { false, true, false, true });
 	public static final boolean[] turnInversion = { true, true, true, true };
 	// kS
 	// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
-    public static final double[] kForwardVolts = { 0, 0, 0, 0 };
+    public static final double[] kForwardVolts = { 0.2, 0.2, 0.2, 0.2 };
 	public static final double[] kBackwardVolts = kForwardVolts;
 
 	// public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
