@@ -15,9 +15,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Limelight extends SubsystemBase {
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   LimelightHelpers helper = new LimelightHelpers();
+  double tx;
+  double currDirection;
+  Drivetrain drivetrain;
+  double targetAngle
+  PIDController rotationPID = new PIDController(kP, kI, kD);
 
-  public Limelight (){
-
+  public Limelight (Drivetrain drivetrain){
+    this.drivetrain = drivetrain;
   }
 
   public Pose2d getPose2D() {
@@ -32,6 +37,12 @@ public class Limelight extends SubsystemBase {
     return table.getEntry("tid").getDouble(0);
   }
 
+  public void alignRotation() {
+    tx = table.getEntry("tx").getDouble(0);
+    currDirection = getHeading();
+    targetAngle = currDirection + tx;
+    drive(0,0,rotationPID.calculate(currDirection, targetAngle));
+  }
 
   
 }

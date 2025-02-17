@@ -33,7 +33,6 @@ public class RobotContainer {
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
 
   public RobotContainer() {
-
     setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
