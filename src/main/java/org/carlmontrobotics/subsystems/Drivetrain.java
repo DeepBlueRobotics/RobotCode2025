@@ -238,7 +238,7 @@ public class Drivetrain extends SubsystemBase {
                 };
                 gyroYawSim = new SimDeviceSim("navX-Sensor[0]").getDouble("Yaw");
             }
-            
+            SmartDashboard.putData("Module FL",moduleFL);
             SparkMaxConfig driveConfig = new SparkMaxConfig();
             driveConfig.openLoopRampRate(secsPer12Volts);
             driveConfig.encoder.positionConversionFactor(wheelDiameterMeters * Math.PI / driveGearing);
@@ -252,12 +252,13 @@ public class Drivetrain extends SubsystemBase {
             }
             SparkMaxConfig turnConfig = new SparkMaxConfig();
             turnConfig.encoder.positionConversionFactor(360/turnGearing);
-            turnConfig.encoder.positionConversionFactor(360/turnGearing/60);
+            turnConfig.encoder.velocityConversionFactor(360/turnGearing/60);
             turnConfig.encoder.uvwAverageDepth(2);
             turnConfig.encoder.uvwMeasurementPeriod(16);
 
+            //turnConfig.closedLoop.pid(kP, kI, kD).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
             for (SparkMax turnMotor : turnMotors) {
-                turnMotor.configure(turnConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+                turnMotor.configure(turnConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
             }
 
             for (CANcoder coder : turnEncoders) {
@@ -266,7 +267,7 @@ public class Drivetrain extends SubsystemBase {
                 coder.getVelocity().setUpdateFrequency(500);
 
             }
-            turnConfig.closedLoop.pid(kP, kI, kD).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+           
             SmartDashboard.putData("Field", field);
 
             // for(SparkMax driveMotor : driveMotors)
@@ -340,25 +341,32 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
-        double velocity = SmartDashboard.getNumber("GoalPos", 0);
-        PIDController pid = new PIDController(kP, kI, kD);        
-        kP = SmartDashboard.getNumber("kP", 0);
-        kI = SmartDashboard.getNumber("kI", 0);
-        kD = SmartDashboard.getNumber("kD", 0);
-        pid.setIZone(20);
-        SparkMaxConfig config = new SparkMaxConfig();
+        // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
+        // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
+        // double goal = SmartDashboard.getNumber("GoalPos", 0);
+        // PIDController pid = new PIDController(kP, kI, kD);        
+        // kP = SmartDashboard.getNumber("kP", 0);
+        // kI = SmartDashboard.getNumber("kI", 0);
+        // kD = SmartDashboard.getNumber("kD", 0);
+        //pid.setIZone(20);
+        //SmartDashboard.putBoolean("atgoal", pid.atSetpoint());
+        // SparkMaxConfig config = new SparkMaxConfig();
+        
         //config.closedLoop.feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder);
-        config.closedLoop.pid(0.2
-        ,0,0.2);
-        config.encoder.positionConversionFactor(360/Constants.Drivetrainc.turnGearing);
-        turnMotors[0].configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        //moduleFL.move(0.0000001, 180);
+        // System.out.println(kP);
+        // config.closedLoop.pid(kP
+        // ,kI,kD);
+        // config.encoder.positionConversionFactor(360/Constants.Drivetrainc.turnGearing);
+        // turnMotors[0].configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        // //moduleFL.move(0.0000001, 180);
         //moduleFL.move(0.01, 180);
-        turnPidControllers[0].setReference(320
+        moduleFR.move(0.00001, 180);
+        moduleBR.move(0.00001, 180);
+        moduleFL.move(0.00001, 180);
+        moduleBL.move(0.00001, 180);
+        // turnPidControllers[0].setReference(goal
 
-        , ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        // , ControlType.kPosition, ClosedLoopSlot.kSlot0);
         
         
         // 167 -> -200
@@ -379,7 +387,7 @@ public class Drivetrain extends SubsystemBase {
         // moduleBR.periodic();
         // double goal = SmartDashboard.getNumber("bigoal", 0);
         for (SwerveModule module : modules) {
-            //module.periodic();
+            module.periodic();
             // module.move(0, goal);
         }
 
@@ -433,7 +441,7 @@ public class Drivetrain extends SubsystemBase {
 
         for (SwerveModule module : modules)
             SendableRegistry.addChild(this, module);
-
+        
         builder.addBooleanProperty("Magnetic Field Disturbance",
         gyro::isMagneticDisturbance, null);
         builder.addBooleanProperty("Gyro Calibrating", gyro::isCalibrating, null);

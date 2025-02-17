@@ -60,7 +60,7 @@ public final class Constants {
 	// Gearing for the Swerve Modules is 6.75 : 1e
 	public static final double driveGearing = 6.75;
 	// Turn motor shaft to "module shaft"
-	public static final double turnGearing = 150 / 7;
+	public static final double turnGearing = 150.0 / 7;
 
 	public static final double driveModifier = 1;
 	public static final double wheelDiameterMeters = Units.inchesToMeters(4.0) * 7.36 / 7.65 /*
@@ -90,23 +90,23 @@ public final class Constants {
 	// Determine correct turnZero constants (FL, FR, BL, BR)
 	public static final double[] turnZeroDeg = RobotBase.isSimulation() ? new double[] {-90.0, -90.0, -90.0, -90.0 }
 	: (CONFIG.isSwimShady() ? new double[] { 85.7812, 85.0782, -96.9433, -162.9492 }
-		: new double[] { -48.6914, 63.3691, 94.1309, -6.7676 });/* real values here */
+		: new double[] { 65.8301, -160.9277, 170.5078, 91.1426 });/* real values here */
 
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
-	public static final double[] turnkP = { 0.2, 0, 0, 0 }; // {0.00374, 0.00374, 0.00374,
+	public static final double[] turnkP = {  51.078, 25, 35.946, 30.986 }; // {0.00374, 0.00374, 0.00374,
 																	// 0.00374};
-	public static final double[] turnkI = { 0, 0, 0, 0 };
-	public static final double[] turnkD = { 0.2/* dont edit */, 0, 0, 0}; // todo: use d
+	public static final double[] turnkI = { 0, 0.1, 0, 0 };
+	public static final double[] turnkD = { 0.2/* dont edit */, 0.3, 0.5, 0.4}; // todo: use d
 	// public static final double[] turnkS = {0.2, 0.2, 0.2, 0.2};
-	public static final double[] turnkS = { 0, 0, 0, 0 };
+	public static final double[] turnkS = { 0.13027, 0.17026, 0.2, 0.23262 };
 
 	// V = kS + kV * v + kA * a
 	// 12 = 0.2 + 0.00463 * v
 	// v = (12 - 0.2) / 0.00463 = 2548.596 degrees/s
-	public static final double[] turnkV = { 0, 0, 0, 0 };
-	public static final double[] turnkA = { 0, 0, 0, 0 };
+	public static final double[] turnkV = {2.6532, 2.7597, 2.7445, 2.7698};
+	public static final double[] turnkA = { 0.17924, 0.17924, 0.17924, 0.17924 };
 
 	// kP is an average of the forward and backward kP values
 	// Forward: 1.72, 1.71, 1.92, 1.94
@@ -122,12 +122,16 @@ public final class Constants {
 	: new boolean[] { true, false, true, false });
 	public static final boolean[] turnInversion = { true, true, true, true };
 	// kS
-	public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
+	// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
+    public static final double[] kForwardVolts = { 0, 0, 0, 0 };
 	public static final double[] kBackwardVolts = kForwardVolts;
 
-	public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
+	// public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
+    public static final double[] kForwardVels = { 0, 0, 0, 0 };//volts per m/s
 	public static final double[] kBackwardVels = kForwardVels;
-	public static final double[] kForwardAccels = { 1.1047 / 2, 0.79422 / 2, 0.77114 / 2, 1.1003 / 2 };
+
+	// public static final double[] kForwardAccels = { 1.1047 / 2, 0.79422 / 2, 0.77114 / 2, 1.1003 / 2 };
+    public static final double[] kForwardAccels = { 0, 0, 0, 0 };// volts per m/s^2
 	public static final double[] kBackwardAccels = kForwardAccels;
 
 	public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
@@ -170,8 +174,8 @@ public final class Constants {
 	public static final int turnBackRightPort = 4;
 	//to be configured
 	public static final int canCoderPortFL = 1; //0
-	public static final int canCoderPortFR = 3;
-	public static final int canCoderPortBL = 2;
+	public static final int canCoderPortFR = 2;
+	public static final int canCoderPortBL = 3;
 	public static final int canCoderPortBR = 0; //1
 
 	// #endregion

@@ -75,6 +75,7 @@ public class RobotContainer {
     {
       // Put any configuration overrides to the dashboard and the terminal
       SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
+      SmartDashboard.putData(drivetrain);
       System.out.println(Config.CONFIG);
 
       SmartDashboard.putData("BuildConstants", BuildInfo.getInstance());
