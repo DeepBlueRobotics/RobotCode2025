@@ -5,11 +5,11 @@ public final class Constants {
     //     public static final double MAX_SPEED_MPS = 2;
     // }
     public static final class Limelightc {
-        public static final String ROBOT_LL_NAME = 'limelight'; // Please change the constant
+        public static final String ROBOT_LL_NAME = "limelight-shooter"; // Please change the constant
 
         public static final int[] VALID_IDS = {3, 16}; // Processors
         public static final double MOUNT_ANGLE_DEG_LL = 45; // Please change
-        public static final double HEIGHT_FROM_GROUND_METERS_ROBOT = 0.206502 // Seems to be OK
+        public static final double HEIGHT_FROM_GROUND_METERS_ROBOT = 0.206502; // Seems to be OK
         public static final double ALGAE_HEIGHT = 0.4191;
 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field

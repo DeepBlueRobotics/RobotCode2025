@@ -33,45 +33,45 @@ public class Limelight extends SubsystemBase {
     shooterMap.put(3.1, 0.3);
 
     SmartDashboard.putBoolean("Robot sees Processor", LimelightHelpers.getTV(ROBOT_LL_NAME));
+  }
+  @Override
+  public void periodic() {
+    SmartDashboard.putBoolean("Robot sees Processor", LimelightHelpers.getTV(ROBOT_LL_NAME));
+  }
+  // Very helpful accessors
+  public double getTXDeg() {
+    return LimelightHelpers.getTX(ROBOT_LL_NAME);
+  }
 
-    public void periodic() {
+  public double getTYDeg() {
+    return LimelightHelpers.getTY(ROBOT_LL_NAME);
+  }
 
-      SmartDashboard.putBoolean("Robot sees Processor", LimelightHelpers.getTV(ROBOT_LL_NAME));
+  // Distance accessors for other subsystems
+  public double getDistanceToProcessorMeters() {
+    if (LimelightHelpers.getFiducialID(ROBOT_LL_NAME) == RED_PROCESSOR_ID
+    || LimelightHelpers.getFiducialID(ROBOT_LL_NAME) == BLUE_PROCESSOR_ID) {
+      Rotation2d angleToGoal = Rotation2d.fromDegrees(MOUNT_ANGLE_DEG_LL).plus(Rotation2d.fromDegrees(getTYDeg()));
+      double distance = (PROCESSOR_CENTER_HEIGHT_METERS - HEIGHT_FROM_GROUND_METERS_ROBOT) / angleToGoal.getTan();
+      return distance;
     }
-    // Very helpful accessors
-    public double getTXDeg() {
-      return LimelightHelpers.getTX(ROBOT_LL_NAME);
+    else {
+      return -1;
     }
+  }
 
-    public double getTYDeg() {
-      return LimelightHelpers.getTY(ROBOT_LL_NAME);
+  public double getDistanceToAlgaeMeters() {
+    Rotation2d angleToGoal = Rotation2d.fromDegrees(MOUNT_ANGLE_DEG_LL).plus(Rotation2d.fromDegrees(getTYDeg()));
+    if (angleToGoal.getDegrees() >= 0) {
+      double distance = (HEIGHT_FROM_GROUND_METERS_ROBOT - ALGAE_HEIGHT)/Math.tan(Math.abs(angleToGoal.getRadians()));
+      return distance;
     }
+    else {
+      return -1;
+    }
+  }
 
-    // Distance accessors for other subsystems
-    public double getDistanceToProcessorMeters() {
-      if (LimelightHelpers.getFiducialID(ROBOT_LL_NAME) == RED_PROCESSOR_ID
-      || LimelightHelpers.getFiducialID(ROBOT_LL_NAME) == BLUE_PROCESSOR_ID) {
-        Rotation2d.angleToGoal = Rotation2d.fromDegrees(MOUNT_ANGLE_DEG_LL).plus(Rotation2d.fromDegrees(getTYDeg(ROBOT_LL_NAME)));
-        double distance = (PROCESSOR_CENTER_HEIGHT_METERS - HEIGHT_FROM_GROUND_METERS_ROBOT) / angleToGoal.getTan();
-        return distance;
-      }
-      else {
-        return -1;
-      }
-    }
-
-    public double getDistanceToAlgaeMeters() {
-      Rotation2d angleToGoal = Rotation2d.fromDegrees(MOUNT_ANGLE_DEG_LL).plus(Rotation2d.fromDegrees(getTYDeg(ROBOT_LL_NAME)));
-      if (angleToGoal.getDegrees >= 0) {
-        double distance = (HEIGHT_FROM_GROUND_METERS_ROBOT - ALGAE_HEIGHT)/Math.tan(Math.abs(angleToGoal.getRadians()));
-      }
-      else {
-        return -1;
-      }
-    }
-
-    public boolean seesTag() {
-      return LimelightHelpers.getTV(ROBOT_LL_NAME);
-    }
+  public boolean seesTag() {
+    return LimelightHelpers.getTV(ROBOT_LL_NAME);
   }
 }
