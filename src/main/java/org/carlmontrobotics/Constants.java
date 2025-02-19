@@ -1,5 +1,7 @@
 package org.carlmontrobotics;
 
+import edu.wpi.first.math.util.Units;
+
 public final class Constants {
     // public static final class Drivetrain {
     //     public static final double MAX_SPEED_MPS = 2;
@@ -25,7 +27,7 @@ public final class Constants {
 
             public static final int RED_PROCESSOR_ID = 3;
             public static final int BLUE_PROCESSOR_ID = 16;
-            public static final double PROCESSOR_CENTER_HEIGHT_METERS = 0.4318; // 17 inches. 17 wasted seconds of my time.
+            public static final double PROCESSOR_CENTER_HEIGHT_METERS = Units.inchesToMeters(17); //0.4318; 17 inches. 17 wasted seconds of my time.
 		}
     }
 
