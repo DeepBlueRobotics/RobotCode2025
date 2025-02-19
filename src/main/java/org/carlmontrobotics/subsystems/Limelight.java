@@ -32,7 +32,7 @@ public class Limelight extends SubsystemBase {
     shooterMap.put(3.45, 0.3);
     shooterMap.put(3.1, 0.3);
 
-    SmartDashboard.putBoolean("Robot sees Processor", , LimelightHelpers.getTV(ROBOT_LL_NAME));
+    SmartDashboard.putBoolean("Robot sees Processor", LimelightHelpers.getTV(ROBOT_LL_NAME));
 
     public void periodic() {
 
@@ -44,7 +44,7 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getTYDeg() {
-      return LimtelightHelpers.getTY(ROBOT_LL_NAME);
+      return LimelightHelpers.getTY(ROBOT_LL_NAME);
     }
 
     // Distance accessors for other subsystems
@@ -73,4 +73,5 @@ public class Limelight extends SubsystemBase {
     public boolean seesTag() {
       return LimelightHelpers.getTV(ROBOT_LL_NAME);
     }
+  }
 }
