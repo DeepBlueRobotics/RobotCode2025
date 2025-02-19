@@ -209,24 +209,24 @@ public class Drivetrain extends SubsystemBase {
 
 
             moduleFL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FL, 
-            driveMotors[0] = new SparkMax(driveFrontLeftPort, MotorType.kBrushless), 
-            turnMotors[0] = new SparkMax(turnFrontLeftPort, MotorType.kBrushless), 
-            turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL), 0, pitchSupplier, rollSupplier);
+                driveMotors[0] = new SparkMax(driveFrontLeftPort, MotorType.kBrushless), 
+                turnMotors[0] = new SparkMax(turnFrontLeftPort, MotorType.kBrushless), 
+                turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL), 0, pitchSupplier, rollSupplier);
             SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
             moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
-            driveMotors[1] = new SparkMax(driveFrontRightPort, MotorType.kBrushless), 
-            turnMotors[1] = new SparkMax(turnFrontRightPort, MotorType.kBrushless), 
-            turnEncoders[1] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFR), 1, pitchSupplier, rollSupplier);
+                driveMotors[1] = new SparkMax(driveFrontRightPort, MotorType.kBrushless), 
+                turnMotors[1] = new SparkMax(turnFrontRightPort, MotorType.kBrushless), 
+                turnEncoders[1] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFR), 1, pitchSupplier, rollSupplier);
 
             moduleBL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BL, 
-            driveMotors[2] = new SparkMax(driveBackLeftPort, MotorType.kBrushless), 
-            turnMotors[2] = new SparkMax(turnBackLeftPort, MotorType.kBrushless), 
-            turnEncoders[2] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBL), 2, pitchSupplier, rollSupplier);
+                driveMotors[2] = new SparkMax(driveBackLeftPort, MotorType.kBrushless), 
+                turnMotors[2] = new SparkMax(turnBackLeftPort, MotorType.kBrushless), 
+                turnEncoders[2] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBL), 2, pitchSupplier, rollSupplier);
 
             moduleBR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BR, 
-            driveMotors[3] = new SparkMax(driveBackRightPort, MotorType.kBrushless), 
-            turnMotors[3] = new SparkMax(turnBackRightPort, MotorType.kBrushless), 
-            turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR), 3, pitchSupplier, rollSupplier);
+                driveMotors[3] = new SparkMax(driveBackRightPort, MotorType.kBrushless), 
+                turnMotors[3] = new SparkMax(turnBackRightPort, MotorType.kBrushless), 
+                turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR), 3, pitchSupplier, rollSupplier);
             modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
             turnPidControllers[0] = turnMotors[0].getClosedLoopController();
             turnPidControllers[1] = turnMotors[1].getClosedLoopController();
@@ -239,6 +239,9 @@ public class Drivetrain extends SubsystemBase {
                 gyroYawSim = new SimDeviceSim("navX-Sensor[0]").getDouble("Yaw");
             }
             SmartDashboard.putData("Module FL",moduleFL);
+            SmartDashboard.putData("Module FR",moduleFR);
+            SmartDashboard.putData("Module BL",moduleBL);
+            SmartDashboard.putData("Module BR",moduleBR);
             SparkMaxConfig driveConfig = new SparkMaxConfig();
             driveConfig.openLoopRampRate(secsPer12Volts);
             driveConfig.encoder.positionConversionFactor(wheelDiameterMeters * Math.PI / driveGearing);
@@ -360,10 +363,10 @@ public class Drivetrain extends SubsystemBase {
         // turnMotors[0].configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         // //moduleFL.move(0.0000001, 180);
         //moduleFL.move(0.01, 180);
-        moduleFR.move(0.1, 0);
-        moduleBR.move(0.1, 0);
-        moduleFL.move(0.1, 0);
-        moduleBL.move(0.1, 0);
+        // moduleFR.move(0.000000001, 0);
+        // moduleBR.move(0.0000001, 0);
+        // moduleFL.move(0.000001, 0);
+        // moduleBL.move(0.000001, 0);
         // turnPidControllers[0].setReference(goal
 
         // , ControlType.kPosition, ClosedLoopSlot.kSlot0);

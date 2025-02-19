@@ -90,7 +90,7 @@ public final class Constants {
 	// Determine correct turnZero constants (FL, FR, BL, BR)
 	public static final double[] turnZeroDeg = RobotBase.isSimulation() ? new double[] {-90.0, -90.0, -90.0, -90.0 }
 	: (CONFIG.isSwimShady() ? new double[] { 85.7812, 85.0782, -96.9433, -162.9492 }
-		: new double[] { 20.8301, -105.9277, 260.5078, 91.1426 });/* real values here */
+		: new double[] { 17.2266, -96.8555, -95.8008, 85.166 });/* real values here */
 
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
