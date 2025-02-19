@@ -85,7 +85,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    implementation "com.github.DeepBlueRobotics:lib199:dbfca96f4f6795f3856e0adcdac4eafe20708dc6"
+    implementation "com.github.DeepBlueRobotics:lib199:2025-SNAPSHOT"
 }
 
 test {
