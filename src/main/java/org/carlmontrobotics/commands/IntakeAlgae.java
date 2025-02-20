@@ -1,10 +1,7 @@
 package org.carlmontrobotics.commands;
 
-import static org.carlmontrobotics.Constants.CoralEffectorc.*;
-
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
-import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
