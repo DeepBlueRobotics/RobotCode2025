@@ -18,9 +18,10 @@ public final class Constants {
         //ports
         public static final int masterPort = 19;
         public static final int followerPort = 20;
-		public static final int climbServoPort = 1;
+		public static final int elevatorLimitSwitchPort = 1;
 
         //Config
+        //TODO figure these parts out
         public static final IdleMode masterIdleMode = IdleMode.kBrake;
         public static final IdleMode followerIdleMode = IdleMode.kBrake;
         public static final boolean masterInverted = true;
@@ -29,7 +30,8 @@ public final class Constants {
         public static final double followerPositionConversionFactor = 1000;
         public static final double masterVelocityConversionFactor = 1000;
         public static final double followerVelocityConversionFactor = 1000;
-		public static final double masterGearRatio = 1000;
+        public static final double maxElevatorHeightInches = 0;
+        public static final double minElevatorHeightInches = 0;
 
         //PID
         public static final double kP = 1;

@@ -18,33 +18,43 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   //Master
-  private SparkMax masterMotor = new SparkMax(Constants.Elevatorc.masterPort, MotorType.kBrushless);
-  private SparkMaxConfig masterConfig = new SparkMaxConfig();
-  private RelativeEncoder masterEncoder = masterMotor.getEncoder();
+  private SparkMax masterMotor;
+  private SparkMaxConfig masterConfig;
+  private RelativeEncoder masterEncoder;
   //Follower
-  private SparkMax followerMotor = new SparkMax(Constants.Elevatorc.followerPort, MotorType.kBrushless);
-  private SparkMaxConfig followerConfig = new SparkMaxConfig();
-  private RelativeEncoder followerEncoder = followerMotor.getEncoder();
-
-  //Servo
-  private Servo climbServo = new Servo(Constants.Elevatorc.climbServoPort);
-
-  //Absolute Encoder
-  private AbsoluteEncoder primaryEncoder = masterMotor.getAbsoluteEncoder();
-
+  private SparkMax followerMotor;
+  private SparkMaxConfig followerConfig;
+  private RelativeEncoder followerEncoder;
+  // Caliberation
+  private DigitalInput limitSwitch;
   //Vars
   private double heightGoal;
   //PID
-  private final SparkClosedLoopController pidElevatorController = masterMotor.getClosedLoopController();
+  private SparkClosedLoopController pidElevatorController;
   
   public Elevator() {
+    //motors
+    masterMotor = new SparkMax(Constants.Elevatorc.masterPort, MotorType.kBrushless);
+    masterConfig = new SparkMaxConfig();
+    masterEncoder = masterMotor.getEncoder();
+    followerMotor = new SparkMax(Constants.Elevatorc.followerPort, MotorType.kBrushless);
+    followerConfig = new SparkMaxConfig();
+    followerEncoder = followerMotor.getEncoder();
     configureMotors();
+
+  //Calibration
+    limitSwitch = new DigitalInput(Constants.Elevatorc.elevatorLimitSwitchPort);
+
+  //PID
+    pidElevatorController = masterMotor.getClosedLoopController();
   }
 
   private void configureMotors () {
@@ -84,11 +94,13 @@ public class Elevator extends SubsystemBase {
   }
   
   public double getCurrentHeight() {
-    return masterEncoder.getPosition() * Constants.Elevatorc.masterPositionConversionFactor;
+    return masterEncoder.getPosition();
   }
   
   public void updateEncoders() {
-    masterEncoder.setPosition(primaryEncoder.getPosition()*Constants.Elevatorc.masterGearRatio);
+    if (!limitSwitch.get()) {
+      masterEncoder.setPosition(Constants.Elevatorc.maxElevatorHeightInches);
+    }
   }
 
   public void getToGoal() {
@@ -107,15 +119,11 @@ public class Elevator extends SubsystemBase {
     return masterEncoder.getPosition();
   }
 
-  public void lockClimb() {
-    climbServo.set(1);
-  }
-
-  public void unlockClimb(){
-    climbServo.set(0);
-  }
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("MaxHeight", limitSwitch.get());
+    SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
+    updateEncoders();
     getToGoal();
   }
 }
