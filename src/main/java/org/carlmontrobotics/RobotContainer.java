@@ -30,6 +30,7 @@ import org.carlmontrobotics.commands.IntakeCoral;
 import org.carlmontrobotics.commands.OuttakeCoral;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
@@ -67,14 +68,34 @@ public class RobotContainer {
 
   private List<Command> autoCommands = new ArrayList<Command>();
   private SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
-  
   private boolean hasSetupAutos = false;
   private final String[] autoNames = new String[] {
           /* These are assumed to be equal to the AUTO ames in pathplanner */
-          "Left-Auto Ruiner", "Center-Auto Ruiner", "Right-Auto Ruiner",
+          "Left 1 Piece L1 Auto", "Center 1 Piece L1 Auto", "Right 1 Piece L1 Auto",
+          "Left 1 Piece L2 Auto", "Center 1 Piece L2 Auto", "Right 1 Piece L2 Auto",
+          "Left 1 Piece L3 Auto", "Center 1 Piece L3 Auto", "Right 1 Piece L3 Auto",
+          "Left 1 Piece L4 Auto", "Center 1 Piece L4 Auto", "Right 1 Piece L4 Auto",
+
+          "Left 2 Piece L1 Auto", "Right 2 Piece L1 Auto",
+          "Left 2 Piece L2 Auto", "Right 2 Piece L2 Auto",
+          "Left 2 Piece L3 Auto", "Right 2 Piece L3 Auto",
+          "Left 2 Piece L4 Auto", "Right 2 Piece L4 Auto",
+
+          "Left 3 Piece L1 Auto", "Right 3 Piece L1 Auto",
+          "Left 3 Piece L2 Auto", "Right 3 Piece L2 Auto",
+          "Left 3 Piece L3 Auto", "Right 3 Piece L3 Auto",
+          "Left 3 Piece L4 Auto", "Right 3 Piece L4 Auto",
+
+          "Left 4 Piece L1 Auto", "Right 4 Piece L1 Auto",
+          "Left 4 Piece L2 Auto", "Right 4 Piece L2 Auto",
+          "Left 4 Piece L3 Auto", "Right 4 Piece L3 Auto",
+          "Left 4 Piece L4 Auto", "Right 4 Piece L4 Auto",
+
+          "Left Forward", "Center Forward", "Right Forward",
+
+
   };
-  
-  //DigitalInput[] autoSelectors = new DigitalInput[Math.min(autoNames.length, 10)];
+  DigitalInput[] autoSelectors = new DigitalInput[Math.min(autoNames.length, 10)];
   
 
   public RobotContainer() {
@@ -183,11 +204,10 @@ public class RobotContainer {
         {
             for (int i = 0; i < autoNames.length; i++) {
                 String name = autoNames[i];
-
+                //Run Auto
                 autoCommands.add(new PathPlannerAuto(name));
             }
         }
-
         {
             //No Auto
             autoCommands.add(0, new PrintCommand("Running NULL Auto!"));
