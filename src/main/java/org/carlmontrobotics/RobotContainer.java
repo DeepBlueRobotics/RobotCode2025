@@ -11,6 +11,7 @@ import static org.carlmontrobotics.Constants.OI;
 
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.commands.CoralIntake;
+import org.carlmontrobotics.commands.SetCoralOut;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 //controllers
@@ -38,7 +39,8 @@ public class RobotContainer {
   public final CoralEffector coralEffector = new CoralEffector();
 
   public RobotContainer() {
-    SmartDashboard.putData("Coral Intake", new CoralIntake());
+    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
+    SmartDashboard.putData("coral out", new SetCoralOut(coralEffector));
     setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
@@ -93,9 +95,5 @@ public class RobotContainer {
    */
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
-  }
-  public Command CoralIntake(){
-    return new SequentialCommandGroup(new CoralIntake());
-
   }
 }
