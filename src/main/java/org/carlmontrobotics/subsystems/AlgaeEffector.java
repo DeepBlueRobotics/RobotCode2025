@@ -7,11 +7,15 @@ import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import static org.carlmontrobotics.RobotContainer.*;
 
+import java.beans.Encoder;
+
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -19,6 +23,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
@@ -50,17 +55,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class AlgaeEffector extends SubsystemBase {
-    private SparkFlex topMotor = new SparkFlex(Constants.AlgaeEffectorc.upperMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
-    private SparkMax bottomMotor = new SparkMax(Constants.AlgaeEffectorc.lowerMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
-    private SparkFlex pincherMotor = new SparkFlex(Constants.AlgaeEffectorc.pinchMotorID, MotorType.kBrushless); //why is there a vortex motor on coral effectors?
+    private final SparkFlex topMotor = new SparkFlex(Constants.AlgaeEffectorc.upperMotorID, MotorType.kBrushless);
+    private final SparkFlex bottomMotor = new SparkFlex(Constants.AlgaeEffectorc.lowerMotorID, MotorType.kBrushless); 
+    private final SparkFlex pincherMotor = new SparkFlex(Constants.AlgaeEffectorc.pinchMotorID, MotorType.kBrushless);
+    private final SparkMax armMotor = new SparkMax(Constants.AlgaeEffectorc.armMotorID, MotorType.kBrushless);
+
     
     private final RelativeEncoder topEncoder = topMotor.getEncoder();
     private final RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
     private final RelativeEncoder pincherEncoder = pincherMotor.getEncoder();
+    private final RelativeEncoder armEncoder = armMotor.getEncoder();
+    private final Encoder armAbsoluteEncoder = new Encoder();
 
     private final SparkClosedLoopController pidControllerTop = topMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerBottom = bottomMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerPincher = pincherMotor.getClosedLoopController();
+    private final SparkClosedLoopController pidControllerArm = armMotor.getClosedLoopController();
     
     private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.TopkS], Constants.kV[Constants.AlgaeEffectorc.TopkS], Constants.kA[Constants.AlgaeEffectorc.TopkS]);
     private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.BottomkS], Constants.kV[Constants.AlgaeEffectorc.BottomkS], Constants.kA[Constants.AlgaeEffectorc.BottomkS]);
@@ -75,8 +85,9 @@ public class AlgaeEffector extends SubsystemBase {
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
         SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
-        SparkMaxConfig bottomMotorConfig = new SparkMaxConfig();
+        SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
         SparkFlexConfig topMotorConfig = new SparkFlexConfig();
+        SparkMaxConfig  armMotorConfig = new SparkMaxConfig();
         
 
         topMotorConfig.closedLoop.pid(
@@ -99,6 +110,9 @@ public class AlgaeEffector extends SubsystemBase {
             Constants.kD[Constants.AlgaeEffectorc.PincherkS]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+
+        armMotorConfig.idleMode(IdleMode.kBrake);
+        armMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     }
     //----------------------------------------------------------------------------------------
 

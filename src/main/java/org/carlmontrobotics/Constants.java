@@ -46,6 +46,7 @@ public final class Constants {
 		public static final int upperMotorID = 1;
 		public static final int lowerMotorID = 2;
         public static final int pinchMotorID = 3;
+        public static final int armMotorID = 4;
 		public static final int TopkS = 1;
 		public static final int BottomkS = 1;
 		public static final int PincherkS = 1;
@@ -58,17 +59,5 @@ public final class Constants {
         public static double outtakeBottomRPM = 2100;  
         public static double outtakePincherRPM = 2100;  
 
-	}
-    public static final class CoralEffectorc {
-		
-        public static final double kP = 0.0;
-		public static final double kI = 0.0;
-		public static final double kD = 0.0;
-        public static double intakeRPM = -1000;  
-        public static double outtakeRPM = 2100;  
-        //TODO: Change after testing
-        public static final int DETECT_DISTANCE_INCHES = 3;
-        public static final int effectorMotorID = 0;
-        public static final int effectorDistanceSensorID = 0;
 	}
 }

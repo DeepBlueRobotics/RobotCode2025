@@ -14,10 +14,9 @@ import org.carlmontrobotics.Constants.OI.Manipulator.*;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
-import org.carlmontrobotics.subsystems.CoralEffector;
+
 import org.carlmontrobotics.commands.IntakeAlgae;
-import org.carlmontrobotics.commands.IntakeCoral;
-import org.carlmontrobotics.commands.OuttakeCoral;
+
 
 
 //controllers
@@ -34,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 //control bindings
-import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -46,7 +44,6 @@ public class RobotContainer {
   public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
   private final AlgaeEffector algaeEffector = new AlgaeEffector();
-  private final CoralEffector coralEffector = new CoralEffector();
   public RobotContainer() {
     setBindingsDriver();
     setBindingsManipulator();
@@ -71,12 +68,6 @@ public class RobotContainer {
 
 
   private void setBindingsManipulator() {
-    axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
-      .whileTrue(new IntakeCoral(coralEffector));
-
-    axisTrigger(manipulatorController, OI.Manipulator.OuttakeTrigger)
-      .whileTrue(new OuttakeCoral(coralEffector));
-    
     new JoystickButton(manipulatorController, OI.Manipulator.IntakeBumper)
       .whileTrue(new IntakeAlgae(algaeEffector));
     
