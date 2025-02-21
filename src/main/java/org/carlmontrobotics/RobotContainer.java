@@ -11,7 +11,7 @@ import static org.carlmontrobotics.Constants.OI;
 
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.commands.CoralIntake;
-import org.carlmontrobotics.commands.SetCoralOut;
+import org.carlmontrobotics.commands.CoralOutake;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 //controllers
@@ -40,7 +40,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
-    SmartDashboard.putData("coral out", new SetCoralOut(coralEffector));
+    SmartDashboard.putData("coral out", new CoralOutake(coralEffector));
     setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
@@ -56,7 +56,11 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {}
-  private void setBindingsManipulator() {}
+  private void setBindingsManipulator() {
+    new JoystickButton(manipulatorController, OI.Manipulator.IntakeButton)
+      .whileTrue(new CoralOutake(coralEffector))
+      .whileFalse(new CoralIntake(coralEffector));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

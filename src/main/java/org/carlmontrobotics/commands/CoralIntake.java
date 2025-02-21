@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;;
 
 public class CoralIntake extends Command {
     public static double spin;
-    public static boolean fast2 = false;
-    Timer timer = new Timer();
-    Timer timer2 = new Timer();
-    Timer coralInTimer = new Timer();
+    // public static boolean fast2 = false;
+    // Timer timer = new Timer();
+    // Timer timer2 = new Timer();
+    // Timer coralInTimer = new Timer();
     public static double coralMotorPosition;
     private CoralEffector coralEffector;
 
@@ -52,16 +52,16 @@ public class CoralIntake extends Command {
         // CoralEffector.coralMotor.set(0.1);
         // spin = 10;
         SmartDashboard.putNumber("spin", spin);
-        SmartDashboard.putNumber("timer", timer.get());
-    // SmartDashboard.getBoolean("outakeGet", coralIn);r
+        //SmartDashboard.putNumber("timer", timer.get());
+        // SmartDashboard.getBoolean("outakeGet", coralIn);r
         SmartDashboard.putBoolean("coral in", coralEffector.coralIsIn());
         if (CoralEffector.distanceSensorSees){
-            coralEffector.setMotorSpeed(0.07);
+            coralEffector.setMotorSpeed(CoralEffectorConstants.coralEffectorMotorInputFastSpeed);
             coralMotorPosition = coralEffector.getEncoderPos(); //rotations
             coralEffector.setCoralIn(true);
         }
         else if (coralEffector.coralIsIn()){
-            coralEffector.setReferencePosition(coralMotorPosition - 0.1); //rotations
+            coralEffector.setReferencePosition(coralMotorPosition + CoralEffectorConstants.coralEffectorDistanceSensorOffset); //rotations
         }
         else {
             coralEffector.setMotorSpeed(0);

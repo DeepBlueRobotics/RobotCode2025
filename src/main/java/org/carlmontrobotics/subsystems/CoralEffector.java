@@ -38,11 +38,10 @@ public class CoralEffector extends SubsystemBase {
     public DigitalInput coralLimitSwitch = new DigitalInput(CoralEffectorConstants.coralLimitSwitchPort);
     public TimeOfFlight distanceSensor = new TimeOfFlight(CoralEffectorConstants.coralDistanceSensorPort);
     
-    public static double p = 0.5;
     public static boolean distanceSensorSees;
     public static boolean limitSwitchSees;
     public final RelativeEncoder coralEncoder = coralMotor.getEncoder();
-    private double CoralGoalRPM = 100;
+    // private double CoralGoalRPM = 100;
     private double coralOutput = coralMotor.getAppliedOutput();
     private boolean coralIn;
   
@@ -53,7 +52,7 @@ public class CoralEffector extends SubsystemBase {
         .idleMode(IdleMode.kBrake);
     config.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(p, 0.0, 0.0);
+        .pid(CoralEffectorConstants.kp, CoralEffectorConstants.ki, CoralEffectorConstants.kd);
         
     coralMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
    }
@@ -80,15 +79,15 @@ public class CoralEffector extends SubsystemBase {
     //coralMotor.getClosedLoopController().setReference(1, ControlType.kVelocity);
     distanceSensorSees = distanceSensor.getRange() < CoralEffectorConstants.coralDistanceSensorDistance;
     limitSwitchSees = !coralLimitSwitch.get();
-    CoralGoalRPM = coralEncoder.getVelocity();
+    // CoralGoalRPM = coralEncoder.getVelocity();
     coralOutput = coralMotor.getAppliedOutput();
 
     SmartDashboard.putBoolean("Distance sensor", distanceSensorSees);
     SmartDashboard.putNumber("distance", distanceSensor.getRange());
     SmartDashboard.putBoolean("limit switch", limitSwitchSees);
-    SmartDashboard.putNumber("Coral goal RPM", CoralGoalRPM);
+    // SmartDashboard.putNumber("Coral goal RPM", CoralGoalRPM);
     SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());
     SmartDashboard.putNumber("coral output", coralOutput);
-    SmartDashboard.getNumber("P", p);
+    SmartDashboard.getNumber("P", CoralEffectorConstants.kp);
   }
 }

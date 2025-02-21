@@ -4,14 +4,15 @@
 
 package org.carlmontrobotics.commands;
 
+import org.carlmontrobotics.Constants.CoralEffectorConstants;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SetCoralOut extends Command {
+public class CoralOutake extends Command {
   /** Creates a new SetCoralOut. */
   private CoralEffector coralEffector;
-  public SetCoralOut(CoralEffector coralEffector) {
+  public CoralOutake(CoralEffector coralEffector) {
     addRequirements(this.coralEffector = coralEffector);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,6 +24,7 @@ public class SetCoralOut extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    coralEffector.setMotorSpeed(CoralEffectorConstants.coralEffectorMotorOutputSpeed);
     coralEffector.setCoralIn(false);
   }
 
