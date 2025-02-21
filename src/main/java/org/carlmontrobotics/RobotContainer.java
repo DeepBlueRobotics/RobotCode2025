@@ -61,9 +61,6 @@ public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
-  private final AlgaeEffector algae = new AlgaeEffector();
-  private final CoralEffector coral = new CoralEffector();
-
   public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
   private final AlgaeEffector algaeEffector = new AlgaeEffector();
@@ -102,7 +99,7 @@ public class RobotContainer {
   public RobotContainer() {
     setBindingsDriver();
     setBindingsManipulator();
-    
+
     RegisterAutoCommands();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -132,10 +129,10 @@ public class RobotContainer {
     }
 
     private void RegisterAutoCommands(){
-      NamedCommands.registerCommand("IntakeAlgae", new IntakeAlgae(algae));
-      NamedCommands.registerCommand("OuttakeAlgae", new OuttakeAlgae(algae));
-      NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(coral));
-      NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coral));
+      NamedCommands.registerCommand("IntakeAlgae", new IntakeAlgae(algaeEffector));
+      NamedCommands.registerCommand("OuttakeAlgae", new OuttakeAlgae(algaeEffector));
+      NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(coralEffector));
+      NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coralEffector));
     }
 
   /*public Command getAutonomousCommand() {
