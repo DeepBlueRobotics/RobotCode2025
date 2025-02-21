@@ -73,6 +73,9 @@ public class CoralEffector extends SubsystemBase {
   public void setCoralIn(boolean coralIsInside) {
     coralIn = coralIsInside;
   }
+  public boolean coralDetected() {
+    return !coralLimitSwitch.get();
+  }
 
   @Override
   public void periodic() {

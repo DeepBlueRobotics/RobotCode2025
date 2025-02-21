@@ -23,10 +23,10 @@ public final class Constants {
         public final static double coralEffectorMotorInputFastSpeed = 0.07;
         // public final static double coralEffectorMotorInputFastSpeed2 = 0.05;
         // public final static double coralEffectorMotorInputSlowSpeed = 0.04;
-        public final static double coralEffectorMotorOutputSpeed = 0.2;
+        public final static double coralEffectorMotorOutputSpeed = 0.1;
         public final static double coralEffectorDistanceSensorOffset = -0.1;
-        public final static double kp = 0.04;
-        public final static double ki = 0.0;
-        public final static double kd = 0.0;
+        public final static double kp = 1.3;
+        public final static double ki = 0;
+        public final static double kd = 0;
     }
 }
