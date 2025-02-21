@@ -79,11 +79,7 @@ public class AlgaeEffector extends SubsystemBase {
     //feedforward for arm was added
 
     private final double GoalAngle=0;
-    DigitalInput limitSwitch = new DigitalInput(1); 
-    
-    public boolean limitDetects() {
-        return limitSwitch.get(); 
-    }
+
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
         SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
@@ -93,29 +89,29 @@ public class AlgaeEffector extends SubsystemBase {
         
 
         topMotorConfig.closedLoop.pid(
-            Constants.kP[Constants.AlgaeEffectorc.TopArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.TopArrayOrder],
-            Constants.kD[Constants.AlgaeEffectorc.TopArrayOrder]
+            Constants.kP[Constants.AlgaeEffectorc.topArrayOrder],
+            Constants.kI[Constants.AlgaeEffectorc.topArrayOrder],
+            Constants.kD[Constants.AlgaeEffectorc.topArrayOrder]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         topMotor.configure(topMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         
         bottomMotorConfig.closedLoop.pid(
-            Constants.kP[Constants.AlgaeEffectorc.BottomArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.BottomArrayOrder],
-            Constants.kD[Constants.AlgaeEffectorc.BottomArrayOrder]
+            Constants.kP[Constants.AlgaeEffectorc.bottomArrayOrder],
+            Constants.kI[Constants.AlgaeEffectorc.bottomArrayOrder],
+            Constants.kD[Constants.AlgaeEffectorc.bottomArrayOrder]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         bottomMotor.configure(bottomMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);   
     
         pincherMotorConfig.closedLoop.pid(
-            Constants.kP[Constants.AlgaeEffectorc.PincherArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.PincherArrayOrder],
-            Constants.kD[Constants.AlgaeEffectorc.PincherArrayOrder]
+            Constants.kP[Constants.AlgaeEffectorc.pincherArrayOrder],
+            Constants.kI[Constants.AlgaeEffectorc.pincherArrayOrder],
+            Constants.kD[Constants.AlgaeEffectorc.pincherArrayOrder]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
         armMotorConfig.closedLoop.pid(
             Constants.kP[Constants.AlgaeEffectorc.armArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.armArrayOrder,
+            Constants.kI[Constants.AlgaeEffectorc.armArrayOrder],
             Constants.kD[Constants.AlgaeEffectorc.armArrayOrder]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);

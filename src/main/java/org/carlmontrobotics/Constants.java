@@ -48,10 +48,10 @@ public final class Constants {
         public static final int pinchMotorID = 3;
         public static final int armMotorID = 4;
 
-		public static final int TopArrayOrder = 0;
-		public static final int BottomArrayOrder = 1;
-		public static final int PincherArrayOrder = 2;
-        public static final int ArmArrayOrder = 3;
+		public static final int topArrayOrder = 0;
+		public static final int bottomArrayOrder = 1;
+		public static final int pincherArrayOrder = 2;
+        public static final int armArrayOrder = 3;
         //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
 
         public static double intakeTopRPM = 1000;  
