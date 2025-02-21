@@ -61,16 +61,16 @@ public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
+  private final AlgaeEffector algae = new AlgaeEffector();
+  private final CoralEffector coral = new CoralEffector();
+
   public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
   private final AlgaeEffector algaeEffector = new AlgaeEffector();
   private final CoralEffector coralEffector = new CoralEffector();
 
-  private List<Command> autoCommands = new ArrayList<Command>();
-  private SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
-  private boolean hasSetupAutos = false;
-  private final String[] autoNames = new String[] {
-          /* These are assumed to be equal to the AUTO ames in pathplanner */
+  private final SendableChooser<Command> autoChooser;
+  /*private final String[] autoNames = new String[] {
           "Left 1 Piece L1 Auto", "Center 1 Piece L1 Auto", "Right 1 Piece L1 Auto",
           "Left 1 Piece L2 Auto", "Center 1 Piece L2 Auto", "Right 1 Piece L2 Auto",
           "Left 1 Piece L3 Auto", "Center 1 Piece L3 Auto", "Right 1 Piece L3 Auto",
@@ -94,44 +94,23 @@ public class RobotContainer {
           "Left Forward", "Center Forward", "Right Forward",
 
 
-  };
-  DigitalInput[] autoSelectors = new DigitalInput[Math.min(autoNames.length, 10)];
+  };*/
+
+
   
 
   public RobotContainer() {
     setBindingsDriver();
     setBindingsManipulator();
-
-
-    registerAutoCommands();
-    SmartDashboard.putData(autoSelector);
-    SmartDashboard.setPersistent("SendableChooser[0]");
-    int i = 3;
-    for (String n : autoNames) {
-        autoSelector.addOption(n, i);
-        i++;
-    }
-    ShuffleboardTab autoSelectorTab = Shuffleboard.getTab("Auto Chooser Tab");
-    autoSelectorTab.add(autoSelector).withSize(2, 1);
+    
+    RegisterAutoCommands();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
-  private void setDefaultCommands() {
-    // drivetrain.setDefaultCommand(new TeleopDrive(
-    //   drivetrain,
-    //   () -> ProcessedAxisValue(driverController, Axis.kLeftY)),
-    //   () -> ProcessedAxisValue(driverController, Axis.kLeftX)),
-    //   () -> ProcessedAxisValue(driverController, Axis.kRightX)),
-    //   () -> driverController.getRawButton(OI.Driver.slowDriveButton)
-    // ));
-  }
-  private void setBindingsDriver() {
-    // new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false)); //wrong
-    // new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
-    // new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
-    // new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true));
 
-  }
-
+  private void setDefaultCommands() {}
+  private void setBindingsDriver() {}
 
   private void setBindingsManipulator() {
     axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
@@ -147,12 +126,17 @@ public class RobotContainer {
       .whileFalse(new OuttakeAlgae(algaeEffector));
     }
     
-
     private Trigger axisTrigger(GenericHID controller, Axis axis) {
       return new Trigger(() -> Math
               .abs(getStickValue(controller, axis)) > Constants.OI.MIN_AXIS_TRIGGER_VALUE);
     }
 
+    private void RegisterAutoCommands(){
+      NamedCommands.registerCommand("IntakeAlgae", new IntakeAlgae(algae));
+      NamedCommands.registerCommand("OuttakeAlgae", new OuttakeAlgae(algae));
+      NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(coral));
+      NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coral));
+    }
 
   /*public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
@@ -193,39 +177,8 @@ public class RobotContainer {
     return inputProcessing(getStickValue(hid, axis));
   }
 
-
-
-  private void registerAutoCommands() {
-    // NamedCommands.registerCommand("Intake", new Intake(intakeShooter));
-    //NamedCommands.registerCommand("Eject", new Eject(intakeShooter));
-  }
-
-    private void setupAutos() {
-        {
-            for (int i = 0; i < autoNames.length; i++) {
-                String name = autoNames[i];
-                //Run Auto
-                autoCommands.add(new PathPlannerAuto(name));
-            }
-        }
-        {
-            //No Auto
-            autoCommands.add(0, new PrintCommand("Running NULL Auto!"));
-        }
-    }
-
     public Command getAutonomousCommand() {
-        if (!hasSetupAutos) {
-            setupAutos();
-            hasSetupAutos = true;
-        }
-        Integer autoIndex = autoSelector.getSelected();
-
-        if (autoIndex != null && autoIndex != 0) {
-            new PrintCommand("Running selected auto: " + autoSelector.toString());
-            return autoCommands.get(autoIndex.intValue());
-        }
-        return new PrintCommand("No auto :(");
+      return autoChooser.getSelected();
     }
 }
 
