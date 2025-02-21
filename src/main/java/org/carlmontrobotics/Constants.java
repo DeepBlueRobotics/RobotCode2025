@@ -71,7 +71,7 @@ public final class Constants {
         public static final double TBE_PPR = 2048.0; //Through-Bore Encoder
         public static final double TBE_DPP = 360.0/TBE_PPR; //Degrees per pulse
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
-        public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k4X;
+        public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
 
         //TODO figure the zero out once encoder is on
         public static final double armToZero = 0; //Pure vertical down
