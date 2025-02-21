@@ -1,5 +1,9 @@
 package org.carlmontrobotics;
 
+import java.security.spec.EncodedKeySpec;
+
+import edu.wpi.first.wpilibj.CounterBase;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 
@@ -66,6 +70,8 @@ public final class Constants {
 
         public static final double TBE_PPR = 2048.0; //Through-Bore Encoder
         public static final double TBE_DPP = 360.0/TBE_PPR; //Degrees per pulse
+        public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
+        public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k4X;
 
         //TODO figure the zero out once encoder is on
         public static final double armToZero = 0; //Pure vertical down
@@ -76,8 +82,8 @@ public final class Constants {
         public static final double armShootingAngle = 0;
         //TODO Figure angle for dealgafying
         public static final double armDealgafyngAngle = 0;
-        //TODO figure out resting angle of the arm
-        public static final double armRestingAngle = 0;
+        //TODO figure out resting angle of the arm while algae inside
+        public static final double armRestingAngleWhileIntakeAlgae = 0;
 
 	}
 }

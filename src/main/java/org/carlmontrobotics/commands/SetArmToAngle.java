@@ -1,22 +1,23 @@
 package org.carlmontrobotics.commands;
+
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class setArmAngle extends Command {
-  AlgaeEffector Algae;
+public class SetArmToAngle extends Command {
+  AlgaeEffector algaeEffector;
   double angle;
   private final Timer timer = new Timer(); 
   public SetArmToAngle(AlgaeEffector algaeEffector, double angle ) {
-    addRequirements(this.Algae = algaeEffector);
+    addRequirements(this.algaeEffector = algaeEffector);
     this.angle = angle;
   }
 
   @Override
   public void initialize() {
-     AlgaeEffector.setArmAngle(angle);
+     algaeEffector.setArmAngle(angle);
     
     timer.start();
   }
@@ -29,12 +30,12 @@ public class setArmAngle extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Algae.stopMotors();
+    algaeEffector.stopMotors();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Algae.limitDetects() || timer.get() > 1; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return algaeEffector.limitDetects() || timer.get() > 1; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

@@ -68,7 +68,7 @@ public class AlgaeEffector extends SubsystemBase {
     private final RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
     private final RelativeEncoder pincherEncoder = pincherMotor.getEncoder();
     private final RelativeEncoder armEncoder = armMotor.getEncoder();
-    private final Encoder armAbsoluteEncoder = new Encoder(Constants.AlgaeEffectorc.aChannelEnc, Constants.AlgaeEffectorc.bChannelEnc);
+    private final Encoder armAbsoluteEncoder = new Encoder(Constants.AlgaeEffectorc.aChannelEnc, Constants.AlgaeEffectorc.bChannelEnc, Constants.AlgaeEffectorc.invertedTBE, Constants.AlgaeEffectorc.encodingType);
 
     private final SparkClosedLoopController pidControllerTop = topMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerBottom = bottomMotor.getClosedLoopController();
@@ -81,7 +81,7 @@ public class AlgaeEffector extends SubsystemBase {
     private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.armArrayOrder], Constants.kV[Constants.AlgaeEffectorc.armArrayOrder], Constants.kA[Constants.AlgaeEffectorc.armArrayOrder]);
     //feedforward for arm was added
 
-    private final double armGoalAngle = 0;
+    private double armGoalAngle = 0;
 
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
@@ -120,12 +120,11 @@ public class AlgaeEffector extends SubsystemBase {
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
-        armMotorConfig.closedLoop
-            .pid(
-                Constants.kP[Constants.AlgaeEffectorc.armArrayOrder],
-                Constants.kI[Constants.AlgaeEffectorc.armArrayOrder],
-                Constants.kD[Constants.AlgaeEffectorc.armArrayOrder]
-                ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        armMotorConfig.closedLoop.pid(
+            Constants.kP[Constants.AlgaeEffectorc.armArrayOrder],
+            Constants.kI[Constants.AlgaeEffectorc.armArrayOrder],
+            Constants.kD[Constants.AlgaeEffectorc.armArrayOrder]
+            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     }
 
     public void setTopRPM(double toprpm) {
@@ -144,7 +143,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     public void setArmAngle(double armangle) {
-        GoalAngle = armangle;
+        armGoalAngle = armangle;
     }
 
     public void runRPM() {
@@ -168,17 +167,17 @@ public class AlgaeEffector extends SubsystemBase {
         return bottomEncoder.getVelocity() == rpm;
     }
 
-    public void setSpeed(double speed) {
-        topMotor.set(speed);
-        bottomMotor.set(speed);
-        pincherMotor.set(speed);
+    public void setMotorSpeed(double topSpeed, double bottomSpeed, double pincherSpeed) {
+        topMotor.set(topSpeed);
+        bottomMotor.set(bottomSpeed);
+        pincherMotor.set(pincherSpeed);
     }
 
-    @override
 
+    @Override
     public void periodic() {
-        pidControllerArm.setReference(goalAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        pincherFeedforward.calculate(goalAngle);    
+        pidControllerArm.setReference(armGoalAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        pincherFeedforward.calculate(goalAngle); //What is this for
     }
 
 }
