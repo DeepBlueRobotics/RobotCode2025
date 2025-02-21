@@ -149,9 +149,13 @@ public class AlgaeEffector extends SubsystemBase {
     public double getArmPos() {
 
         return MathUtil.inputModulus(armAbsoluteEncoder.getPosition(),
-                0, ARM_DISCONT_RAD);
+                ARM_DISCONT_RAD, ARM_DISCONT_RAD + 2 * Math.PI);
         
                 
+    }
+
+    public double getArmVel() {
+        return armAbsoluteEncoder.getVelocity();
     }
 
     public void runRPM() {
