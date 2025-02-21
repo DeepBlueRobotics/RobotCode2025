@@ -85,5 +85,9 @@ public final class Constants {
         //TODO figure out resting angle of the arm while algae inside
         public static final double armRestingAngleWhileIntakeAlgae = 0;
 
+        public static final double UPPER_ANGLE_LIMIT_RAD = 2.6;
+		public static final double LOWER_ANGLE_LIMIT_RAD = 0;
+        public static final double ARM_DISCONT_RAD = (LOWER_ANGLE_LIMIT_RAD + UPPER_ANGLE_LIMIT_RAD) / 2 - Math.PI;
+
 	}
 }

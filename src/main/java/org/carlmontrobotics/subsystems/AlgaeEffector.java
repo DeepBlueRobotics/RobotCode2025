@@ -146,6 +146,14 @@ public class AlgaeEffector extends SubsystemBase {
         armGoalAngle = armangle;
     }
 
+    public double getArmPos() {
+
+        return MathUtil.inputModulus(armAbsoluteEncoder.getPosition(),
+                0, ARM_DISCONT_RAD);
+        
+                
+    }
+
     public void runRPM() {
         //TODO: Change RPM according to design
         setTopRPM(1000);
