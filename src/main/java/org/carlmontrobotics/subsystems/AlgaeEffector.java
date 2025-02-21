@@ -7,8 +7,6 @@ import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import static org.carlmontrobotics.RobotContainer.*;
 
-import java.beans.Encoder;
-
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
 
@@ -52,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Encoder;
 
 
 public class AlgaeEffector extends SubsystemBase {
@@ -60,34 +59,39 @@ public class AlgaeEffector extends SubsystemBase {
     private final SparkFlex pincherMotor = new SparkFlex(Constants.AlgaeEffectorc.pinchMotorID, MotorType.kBrushless);
     private final SparkMax armMotor = new SparkMax(Constants.AlgaeEffectorc.armMotorID, MotorType.kBrushless);
 
+    private SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
+    private SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
+    private SparkFlexConfig topMotorConfig = new SparkFlexConfig();
+    private SparkMaxConfig  armMotorConfig = new SparkMaxConfig();
     
     private final RelativeEncoder topEncoder = topMotor.getEncoder();
     private final RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
     private final RelativeEncoder pincherEncoder = pincherMotor.getEncoder();
     private final RelativeEncoder armEncoder = armMotor.getEncoder();
-    private final Encoder armAbsoluteEncoder = new Encoder();
+    private final Encoder armAbsoluteEncoder = new Encoder(Constants.AlgaeEffectorc.aChannelEnc, Constants.AlgaeEffectorc.bChannelEnc);
 
     private final SparkClosedLoopController pidControllerTop = topMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerBottom = bottomMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerPincher = pincherMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerArm = armMotor.getClosedLoopController();
     
-    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.TopArrayOrder], Constants.kV[Constants.AlgaeEffectorc.TopArrayOrder], Constants.kA[Constants.AlgaeEffectorc.TopArrayOrder]);
-    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.BottomArrayOrder], Constants.kV[Constants.AlgaeEffectorc.BottomArrayOrder], Constants.kA[Constants.AlgaeEffectorc.BottomArrayOrder]);
-    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.PincherArrayOrder], Constants.kV[Constants.AlgaeEffectorc.PincherArrayOrder], Constants.kA[Constants.AlgaeEffectorc.PincherArrayOrder]);
-    private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.ArmArrayOrder], Constants.kV[Constants.AlgaeEffectorc.ArmArrayOrder], Constants.kA[Constants.AlgaeEffectorc.ArmArrayOrder]);
+    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.topArrayOrder], Constants.kV[Constants.AlgaeEffectorc.topArrayOrder], Constants.kA[Constants.AlgaeEffectorc.topArrayOrder]);
+    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.bottomArrayOrder], Constants.kV[Constants.AlgaeEffectorc.bottomArrayOrder], Constants.kA[Constants.AlgaeEffectorc.bottomArrayOrder]);
+    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.pincherArrayOrder], Constants.kV[Constants.AlgaeEffectorc.pincherArrayOrder], Constants.kA[Constants.AlgaeEffectorc.pincherArrayOrder]);
+    private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.armArrayOrder], Constants.kV[Constants.AlgaeEffectorc.armArrayOrder], Constants.kA[Constants.AlgaeEffectorc.armArrayOrder]);
     //feedforward for arm was added
 
-    private final double GoalAngle=0;
+    private final double armGoalAngle = 0;
 
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
-        SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
-        SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
-        SparkFlexConfig topMotorConfig = new SparkFlexConfig();
-        SparkMaxConfig  armMotorConfig = new SparkMaxConfig();
-        
+        configureMotors();
+        armAbsoluteEncoder.setDistancePerPulse(Constants.AlgaeEffectorc.TBE_DPP);
 
+    }
+    //----------------------------------------------------------------------------------------
+
+    private void configureMotors () {
         topMotorConfig.closedLoop.pid(
             Constants.kP[Constants.AlgaeEffectorc.topArrayOrder],
             Constants.kI[Constants.AlgaeEffectorc.topArrayOrder],
@@ -116,9 +120,13 @@ public class AlgaeEffector extends SubsystemBase {
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
-        armMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        armMotorConfig.closedLoop
+            .pid(
+                Constants.kP[Constants.AlgaeEffectorc.armArrayOrder],
+                Constants.kI[Constants.AlgaeEffectorc.armArrayOrder],
+                Constants.kD[Constants.AlgaeEffectorc.armArrayOrder]
+                ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     }
-    //----------------------------------------------------------------------------------------
 
     public void setTopRPM(double toprpm) {
         pidControllerTop.setReference(toprpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);

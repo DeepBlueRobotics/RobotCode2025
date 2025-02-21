@@ -47,13 +47,15 @@ public final class Constants {
 		public static final int lowerMotorID = 2;
         public static final int pinchMotorID = 3;
         public static final int armMotorID = 4;
+        public static final int aChannelEnc = 0;
+        public static final int bChannelEnc = 1;
 
 		public static final int topArrayOrder = 0;
 		public static final int bottomArrayOrder = 1;
 		public static final int pincherArrayOrder = 2;
         public static final int armArrayOrder = 3;
         //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
-
+        //TODO find these values out vvv
         public static double intakeTopRPM = 1000;  
         public static double intakeBottomRPM = 1000;  
         public static double intakePincherRPM = 1000;  
@@ -61,6 +63,21 @@ public final class Constants {
         public static double outtakeTopRPM = 2100;  
         public static double outtakeBottomRPM = 2100;  
         public static double outtakePincherRPM = 2100;  
+
+        public static final double TBE_PPR = 2048.0; //Through-Bore Encoder
+        public static final double TBE_DPP = 360.0/TBE_PPR; //Degrees per pulse
+
+        //TODO figure the zero out once encoder is on
+        public static final double armToZero = 0; //Pure vertical down
+        //TODO ask samo for angle to intake algae from pure vertical down
+        public static final double armIntakeAngle = 0;
+        //TODO Figure these two out if we will be shooting algae
+        public static final double armRampingUpAngle = 0;
+        public static final double armShootingAngle = 0;
+        //TODO Figure angle for dealgafying
+        public static final double armDealgafyngAngle = 0;
+        //TODO figure out resting angle of the arm
+        public static final double armRestingAngle = 0;
 
 	}
 }
