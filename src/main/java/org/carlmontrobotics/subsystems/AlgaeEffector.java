@@ -25,6 +25,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkMaxAlternateEncoder;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.math.MathUtil;
@@ -68,7 +69,7 @@ public class AlgaeEffector extends SubsystemBase {
     private final RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
     private final RelativeEncoder pincherEncoder = pincherMotor.getEncoder();
     private final RelativeEncoder armEncoder = armMotor.getEncoder();
-    private final Encoder armAbsoluteEncoder = new Encoder(Constants.AlgaeEffectorc.aChannelEnc, Constants.AlgaeEffectorc.bChannelEnc, Constants.AlgaeEffectorc.invertedTBE, Constants.AlgaeEffectorc.encodingType);
+    private final RelativeEncoder armAbsoluteEncoder = armMotor.getAlternateEncoder();
 
     private final SparkClosedLoopController pidControllerTop = topMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerBottom = bottomMotor.getClosedLoopController();
@@ -86,7 +87,6 @@ public class AlgaeEffector extends SubsystemBase {
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
         configureMotors();
-        armAbsoluteEncoder.setDistancePerPulse(Constants.AlgaeEffectorc.TBE_DPP);
 
     }
     //----------------------------------------------------------------------------------------
@@ -149,7 +149,7 @@ public class AlgaeEffector extends SubsystemBase {
     public double getArmPos() {
 
         return MathUtil.inputModulus(armAbsoluteEncoder.getPosition(),
-                ARM_DISCONT_RAD, ARM_DISCONT_RAD + 2 * Math.PI);
+                Constants.AlgaeEffectorc.ARM_DISCONT_RAD, Constants.AlgaeEffectorc.ARM_DISCONT_RAD + 2 * Math.PI);
         
                 
     }

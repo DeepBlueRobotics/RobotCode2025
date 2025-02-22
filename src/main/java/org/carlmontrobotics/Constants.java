@@ -68,8 +68,8 @@ public final class Constants {
         public static double outtakeBottomRPM = 2100;  
         public static double outtakePincherRPM = 2100;  
 
-        public static final double TBE_PPR = 2048.0; //Through-Bore Encoder
-        public static final double TBE_DPP = 360.0/TBE_PPR; //Degrees per pulse
+        public static final int TBE_CPR = 8192; //Through-Bore Encoder
+        public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
         public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
 
