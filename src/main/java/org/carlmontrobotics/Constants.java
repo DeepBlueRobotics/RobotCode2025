@@ -95,25 +95,25 @@ public final class Constants {
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
-	public static final double[] turnkP = {  51.078, 25, 35.946, 30.986 }; // {0.00374, 0.00374, 0.00374,
+	public static final double[] turnkP = {18, 18, 27, 30};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
 																	// 0.00374};
-	public static final double[] turnkI = { 0, 0.1, 0, 0 };
-	public static final double[] turnkD = { 0.2/* dont edit */, 0.3, 0.5, 0.4}; // todo: use d
+	public static final double[] turnkI = {0, 0, 0, 0};//{ 0, 0.1, 0, 0 };
+	public static final double[] turnkD = {1, 1.55, 0, 2};//{ 0.2/* dont edit */, 0.3, 0.5, 0.4}; // todo: use d
 	// public static final double[] turnkS = {0.2, 0.2, 0.2, 0.2};
-	public static final double[] turnkS = { 0.13027, 0.17026, 0.2, 0.23262 };
+	public static final double[] turnkS = {0.050634, 0.033065, 0.018117, 0.021337};//sysid for fr that didnt't work{0.041796, 0.09111, 0.64804, 1.0873}//{ 0.13027, 0.17026, 0.2, 0.23262 };
 
 	// V = kS + kV * v + kA * a
 	// 12 = 0.2 + 0.00463 * v
 	// v = (12 - 0.2) / 0.00463 = 2548.596 degrees/s
-	public static final double[] turnkV = {2.6532, 2.7597, 2.7445, 2.7698};
-	public static final double[] turnkA = { 0.17924, 0.17924, 0.17924, 0.17924 };
+	public static final double[] turnkV = {2.6153, 2.5924, 2.6495, 2.6705};//sysid for fr that didnt't work{2.6403, 2.6603, 2.6168, 2.5002} //{2.6532, 2.7597, 2.7445, 2.7698};
+	public static final double[] turnkA = {0.18525, 0.13879, 0.23625, 0.25589};//sysid for fr that didnt't work{0.33266, 0.25535, 0.17924, 0.17924} //{ 0.17924, 0.17924, 0.17924, 0.17924 };
 
 	// kP is an average of the forward and backward kP values
 	// Forward: 1.72, 1.71, 1.92, 1.94
 	// Backward: 1.92, 1.92, 2.11, 1.89
 	// Order of modules: (FL, FR, BL, BR)
 	public static final double[] drivekP = CONFIG.isSwimShady() ? new double[] { 2.8, 2.8, 2.8, 2.8 }
-	: new double[] { 0, 0, 0, 0 }; // {1.82/100, 1.815/100, 2.015/100,
+	: new double[] {1.2406, 0.29066, 1.9366, 2.1562}; // {1.82/100, 1.815/100, 2.015/100,
 															// 1.915/100};
 	public static final double[] drivekI = { 0, 0, 0, 0 };
 	public static final double[] drivekD = { 0, 0, 0, 0 };
@@ -123,15 +123,15 @@ public final class Constants {
 	public static final boolean[] turnInversion = { true, true, true, true };
 	// kS
 	// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
-    public static final double[] kForwardVolts = { 0.2, 0.2, 0.2, 0.2 };
+    public static final double[] kForwardVolts = {0.33073, 0.32889, 0.12425, 0.10611};      //{ 0.2, 0.2, 0.2, 0.2 };
 	public static final double[] kBackwardVolts = kForwardVolts;
 
 	// public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
-    public static final double[] kForwardVels = { 0, 0, 0, 0 };//volts per m/s
+    public static final double[] kForwardVels = {2.5857, 2.3916, 3.0435, 3.0442};        //{ 0, 0, 0, 0 };//volts per m/s
 	public static final double[] kBackwardVels = kForwardVels;
 
 	// public static final double[] kForwardAccels = { 1.1047 / 2, 0.79422 / 2, 0.77114 / 2, 1.1003 / 2 };
-    public static final double[] kForwardAccels = { 0, 0, 0, 0 };// volts per m/s^2
+    public static final double[] kForwardAccels = {0.22104, 0.36626, 0.34054, 0.42251};    //{ 0, 0, 0, 0 };// volts per m/s^2
 	public static final double[] kBackwardAccels = kForwardAccels;
 
 	public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
@@ -245,10 +245,10 @@ public final class Constants {
 			public static final int resetFieldOrientationButton = Button.kRightBumper.value;
 			public static final int toggleFieldOrientedButton = Button.kStart.value;
 
-			public static final int rotateFieldRelative0Deg = Button.kY.value;
-			public static final int rotateFieldRelative90Deg = Button.kB.value;
-			public static final int rotateFieldRelative180Deg = Button.kA.value;
-			public static final int rotateFieldRelative270Deg = Button.kX.value;
+			public static final int y = Button.kY.value;
+			public static final int b = Button.kB.value;
+			public static final int a = Button.kA.value;
+			public static final int x = Button.kX.value;
 		}
 
 		public static final class Manipulator {

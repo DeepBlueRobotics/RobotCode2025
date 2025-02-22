@@ -390,7 +390,7 @@ public class Drivetrain extends SubsystemBase {
         // moduleBR.periodic();
         // double goal = SmartDashboard.getNumber("bigoal", 0);
         for (SwerveModule module : modules) {
-            module.periodic();
+           module.turnPeriodic();
             // module.move(0, goal);
         }
 
@@ -926,6 +926,11 @@ public class Drivetrain extends SubsystemBase {
             sysidtabshorthand_dyn("Dynamic Forward", SysIdRoutine.Direction.kForward);
             sysidtabshorthand_dyn("Dynamic Backward", SysIdRoutine.Direction.kReverse);
 
+
+            sysIdTab
+            .add(sysIdChooser)
+            .withSize(2, 1);
+
             sysIdChooser.addOption("Front Only Drive", SysIdTest.FRONT_DRIVE);
             sysIdChooser.addOption("Back Only Drive", SysIdTest.BACK_DRIVE);
             sysIdChooser.addOption("All Drive", SysIdTest.ALL_DRIVE);
@@ -937,13 +942,16 @@ public class Drivetrain extends SubsystemBase {
             sysIdChooser.addOption("BL Rotate", SysIdTest.BL_ROT);
             sysIdChooser.addOption("BR Rotate", SysIdTest.BR_ROT);
 
-            sysIdTab
-                    .add(sysIdChooser)
-                    .withSize(2, 1);
 
             sysIdTab.add("ALL THE SYSID TESTS", allTheSYSID())// is this legal??
                     .withSize(2, 1);
+            //sysIdTab.add("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
+            //sysIdTab.add("Dynamic Forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
+            sysIdTab.add("Quackson Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
+            sysIdTab.add("Quackson Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
 
+            sysIdTab.add("Dyanmic forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
+            sysIdTab.add("Dyanmic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
             sysIdTab.add(this);
 
             for (int i = 0; i < 8; i++) {// first four are drive, next 4 are turn motors
@@ -977,7 +985,8 @@ public class Drivetrain extends SubsystemBase {
     // }
 
     private SysIdTest selector() {
-        SysIdTest test = sysIdChooser.getSelected();
+        //SysIdTest test = sysIdChooser.getSelected();
+        SysIdTest test = SysIdTest.BR_ROT;
         System.out.println("Test Selected: " + test);
         return test;
     }
