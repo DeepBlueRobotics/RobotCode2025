@@ -34,6 +34,6 @@ public class OuttakeAlgae extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Algae.limitDetects() || timer.get() > 1; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return false; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

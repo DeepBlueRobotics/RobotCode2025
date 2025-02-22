@@ -18,15 +18,20 @@ public class IntakeAlgae extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    Algae.setTopRPM(Constants.AlgaeEffectorc.intakeTopRPM); 
-    Algae.setBottomRPM(Constants.AlgaeEffectorc.intakeBottomRPM); 
-    Algae.setPincherRPM(Constants.AlgaeEffectorc.intakePincherRPM); 
+    Algae.setArmAngle(Constants.AlgaeEffectorc.armIntakeAngle);
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (Algae.getArmPos() > Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae) {
+      
+      Algae.setTopRPM(Constants.AlgaeEffectorc.intakeTopRPM);
+      Algae.setBottomRPM(Constants.AlgaeEffectorc.intakeBottomRPM);
+      Algae.setPincherRPM(Constants.AlgaeEffectorc.intakePincherRPM);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -40,6 +45,6 @@ public class IntakeAlgae extends Command {
     //distance sensor doesn't detect coral
     //TODO: make distance sensor stuff
     //TODO: add smartdashboard
-    return Algae.limitDetects() || timer.get() > 1; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return false; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

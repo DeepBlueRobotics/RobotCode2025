@@ -147,16 +147,14 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     public double getArmPos() {
-
-        return MathUtil.inputModulus(armAbsoluteEncoder.getPosition(),
-                Constants.AlgaeEffectorc.ARM_DISCONT_RAD, Constants.AlgaeEffectorc.ARM_DISCONT_RAD + 2 * Math.PI);
-        
-                
+        //figures out the position of the arm in degrees based off pure vertical down
+        //TODO update the arm to get in degrees after someone will figure out what the .getPosition gets for the TBE
+        return armAbsoluteEncoder.getPosition() - Constants.AlgaeEffectorc.armToZero;
     }
 
-    public double getArmVel() {
-        return armAbsoluteEncoder.getVelocity();
-    }
+    // public double getArmVel() {
+    //     return armAbsoluteEncoder.getVelocity();
+    // }
 
     public void runRPM() {
         //TODO: Change RPM according to design
@@ -184,6 +182,11 @@ public class AlgaeEffector extends SubsystemBase {
         bottomMotor.set(bottomSpeed);
         pincherMotor.set(pincherSpeed);
     }
+
+    public boolean isAlgaeIntaked() {
+        return pincherMotor.getOutputCurrent() > Constants.AlgaeEffectorc.pincherCurrentThreshold;
+    }
+    
 
 
     @Override

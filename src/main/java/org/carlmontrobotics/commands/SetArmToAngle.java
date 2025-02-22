@@ -18,7 +18,6 @@ public class SetArmToAngle extends Command {
   @Override
   public void initialize() {
      algaeEffector.setArmAngle(angle);
-    
     timer.start();
   }
 
@@ -30,12 +29,11 @@ public class SetArmToAngle extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algaeEffector.stopMotors();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return algaeEffector.limitDetects() || timer.get() > 1; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return false; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

@@ -85,12 +85,15 @@ public final class Constants {
         //TODO Figure angle for dealgafying
         public static final double armDealgafyngAngle = 0;
         //TODO figure out resting angle of the arm while algae inside
-        public static final double armRestingAngleWhileIntakeAlgae = 0;
+        public static final double armRestingAngleWhileIntakeAlgae = 0.0;
+        //TODO figure out current threshold for pincher wheels
+        public static final double pincherCurrentThreshold = 15.0;
 
-        //max angle in radians and minimum angle in radians
-        public static final double UPPER_ANGLE_LIMIT_RAD = 2.6;
-		public static final double LOWER_ANGLE_LIMIT_RAD = 0;
-        public static final double ARM_DISCONT_RAD = (LOWER_ANGLE_LIMIT_RAD + UPPER_ANGLE_LIMIT_RAD) / 2 - Math.PI;
+        //Bad idea to make the arm think like it can spin 360 degrees CAUSE IT CANNOT #StopGaslightingTheArm
+        // //max angle in radians and minimum angle in radians
+        // public static final double UPPER_ANGLE_LIMIT_RAD = 2.6;
+		// public static final double LOWER_ANGLE_LIMIT_RAD = 0;
+        // public static final double ARM_DISCONT_RAD = (LOWER_ANGLE_LIMIT_RAD + UPPER_ANGLE_LIMIT_RAD) / 2 - Math.PI;
 
 	}
 }
