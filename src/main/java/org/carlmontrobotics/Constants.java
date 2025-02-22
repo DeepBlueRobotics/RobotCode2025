@@ -73,6 +73,8 @@ public final class Constants {
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
         public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
 
+        public static final double armGearing = 39.375;
+
         //TODO figure the zero out once encoder is on
         public static final double armToZero = 0; //Pure vertical down
         //TODO ask samo for angle to intake algae from pure vertical down
@@ -85,6 +87,7 @@ public final class Constants {
         //TODO figure out resting angle of the arm while algae inside
         public static final double armRestingAngleWhileIntakeAlgae = 0;
 
+        //max angle in radians and minimum angle in radians
         public static final double UPPER_ANGLE_LIMIT_RAD = 2.6;
 		public static final double LOWER_ANGLE_LIMIT_RAD = 0;
         public static final double ARM_DISCONT_RAD = (LOWER_ANGLE_LIMIT_RAD + UPPER_ANGLE_LIMIT_RAD) / 2 - Math.PI;
