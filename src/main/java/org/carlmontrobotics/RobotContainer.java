@@ -9,15 +9,13 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
-import org.carlmontrobotics.Constants.OI;
-import org.carlmontrobotics.commands.CoralIntake;
-import org.carlmontrobotics.commands.CoralOutake;
+import org.carlmontrobotics.subsystems.AlgaeEffector;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotContainer {
 
@@ -36,11 +35,11 @@ public class RobotContainer {
   //2. Use absolute paths from constants to reduce confusion
   public final GenericHID driverController = new GenericHID(OI.Driver.port);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
-  public final CoralEffector coralEffector = new CoralEffector();
-
+  
+  //private final CoralEffector coralEffector = new CoralEffector();
+  private final AlgaeEffector algaeEffector = new AlgaeEffector();
   public RobotContainer() {
-    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
-    SmartDashboard.putData("coral out", new CoralOutake(coralEffector));
+
     setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
@@ -55,11 +54,11 @@ public class RobotContainer {
     //   () -> driverController.getRawButton(OI.Driver.slowDriveButton)
     // ));
   }
-  private void setBindingsDriver() {}
+  private void setBindingsDriver() {
+
+  }
   private void setBindingsManipulator() {
-    new JoystickButton(manipulatorController, OI.Manipulator.IntakeButton)
-      .whileTrue(new CoralOutake(coralEffector))
-      .whileFalse(new CoralIntake(coralEffector));
+
   }
 
   public Command getAutonomousCommand() {
