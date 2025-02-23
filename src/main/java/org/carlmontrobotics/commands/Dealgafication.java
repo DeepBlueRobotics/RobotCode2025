@@ -16,22 +16,15 @@ public class OuttakeAlgae extends Command {
 
   @Override
   public void initialize() {
-    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE);
+    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE);
     timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae) <= Units.degreesToRadians(20))
-      Algae.setMotorSpeed(Constants.AlgaeEffectorc.INTAKE_TOP_RPM, Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM, Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
-    
-    // if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae) <= Units.degreestoradian(5)) {
-    //   Algae.setTopRPM(-1 * Constants.AlgaeEffectorc.intakeTopRPM);
-    //   Algae.setBottomRPM(-1 * Constants.AlgaeEffectorc.intakeBottomRPM);
-    //   Algae.setPincherRPM(-1 * Constants.AlgaeEffectorc.intakePincherRPM);
-    // }
-      
+    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE) <= Units.degreesToRadians(5))
+      Algae.setMotorSpeed(Constants.AlgaeEffectorc.DEALGAFY_TOP_RPM, Constants.AlgaeEffectorc.DEALGAFY_BOTTOM_RPM, Constants.AlgaeEffectorc.SHOOT_DEALGAFY_PINCHER_RPM); 
   }
 
   // Called once the command ends or is interrupted.

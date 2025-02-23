@@ -25,15 +25,13 @@ public class IntakeAlgae extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)
-    if (Algae.getArmPos() > Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae) {
-      Algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
-      Algae.setBottomRPM(Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM);
-      Algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
+    //Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)
+    if (Algae.getArmPos() > Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE) {
+      Algae.setMotorSpeed(Constants.AlgaeEffectorc.INTAKE_TOP_RPM,Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM, Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
       if (Algae.isAlgaeIntaked()) {
         Algae.setTopRPM(0);
         Algae.setBottomRPM(0);
-        Algae.setArmAngle(Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae)
+        Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE)
       }
       
 

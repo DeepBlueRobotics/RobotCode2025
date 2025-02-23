@@ -24,9 +24,7 @@ public class OuttakeAlgae extends Command {
   @Override
   public void execute() {
     if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armShootingAngle) <= Units.degreesToRadians(5))
-      Algae.setPincherRPM(Constants.AlgaeEffectorc.sho);
-      Algae.setTopRPM(Constants.AlgaeEffectorc.ShootingTopRPM);
-      Algae.setBottomRPM(Constants.AlgaeEffectorc.ShootingBottomRPM); 
+      Algae.setMotorSpeed(Constants.AlgaeEffectorc.SHOOT_TOP_RPM, Constants.AlgaeEffectorc.SHOOT_BOTTOM_RPM, Constants.AlgaeEffectorc.SHOOT_PINCHER_RPM); 
   }
 
   // Called once the command ends or is interrupted.

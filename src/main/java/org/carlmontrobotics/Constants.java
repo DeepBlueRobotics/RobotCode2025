@@ -64,13 +64,17 @@ public final class Constants {
         public static double INTAKE_BOTTOM_RPM = 1000;  
         public static double INTAKE_PINCHER_RPM = 1000;  
 
-        public static double OUTTAKE_TOP_RPM = 2100;  
-        public static double OUTTAKE_BOTTOM_RPM = 2100;  
-        public static double OUTTAKE_PINCHER_RPM = 2100;  
+        public static double OUTTAKE_TOP_RPM = -2100;  
+        public static double OUTTAKE_BOTTOM_RPM = -2100;  
+        public static double OUTTAKE_PINCHER_RPM = -2100;  
 
-        public static double SHOOT_TOP_RPM = 2100;//ask design
-        public static double SHOOT_BOTTOM_RPM = 2100; 
-        public static double SHOOT_PINCHER_RPM = 2100; 
+        public static double SHOOT_TOP_RPM = -2100;//ask design
+        public static double SHOOT_BOTTOM_RPM = -2100; 
+        public static double SHOOT_PINCHER_RPM = -2100; 
+
+        public static double DEALGAFY_TOP_RPM = 1000;  
+        public static double DEALGAFY_BOTTOM_RPM = 1000;  
+        public static double DEALGAFY_PINCHER_RPM = 1000; 
 
         public static final int TBE_CPR = 8192; //Through-Bore Encoder
         public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
@@ -89,9 +93,9 @@ public final class Constants {
         public static final double ARM_RAMP_UP_ANGLE = 0;
         public static final double ARM_SHOOT_ANGLE = 0;
         //TODO Figure angle for dealgafying
-        public static final double armDealgafyngAngle = 0;
+        public static final double ARM_DEALGAFYING_ANGLE = 0;
         //TODO figure out resting angle of the arm while algae inside
-        public static final double armRestingAngleWhileIntakeAlgae = 0.0;
+        public static final double ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE = 0.0;
         //TODO figure out current threshold for pincher wheels
         public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
