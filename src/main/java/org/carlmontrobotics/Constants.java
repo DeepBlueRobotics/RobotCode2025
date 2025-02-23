@@ -47,17 +47,17 @@ public final class Constants {
         }
     }
 	public static final class AlgaeEffectorc {
-		public static final int upperMotorID = 1;
-		public static final int lowerMotorID = 2;
-        public static final int pinchMotorID = 3;
-        public static final int armMotorID = 4;
+		public static final int UPPER_MOTOR_PORT = 1; 
+		public static final int LOWER_MOTOR_PORT = 2;
+        public static final int PINCH_MOTOR_PORT = 3;
+        public static final int ARM_MOTOR_PORT = 4;
         public static final int aChannelEnc = 0;
         public static final int bChannelEnc = 1;
 
-		public static final int topArrayOrder = 0;
-		public static final int bottomArrayOrder = 1;
-		public static final int pincherArrayOrder = 2;
-        public static final int armArrayOrder = 3;
+		public static final int TOP_ARRAY_ORDER = 0;
+		public static final int BOTTOM_ARRAY_ORDER = 1;
+		public static final int PINCHER_ARRAY_ORDER = 2;
+        public static final int ARM_ARRAY_ORDER = 3;
         //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
         //TODO find these values out vvv
         public static double intakeTopRPM = 1000;  
@@ -98,4 +98,8 @@ public final class Constants {
         // public static final double ARM_DISCONT_RAD = (LOWER_ANGLE_LIMIT_RAD + UPPER_ANGLE_LIMIT_RAD) / 2 - Math.PI;
 
 	}
+    public static final class AlgaeArmc{
+        public static final int ARM_MOTOR_PORT_MASTER = 1; //to change
+        public static final int ARM_MOTOR_PORT_FOLLOWER = 2; //to change
+    }
 }

@@ -53,12 +53,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Encoder;
 
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
+
 
 public class AlgaeEffector extends SubsystemBase {
-    private final SparkFlex topMotor = new SparkFlex(Constants.AlgaeEffectorc.upperMotorID, MotorType.kBrushless);
-    private final SparkFlex bottomMotor = new SparkFlex(Constants.AlgaeEffectorc.lowerMotorID, MotorType.kBrushless); 
-    private final SparkFlex pincherMotor = new SparkFlex(Constants.AlgaeEffectorc.pinchMotorID, MotorType.kBrushless);
-    private final SparkMax armMotor = new SparkMax(Constants.AlgaeEffectorc.armMotorID, MotorType.kBrushless);
+    private final SparkFlex topMotor = new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
+    private final SparkFlex bottomMotor = new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless); 
+    private final SparkFlex pincherMotor = new SparkFlex(PINCH_MOTOR_PORT, MotorType.kBrushless);
+    private final SparkMax armMotor = new SparkMax(ARM_MOTOR_PORT, MotorType.kBrushless);
 
     private SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
     private SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
@@ -76,10 +78,10 @@ public class AlgaeEffector extends SubsystemBase {
     private final SparkClosedLoopController pidControllerPincher = pincherMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerArm = armMotor.getClosedLoopController();
     
-    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.topArrayOrder], Constants.kV[Constants.AlgaeEffectorc.topArrayOrder], Constants.kA[Constants.AlgaeEffectorc.topArrayOrder]);
-    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.bottomArrayOrder], Constants.kV[Constants.AlgaeEffectorc.bottomArrayOrder], Constants.kA[Constants.AlgaeEffectorc.bottomArrayOrder]);
-    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.pincherArrayOrder], Constants.kV[Constants.AlgaeEffectorc.pincherArrayOrder], Constants.kA[Constants.AlgaeEffectorc.pincherArrayOrder]);
-    private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(Constants.kS[Constants.AlgaeEffectorc.armArrayOrder], Constants.kV[Constants.AlgaeEffectorc.armArrayOrder], Constants.kA[Constants.AlgaeEffectorc.armArrayOrder]);
+    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[TOP_ARRAY_ORDER], Constants.kV[TOP_ARRAY_ORDER], Constants.kA[TOP_ARRAY_ORDER]);
+    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[BOTTOM_ARRAY_ORDER], Constants.kV[BOTTOM_ARRAY_ORDER], Constants.kA[BOTTOM_ARRAY_ORDER]);
+    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(Constants.kS[PINCHER_ARRAY_ORDER], Constants.kV[PINCHER_ARRAY_ORDER], Constants.kA[PINCHER_ARRAY_ORDER]);
+    private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(Constants.kS[ARM_ARRAY_ORDER], Constants.kV[ARM_ARRAY_ORDER], Constants.kA[ARM_ARRAY_ORDER]);
     //feedforward for arm was added
 
     private double armGoalAngle = 0;
@@ -93,37 +95,37 @@ public class AlgaeEffector extends SubsystemBase {
 
     private void configureMotors () {
         topMotorConfig.closedLoop.pid(
-            Constants.kP[Constants.AlgaeEffectorc.topArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.topArrayOrder],
-            Constants.kD[Constants.AlgaeEffectorc.topArrayOrder]
+            Constants.kP[TOP_ARRAY_ORDER],
+            Constants.kI[TOP_ARRAY_ORDER],
+            Constants.kD[TOP_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         topMotor.configure(topMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         
         bottomMotorConfig.closedLoop.pid(
-            Constants.kP[Constants.AlgaeEffectorc.bottomArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.bottomArrayOrder],
-            Constants.kD[Constants.AlgaeEffectorc.bottomArrayOrder]
+            Constants.kP[BOTTOM_ARRAY_ORDER],
+            Constants.kI[BOTTOM_ARRAY_ORDER],
+            Constants.kD[BOTTOM_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         bottomMotor.configure(bottomMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);   
     
         pincherMotorConfig.closedLoop.pid(
-            Constants.kP[Constants.AlgaeEffectorc.pincherArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.pincherArrayOrder],
-            Constants.kD[Constants.AlgaeEffectorc.pincherArrayOrder]
+            Constants.kP[PINCHER_ARRAY_ORDER],
+            Constants.kI[PINCHER_ARRAY_ORDER],
+            Constants.kD[PINCHER_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
         armMotorConfig.closedLoop.pid(
-            Constants.kP[Constants.AlgaeEffectorc.armArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.armArrayOrder],
-            Constants.kD[Constants.AlgaeEffectorc.armArrayOrder]
+            Constants.kP[ARM_ARRAY_ORDER],
+            Constants.kI[ARM_ARRAY_ORDER],
+            Constants.kD[ARM_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
         armMotorConfig.closedLoop.pid(
-            Constants.kP[Constants.AlgaeEffectorc.armArrayOrder],
-            Constants.kI[Constants.AlgaeEffectorc.armArrayOrder],
-            Constants.kD[Constants.AlgaeEffectorc.armArrayOrder]
+            Constants.kP[ARM_ARRAY_ORDER],
+            Constants.kI[ARM_ARRAY_ORDER],
+            Constants.kD[ARM_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     }
 
