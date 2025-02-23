@@ -23,8 +23,10 @@ public class OuttakeAlgae extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE) <= Units.degreesToRadians(5))
-      Algae.setMotorSpeed(Constants.AlgaeEffectorc.DEALGAFY_TOP_RPM, Constants.AlgaeEffectorc.DEALGAFY_BOTTOM_RPM, Constants.AlgaeEffectorc.SHOOT_DEALGAFY_PINCHER_RPM); 
+    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE) <= 5)
+      Algae.setTopRPM(Constants.AlgaeEffectorc.DEALGAFY_TOP_RPM); 
+      Algae.setBottomRPM(Constants.AlgaeEffectorc.DEALGAFY_BOTTOM_RPM);
+      Algae.setPincherRPM(Constants.AlgaeEffectorc.DEALGAFY_PINCHER_RPM);
   }
 
   // Called once the command ends or is interrupted.

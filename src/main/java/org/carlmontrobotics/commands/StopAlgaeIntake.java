@@ -24,20 +24,13 @@ public class IntakeAlgae extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    //Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)
-    if (Algae.getArmPos() > Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE) {
-      Algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
-      Algae.setBottomRPM(Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM);
-      Algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
-      if (Algae.isAlgaeIntaked()) {
-        Algae.setTopRPM(0);
-        Algae.setBottomRPM(0);
-        Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE)
-      }
+  public void execute() 
       
-
-    }
+      Algae.setTopRPM(0);
+      Algae.setBottomRPM(0);
+      Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE)
+      
+    
   }
 
   // Called once the command ends or is interrupted.
