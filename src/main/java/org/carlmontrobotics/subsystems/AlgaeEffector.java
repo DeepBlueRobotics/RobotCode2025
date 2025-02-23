@@ -54,9 +54,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Encoder;
 
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
+import static org.carlmontrobotics.Constants.*;
 
 
 public class AlgaeEffector extends SubsystemBase {
+
+    //motors
     private final SparkFlex topMotor = new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
     private final SparkFlex bottomMotor = new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless); 
     private final SparkFlex pincherMotor = new SparkFlex(PINCH_MOTOR_PORT, MotorType.kBrushless);
@@ -78,11 +81,18 @@ public class AlgaeEffector extends SubsystemBase {
     private final SparkClosedLoopController pidControllerPincher = pincherMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerArm = armMotor.getClosedLoopController();
     
-    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(Constants.kS[TOP_ARRAY_ORDER], Constants.kV[TOP_ARRAY_ORDER], Constants.kA[TOP_ARRAY_ORDER]);
-    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(Constants.kS[BOTTOM_ARRAY_ORDER], Constants.kV[BOTTOM_ARRAY_ORDER], Constants.kA[BOTTOM_ARRAY_ORDER]);
-    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(Constants.kS[PINCHER_ARRAY_ORDER], Constants.kV[PINCHER_ARRAY_ORDER], Constants.kA[PINCHER_ARRAY_ORDER]);
-    private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(Constants.kS[ARM_ARRAY_ORDER], Constants.kV[ARM_ARRAY_ORDER], Constants.kA[ARM_ARRAY_ORDER]);
+    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(kS[TOP_ARRAY_ORDER], kV[TOP_ARRAY_ORDER], kA[TOP_ARRAY_ORDER]);
+    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(kS[BOTTOM_ARRAY_ORDER], kV[BOTTOM_ARRAY_ORDER], kA[BOTTOM_ARRAY_ORDER]);
+    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(kS[PINCHER_ARRAY_ORDER], kV[PINCHER_ARRAY_ORDER], kA[PINCHER_ARRAY_ORDER]);
+    private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(kS[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]);
     //feedforward for arm was added
+
+
+
+    //Arm Trapezoid Profile
+    private TrapezoidProfile armTrapProfile;
+    private TrapezoidProfile.State armGoalState = new TrapezoidProfile.State(0,0); //position,velocity (0,0)
+
 
     private double armGoalAngle = 0;
 
@@ -143,11 +153,29 @@ public class AlgaeEffector extends SubsystemBase {
         pidControllerPincher.setReference(pincherrpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
         pincherFeedforward.calculate(pincherrpm);    
     }
-
+    //arm methods
     public void setArmPosition(double armangle) {
         pidControllerArm.setReference(armangle, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
         pincherFeedforward.calculate(pincherrpm);    
     }
+  
+    public void setArmTarget(double targetPost){
+
+    }
+
+    //returns the arm position and velocity based on encoder and position 
+    public TrapezoidProfile.State getArmState(){
+        TrapezoidProfile.State armState = new TrapezoidProfile.State(getArmPos(), getArmVel());
+        return armState;
+    }
+
+    public boolean armAtGoal(){
+        //TODO:
+        //reutrns if arm is at goal state - need to add toelrance
+        return false; 
+    }
+
+    
 
     
 
@@ -155,6 +183,9 @@ public class AlgaeEffector extends SubsystemBase {
         //figures out the position of the arm in degrees based off pure vertical down
         //TODO update the arm to get in degrees after someone will figure out what the .getPosition gets for the TBE
         return armAbsoluteEncoder.getPosition() * Constants.AlgaeEffectorc.armChainGearing - Constants.AlgaeEffectorc.armToZero;
+    }
+    public double getArmVel(){
+        return armAbsoluteEncoder.getVelocity();
     }
 
     public void stopArm() {
@@ -197,6 +228,8 @@ public class AlgaeEffector extends SubsystemBase {
     public boolean isAlgaeIntaked() {
         return pincherMotor.getOutputCurrent() > Constants.AlgaeEffectorc.pincherCurrentThreshold;
     }
+
+
     
 
 
