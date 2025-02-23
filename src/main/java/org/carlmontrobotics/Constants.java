@@ -85,7 +85,7 @@ public final class Constants {
 	// Angular velocity = Tangential speed / radius
 	public static final double maxRCW = maxSpeed / swerveRadius;
 
-	public static final boolean[] reversed = { true, false, false, false };
+	public static final boolean[] reversed = { false, false, false, false };
 	// public static final boolean[] reversed = {true, true, true, true};
 	// Determine correct turnZero constants (FL, FR, BL, BR)
 	public static final double[] turnZeroDeg = RobotBase.isSimulation() ? new double[] {-90.0, -90.0, -90.0, -90.0 }
@@ -95,7 +95,7 @@ public final class Constants {
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
-	public static final double[] turnkP = {18, 18, 27, 30};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
+	public static final double[] turnkP = {12, 12, 23, 23};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
 																	// 0.00374};
 	public static final double[] turnkI = {0, 0, 0, 0};//{ 0, 0.1, 0, 0 };
 	public static final double[] turnkD = {1, 1.55, 0, 2};//{ 0.2/* dont edit */, 0.3, 0.5, 0.4}; // todo: use d
