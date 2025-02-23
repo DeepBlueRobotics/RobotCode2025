@@ -156,7 +156,7 @@ public class AlgaeEffector extends SubsystemBase {
     //arm methods
     public void setArmPosition(double armangle) {
         pidControllerArm.setReference(armangle, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        pincherFeedforward.calculate(pincherrpm);    
+        pincherFeedforward.calculate(pincherrpm);    //WHAT IS THIS
     }
   
     public void setArmTarget(double targetPost){
@@ -182,7 +182,7 @@ public class AlgaeEffector extends SubsystemBase {
     public double getArmPos() {
         //figures out the position of the arm in degrees based off pure vertical down
         //TODO update the arm to get in degrees after someone will figure out what the .getPosition gets for the TBE
-        return armAbsoluteEncoder.getPosition() * Constants.AlgaeEffectorc.armChainGearing - Constants.AlgaeEffectorc.armToZero;
+        return armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING - ARM_TO_ZERO;
     }
     public double getArmVel(){
         return armAbsoluteEncoder.getVelocity();
@@ -226,7 +226,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     public boolean isAlgaeIntaked() {
-        return pincherMotor.getOutputCurrent() > Constants.AlgaeEffectorc.pincherCurrentThreshold;
+        return pincherMotor.getOutputCurrent() > PINCHER_CURRENT_THRESHOLD;
     }
 
 

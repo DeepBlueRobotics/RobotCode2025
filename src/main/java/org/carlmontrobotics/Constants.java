@@ -60,36 +60,36 @@ public final class Constants {
         public static final int ARM_ARRAY_ORDER = 3;
         //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
         //TODO find these values out vvv
-        public static double intakeTopRPM = 1000;  
-        public static double intakeBottomRPM = 1000;  
-        public static double intakePincherRPM = 1000;  
+        public static double INTAKE_TOP_RPM = 1000;  
+        public static double INTAKE_BOTTOM_RPM = 1000;  
+        public static double INTAKE_PINCHER_RPM = 1000;  
 
-        public static double outtakeTopRPM = 2100;  
-        public static double outtakeBottomRPM = 2100;  
-        public static double outtakePincherRPM = 2100;  
+        public static double OUTTAKE_TOP_RPM = 2100;  
+        public static double OUTTAKE_BOTTOM_RPM = 2100;  
+        public static double OUTTAKE_PINCHER_RPM = 2100;  
 
         public static final int TBE_CPR = 8192; //Through-Bore Encoder
         public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
         public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
 
-        public static final double armChainGearing = 16.0/34;
-        public static final double armGearRatio = 1.0/3;
+        public static final double ARM_CHAIN_GEARING = 16.0/34;
+        public static final double ARM_GEAR_RATIO = 1.0/3;
         
 
         //TODO figure the zero out once encoder is on
-        public static final double armToZero = 0; //Pure vertical down
+        public static final double ARM_TO_ZERO = 0; //Pure vertical down
         //TODO ask samo for angle to intake algae from pure vertical down
-        public static final double armIntakeAngle = 0;
+        public static final double ARM_INTAKE_ANGLE = 0;
         //TODO Figure these two out if we will be shooting algae
-        public static final double armRampingUpAngle = 0;
-        public static final double armShootingAngle = 0;
+        public static final double ARM_RAMP_UP_ANGLE = 0;
+        public static final double ARM_SHOOT_ANGLE = 0;
         //TODO Figure angle for dealgafying
         public static final double armDealgafyngAngle = 0;
         //TODO figure out resting angle of the arm while algae inside
         public static final double armRestingAngleWhileIntakeAlgae = 0.0;
         //TODO figure out current threshold for pincher wheels
-        public static final double pincherCurrentThreshold = 15.0;
+        public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
         //Bad idea to make the arm think like it can spin 360 degrees CAUSE IT CANNOT #StopGaslightingTheArm
         // //max angle in radians and minimum angle in radians
@@ -98,8 +98,5 @@ public final class Constants {
         // public static final double ARM_DISCONT_RAD = (LOWER_ANGLE_LIMIT_RAD + UPPER_ANGLE_LIMIT_RAD) / 2 - Math.PI;
 
 	}
-    public static final class AlgaeArmc{
-        public static final int ARM_MOTOR_PORT_MASTER = 1; //to change
-        public static final int ARM_MOTOR_PORT_FOLLOWER = 2; //to change
-    }
+  
 }
