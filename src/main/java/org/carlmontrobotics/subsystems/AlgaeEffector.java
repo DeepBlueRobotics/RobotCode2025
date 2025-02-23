@@ -156,7 +156,7 @@ public class AlgaeEffector extends SubsystemBase {
     //arm methods
     public void setArmPosition(double armangle) {
         pidControllerArm.setReference(armangle, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        pincherFeedforward.calculate(pincherrpm);    //WHAT IS THIS
+        pincherFeedforward.calculate(armangle); 
     }
   
     public void setArmTarget(double targetPost){

@@ -27,7 +27,10 @@ public final class Constants {
 
         public static final class Driver {
             public static final int driverPort = 0;
-            public static final int effectorMotorID = 4;
+            public static final int EFFECTOR_TOP_MOTOR_ID = 31;
+            public static final int EFFECTOR_BOTTOM_MOTOR_ID = 33;
+            public static final int EFFECTOR_PINCHER_MOTOR_ID = 31;
+            public static final int EFFECTOR_ARM_MOTOR_ID = 34;
             public static final int effectorDistanceSensorID = 5;
 			/*public static final int A = 1;
 	    	public static final int B = 2;
@@ -108,6 +111,6 @@ public final class Constants {
 	}
     public static final class AlgaeArmc{
         public static final int ARM_MOTOR_PORT_MASTER = 1; //to change
-        public static final int ARM_MOTOR_PORT_FOLLOWER = 2; //to change
+        //public static final int ARM_MOTOR_PORT_FOLLOWER = 2;
     }
 }
