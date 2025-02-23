@@ -73,7 +73,9 @@ public final class Constants {
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
         public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
 
-        public static final double armGearing = 39.375;
+        public static final double armChainGearing = 16.0/34;
+        public static final double armGearRatio = 1.0/3;
+        
 
         //TODO figure the zero out once encoder is on
         public static final double armToZero = 0; //Pure vertical down
