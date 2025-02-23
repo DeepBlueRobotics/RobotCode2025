@@ -390,7 +390,8 @@ public class Drivetrain extends SubsystemBase {
         // moduleBR.periodic();
         // double goal = SmartDashboard.getNumber("bigoal", 0);
         for (SwerveModule module : modules) {
-           module.turnPeriodic();
+           //module.turnPeriodic();
+           module.drivePeriodic();
             // module.move(0, goal);
         }
 
@@ -986,7 +987,7 @@ public class Drivetrain extends SubsystemBase {
 
     private SysIdTest selector() {
         //SysIdTest test = sysIdChooser.getSelected();
-        SysIdTest test = SysIdTest.BR_ROT;
+        SysIdTest test = SysIdTest.BACK_DRIVE;
         System.out.println("Test Selected: " + test);
         return test;
     }

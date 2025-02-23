@@ -113,7 +113,7 @@ public final class Constants {
 	// Backward: 1.92, 1.92, 2.11, 1.89
 	// Order of modules: (FL, FR, BL, BR)
 	public static final double[] drivekP = CONFIG.isSwimShady() ? new double[] { 2.8, 2.8, 2.8, 2.8 }
-	: new double[] {1.2406, 0.29066, 1.9366, 2.1562}; // {1.82/100, 1.815/100, 2.015/100,
+	: new double[] {2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
 															// 1.915/100};
 	public static final double[] drivekI = { 0, 0, 0, 0 };
 	public static final double[] drivekD = { 0, 0, 0, 0 };
@@ -123,15 +123,17 @@ public final class Constants {
 	public static final boolean[] turnInversion = { true, true, true, true };
 	// kS
 	// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
-    public static final double[] kForwardVolts = {0.33073, 0.32889, 0.12425, 0.10611};      //{ 0.2, 0.2, 0.2, 0.2 };
+    public static final double[] kForwardVolts = {0, 0, 0, 0};//{0.59395, 0.52681, 0.11097, 0.17914};      //{ 0.2, 0.2, 0.2, 0.2 };
 	public static final double[] kBackwardVolts = kForwardVolts;
 
+	//kV
 	// public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
-    public static final double[] kForwardVels = {2.5857, 2.3916, 3.0435, 3.0442};        //{ 0, 0, 0, 0 };//volts per m/s
+    public static final double[] kForwardVels = {2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
 	public static final double[] kBackwardVels = kForwardVels;
 
+	//kA
 	// public static final double[] kForwardAccels = { 1.1047 / 2, 0.79422 / 2, 0.77114 / 2, 1.1003 / 2 };
-    public static final double[] kForwardAccels = {0.22104, 0.36626, 0.34054, 0.42251};    //{ 0, 0, 0, 0 };// volts per m/s^2
+    public static final double[] kForwardAccels = {0.31958, 0.33557, 0.70264, 0.46644};    //{ 0, 0, 0, 0 };// volts per m/s^2
 	public static final double[] kBackwardAccels = kForwardAccels;
 
 	public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
