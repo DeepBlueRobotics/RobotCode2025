@@ -1,5 +1,7 @@
 package org.carlmontrobotics;
 
+import edu.wpi.first.math.util.Units;
+
 public final class Constants {
     // public static final class Drivetrain {
     //     public static final double MAX_SPEED_MPS = 2;
@@ -23,10 +25,33 @@ public final class Constants {
 			public static final double HEIGHT_FROM_BOTTOM_TO_SUBWOOFER = Units.inchesToMeters(26);
 			public static final double HEIGHT_FROM_BOTTOM_TO_ARM_RESTING = Units.inchesToMeters(21.875);*/
 
+            // Red Processor ids
             public static final int RED_PROCESSOR_ID = 3;
+
+            // Blue Processor ids
             public static final int BLUE_PROCESSOR_ID = 16;
-            public static final double PROCESSOR_CENTER_HEIGHT_METERS = 0.4318; // 17 inches. 17 wasted seconds of my time.
-		}
+
+            // Red Reef ids
+            public static final int RED_REEF_FAR_RIGHT_ID = 6;
+            public static final int RED_REEF_FAR_ID = 7;
+            public static final int RED_REEF_FAR_LEFT_ID = 8;
+            public static final int RED_REEF_CLOSE_LEFT_ID = 9;
+            public static final int RED_REEF_CLOSE_ID = 10;
+            public static final int RED_REEF_CLOSE_RIGHT_ID = 11;
+
+            // Blue Reef ids
+            public static final int BLUE_REEF_FAR_LEFT_ID = 17;
+            public static final int BLUE_REEF_FAR_ID = 18;
+            public static final int BLUE_REEF_FAR_RIGHT_ID = 19;
+            public static final int BLUE_REEF_CLOSE_RIGHT_ID = 20;
+            public static final int BLUE_REEF_CLOSE_ID = 21;
+            public static final int BLUE_REEF_CLOSE_LEFT_ID = 22;
+
+
+            // Heights
+            public static final double PROCESSOR_CENTER_HEIGHT_METERS = Units.inchesToMeters(47.88); // Going to re-assume that this is for Apriltag center.
+            public static final double REEF_CENTER_HEIGHT_METERS = Units.inchesToMeters(8.75); // Also center of Reef
+        }
     }
 
     public static final class Drivetrainc {
