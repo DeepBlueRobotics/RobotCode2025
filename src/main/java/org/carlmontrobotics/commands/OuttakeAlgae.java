@@ -16,14 +16,14 @@ public class OuttakeAlgae extends Command {
 
   @Override
   public void initialize() {
-    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE);
+    Algae.setArmPosition(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE);
     timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae) <= 20)
+    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE) <= 20)
       Algae.setTopRPM(Constants.AlgaeEffectorc.OUTTAKE_TOP_RPM);
       Algae.setBottomRPM(Constants.AlgaeEffectorc.OUTTAKE_BOTTOM_RPM);
       Algae.setPincherRPM(Constants.AlgaeEffectorc.OUTTAKE_PINCHER_RPM);

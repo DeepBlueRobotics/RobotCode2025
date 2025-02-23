@@ -7,25 +7,27 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.util.Units;
 
 
-public class OuttakeAlgae extends Command {
+public class ShootAlgae extends Command {
   AlgaeEffector Algae;
   private final Timer timer = new Timer(); 
-  public OuttakeAlgae(AlgaeEffector algaeEffector) {
+  public ShootAlgae(AlgaeEffector algaeEffector) {
     addRequirements(this.Algae = algaeEffector);
   }
 
   @Override
   public void initialize() {
-    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE);
+    Algae.setArmPosition(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE);
     timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armShootingAngle) <= 5)
+    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE) <= 5)
 
-      Algae.setMotorSpeed(Constants.AlgaeEffectorc.SHOOT_TOP_RPM, Constants.AlgaeEffectorc.SHOOT_BOTTOM_RPM, Constants.AlgaeEffectorc.SHOOT_PINCHER_RPM); 
+      Algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
+      Algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
+      Algae.setPincherRPM(Constants.AlgaeEffectorc.SHOOT_PINCHER_RPM);
   }
 
   // Called once the command ends or is interrupted.

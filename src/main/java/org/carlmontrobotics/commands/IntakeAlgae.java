@@ -18,7 +18,7 @@ public class IntakeAlgae extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE);
+    Algae.setArmPosition(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE);
   }
 
 
@@ -33,7 +33,7 @@ public class IntakeAlgae extends Command {
       if (Algae.isAlgaeIntaked()) {
         Algae.setTopRPM(0);
         Algae.setBottomRPM(0);
-        Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE)
+        Algae.setArmPosition(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
       }
       
 

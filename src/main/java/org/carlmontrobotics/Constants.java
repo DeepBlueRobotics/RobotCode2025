@@ -21,7 +21,8 @@ public final class Constants {
     public static final double[] kS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kV = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kA = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
-
+    public static final double[] kG = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
+    
     public static final class OI {
         public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;
 
@@ -102,11 +103,10 @@ public final class Constants {
         //TODO figure out current threshold for pincher wheels
         public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
-        //Bad idea to make the arm think like it can spin 360 degrees CAUSE IT CANNOT #StopGaslightingTheArm
-        // //max angle in radians and minimum angle in radians
-        // public static final double UPPER_ANGLE_LIMIT_RAD = 2.6;
-		// public static final double LOWER_ANGLE_LIMIT_RAD = 0;
-        // public static final double ARM_DISCONT_RAD = (LOWER_ANGLE_LIMIT_RAD + UPPER_ANGLE_LIMIT_RAD) / 2 - Math.PI;
+        public static final double UPPER_ANGLE_LIMIT = 0;
+        public static final double LOWER_ANGLE_LIMIT = -70;
+        public static final double ROTATION_TO_DEG = 360;
+        public static final double ARM_DISCONT_DEG = -35;
 
 	}
     public static final class AlgaeArmc{

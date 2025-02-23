@@ -17,7 +17,7 @@ public class SetArmToAngle extends Command {
 
   @Override
   public void initialize() {
-     algaeEffector.setArmAngle(angle);
+     algaeEffector.setArmPosition(angle);
     timer.start();
   }
 

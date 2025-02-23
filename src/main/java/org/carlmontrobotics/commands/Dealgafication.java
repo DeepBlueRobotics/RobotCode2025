@@ -7,16 +7,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.util.Units;
 
 
-public class OuttakeAlgae extends Command {
+public class Dealgafication extends Command {
   AlgaeEffector Algae;
   private final Timer timer = new Timer(); 
-  public OuttakeAlgae(AlgaeEffector algaeEffector) {
+  public Dealgafication(AlgaeEffector algaeEffector) {
     addRequirements(this.Algae = algaeEffector);
   }
 
   @Override
   public void initialize() {
-    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE);
+    Algae.setArmPosition(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE);
     timer.start();
   }
 

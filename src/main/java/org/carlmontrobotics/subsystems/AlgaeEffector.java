@@ -93,12 +93,18 @@ public class AlgaeEffector extends SubsystemBase {
     private TrapezoidProfile armTrapProfile;
     private TrapezoidProfile.State armGoalState = new TrapezoidProfile.State(0,0); //position,velocity (0,0)
 
-
+    private static double kDt;
+    private TrapezoidProfile.State setPoint;
     private double armGoalAngle = 0;
+    private double armFeedVolts;
+    private double kG;
+   // private final ArmFeedforward armFeed = new ArmFeedforward(kS[ARM_ARRAY_ORDER], kG[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]);
 
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
         configureMotors();
+        kDt = 0.02;
+        setPoint = getArmState();
 
     }
     //----------------------------------------------------------------------------------------
@@ -137,6 +143,7 @@ public class AlgaeEffector extends SubsystemBase {
             Constants.kI[ARM_ARRAY_ORDER],
             Constants.kD[ARM_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
     }
 
     public void setTopRPM(double toprpm) {
@@ -155,8 +162,17 @@ public class AlgaeEffector extends SubsystemBase {
     }
     //arm methods
     public void setArmPosition(double armangle) {
-        pidControllerArm.setReference(armangle, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        pincherFeedforward.calculate(armangle); 
+        armGoalState = armTrapProfile.calculate(kDt, setPoint, armGoalState); 
+
+        armFeedVolts = armFeedforward.calculate(setPoint.position, setPoint.velocity);
+        if ((getArmPos() < LOWER_ANGLE_LIMIT)
+             || (getArmPos() > UPPER_ANGLE_LIMIT)) {
+            armFeedVolts = armFeedforward.calculate(getArmPos(), 0);
+
+        }
+
+        pidControllerArm.setReference(setPoint.position, ControlType.kPosition);
+        //((setPoint.position),ControlType.kPosition,armFeedVolts);
     }
   
     public void setArmTarget(double targetPost){
@@ -176,7 +192,13 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     
-
+    public double getArmClappedGoal(double goal) {
+        return MathUtil.clamp(
+            MathUtil.inputModulus(armGoalAngle, ARM_DISCONT_DEG, 
+                ARM_DISCONT_DEG + 360),
+                LOWER_ANGLE_LIMIT, UPPER_ANGLE_LIMIT
+        );
+    }
     
 
     public double getArmPos() {
@@ -236,7 +258,7 @@ public class AlgaeEffector extends SubsystemBase {
     @Override
     public void periodic() {
         pidControllerArm.setReference(armGoalAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        pincherFeedforward.calculate(goalAngle); //What is this for
+        pincherFeedforward.calculate(armGoalAngle); //What is this for
     }
 
 }
