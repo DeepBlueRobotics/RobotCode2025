@@ -68,6 +68,10 @@ public final class Constants {
         public static double OUTTAKE_BOTTOM_RPM = 2100;  
         public static double OUTTAKE_PINCHER_RPM = 2100;  
 
+        public static double SHOOT_TOP_RPM = 2100;//ask design
+        public static double SHOOT_BOTTOM_RPM = 2100; 
+        public static double SHOOT_PINCHER_RPM = 2100; 
+
         public static final int TBE_CPR = 8192; //Through-Bore Encoder
         public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
@@ -98,5 +102,8 @@ public final class Constants {
         // public static final double ARM_DISCONT_RAD = (LOWER_ANGLE_LIMIT_RAD + UPPER_ANGLE_LIMIT_RAD) / 2 - Math.PI;
 
 	}
-  
+    public static final class AlgaeArmc{
+        public static final int ARM_MOTOR_PORT_MASTER = 1; //to change
+        public static final int ARM_MOTOR_PORT_FOLLOWER = 2; //to change
+    }
 }

@@ -16,24 +16,17 @@ public class OuttakeAlgae extends Command {
 
   @Override
   public void initialize() {
-    Algae.setTopRPM(Constants.AlgaeEffectorc.OUTTAKE_TOP_RPM); 
-    Algae.setBottomRPM(Constants.AlgaeEffectorc.OUTTAKE_BOTTOM_RPM); 
-    Algae.setPincherRPM(Constants.AlgaeEffectorc.OUTTAKE_PINCHER_RPM); 
-    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE);
+    Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE);
     timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae) <= Units.degreesToRadians(20))
-
-    // if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae) <= Units.degreestoradian(5)) {
-    //   Algae.setTopRPM(-1 * Constants.AlgaeEffectorc.intakeTopRPM);
-    //   Algae.setBottomRPM(-1 * Constants.AlgaeEffectorc.intakeBottomRPM);
-    //   Algae.setPincherRPM(-1 * Constants.AlgaeEffectorc.intakePincherRPM);
-    // }
-      
+    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armShootingAngle) <= Units.degreesToRadians(5))
+      Algae.setPincherRPM(Constants.AlgaeEffectorc.sho);
+      Algae.setTopRPM(Constants.AlgaeEffectorc.ShootingTopRPM);
+      Algae.setBottomRPM(Constants.AlgaeEffectorc.ShootingBottomRPM); 
   }
 
   // Called once the command ends or is interrupted.
