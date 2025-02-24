@@ -191,7 +191,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     
-    public double getArmClappedGoal(double goal) {
+    public double getArmClappedGoal() {
         return MathUtil.clamp(
             MathUtil.inputModulus(armGoalAngle, ARM_DISCONT_DEG, 
                 ARM_DISCONT_DEG + 360),
@@ -261,6 +261,10 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("Raw Arm Angle", armAbsoluteEncoder.getPosition());
         SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
+        SmartDashboard.putData("Dealgafication", new Dealgafication());
+        SmartDashboard.putData("Intake Algae", new IntakeAlgae());
+        SmartDashboard.putData("Outtake Algae", new OuttakeAlgae());
+        SmartDashboard.putData("Shoot Algae", new ShootAlgae());
 
     }
 

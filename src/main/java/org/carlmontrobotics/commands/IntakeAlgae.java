@@ -27,7 +27,7 @@ public class IntakeAlgae extends Command {
   @Override
   public void execute() {
     //Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)
-    if (Algae.getArmPos() > Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE) {//FIXME do the eror thing
+    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)) {
       Algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
       Algae.setBottomRPM(Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM);
       Algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
