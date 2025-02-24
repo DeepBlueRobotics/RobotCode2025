@@ -162,6 +162,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
     //arm methods
     public void setArmPosition(double armangle) {
+        armGoalAngle = armangle;
         armGoalState = armTrapProfile.calculate(kDt, setPoint, armGoalState); 
 
         armFeedVolts = armFeedforward.calculate(setPoint.position, setPoint.velocity);
@@ -185,9 +186,9 @@ public class AlgaeEffector extends SubsystemBase {
         return armState;
     }
 
-    public boolean armAtGoal(){
+    public boolean armAtGoal(ErrorMargin){
         
-        return Math.abs(getArmPos()-armGoalAngle) <= 5; 
+        return Math.abs(getArmPos()-armGoalAngle) <= ErrorMargin; 
     }
 
     

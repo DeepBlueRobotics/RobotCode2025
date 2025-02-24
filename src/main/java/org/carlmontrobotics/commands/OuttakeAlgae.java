@@ -23,7 +23,7 @@ public class OuttakeAlgae extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE) <= 20)
+    if (armAtGoal(20))
       Algae.setTopRPM(Constants.AlgaeEffectorc.OUTTAKE_TOP_RPM);
       Algae.setBottomRPM(Constants.AlgaeEffectorc.OUTTAKE_BOTTOM_RPM);
       Algae.setPincherRPM(Constants.AlgaeEffectorc.OUTTAKE_PINCHER_RPM);

@@ -23,7 +23,7 @@ public class ShootAlgae extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE) <= 5)
+    if (armAtGoal(5))
 
       Algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
       Algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
