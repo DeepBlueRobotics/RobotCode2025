@@ -16,9 +16,11 @@ public final class Constants {
     }
     public static final class Elevatorc {
         //ports
-        public static final int masterPort = 19;
-        public static final int followerPort = 20;
-		public static final int elevatorLimitSwitchPort = 1;
+        public static final int masterPort = 20;
+        public static final int followerPort = 21;
+		public static final int elevatorTopLimitSwitchPort = 1;
+        public static final int elevatorBottomLimitSwitchPort = 2;
+
 
         //Config
         //TODO figure these parts out

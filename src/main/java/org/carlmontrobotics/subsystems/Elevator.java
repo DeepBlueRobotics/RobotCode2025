@@ -20,6 +20,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -33,12 +34,15 @@ public class Elevator extends SubsystemBase {
   private SparkMax followerMotor;
   private SparkMaxConfig followerConfig;
   private RelativeEncoder followerEncoder;
-  // Caliberation
-  private DigitalInput limitSwitch;
+  // Limit Switches
+  private DigitalInput topLimitSwitch;
+  private DigitalInput bottomLimitSwitch;
   //Vars
   private double heightGoal;
+  private int elevatorState;
   //PID
   private SparkClosedLoopController pidElevatorController;
+  private Timer timer;
   
   public Elevator() {
     //motors
@@ -50,10 +54,13 @@ public class Elevator extends SubsystemBase {
     followerEncoder = followerMotor.getEncoder();
     configureMotors();
 
-  //Calibration
-    limitSwitch = new DigitalInput(Constants.Elevatorc.elevatorLimitSwitchPort);
+    //Calibration
+    topLimitSwitch = new DigitalInput(Constants.Elevatorc.elevatorTopLimitSwitchPort);
+    bottomLimitSwitch = new DigitalInput(Constants.Elevatorc.elevatorBottomLimitSwitchPort);
+    timer = new Timer();
+    timer.start();
 
-  //PID
+    //PID
     pidElevatorController = masterMotor.getClosedLoopController();
   }
 
@@ -96,10 +103,25 @@ public class Elevator extends SubsystemBase {
   public double getCurrentHeight() {
     return masterEncoder.getPosition();
   }
-  
+
+  public boolean elevatorAtMax() {
+    return !topLimitSwitch.get();
+  }
+
+  public boolean elevatorAtMin() {
+    return !bottomLimitSwitch.get();
+  }
+
   public void updateEncoders() {
-    if (!limitSwitch.get()) {
+    if (elevatorAtMax()) {
       masterEncoder.setPosition(Constants.Elevatorc.maxElevatorHeightInches);
+      timer.reset();
+      timer.start();
+    }
+    else if (elevatorAtMin()) {
+      masterEncoder.setPosition(Constants.Elevatorc.minElevatorHeightInches);
+      timer.reset();
+      timer.start();
     }
   }
 
@@ -121,8 +143,17 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("MaxHeight", limitSwitch.get());
+    if (elevatorAtMax()){
+      SmartDashboard.putString("ElevatorState", "🔴STOP🔴");
+    }
+    else if (elevatorAtMin()) {
+      SmartDashboard.putString("ElevatorState", "🟢GO🟢");
+    }
+    else {
+      SmartDashboard.putString("ElevatorState", "🟡CAUTION🟡");
+    }
     SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
+    SmartDashboard.putNumber("Since Calibrated", timer.get());
     updateEncoders();
     getToGoal();
   }
