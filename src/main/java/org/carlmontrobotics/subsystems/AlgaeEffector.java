@@ -186,9 +186,8 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     public boolean armAtGoal(){
-        //TODO:
-        //reutrns if arm is at goal state - need to add toelrance
-        return false; 
+        
+        return Math.abs(getArmPos()-armGoalAngle) <= 5; 
     }
 
     
@@ -238,7 +237,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     public boolean checkIfAtBottomRPM(double rpm) {
-        return bottomEncoder.getVelocity() == rpm;
+        return bottomEncoder.getVelocity() == rpm;//give like a 5% error or somethin
     }
 
     public void setMotorSpeed(double topSpeed, double bottomSpeed, double pincherSpeed) {
@@ -259,6 +258,10 @@ public class AlgaeEffector extends SubsystemBase {
     public void periodic() {
         pidControllerArm.setReference(armGoalAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         pincherFeedforward.calculate(armGoalAngle); //What is this for
+        SmartDashboard.putNumber("Arm Angle", getArmPos());
+        SmartDashboard.putNumber("Raw Arm Angle", armAbsoluteEncoder.getPosition());
+        SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
+
     }
 
 }

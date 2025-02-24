@@ -13,14 +13,16 @@ import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator.*;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.OuttakeAlgae;
+import org.carlmontrobotics.commands.ShootAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
-
+import org.carlmontrobotics.commands.Dealgafication;
 import org.carlmontrobotics.commands.IntakeAlgae;
 
 
 
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS5Controller.Button;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 
@@ -73,7 +75,15 @@ public class RobotContainer {
     
     new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
       .whileFalse(new OuttakeAlgae(algaeEffector));
-    }
+
+    new JoystickButton(manipulatorController, XboxController.Button.kA.value)
+      .onTrue(new Dealgafication(algaeEffector));
+    
+      new JoystickButton(manipulatorController, XboxController.Button.kB.value)
+      .onTrue(new ShootAlgae(algaeEffector));
+      new JoystickButton(manipulatorController, XboxController.Button.kY.value)
+      .onTrue(new InstantCommand(()->{algaeEffector.stopMotors();}));
+  }
     
 
     private Trigger axisTrigger(GenericHID controller, Axis axis) {

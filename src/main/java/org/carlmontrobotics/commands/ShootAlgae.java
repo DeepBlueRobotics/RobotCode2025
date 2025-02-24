@@ -39,6 +39,6 @@ public class ShootAlgae extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return timer.getFPGATimestamp() > 3; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

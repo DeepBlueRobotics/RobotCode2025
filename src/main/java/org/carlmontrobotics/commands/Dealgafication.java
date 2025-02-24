@@ -38,6 +38,7 @@ public class Dealgafication extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return timer.getFPGATimestamp()>5 || Algae.isAlgaeIntaked();
+    //return false; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }
