@@ -9,6 +9,10 @@ import static org.carlmontrobotics.RobotContainer.*;
 
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
+import org.carlmontrobotics.commands.Dealgafication;
+import org.carlmontrobotics.commands.IntakeAlgae;
+import org.carlmontrobotics.commands.OuttakeAlgae;
+import org.carlmontrobotics.commands.ShootAlgae;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
@@ -176,7 +180,10 @@ public class AlgaeEffector extends SubsystemBase {
         //((setPoint.position),ControlType.kPosition,armFeedVolts);
     }
   
-    public void setArmTarget(double targetPost){
+    public void setArmTarget(double targetPos){
+        armGoalState.position = getArmClappedGoal(targetPos); 
+        armGoalState.velocity = 0;
+    }
 
     }
 
@@ -186,15 +193,15 @@ public class AlgaeEffector extends SubsystemBase {
         return armState;
     }
 
-    public boolean armAtGoal(ErrorMargin){
+    public boolean armAtGoal(){ //TODO: make error margin a constant
         
-        return Math.abs(getArmPos()-armGoalAngle) <= ErrorMargin; 
+        return Math.abs(getArmPos()-armGoalAngle) <= ARM_TOLERANCE; 
     }
 
     
-    public double getArmClappedGoal() {
+    public double getArmClappedGoal(double goalAngle) {
         return MathUtil.clamp(
-            MathUtil.inputModulus(armGoalAngle, ARM_DISCONT_DEG, 
+            MathUtil.inputModulus(goalAngle, ARM_DISCONT_DEG, 
                 ARM_DISCONT_DEG + 360),
                 LOWER_ANGLE_LIMIT, UPPER_ANGLE_LIMIT
         );

@@ -108,9 +108,8 @@ public final class Constants {
         public static final double ROTATION_TO_DEG = 360;
         public static final double ARM_DISCONT_DEG = -35;
 
+        public static final double ARM_TOLERANCE = 1.0; //need to change
+
 	}
-    public static final class AlgaeArmc{
-        public static final int ARM_MOTOR_PORT_MASTER = 1; //to change
-        //public static final int ARM_MOTOR_PORT_FOLLOWER = 2;
-    }
+    
 }
