@@ -51,6 +51,10 @@ public final class Constants {
         }
     }
 	public static final class AlgaeEffectorc {
+
+        //EFFECTOR
+
+        
 		public static final int UPPER_MOTOR_PORT = 1; 
 		public static final int LOWER_MOTOR_PORT = 2;
         public static final int PINCH_MOTOR_PORT = 3;
@@ -87,8 +91,6 @@ public final class Constants {
 
         public static final double ARM_CHAIN_GEARING = 16.0/34;
         public static final double ARM_GEAR_RATIO = 1.0/3;
-        
-
         //TODO figure the zero out once encoder is on
         public static final double ARM_TO_ZERO = 0; //Pure vertical down
         //TODO ask samo for angle to intake algae from pure vertical down
@@ -108,7 +110,8 @@ public final class Constants {
         public static final double ROTATION_TO_DEG = 360;
         public static final double ARM_DISCONT_DEG = -35;
 
-        public static final double ARM_TOLERANCE = 1.0; //need to change
+        public static final double ARM_TOLERANCE = 1.0; //need to change, tolerance for armATPOSITION
+
 
 	}
     
