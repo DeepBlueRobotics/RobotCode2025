@@ -193,9 +193,9 @@ public class AlgaeEffector extends SubsystemBase {
         return armState;
     }
 
-    public boolean armAtGoal(){ //TODO: make error margin a constant
+    public boolean armAtGoal(double errorMargin){ //TODO: make error margin a constant
         
-        return Math.abs(getArmPos()-armGoalAngle) <= ARM_TOLERANCE; 
+        return Math.abs(getArmPos()-armGoalAngle) <= errorMargin; 
     }
 
     

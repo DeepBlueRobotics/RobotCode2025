@@ -1,4 +1,6 @@
 package org.carlmontrobotics.commands;
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE;
+
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
 
@@ -23,7 +25,7 @@ public class ShootAlgae extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Algae.armAtGoal())
+    if (Algae.armAtGoal(ARM_SHOOT_ANGLE))
 
       Algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
       Algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
