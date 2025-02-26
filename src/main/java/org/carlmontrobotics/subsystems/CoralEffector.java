@@ -35,11 +35,11 @@ import com.revrobotics.spark.SparkBase;
 public class CoralEffector extends SubsystemBase {
   
     public SparkFlex coralMotor = new SparkFlex(CoralEffectorConstants.coralMotorPort, MotorType.kBrushless);
-    public DigitalInput coralLimitSwitch = new DigitalInput(CoralEffectorConstants.coralLimitSwitchPort);
+    // public DigitalInput coralLimitSwitch = new DigitalInput(CoralEffectorConstants.coralLimitSwitchPort);
     public TimeOfFlight distanceSensor = new TimeOfFlight(CoralEffectorConstants.coralDistanceSensorPort);
     
     public static boolean distanceSensorSees;
-    public static boolean limitSwitchSees;
+    // public static boolean limitSwitchSees;
     public final RelativeEncoder coralEncoder = coralMotor.getEncoder();
     // private double CoralGoalRPM = 100;
     private double coralOutput = coralMotor.getAppliedOutput();
@@ -73,21 +73,21 @@ public class CoralEffector extends SubsystemBase {
   public void setCoralIn(boolean coralIsInside) {
     coralIn = coralIsInside;
   }
-  public boolean coralDetected() {
-    return !coralLimitSwitch.get();
-  }
+  // public boolean coralDetected() {
+  //   return !coralLimitSwitch.get();
+  // }
 
   @Override
   public void periodic() {
     //coralMotor.getClosedLoopController().setReference(1, ControlType.kVelocity);
     distanceSensorSees = distanceSensor.getRange() < CoralEffectorConstants.coralDistanceSensorDistance;
-    limitSwitchSees = !coralLimitSwitch.get();
+    // limitSwitchSees = !coralLimitSwitch.get();
     // CoralGoalRPM = coralEncoder.getVelocity();
     coralOutput = coralMotor.getAppliedOutput();
 
     SmartDashboard.putBoolean("Distance sensor", distanceSensorSees);
     SmartDashboard.putNumber("distance", distanceSensor.getRange());
-    SmartDashboard.putBoolean("limit switch", limitSwitchSees);
+    // SmartDashboard.putBoolean("limit switch", limitSwitchSees);
     // SmartDashboard.putNumber("Coral goal RPM", CoralGoalRPM);
     SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());
     SmartDashboard.putNumber("coral output", coralOutput);

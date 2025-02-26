@@ -29,12 +29,12 @@ public class CoralOutake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (coralEffector.coralDetected()) {
+/*    if (coralEffector.coralDetected()) {
       coralEffector.setMotorSpeed(CoralEffectorConstants.coralEffectorMotorOutputSpeed);
       timer.reset();
       timer.start();
     }
-    else if (timer.get() <= 0.5) {
+    else */if (timer.get() <= 0.5) {
       coralEffector.setMotorSpeed(CoralEffectorConstants.coralEffectorMotorOutputSpeed);
     }
     else {
