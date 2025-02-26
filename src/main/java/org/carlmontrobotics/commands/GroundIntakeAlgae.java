@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class IntakeAlgae extends Command {
+public class GroundIntakeAlgae extends Command {
   private final AlgaeEffector algae;
   private final Timer timer = new Timer();
   private boolean done = false;
-  public IntakeAlgae(AlgaeEffector algae) {
+  public GroundIntakeAlgae(AlgaeEffector algae) {
     addRequirements(this.algae = algae);
   }
 
@@ -19,7 +19,7 @@ public class IntakeAlgae extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    algae.setArmPosition(ARM_INTAKE_ANGLE);
+    //algae.setArmPosition(ARM_INTAKE_ANGLE);
   }
 
 
@@ -45,6 +45,7 @@ public class IntakeAlgae extends Command {
   @Override
   public void end(boolean interrupted) {
     algae.stopMotors();
+    timer.stop();
     //TODO: Test different times
   }
 

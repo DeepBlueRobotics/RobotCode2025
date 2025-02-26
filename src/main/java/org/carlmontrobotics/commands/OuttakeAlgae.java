@@ -16,7 +16,8 @@ public class OuttakeAlgae extends Command {
 
   @Override
   public void initialize() {
-    algae.setArmPosition(ARM_INTAKE_ANGLE);
+    //algae.setArmPosition(ARM_INTAKE_ANGLE);
+    timer.reset();
     timer.start();
   }
 
@@ -40,6 +41,7 @@ public class OuttakeAlgae extends Command {
   @Override
   public void end(boolean interrupted) {
     algae.stopMotors();
+    timer.stop();
   }
 
   // Returns true when the command should end.

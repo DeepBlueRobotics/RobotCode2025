@@ -7,16 +7,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.util.Units;
 
 
-public class Dealgafication extends Command {
+public class DealgaficationIntake extends Command {
   AlgaeEffector algae;
   private final Timer timer = new Timer(); 
-  public Dealgafication(AlgaeEffector algaeEffector) {
-    addRequirements(this.algae = algaeEffector);
+  public DealgaficationIntake(AlgaeEffector algae) {
+    addRequirements(this.algae = algae);
   }
 
   @Override
   public void initialize() {
-    algae.setArmPosition(ARM_DEALGAFYING_ANGLE);
+    //algae.setArmPosition(ARM_DEALGAFYING_ANGLE);
+    timer.reset();
     timer.start();
   }
 
@@ -34,6 +35,7 @@ public class Dealgafication extends Command {
   @Override
   public void end(boolean interrupted) {
     algae.stopMotors();
+    timer.stop();
   }
 
   // Returns true when the command should end.

@@ -9,8 +9,8 @@ import static org.carlmontrobotics.RobotContainer.*;
 
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
-import org.carlmontrobotics.commands.Dealgafication;
-import org.carlmontrobotics.commands.IntakeAlgae;
+import org.carlmontrobotics.commands.DealgaficationIntake;
+import org.carlmontrobotics.commands.GroundIntakeAlgae;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.commands.ShootAlgae;
 
@@ -183,7 +183,7 @@ public class AlgaeEffector extends SubsystemBase {
         //((setPoint.position),ControlType.kPosition,armFeedVolts);
     }
     
-    //
+    // use trapezoid 
     public void setArmTarget(double targetPos){
         armGoalState.position = getArmClappedGoal(targetPos); 
         armGoalState.velocity = 0;

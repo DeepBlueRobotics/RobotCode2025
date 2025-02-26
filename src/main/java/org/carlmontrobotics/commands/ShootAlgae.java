@@ -10,15 +10,16 @@ import edu.wpi.first.math.util.Units;
 
 
 public class ShootAlgae extends Command {
-  AlgaeEffector Algae;
+  AlgaeEffector algae;
   private final Timer timer = new Timer(); 
-  public ShootAlgae(AlgaeEffector algaeEffector) {
-    addRequirements(this.Algae = algaeEffector);
+  public ShootAlgae(AlgaeEffector algae) {
+    addRequirements(this.algae = algae);
   }
 
   @Override
   public void initialize() {
-    Algae.setArmPosition(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE);
+    algae.setArmPosition(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE);
+    timer.reset();
     timer.start();
   }
 
@@ -27,15 +28,16 @@ public class ShootAlgae extends Command {
   public void execute() {
    
 
-      Algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
-      Algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
-      Algae.setPincherRPM(Constants.AlgaeEffectorc.SHOOT_PINCHER_RPM);
+      algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
+      algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
+      algae.setPincherRPM(Constants.AlgaeEffectorc.SHOOT_PINCHER_RPM);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Algae.stopMotors();
+    algae.stopMotors();
+    timer.stop();
   }
 
   // Returns true when the command should end.
