@@ -19,7 +19,16 @@ import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.Constants.OI.Manipulator.*;
 import org.carlmontrobotics.commands.*;
-import static org.carlmontrobotics.Constants.OI;
+import static org.carlmontrobotics.Constants.OI.*;
+import static org.carlmontrobotics.Constants.OI.Manipulator.*;
+
+import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.Constants.OI.Manipulator.*;
+import org.carlmontrobotics.Constants.OI.Manipulator;
+
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +40,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS5Controller.Button;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -39,6 +50,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -71,6 +83,7 @@ public class RobotContainer {
 
   private boolean hasSetupAutos = false;
   private final String[] autoNames = new String[] {};
+  private final AlgaeEffector algaeEffector = new AlgaeEffector();
 
   public RobotContainer() {
     {
@@ -115,8 +128,51 @@ public class RobotContainer {
             () -> ProcessedAxisValue(driverController, Axis.kRightX),
             () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
   }
-  private void setBindingsDriver() {}
-  private void setBindingsManipulator() {}
+  private void setBindingsDriver() {
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false)); //wrong
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true));
+
+  }
+
+
+  private void setBindingsManipulator() {
+    //intake
+    new JoystickButton(manipulatorController, INTAKE_BUMPER)
+      .whileTrue(new SequentialCommandGroup(
+        new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
+        new GroundIntakeAlgae(algaeEffector)
+      ));
+      
+      
+    //outake
+
+    //dealgify
+    
+    
+    new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
+      .whileFalse(new OuttakeAlgae(algaeEffector));
+
+    new JoystickButton(manipulatorController, XboxController.Button.kA.value)
+      .onTrue(new DealgaficationIntake(algaeEffector));
+    
+      new JoystickButton(manipulatorController, XboxController.Button.kB.value)
+      .onTrue(new ShootAlgae(algaeEffector));
+      new JoystickButton(manipulatorController, XboxController.Button.kY.value)
+      .onTrue(new InstantCommand(()->{algaeEffector.stopMotors();}));
+  }
+    
+
+    private Trigger axisTrigger(GenericHID controller, Axis axis) {
+      return new Trigger(() -> Math
+              .abs(getStickValue(controller, axis)) > Constants.OI.MIN_AXIS_TRIGGER_VALUE);
+    }
+
+
+  public Command getAutonomousCommand() {
+    return Commands.print("No autonomous command configured");
+  }
 
   /**
      * Flips an axis' Y coordinates upside down, but only if the select axis is a
