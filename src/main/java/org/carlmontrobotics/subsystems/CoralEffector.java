@@ -1,4 +1,3 @@
-
 package org.carlmontrobotics.subsystems;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
@@ -34,9 +33,9 @@ import com.revrobotics.spark.SparkBase;
 
 public class CoralEffector extends SubsystemBase {
   
-    public SparkFlex coralMotor = new SparkFlex(CoralEffectorConstants.coralMotorPort, MotorType.kBrushless);
+    public SparkFlex coralMotor = new SparkFlex(CoralEffectorConstants.CORAL_MOTOR_PORT, MotorType.kBrushless);
     // public DigitalInput coralLimitSwitch = new DigitalInput(CoralEffectorConstants.coralLimitSwitchPort);
-    public TimeOfFlight distanceSensor = new TimeOfFlight(CoralEffectorConstants.coralDistanceSensorPort);
+    public TimeOfFlight distanceSensor = new TimeOfFlight(CoralEffectorConstants.CORAL_DISTANCE_SENSOR_PORT);
     
     public static boolean distanceSensorSees;
     // public static boolean limitSwitchSees;
@@ -52,7 +51,7 @@ public class CoralEffector extends SubsystemBase {
         .idleMode(IdleMode.kBrake);
     config.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(CoralEffectorConstants.kp, CoralEffectorConstants.ki, CoralEffectorConstants.kd);
+        .pid(CoralEffectorConstants.KP, CoralEffectorConstants.KI, CoralEffectorConstants.KD);
         
     coralMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
    }
@@ -80,7 +79,7 @@ public class CoralEffector extends SubsystemBase {
   @Override
   public void periodic() {
     //coralMotor.getClosedLoopController().setReference(1, ControlType.kVelocity);
-    distanceSensorSees = distanceSensor.getRange() < CoralEffectorConstants.coralDistanceSensorDistance;
+    distanceSensorSees = distanceSensor.getRange() < CoralEffectorConstants.CORAL_DISTANCE_SENSOR_DISTANCE;
     // limitSwitchSees = !coralLimitSwitch.get();
     // CoralGoalRPM = coralEncoder.getVelocity();
     coralOutput = coralMotor.getAppliedOutput();
@@ -91,6 +90,6 @@ public class CoralEffector extends SubsystemBase {
     // SmartDashboard.putNumber("Coral goal RPM", CoralGoalRPM);
     SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());
     SmartDashboard.putNumber("coral output", coralOutput);
-    SmartDashboard.getNumber("P", CoralEffectorConstants.kp);
+    SmartDashboard.getNumber("P", CoralEffectorConstants.KP);
   }
 }

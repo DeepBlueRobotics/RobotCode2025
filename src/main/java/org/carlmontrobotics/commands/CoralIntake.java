@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;;
 
 public class CoralIntake extends Command {
-    public static double spin;
+    // public static double spin;
     // public static boolean fast2 = false;
     // Timer timer = new Timer();
     // Timer timer2 = new Timer();
@@ -51,17 +51,17 @@ public class CoralIntake extends Command {
         // }
         // CoralEffector.coralMotor.set(0.1);
         // spin = 10;
-        SmartDashboard.putNumber("spin", spin);
+        // SmartDashboard.putNumber("spin", spin);
         //SmartDashboard.putNumber("timer", timer.get());
         // SmartDashboard.getBoolean("outakeGet", coralIn);r
         SmartDashboard.putBoolean("coral in", coralEffector.coralIsIn());
         if (CoralEffector.distanceSensorSees){
-            coralEffector.setMotorSpeed(CoralEffectorConstants.coralEffectorMotorInputFastSpeed);
+            coralEffector.setMotorSpeed(CoralEffectorConstants.CORAL_EFFECTOR_MOTOR_INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); //rotations
             coralEffector.setCoralIn(true);
         }
         else if (coralEffector.coralIsIn()){
-            coralEffector.setReferencePosition(coralMotorPosition + CoralEffectorConstants.coralEffectorDistanceSensorOffset); //rotations
+            coralEffector.setReferencePosition(coralMotorPosition + CoralEffectorConstants.CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
         }
         else {
             coralEffector.setMotorSpeed(0);

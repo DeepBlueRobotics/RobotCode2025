@@ -3,30 +3,26 @@ package org.carlmontrobotics;
 import edu.wpi.first.wpilibj.StadiaController.Button;
 
 public final class Constants {
-    // public static final class Drivetrain {
-    //     public static final double MAX_SPEED_MPS = 2;
-    // }
     public static final class OI {
         public static final class Driver {
-            public static final int port = 0;
+            public static final int PORT = 0;
         }
         public static final class Manipulator {
-            public static final int port = 1;
-            public static final int IntakeButton = Button.kA.value;
+            public static final int PORT = 1;
+            public static final int INTAKE_BUTTON = Button.kA.value;
         }
     }
-    public static final class CoralEffectorConstants{
-        public final static int coralMotorPort = 1;
-        public final static int coralLimitSwitchPort = 0;
-        public final static int coralDistanceSensorPort = 6;
-        public final static int coralDistanceSensorDistance = 150;
-        public final static double coralEffectorMotorInputFastSpeed = 0.07;
-        // public final static double coralEffectorMotorInputFastSpeed2 = 0.05;
-        // public final static double coralEffectorMotorInputSlowSpeed = 0.04;
-        public final static double coralEffectorMotorOutputSpeed = 0.1;
-        public final static double coralEffectorDistanceSensorOffset = -0.1;
-        public final static double kp = 1.3;
-        public final static double ki = 0;
-        public final static double kd = 0;
+    public static final class CoralEffectorConstants {
+        public final static int CORAL_MOTOR_PORT = 1;
+        public final static int CORAL_LIMIT_SWITCH_PORT = 0;
+        public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
+        //TODO: tune distance sensor distance, speeds, offsets, and PID on the actual coral subsystem
+        public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150;
+        public final static double CORAL_EFFECTOR_MOTOR_INPUT_FAST_SPEED = 0.07;
+        public final static double CORAL_EFFECTOR_MOTOR_OUTPUT_SPEED = 0.1;
+        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = -0.1;
+        public final static double KP = 1.3;
+        public final static double KI = 0;
+        public final static double KD = 0;
     }
 }

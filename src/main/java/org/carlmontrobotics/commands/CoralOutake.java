@@ -35,7 +35,7 @@ public class CoralOutake extends Command {
       timer.start();
     }
     else */if (timer.get() <= 0.5) {
-      coralEffector.setMotorSpeed(CoralEffectorConstants.coralEffectorMotorOutputSpeed);
+      coralEffector.setMotorSpeed(CoralEffectorConstants.CORAL_EFFECTOR_MOTOR_OUTPUT_SPEED);
     }
     else {
       coralEffector.setMotorSpeed(0);
