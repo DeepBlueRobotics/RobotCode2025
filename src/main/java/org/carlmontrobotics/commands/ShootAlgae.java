@@ -18,7 +18,7 @@ public class ShootAlgae extends Command {
 
   @Override
   public void initialize() {
-    algae.setArmPosition(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE);
+    //algae.setArmPosition(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE);
     timer.reset();
     timer.start();
   }

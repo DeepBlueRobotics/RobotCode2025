@@ -274,8 +274,8 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putNumber("Raw Arm Angle", armAbsoluteEncoder.getPosition());
         SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
         SmartDashboard.putNumber("Arm Velocity", getArmVel());
-        SmartDashboard.putData("Dealgafication", new Dealgafication(this));//need params for these
-        SmartDashboard.putData("Intake Algae", new IntakeAlgae(this));
+        SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));//need params for these
+        SmartDashboard.putData("Intake Algae", new GroundIntakeAlgae(this));
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
         SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
 
