@@ -99,7 +99,7 @@ public class AlgaeEffector extends SubsystemBase {
 
     private static double kDt;
     private TrapezoidProfile.State setPoint;
-    private double armGoalAngle = 0;
+    
     private double armFeedVolts;
     private double kG;
    // private final ArmFeedforward armFeed = new ArmFeedforward(kS[ARM_ARRAY_ORDER], kG[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]);
@@ -165,18 +165,20 @@ public class AlgaeEffector extends SubsystemBase {
         pincherFeedforward.calculate(pincherrpm);    
     }
     //arm methods
-    public void setArmPosition(double armangle) {
-        armGoalAngle = armangle;
+    public void setArmPosition() {
+        
+        setPoint = getArmState();
         armGoalState = armTrapProfile.calculate(kDt, setPoint, armGoalState); 
 
-        armFeedVolts = armFeedforward.calculate(setPoint.position, setPoint.velocity);
+        armFeedVolts = armFeedforward.calculate(armGoalState.position, armGoalState.velocity);
         if ((getArmPos() < LOWER_ANGLE_LIMIT)
              || (getArmPos() > UPPER_ANGLE_LIMIT)) {
             armFeedVolts = armFeedforward.calculate(getArmPos(), 0);
 
         }
 
-        pidControllerArm.setReference(setPoint.position, ControlType.kPosition);
+        
+        pidControllerArm.setReference(armGoalState.position, ControlType.kPosition,ClosedLoopSlot.kSlot0, armFeedVolts);
         //((setPoint.position),ControlType.kPosition,armFeedVolts);
     }
   
@@ -194,12 +196,9 @@ public class AlgaeEffector extends SubsystemBase {
     }
     //overload
 
-    public boolean armAtGoal(double errorMargin){ //TODO: make error margin a constant
-        
-        return Math.abs(getArmPos()-armGoalAngle) <= errorMargin; 
-    }
+    
     public boolean armAtGoal(){
-        return Math.abs(getArmPos()-armGoalAngle) <= ARM_ERROR_MARGIN;
+        return Math.abs(getArmPos()-armGoalState.position) <= ARM_ERROR_MARGIN;
     }
 
     
@@ -268,11 +267,11 @@ public class AlgaeEffector extends SubsystemBase {
 
     @Override
     public void periodic() {
-        pidControllerArm.setReference(armGoalAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        pincherFeedforward.calculate(armGoalAngle); //What is this for
+        setArmPosition();
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("Raw Arm Angle", armAbsoluteEncoder.getPosition());
         SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
+        SmartDashboard.putNumber("Arm Velocity", getArmVel());
         SmartDashboard.putData("Dealgafication", new Dealgafication(this));//need params for these
         SmartDashboard.putData("Intake Algae", new IntakeAlgae(this));
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
