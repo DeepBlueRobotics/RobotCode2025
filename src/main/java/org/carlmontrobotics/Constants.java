@@ -331,35 +331,34 @@ public final class Constants {
 		public static final double followerPositionConversionFactor = 1000;
 		public static final double masterVelocityConversionFactor = 1000;
 		public static final double followerVelocityConversionFactor = 1000;
-		public static final double maxElevatorHeightInches = 0;
+		public static final double maxElevatorHeightInches = 53.2;
 		public static final double minElevatorHeightInches = 0;
 
-		// PID
-		public static final double kP = 1;
-		public static final double kI = 0;
-		public static final double kD = 0;
-		// Positions
-		public static final double downPos = 0;
-		public static final double l1 = 0;
-		public static final double l2 = 0;
-		public static final double l3 = 0;
-		public static final double l4 = 0;
-		public static final double net = 0;
-		public static final double processor = 0;
-		public static final double bottomAlgaeRemoval = 0;
-		public static final double uppperAlgaeRemoval = 0;
-
-		// ScoreENUM
-		public enum ElevatorPos {
-			DOWN(downPos),
-			L1(l1),
-			L2(l2),
-			L3(l3),
-			L4(l4),
-			NET(net),
-			PROCESSOR(processor),
-			BOTTOMALGAE(bottomAlgaeRemoval),
-			UPPERALGAE(uppperAlgaeRemoval);
+        //PID
+        public static final double kP = 1;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        //Positions
+        public static final double downPos = 0;
+        public static final double l1 = 0;
+        public static final double l2 = 6.5; //inches
+        public static final double l3 = 22.5; //inches
+        public static final double l4 = 52.64;
+        public static final double net = 53.2;
+        public static final double processor = 0;
+        public static final double bottomAlgaeRemoval = 22.5;
+        public static final double uppperAlgaeRemoval = 38.35;
+        //ScoreENUM
+        public enum ElevatorPos {
+            DOWN(downPos),
+            L1(l1),
+            L2(l2),
+            L3(l3),
+            L4(l4),
+            NET(net),
+            PROCESSOR(processor),
+            BOTTOMALGAE(bottomAlgaeRemoval),
+            UPPERALGAE(uppperAlgaeRemoval);
 
 			public final double positionInches;
 
