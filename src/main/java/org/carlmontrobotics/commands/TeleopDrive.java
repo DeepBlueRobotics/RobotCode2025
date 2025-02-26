@@ -111,6 +111,12 @@ public class TeleopDrive extends Command {
       driveMultiplier = kBabyDriveSpeed; 
       rotationMultiplier = kBabyDriveRotation;
     }
+   
+    if( height >= Elevatorc.l1 && arm.getArmPos() >= ARM_INTAKE_ANGLE)
+    {
+      rotationMultiplier = 0;
+      strafe = 0;
+    }
 
    
     
