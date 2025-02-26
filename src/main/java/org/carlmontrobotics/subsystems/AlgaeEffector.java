@@ -185,17 +185,21 @@ public class AlgaeEffector extends SubsystemBase {
         armGoalState.velocity = 0;
     }
 
-    }
+
 
     //returns the arm position and velocity based on encoder and position 
     public TrapezoidProfile.State getArmState(){
         TrapezoidProfile.State armState = new TrapezoidProfile.State(getArmPos(), getArmVel());
         return armState;
     }
+    //overload
 
     public boolean armAtGoal(double errorMargin){ //TODO: make error margin a constant
         
         return Math.abs(getArmPos()-armGoalAngle) <= errorMargin; 
+    }
+    public boolean armAtGoal(){
+        return Math.abs(getArmPos()-armGoalAngle) <= ARM_ERROR_MARGIN;
     }
 
     
@@ -269,10 +273,10 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("Raw Arm Angle", armAbsoluteEncoder.getPosition());
         SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
-        SmartDashboard.putData("Dealgafication", new Dealgafication());//need params for these
-        SmartDashboard.putData("Intake Algae", new IntakeAlgae());
-        SmartDashboard.putData("Outtake Algae", new OuttakeAlgae());
-        SmartDashboard.putData("Shoot Algae", new ShootAlgae());
+        SmartDashboard.putData("Dealgafication", new Dealgafication(this));//need params for these
+        SmartDashboard.putData("Intake Algae", new IntakeAlgae(this));
+        SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
+        SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
 
     }
 

@@ -110,8 +110,7 @@ public final class Constants {
         public static final double ROTATION_TO_DEG = 360;
         public static final double ARM_DISCONT_DEG = -35;
 
-        public static final double ARM_TOLERANCE_SHOOT = 5; //degrees
-        public static final double ARM_TOLERANCE_INTAKE = 20;//degress
+        public static final double ARM_ERROR_MARGIN = 1;
 
 
 	}

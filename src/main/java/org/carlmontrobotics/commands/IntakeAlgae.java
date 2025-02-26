@@ -27,15 +27,18 @@ public class IntakeAlgae extends Command {
   @Override
   public void execute() {
     //Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)
-    if (algae.armAtGoal(ARM_TOLERANCE_INTAKE)) {
-      algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
-      algae.setBottomRPM(Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM);
-      algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
-    }
-    if (algae.isAlgaeIntaked()) {
+
+    algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
+    algae.setBottomRPM(Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM);
+    algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
+
+    /* 
+     * if (algae.isAlgaeIntaked()) {
       algae.setArmPosition(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
       done = true;
     }
+    */
+    
   }
 
   // Called once the command ends or is interrupted.

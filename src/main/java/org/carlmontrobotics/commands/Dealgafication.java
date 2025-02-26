@@ -23,10 +23,11 @@ public class Dealgafication extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (algae.armAtGoal(ARM_TOLERANCE_SHOOT)) //TODO: is this the right tolerance??
-      algae.setTopRPM(DEALGAFY_TOP_RPM); 
-      algae.setBottomRPM(DEALGAFY_BOTTOM_RPM);
-      algae.setPincherRPM(DEALGAFY_PINCHER_RPM);
+    //call command arm toposition
+    
+    algae.setTopRPM(DEALGAFY_TOP_RPM); 
+    algae.setBottomRPM(DEALGAFY_BOTTOM_RPM);
+    algae.setPincherRPM(DEALGAFY_PINCHER_RPM);
   }
 
   // Called once the command ends or is interrupted.
