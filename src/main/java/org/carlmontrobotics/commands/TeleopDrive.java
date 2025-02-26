@@ -1,5 +1,6 @@
 package org.carlmontrobotics.commands;
 
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE;
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
 
 import java.util.function.BooleanSupplier;
@@ -7,7 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Elevatorc;
-import org.carlmontrobotics.Constants;
+import org.carlmontrobotics.subsystems.AlgaeEffector;
 import org.carlmontrobotics.Robot;
 import org.carlmontrobotics.subsystems.Drivetrain;
 import static org.carlmontrobotics.RobotContainer.*;
@@ -31,9 +32,8 @@ public class TeleopDrive extends Command {
   private double currentStrafeVel = 0;
   private double prevTimestamp;
   private boolean babyMode;
-  private boolean ElevatorMode;
-  private boolean elavatorUp;
   Elevator elevator;
+  AlgaeEffector arm;
   private double height = elevator.getCurrentHeight();
   /**
    * Creates a new TeleopDrive.
@@ -111,11 +111,10 @@ public class TeleopDrive extends Command {
       driveMultiplier = kBabyDriveSpeed; 
       rotationMultiplier = kBabyDriveRotation;
     }
-    if( height >= Elevatorc.l1 )
-    {
-      rotationMultiplier = 0;
-      strafe = 0;
-    }
+
+   
+    
+
     // double driveMultiplier = kNormalDriveSpeed;
     // double rotationMultiplier = kNormalDriveRotation;
 

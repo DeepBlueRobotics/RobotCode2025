@@ -19,6 +19,8 @@ public class ElevatorL1 extends Command {
     @Override
     public void execute() {
         elevator.setGoal(ElevatorPos.L1);
+        
+        
     }
     @Override
     public void end(boolean interrupted) {
