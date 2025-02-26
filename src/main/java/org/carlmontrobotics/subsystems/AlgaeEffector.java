@@ -165,7 +165,11 @@ public class AlgaeEffector extends SubsystemBase {
         pincherFeedforward.calculate(pincherrpm);    
     }
     //arm methods
+    
+
+    //drives arm from set point to goal position
     public void setArmPosition(double armangle) {
+    
         armGoalAngle = armangle;
         armGoalState = armTrapProfile.calculate(kDt, setPoint, armGoalState); 
 
@@ -179,7 +183,8 @@ public class AlgaeEffector extends SubsystemBase {
         pidControllerArm.setReference(setPoint.position, ControlType.kPosition);
         //((setPoint.position),ControlType.kPosition,armFeedVolts);
     }
-  
+    
+    //
     public void setArmTarget(double targetPos){
         armGoalState.position = getArmClappedGoal(targetPos); 
         armGoalState.velocity = 0;
