@@ -42,8 +42,8 @@ public final class Constants {
         //Positions
         public static final double downPos = 0;
         public static final double l1 = 0;
-        public static final double l2 = 0;
-        public static final double l3 = 0;
+        public static final double l2 = 15; //inches
+        public static final double l3 = 30; //inches
         public static final double l4 = 0;
         public static final double net = 0;
         public static final double processor = 0;

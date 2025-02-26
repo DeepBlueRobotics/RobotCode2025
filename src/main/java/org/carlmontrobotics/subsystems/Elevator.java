@@ -141,6 +141,20 @@ public class Elevator extends SubsystemBase {
     return masterEncoder.getPosition();
   }
 
+  public boolean atGoalHeight() {
+    if (heightGoal == Constants.Elevatorc.maxElevatorHeightInches) {
+      return elevatorAtMax();
+    }
+    else if (heightGoal == Constants.Elevatorc.minElevatorHeightInches) {
+      return elevatorAtMin();
+    }
+    
+    else {
+      return (Math.abs(getEncoderValue()) - heightGoal <= Constants.Elevatorc.elevatorTolerance);
+    }
+
+  }
+
   @Override
   public void periodic() {
     if (elevatorAtMax()){
