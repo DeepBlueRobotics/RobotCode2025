@@ -54,7 +54,7 @@ public class Limelight extends SubsystemBase {
     Pose3d targetPoseRobotSpace = LimelightHelpers.getTargetPose3d_RobotSpace(limelightName); // pose of the target
 
     double targetX = targetPoseRobotSpace.getX(); // the forward offset between the center of the
-                                                  // robot and target
+    // robot and target
     double targetZ = -targetPoseRobotSpace.getZ(); // the sideways offset
 
     double targetOffsetRads = MathUtil.inputModulus(Math.atan2(targetX, targetZ), -Math.PI, Math.PI);
