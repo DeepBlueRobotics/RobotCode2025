@@ -8,6 +8,7 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.subsystems.*;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI.*;
+import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator.*;
@@ -15,8 +16,11 @@ import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.commands.ShootAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
+import org.carlmontrobotics.commands.ArmToPosition;
 import org.carlmontrobotics.commands.Dealgafication;
 import org.carlmontrobotics.commands.IntakeAlgae;
+
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
 
 
 
@@ -70,8 +74,18 @@ public class RobotContainer {
 
 
   private void setBindingsManipulator() {
-    new JoystickButton(manipulatorController, OI.Manipulator.IntakeBumper)
-      .whileTrue(new IntakeAlgae(algaeEffector));
+    //intake
+    new JoystickButton(manipulatorController, INTAKE_BUMPER)
+      .whileTrue(new SequentialCommandGroup(
+        new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
+        new IntakeAlgae(algaeEffector)
+      ));
+      
+      
+    //outake
+
+    //dealgify
+    
     
     new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
       .whileFalse(new OuttakeAlgae(algaeEffector));

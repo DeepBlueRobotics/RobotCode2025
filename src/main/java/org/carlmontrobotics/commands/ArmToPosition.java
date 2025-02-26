@@ -14,9 +14,6 @@ public class ArmToPosition extends Command{
         addRequirements(this.algaeArm = algaeArm);
         this.goalPosition = goalPosition;
        
-
-
-
     }
 
     @Override

@@ -47,7 +47,7 @@ public final class Constants {
             public static final Axis OuttakeTrigger = Axis.kRightTrigger;
             public static final Axis IntakeTrigger = Axis.kLeftTrigger;
             public static final int OuttakeBumper = Button.kRightBumper.value;
-            public static final int IntakeBumper = Button.kLeftBumper.value;
+            public static final int INTAKE_BUMPER = Button.kLeftBumper.value;
         }
     }
 	public static final class AlgaeEffectorc {
