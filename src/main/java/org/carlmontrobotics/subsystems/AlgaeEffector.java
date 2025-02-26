@@ -274,7 +274,13 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putNumber("Raw Arm Angle", armAbsoluteEncoder.getPosition());
         SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
         SmartDashboard.putNumber("Arm Velocity", getArmVel());
-        SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));//need params for these
+        SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmTarget(0)));
+        SmartDashboard.putData("Arm to Shooting Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE)));
+        SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
+        SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
+        SmartDashboard.putData("Arm to Resting While Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE)));
+        SmartDashboard.putData("Arm to Ramp Up Angle Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RAMP_UP_ANGLE)));
+        SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));
         SmartDashboard.putData("Intake Algae", new GroundIntakeAlgae(this));
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
         SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
