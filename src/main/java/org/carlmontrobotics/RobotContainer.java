@@ -77,8 +77,9 @@ public class RobotContainer {
     //intake
     new JoystickButton(manipulatorController, INTAKE_BUMPER)
       .whileTrue(new SequentialCommandGroup(
-        new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
+        // new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
         new GroundIntakeAlgae(algaeEffector)
+        //the command seems to take care of arm angles by itself. please change the command.
       ));
       
       
@@ -97,6 +98,15 @@ public class RobotContainer {
       .onTrue(new ShootAlgae(algaeEffector));
       new JoystickButton(manipulatorController, XboxController.Button.kY.value)
       .onTrue(new InstantCommand(()->{algaeEffector.stopMotors();}));
+
+    /*
+     * THE COMMANDS AND WHAT SUBCOMMANDS THEY NEED TO RUN IN ORDER!!
+     * 
+     * outtake: clear arm out of way, outtake
+     * dealgify: move elevator to L1/L2/L3, move arm out, dealgify&intake
+     * shoot: Not Important
+     * ground intake: elevator to ground, arm to intake angle, intake
+     */
   }
     
 
