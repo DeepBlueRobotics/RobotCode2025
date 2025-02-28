@@ -18,8 +18,10 @@ public final class Constants {
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
         //TODO: tune distance sensor distance, speeds, offsets, and PID on the actual coral subsystem
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150;
-        public final static double CORAL_EFFECTOR_MOTOR_INPUT_FAST_SPEED = 0.07;
-        public final static double CORAL_EFFECTOR_MOTOR_OUTPUT_SPEED = 0.1;
+        public final static double CORAL_INTAKE_ERR = .1;//encoder units - likely rotations
+        public final static double INPUT_FAST_SPEED = 0.07;
+        public final static double INPUT_SLOW_SPEED = 0.035;
+        public final static double OUTPUT_SPEED = 0.1;
         public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = -0.1;
         public final static double KP = 1.3;
         public final static double KI = 0;

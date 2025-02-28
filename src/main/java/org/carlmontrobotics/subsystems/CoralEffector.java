@@ -35,14 +35,15 @@ public class CoralEffector extends SubsystemBase {
   
     public SparkFlex coralMotor = new SparkFlex(CoralEffectorConstants.CORAL_MOTOR_PORT, MotorType.kBrushless);
     // public DigitalInput coralLimitSwitch = new DigitalInput(CoralEffectorConstants.coralLimitSwitchPort);
+    //FIXME ADD THE LIMIT SWITCH!!
     public TimeOfFlight distanceSensor = new TimeOfFlight(CoralEffectorConstants.CORAL_DISTANCE_SENSOR_PORT);
     
-    public static boolean distanceSensorSees;
-    // public static boolean limitSwitchSees;
+    
     public final RelativeEncoder coralEncoder = coralMotor.getEncoder();
-    // private double CoralGoalRPM = 100;
-    private double coralOutput = coralMotor.getAppliedOutput();
-    private boolean coralIn;
+    
+    private double coralOutput;
+    public boolean coralIn;
+    private double targetPos=0;
   
     SparkFlexConfig config = new SparkFlexConfig();
     public CoralEffector(){
@@ -63,15 +64,24 @@ public class CoralEffector extends SubsystemBase {
     coralMotor.set(speed);
   }
   public void setReferencePosition(double reference) {
+    targetPos = reference;
     coralMotor.getClosedLoopController().setReference(reference, SparkBase.ControlType.kPosition);
   }
+  public boolean motorAtGoal(){
+    return Math.abs(coralEncoder.getPosition()-targetPos) <= CoralEffectorConstants.CORAL_INTAKE_ERR;
+  }
 
-  public boolean coralIsIn() {
-    return coralIn;
+  public boolean seesCoral(){
+    return distanceSensor.getRange() < CoralEffectorConstants.CORAL_DISTANCE_SENSOR_DISTANCE;
   }
-  public void setCoralIn(boolean coralIsInside) {
-    coralIn = coralIsInside;
-  }
+
+  // public boolean coralIsIn() {
+  //   return coralIn;
+  // }
+  // public void setCoralIn(boolean coralIsInside) {
+  //   coralIn = coralIsInside;
+  // }
+
   // public boolean coralDetected() {
   //   return !coralLimitSwitch.get();
   // }
@@ -79,13 +89,13 @@ public class CoralEffector extends SubsystemBase {
   @Override
   public void periodic() {
     //coralMotor.getClosedLoopController().setReference(1, ControlType.kVelocity);
-    distanceSensorSees = distanceSensor.getRange() < CoralEffectorConstants.CORAL_DISTANCE_SENSOR_DISTANCE;
     // limitSwitchSees = !coralLimitSwitch.get();
     // CoralGoalRPM = coralEncoder.getVelocity();
     coralOutput = coralMotor.getAppliedOutput();
 
-    SmartDashboard.putBoolean("Distance sensor", distanceSensorSees);
+    SmartDashboard.putBoolean("Distance sensor", seesCoral());
     SmartDashboard.putNumber("distance", distanceSensor.getRange());
+    SmartDashboard.putBoolean("coral in", coralIn);
     // SmartDashboard.putBoolean("limit switch", limitSwitchSees);
     // SmartDashboard.putNumber("Coral goal RPM", CoralGoalRPM);
     SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());

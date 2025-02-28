@@ -23,7 +23,9 @@ public class CoralOutake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    timer.reset();
     timer.start();
+    coralEffector.setMotorSpeed(CoralEffectorConstants.OUTPUT_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,22 +36,18 @@ public class CoralOutake extends Command {
       timer.reset();
       timer.start();
     }
-    else */if (timer.get() <= 0.5) {
-      coralEffector.setMotorSpeed(CoralEffectorConstants.CORAL_EFFECTOR_MOTOR_OUTPUT_SPEED);
-    }
-    else {
-      coralEffector.setMotorSpeed(0);
-    }
-    coralEffector.setCoralIn(false);
+    else */
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    coralEffector.setMotorSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return timer.get() > .5 || coralEffector.seesCoral()==false;
   }
 }
