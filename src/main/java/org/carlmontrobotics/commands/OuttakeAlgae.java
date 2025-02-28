@@ -19,15 +19,15 @@ public class OuttakeAlgae extends Command {
     //algae.setArmPosition(ARM_INTAKE_ANGLE);
     timer.reset();
     timer.start();
+
+    algae.setTopRPM(OUTTAKE_TOP_RPM);
+    algae.setBottomRPM(OUTTAKE_BOTTOM_RPM);
+    algae.setPincherRPM(OUTTAKE_PINCHER_RPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-      algae.setTopRPM(OUTTAKE_TOP_RPM);
-      algae.setBottomRPM(OUTTAKE_BOTTOM_RPM);
-      algae.setPincherRPM(OUTTAKE_PINCHER_RPM);
     
     // if (Math.abs(Algae.getArmPos()-Constants.AlgaeEffectorc.armRestingAngleWhileIntakeAlgae) <= Units.degreestoradian(5)) {
     //   Algae.setTopRPM(-1 * Constants.AlgaeEffectorc.intakeTopRPM);
@@ -47,6 +47,6 @@ public class OuttakeAlgae extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {//FIXME DO THIS
-    return timer.getFPGATimestamp()>3; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return timer.get()>3; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

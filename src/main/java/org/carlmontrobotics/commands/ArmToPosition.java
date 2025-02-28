@@ -19,17 +19,15 @@ public class ArmToPosition extends Command{
     @Override
     public void initialize(){
         algaeArm.setArmTarget(goalPosition); //sets target to position in rads
-        
-
     }
-    public void execute(){
 
-    }
-    public void end(){
+    // @Override
+    // public void execute(){}
 
-    }
+    // @Override
+    // public void end(){boolean interrupted}
+    
     public boolean isFinished(){
         return algaeArm.armAtGoal();
-
     }
 }

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class GroundIntakeAlgae extends Command {
   private final AlgaeEffector algae;
   private final Timer timer = new Timer();
-  private boolean done = false;
+  
   public GroundIntakeAlgae(AlgaeEffector algae) {
     addRequirements(this.algae = algae);
   }
@@ -19,34 +19,26 @@ public class GroundIntakeAlgae extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    //algae.setArmPosition(ARM_INTAKE_ANGLE);
-  }
-
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    //Algae.setArmAngle(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)
+    algae.setArmTarget(ARM_INTAKE_ANGLE);
+    //this command is strange in that it seems to handle the arm movement by itself, but I will leave it that way until someone changes it.
 
     algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
     algae.setBottomRPM(Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM);
     algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
-
-    /* 
-     * if (algae.isAlgaeIntaked()) {
-      algae.setArmPosition(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
-      done = true;
-    }
-    */
-    
   }
+
+
+  // Called every time the scheduler runs while the command is scheduled.
+  // @Override
+  // public void execute() {
+  // }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    algae.setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
     algae.stopMotors();
     timer.stop();
-    //TODO: Test different times
   }
 
   @Override
@@ -54,6 +46,7 @@ public class GroundIntakeAlgae extends Command {
     //distance sensor doesn't detect coral
     //TODO: make distance sensor stuff
     //TODO: add smartdashboard
-    return done || timer.getFPGATimestamp()>5; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    //TODO: Test different times
+    return algae.isAlgaeIntaked() || timer.get()>5; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }
