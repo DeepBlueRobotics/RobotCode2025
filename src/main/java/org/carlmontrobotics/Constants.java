@@ -84,6 +84,8 @@ public final class Constants {
         public static double DEALGAFY_BOTTOM_RPM = 1000;  
         public static double DEALGAFY_PINCHER_RPM = 1000; 
 
+        public static double RPM_ALLOWED_ERROR = 150;//rpm
+
         public static final int TBE_CPR = 8192; //Through-Bore Encoder
         public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
