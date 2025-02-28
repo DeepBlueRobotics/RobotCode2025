@@ -78,7 +78,7 @@ public class AlgaeEffector extends SubsystemBase {
     private final RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
     private final RelativeEncoder pincherEncoder = pincherMotor.getEncoder();
     private final RelativeEncoder armEncoder = armMotor.getEncoder();
-    private final RelativeEncoder armAbsoluteEncoder = armMotor.getAlternateEncoder();
+    private final AbsoluteEncoder armAbsoluteEncoder = armMotor.getAbsoluteEncoder();
 
     private final SparkClosedLoopController pidControllerTop = topMotor.getClosedLoopController();
     private final SparkClosedLoopController pidControllerBottom = bottomMotor.getClosedLoopController();
@@ -152,17 +152,19 @@ public class AlgaeEffector extends SubsystemBase {
 
     public void setTopRPM(double toprpm) {
         pidControllerTop.setReference(toprpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        topFeedforward.calculate(toprpm);
+        // topFeedforward.calculate(toprpm);
+        //ALL THIS DOES IS RETURN THE CALCULATED VOLTAGE TO ADD!! IT DOES NOT DO ANYTHING!!
+        //also, only the arm generally needs feedforward - unless you have a flywheel.
     }
 
     public void setBottomRPM(double bottomrpm) {
         pidControllerBottom.setReference(bottomrpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        bottomFeedforward.calculate(bottomrpm);
+        // bottomFeedforward.calculate(bottomrpm);
     }
 
     public void setPincherRPM(double pincherrpm) {
         pidControllerPincher.setReference(pincherrpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        pincherFeedforward.calculate(pincherrpm);    
+        // pincherFeedforward.calculate(pincherrpm);    
     }
     //arm methods
     //drives arm from set point to goal position
@@ -224,7 +226,6 @@ public class AlgaeEffector extends SubsystemBase {
 
     public void stopArm() {
         armMotor.set(0);
-
     }
 
 
@@ -246,11 +247,11 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     public boolean checkIfAtTopRPM(double rpm) {
-        return topEncoder.getVelocity() == rpm;
+        return Math.abs(topEncoder.getVelocity()-rpm) <= RPM_ALLOWED_ERROR;
     }
 
     public boolean checkIfAtBottomRPM(double rpm) {
-        return bottomEncoder.getVelocity() == rpm;//give like a 5% error or somethin
+        return Math.abs(bottomEncoder.getVelocity()-rpm) <= RPM_ALLOWED_ERROR;
     }
 
     public void setMotorSpeed(double topSpeed, double bottomSpeed, double pincherSpeed) {
