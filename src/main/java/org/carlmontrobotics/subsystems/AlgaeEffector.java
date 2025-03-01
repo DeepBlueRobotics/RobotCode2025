@@ -106,6 +106,9 @@ public class AlgaeEffector extends SubsystemBase {
 
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
+        TRAP_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                (MAX_FF_VEL_RAD_P_S), (MAX_FF_ACCEL_RAD_P_S));
+        armTrapProfile = new TrapezoidProfile(TRAP_CONSTRAINTS);
         configureMotors();
         kDt = 0.02;
         setPoint = getArmState();
@@ -152,21 +155,22 @@ public class AlgaeEffector extends SubsystemBase {
 
     public void setTopRPM(double toprpm) {
         pidControllerTop.setReference(toprpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        // topFeedforward.calculate(toprpm);
+        topFeedforward.calculate(toprpm);
         //ALL THIS DOES IS RETURN THE CALCULATED VOLTAGE TO ADD!! IT DOES NOT DO ANYTHING!!
         //also, only the arm generally needs feedforward - unless you have a flywheel.
     }
 
     public void setBottomRPM(double bottomrpm) {
         pidControllerBottom.setReference(bottomrpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        // bottomFeedforward.calculate(bottomrpm);
+        bottomFeedforward.calculate(bottomrpm);
     }
 
     public void setPincherRPM(double pincherrpm) {
         pidControllerPincher.setReference(pincherrpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        // pincherFeedforward.calculate(pincherrpm);    
+        pincherFeedforward.calculate(pincherrpm);    
     }
     //arm methods
+
     //drives arm from set point to goal position
     public void setArmPosition() {
         
@@ -179,13 +183,13 @@ public class AlgaeEffector extends SubsystemBase {
             armFeedVolts = armFeedforward.calculate(getArmPos(), 0);
 
         }
-
+        //System.out.println(armFeedVolts);
         
         pidControllerArm.setReference(armGoalState.position, ControlType.kPosition,ClosedLoopSlot.kSlot0, armFeedVolts);
         //((setPoint.position),ControlType.kPosition,armFeedVolts);
     }
     
-    // use trapezoid 
+    // // use trapezoid 
     public void setArmTarget(double targetPos){
         armGoalState.position = getArmClappedGoal(targetPos); 
         armGoalState.velocity = 0;
@@ -193,12 +197,12 @@ public class AlgaeEffector extends SubsystemBase {
 
 
 
-    //returns the arm position and velocity based on encoder and position 
+    // //returns the arm position and velocity based on encoder and position 
     public TrapezoidProfile.State getArmState(){
         TrapezoidProfile.State armState = new TrapezoidProfile.State(getArmPos(), getArmVel());
         return armState;
     }
-    //overload
+    // //overload
 
     
     public boolean armAtGoal(){
@@ -220,18 +224,15 @@ public class AlgaeEffector extends SubsystemBase {
         //TODO update the arm to get in degrees after someone will figure out what the .getPosition gets for the TBE
         return armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING - ARM_TO_ZERO;
     }
-    public double getArmVel(){
-        return armAbsoluteEncoder.getVelocity();
-    }
-
+   
     public void stopArm() {
         armMotor.set(0);
     }
 
 
-    // public double getArmVel() {
-    //     return armAbsoluteEncoder.getVelocity();
-    // }
+    public double getArmVel() {
+        return armAbsoluteEncoder.getVelocity();
+    }
 
     public void runRPM() {
         //TODO: Change RPM according to design
@@ -270,7 +271,9 @@ public class AlgaeEffector extends SubsystemBase {
 
     @Override
     public void periodic() {
+        //armMotor.set(0.1);
         setArmPosition();
+        
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("Raw Arm Angle", armAbsoluteEncoder.getPosition());
         SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());

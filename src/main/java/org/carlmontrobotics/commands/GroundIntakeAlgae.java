@@ -19,7 +19,7 @@ public class GroundIntakeAlgae extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    algae.setArmTarget(ARM_INTAKE_ANGLE);
+    //algae.setArmTarget(ARM_INTAKE_ANGLE);
     //this command is strange in that it seems to handle the arm movement by itself, but I will leave it that way until someone changes it.
 
     algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
@@ -36,7 +36,7 @@ public class GroundIntakeAlgae extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algae.setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
+    //algae.setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
     algae.stopMotors();
     timer.stop();
   }

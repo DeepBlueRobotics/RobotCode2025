@@ -78,7 +78,7 @@ public class RobotContainer {
     new JoystickButton(manipulatorController, INTAKE_BUMPER)
       .whileTrue(new SequentialCommandGroup(
         // new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
-        new GroundIntakeAlgae(algaeEffector)
+        //new GroundIntakeAlgae(algaeEffector)
         //the command seems to take care of arm angles by itself. please change the command.
       ));
       
@@ -88,16 +88,16 @@ public class RobotContainer {
     //dealgify
     
     
-    new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
-      .whileFalse(new OuttakeAlgae(algaeEffector));
+    // new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
+    //   .whileFalse(new OuttakeAlgae(algaeEffector));
 
-    new JoystickButton(manipulatorController, XboxController.Button.kA.value)
-      .onTrue(new DealgaficationIntake(algaeEffector));
+    // new JoystickButton(manipulatorController, XboxController.Button.kA.value)
+    //   .onTrue(new DealgaficationIntake(algaeEffector));
     
-      new JoystickButton(manipulatorController, XboxController.Button.kB.value)
-      .onTrue(new ShootAlgae(algaeEffector));
-      new JoystickButton(manipulatorController, XboxController.Button.kY.value)
-      .onTrue(new InstantCommand(()->{algaeEffector.stopMotors();}));
+    //   new JoystickButton(manipulatorController, XboxController.Button.kB.value)
+    //   .onTrue(new ShootAlgae(algaeEffector));
+    //   new JoystickButton(manipulatorController, XboxController.Button.kY.value)
+    //   .onTrue(new InstantCommand(()->{algaeEffector.stopMotors();}));
 
     /*
      * THE COMMANDS AND WHAT SUBCOMMANDS THEY NEED TO RUN IN ORDER!!

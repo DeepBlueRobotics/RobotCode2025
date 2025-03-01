@@ -2,6 +2,7 @@ package org.carlmontrobotics;
 
 import java.security.spec.EncodedKeySpec;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController.Axis;
@@ -18,7 +19,7 @@ public final class Constants {
     public static final double[] kI = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kD = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
 
-    public static final double[] kS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
+    public static final double[] kS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.01};
     public static final double[] kV = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kA = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kG = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
@@ -58,7 +59,7 @@ public final class Constants {
 		public static final int UPPER_MOTOR_PORT = 1; 
 		public static final int LOWER_MOTOR_PORT = 2;
         public static final int PINCH_MOTOR_PORT = 3;
-        public static final int ARM_MOTOR_PORT = 4;
+        public static final int ARM_MOTOR_PORT = 14;
         public static final int aChannelEnc = 0;
         public static final int bChannelEnc = 1;
 
@@ -67,7 +68,7 @@ public final class Constants {
 		public static final int PINCHER_ARRAY_ORDER = 2;
         public static final int ARM_ARRAY_ORDER = 3;
         //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
-        //TODO find these values out vvv
+        //TODO find these values out 
         public static double INTAKE_TOP_RPM = 1000;  
         public static double INTAKE_BOTTOM_RPM = 1000;  
         public static double INTAKE_PINCHER_RPM = 1000;  
@@ -111,7 +112,9 @@ public final class Constants {
         public static final double LOWER_ANGLE_LIMIT = -70;
         public static final double ROTATION_TO_DEG = 360;
         public static final double ARM_DISCONT_DEG = -35;
-
+        public static TrapezoidProfile.Constraints TRAP_CONSTRAINTS;
+        public static final double MAX_FF_VEL_RAD_P_S = (Math.PI * .5)/2;
+		public static final double MAX_FF_ACCEL_RAD_P_S = (53.728 / 4)/2;
         public static final double ARM_ERROR_MARGIN = 1;
 
 
