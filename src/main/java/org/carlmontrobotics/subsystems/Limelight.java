@@ -2,6 +2,9 @@
 package org.carlmontrobotics.subsystems;
 
 import static org.carlmontrobotics.Constants.Limelightc.*;
+
+import org.carlmontrobotics.Constants.Limelightc.Apriltagc;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,36 +14,37 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Limelight extends SubsystemBase {
   private final Drivetrain drivetrain;
 
-
   // NEEDS TO SEE: Barge, Reef, Processor, Coral Dropoff
   public Limelight(Drivetrain drivetrain) {
     this.drivetrain = drivetrain;
-    LimelightHelpers.SetFiducialIDFiltersOverride(ROBOT_LL_NAME, VALID_IDS);
+    LimelightHelpers.SetFiducialIDFiltersOverride(CORAL_LL, CORAL_VALID_IDS);
+    LimelightHelpers.SetFiducialIDFiltersOverride(REEF_LL, REEF_VALID_IDS);
 
-    SmartDashboard.putBoolean("Robot sees a Tag", seesTag()); // I need to improve this...
-    SmartDashboard.putNumber("Distance to Processor", getDistanceToApriltag(ROBOT_LL_NAME, MOUNT_ANGLE, 0, LENS_HEIGHT_FROM_GROUND_METERS));
+    SmartDashboard.putBoolean("sees coral station tag", seesTag(CORAL_LL));
+    SmartDashboard.putBoolean("sees reef tag", seesTag(REEF_LL));
+    SmartDashboard.putNumber("distance to coral", getDistanceToApriltag(CORAL_LL, CORAL_MOUNT_ANGLE, Apriltagc.CORAL_HEIGHT_METERS, CORAL_LL_HEIGHT_FROM_GROUND_METERS));
+    SmartDashboard.putNumber("distance to reef", getDistanceToApriltag(REEF_LL, REEF_MOUNT_ANGLE, Apriltagc.REEF_HEIGHT_METERS, REEF_LL_HEIGHT_FROM_GROUND_METERS));
   }
+
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Robot sees a Tag", seesTag());
-    SmartDashboard.putNumber("Distance to Processor", getDistanceToApriltag(ROBOT_LL_NAME, MOUNT_ANGLE, 0, LENS_HEIGHT_FROM_GROUND_METERS));
-  }
-  // Very helpful accessors
-  public double getTXDeg() {
-    return LimelightHelpers.getTX(ROBOT_LL_NAME);
+    SmartDashboard.putBoolean("sees coral station tag", seesTag(CORAL_LL));
+    SmartDashboard.putBoolean("sees reef tag", seesTag(REEF_LL));
+    SmartDashboard.putNumber("distance to coral", getDistanceToApriltag(CORAL_LL, CORAL_MOUNT_ANGLE, Apriltagc.CORAL_HEIGHT_METERS, CORAL_LL_HEIGHT_FROM_GROUND_METERS));
+    SmartDashboard.putNumber("distance to reef", getDistanceToApriltag(REEF_LL, REEF_MOUNT_ANGLE, Apriltagc.REEF_HEIGHT_METERS, REEF_LL_HEIGHT_FROM_GROUND_METERS));
   }
 
-  public double getTYDeg() {
-    return LimelightHelpers.getTY(ROBOT_LL_NAME);
+  public double getTYDeg(String limelightName) {
+    return LimelightHelpers.getTY(limelightName);
   }
 
   // Distance accessors for field areas
   public double getDistanceToApriltag(String limelightName, double mountAngle, double tagHeight, double limelightHeight) {
-    if (!seesTag()) {
+    if (!seesTag(limelightName)) {
       return -1;
     }
     else {
-      Rotation2d angleToGoal = Rotation2d.fromDegrees(mountAngle).plus(Rotation2d.fromDegrees(getTYDeg()));
+      Rotation2d angleToGoal = Rotation2d.fromDegrees(mountAngle).plus(Rotation2d.fromDegrees(getTYDeg(limelightName)));
       double distance = (tagHeight - limelightHeight) / angleToGoal.getTan();
       return distance;
     }
@@ -62,7 +66,8 @@ public class Limelight extends SubsystemBase {
     return targetOffsetRads;
   }
 
-  public boolean seesTag() {
-    return LimelightHelpers.getTV(ROBOT_LL_NAME);
+
+  public boolean seesTag(String limelightName) {
+    return LimelightHelpers.getTV(limelightName);
   }
 }

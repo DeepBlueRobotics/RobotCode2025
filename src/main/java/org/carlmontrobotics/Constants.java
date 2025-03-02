@@ -229,11 +229,26 @@ public final class Constants {
 		}
 	}
 	public static final class Limelightc {
-		
-		public static final class Apriltag {
+		public static final String CORAL_LL = "limelight-coral";
+		public static final String REEF_LL = "limelight-reef";
 
-		}
-	}
+        public static final int[] CORAL_VALID_IDS = {1, 2, 12, 13};
+		public static final int[] REEF_VALID_IDS = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
+        public static final double CORAL_MOUNT_ANGLE = 25; // pitch
+		public static final double REEF_MOUNT_ANGLE = 15; // pitch TODO: change
+        public static final double CORAL_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; // TODO: change
+		public static final double REEF_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; // TODO: change
+
+
+        public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
+		public static final double STD_DEV_Y_METERS = 0.7; // uncertainty of 0.7 meters on the field
+		public static final int STD_DEV_HEADING_RADS = 9999999; // (gyro) heading standard deviation, set extremely high
+
+        public static final class Apriltagc {
+            public static final double CORAL_HEIGHT_METERS = Units.inchesToMeters(47.88); // Going to re-assume that this is for Apriltag center.
+            public static final double REEF_HEIGHT_METERS = Units.inchesToMeters(8.75); // Also center of Reef
+        }
+    }
 
 	public static final class OI {
 		public static final class Driver {
