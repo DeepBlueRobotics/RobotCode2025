@@ -19,7 +19,7 @@ public final class Constants {
     public static final double[] kI = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kD = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
 
-    public static final double[] kS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.01};
+    public static final double[] kS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kV = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kA = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kG = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
@@ -111,6 +111,7 @@ public final class Constants {
         public static final double UPPER_ANGLE_LIMIT = 0;
         public static final double LOWER_ANGLE_LIMIT = -70;
         public static final double ROTATION_TO_DEG = 360;
+        public static final double DEGREES_TO_RADS = Math.PI/180;
         public static final double ARM_DISCONT_DEG = -35;
         public static TrapezoidProfile.Constraints TRAP_CONSTRAINTS;
         public static final double MAX_FF_VEL_RAD_P_S = (Math.PI * .5)/2;
