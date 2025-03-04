@@ -88,7 +88,25 @@ public class AlgaeEffector extends SubsystemBase {
     private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(kS[TOP_ARRAY_ORDER], kV[TOP_ARRAY_ORDER], kA[TOP_ARRAY_ORDER]);
     private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(kS[BOTTOM_ARRAY_ORDER], kV[BOTTOM_ARRAY_ORDER], kA[BOTTOM_ARRAY_ORDER]);
     private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(kS[PINCHER_ARRAY_ORDER], kV[PINCHER_ARRAY_ORDER], kA[PINCHER_ARRAY_ORDER]);
-    private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(kS[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]);
+
+    //for sendable we need this stuff; TODO: remove
+    private double armkS = kS[ARM_ARRAY_ORDER];
+    private double armkV = kV[ARM_ARRAY_ORDER];
+    private double armkA = kA[ARM_ARRAY_ORDER];
+    private double armkP = Constants.kP[ARM_ARRAY_ORDER];
+    private double armkI = Constants.kI[ARM_ARRAY_ORDER];
+    private double armkD = Constants.kD[ARM_ARRAY_ORDER];
+    private void updateFeedforward() {
+        armFeedforward = new SimpleMotorFeedforward(armkS, armkV, armkA);
+    }
+    private void updateArmPID() {
+        // Update the arm motor PID configuration with the new values
+        armMotorConfig.closedLoop.pid(armkP, armkI , armkD);
+        armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+    private SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(armkS, armkV, armkA);
+    
+    //private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(kS[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]); //change
     //feedforward for arm was added
 
 
@@ -138,18 +156,20 @@ public class AlgaeEffector extends SubsystemBase {
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
+        //todo
         armMotorConfig.closedLoop.pid(
-            Constants.kP[ARM_ARRAY_ORDER],
-            Constants.kI[ARM_ARRAY_ORDER],
-            Constants.kD[ARM_ARRAY_ORDER]
+            armkP, //change to: Constants.kP[ARM_ARRAY_ORDER]
+            armkI, //change to:  Constants.kI[ARM_ARRAY_ORDER]
+            armkD  // Constants.kd[ARM_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        //pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
-        armMotorConfig.closedLoop.pid(
+       
+       /*  armMotorConfig.closedLoop.pid(
             Constants.kP[ARM_ARRAY_ORDER],
             Constants.kI[ARM_ARRAY_ORDER],
             Constants.kD[ARM_ARRAY_ORDER]
-            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder); */ //repetivie??
         armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
     }
 
@@ -289,6 +309,18 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
         SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
 
+        //ARM PID values
+        //kS, kV, kA and kG , kP, kI, kD
+
+    }
+    public void initSendable(SendableBuilder builder){
+       super.initSendable(builder); 
+       builder.addDoubleProperty("arm kS", () -> armkS, (value) -> { armkS = value; updateFeedforward(); });
+       builder.addDoubleProperty("arm kV", ()-> armkV, (value) -> { armkV = value; updateFeedforward(); });
+       builder.addDoubleProperty("arm kA", ()-> armkA, (value) -> { armkA = value; updateFeedforward(); } );
+       builder.addDoubleProperty("arm kP", () -> armkP , (value) -> { armkP = value; updateArmPID(); });
+       builder.addDoubleProperty("arm kI", () -> armkI , (value) -> { armkI = value; updateArmPID(); });
+       builder.addDoubleProperty("arm kD", () -> armkD, (value) -> { armkD = value; updateArmPID(); });
     }
 
 }
