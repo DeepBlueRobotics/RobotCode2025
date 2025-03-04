@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import javax.swing.text.html.CSS;
+
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Drivetrainc;
 import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
@@ -109,6 +111,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volt;
 import static edu.wpi.first.units.Units.Meter;
 import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
+
 // Make sure this code is extraneous
 // import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
@@ -499,85 +502,51 @@ public class Drivetrain extends SubsystemBase {
             modules[i].move(moduleStates[i].speedMetersPerSecond, moduleStates[i].angle.getDegrees());
         }
     }
-    
-//    public void configurePPLAutoBuilder() {
-//     /**
-//      * PATHPLANNER SETTINGS
-//      * Robot Width (m): .91
-//      * Robot Length(m): .94
-//      * Max Module Spd (m/s): 4.30
-//      * Default Constraints
-//      * Max Vel: 1.54, Max Accel: 6.86
-//      * Max Angvel: 360, Max AngAccel: 180 (guesses!)
-//      
-//     AutoBuilder.configure(
-//         this::getPose, // :D
-//         this::setPose, // :D
-//         this::getSpeeds, // :D
-//         (ChassisSpeeds cs) -> {
-//             //cs.vxMetersPerSecond = -cs.vxMetersPerSecond;
-//             // SmartDashboard.putNumber("chassis speeds x", cs.vxMetersPerSecond);
-//             // SmartDashboard.putNumber("chassis speeds y", cs.vyMetersPerSecond);
-//             // SmartDashboard.putNumber("chassis speeds theta", cs.omegaRadiansPerSecond);
 
-//             drive(kinematics.toSwerveModuleStates(cs));  
-//         }, // :D
-//         new PPHolonomicDriveController(
-//             new PIDConstants(xPIDController[0], xPIDController[1], xPIDController[2], 0), //translation (drive) pid vals
-//             new PIDConstants(thetaPIDController[0], thetaPIDController[1], thetaPIDController[2], 0), //rotation pid vals
-//             Robot.kDefaultPeriod//robot period
-//         ), 
-//         Autoc.robotConfig,
-//         () -> {
-//             // Boolean supplier that controls when the path will be mirrored for the red alliance
-//             // This will flip the path being followed to the red side of the field.
-//             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-//             var alliance = DriverStation.getAlliance();
-//             if (alliance.isPresent())
-//                 return alliance.get() == DriverStation.Alliance.Red;
-//             //else:
-//             return false;
-//         }, // :D
-//         this // :D
-//     );
+///---------------------------------------------------------
 
+//TODO: AUTOBUILDER
+    /*public void AutoBuilder() {
+        // All other subsystem initialization
+        // ...
 
+        // Load the RobotConfig from the GUI settings. You should probably
+        // store this in your Constants file
+        RobotConfig config;
+        try{
+        config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+        // Handle exception as needed
+        e.printStackTrace();
+        }
 
-    
-    /*  AutoBuilder.configureHolonomic(
-    () -> getPose().plus(new Transform2d(autoGyroOffset.getTranslation(),autoGyroOffset.getRotation())),//position supplier
-    (Pose2d pose) -> { autoGyroOffset=pose.times(-1); }, //position reset (by subtracting current pos)
-    this::getSpeeds, //chassisSpeed supplier
-    (ChassisSpeeds cs) -> drive(
-            cs.vxMetersPerSecond, 
-            -cs.vyMetersPerSecond,
-            //flipped because drive assumes up is negative, but PPlanner assumes up is positive
-            cs.omegaRadiansPerSecond
-    ),
-    new HolonomicPathFollowerConfig(
-        new PIDConstants(drivekP[0], drivekI[0], drivekD[0], driveIzone), //translation (drive) pid vals
-        new PIDConstants(turnkP_avg, 0., 0., turnIzone), //rotation pid vals
-        maxSpeed,
-        swerveRadius,
-        Autoc.replanningConfig,
-        Robot.robot.getPeriod()//robot period
-    ),
-    () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent())
-            return alliance.get() == DriverStation.Alliance.Red;
-        //else:
-        return false;
-      },
-      this
-    );
-    */
-   
-//  }
+        // Configure AutoBuilder last
+        AutoBuilder.configure(
+                this::getPose, // Robot pose supplier
+                this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                (speeds, feedforwards) -> drive(kinematics.toSwerveModuleStates(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                ),
+                config, // The robot configuration
+                () -> {
+                // Boolean supplier that controls when the path will be mirrored for the red alliance
+                // This will flip the path being followed to the red side of the field.
+                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+                },
+                this // Reference to this subsystem to set requirements
+            ));
+        }*/
+
+//----------------------------------------------------------
    public void autoCancelDtCommand() {
        if(!(getDefaultCommand() instanceof TeleopDrive) || DriverStation.isAutonomous()) return;
 
