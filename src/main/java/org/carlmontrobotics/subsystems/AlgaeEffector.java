@@ -1,8 +1,9 @@
 package org.carlmontrobotics.subsystems;
 
 
+import org.carlmontrobotics.lib199.MotorConfig;
 //import org.carlmontrobotics.lib199.MotorConfig;
-//import org.carlmontrobotics.lib199.MotorControllerFactory;
+import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 
 import static org.carlmontrobotics.RobotContainer.*;
@@ -26,6 +27,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
@@ -69,7 +71,7 @@ public class AlgaeEffector extends SubsystemBase {
     private final SparkFlex topMotor = null; //new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
     private final SparkFlex bottomMotor = null; //new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless); 
     private final SparkFlex pincherMotor = null; //new SparkFlex(PINCH_MOTOR_PORT, MotorType.kBrushless);
-    private final SparkMax armMotor = new SparkMax(ARM_MOTOR_PORT, MotorType.kBrushless);
+    private final SparkMax armMotor = MotorControllerFactory.createSparkMax(ARM_MOTOR_PORT, MotorConfig.NEO);
 
     private SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
     private SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
@@ -91,27 +93,30 @@ public class AlgaeEffector extends SubsystemBase {
     private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(kS[TOP_ARRAY_ORDER], kV[TOP_ARRAY_ORDER], kA[TOP_ARRAY_ORDER]);
     private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(kS[BOTTOM_ARRAY_ORDER], kV[BOTTOM_ARRAY_ORDER], kA[BOTTOM_ARRAY_ORDER]);
     private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(kS[PINCHER_ARRAY_ORDER], kV[PINCHER_ARRAY_ORDER], kA[PINCHER_ARRAY_ORDER]);
-
+    AbsoluteEncoderConfig config = new AbsoluteEncoderConfig();
     //for sendable we need this stuff; TODO: remove
     private double armkS = kS[ARM_ARRAY_ORDER];
     private double armkV = kV[ARM_ARRAY_ORDER];
     private double armkA = kA[ARM_ARRAY_ORDER];
+    private double armkG = kG[ARM_ARRAY_ORDER];
     private double armkP = Constants.kP[ARM_ARRAY_ORDER];
     private double armkI = Constants.kI[ARM_ARRAY_ORDER];
     private double armkD = Constants.kD[ARM_ARRAY_ORDER];
+    private ArmFeedforward armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
     private void updateFeedforward() {
-        armFeedforward = new SimpleMotorFeedforward(armkS, armkV, armkA);
+        armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
     }
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
         armMotorConfig.closedLoop.pid(armkP, armkI , armkD);
         armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+       
     }
-    private SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(armkS, armkV, armkA);
+    //private SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(armkS, armkV, armkA);
     
     //private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(kS[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]); //change
     //feedforward for arm was added
-
+    
 
 
     //Arm Trapezoid Profile
@@ -123,7 +128,7 @@ public class AlgaeEffector extends SubsystemBase {
     
     private double armFeedVolts;
     
-   // private final ArmFeedforward armFeed = new ArmFeedforward(kS[ARM_ARRAY_ORDER], kG[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]);
+    //private final ArmFeedforward armFeed = new ArmFeedforward(kS[ARM_ARRAY_ORDER], kG[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]);
 
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
@@ -133,7 +138,7 @@ public class AlgaeEffector extends SubsystemBase {
         configureMotors();
         kDt = 0.02;
         setPoint = getArmState();
-
+        
         
 
         SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmTarget(0)));
@@ -177,22 +182,26 @@ public class AlgaeEffector extends SubsystemBase {
             Constants.kI[PINCHER_ARRAY_ORDER],
             Constants.kD[PINCHER_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        if (pincherMotor != null) {
+            pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        }
+        
 
         //todo
         armMotorConfig.closedLoop.pid(
             armkP, //change to: Constants.kP[ARM_ARRAY_ORDER]
             armkI, //change to:  Constants.kI[ARM_ARRAY_ORDER]
             armkD  // Constants.kd[ARM_ARRAY_ORDER]
-            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            ;
+        armMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
         armMotorConfig.closedLoop.pid(
             Constants.kP[ARM_ARRAY_ORDER],
             Constants.kI[ARM_ARRAY_ORDER],
             Constants.kD[ARM_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
+        //armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
         if (armMotor != null) {
             armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
@@ -235,10 +244,10 @@ public class AlgaeEffector extends SubsystemBase {
         setPoint = getArmState();
         armGoalState = armTrapProfile.calculate(kDt, setPoint, armGoalState); 
 
-        armFeedVolts = armFeedforward.calculate(armGoalState.position, armGoalState.velocity);
+        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoalState.position), armGoalState.velocity);
         if ((getArmPos() < LOWER_ANGLE_LIMIT)
              || (getArmPos() > UPPER_ANGLE_LIMIT)) {
-            armFeedVolts = armFeedforward.calculate(getArmPos()*Constants.AlgaeEffectorc.DEGREES_TO_RADS, 0);
+            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(getArmPos()), 0);
 
         }
         //System.out.println(armFeedVolts);
@@ -282,7 +291,9 @@ public class AlgaeEffector extends SubsystemBase {
     public double getArmPos() {
         //figures out the position of the arm in degrees based off pure vertical down
         //TODO update the arm to get in degrees after someone will figure out what the .getPosition gets for the TBE
-        return armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING * DEGREES_TO_RADS; 
+
+        return -1*(Units.rotationsToDegrees(armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING)-203); 
+
     }
    
     public void stopArm() {
@@ -345,22 +356,14 @@ public class AlgaeEffector extends SubsystemBase {
         setArmPosition();
         
         SmartDashboard.putNumber("Arm Angle", getArmPos());
-        SmartDashboard.putNumber("Raw Arm Angle", armAbsoluteEncoder.getPosition());
+        SmartDashboard.putNumber("Raw Arm Angle",Units.rotationsToDegrees(armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING)-20);
+         
         if (pincherMotor != null) {
             SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
         }
         
         SmartDashboard.putNumber("Arm Velocity", getArmVel());
-        SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmTarget(0)));
-        SmartDashboard.putData("Arm to Shooting Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE)));
-        SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
-        SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
-        SmartDashboard.putData("Arm to Resting While Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE)));
-        SmartDashboard.putData("Arm to Ramp Up Angle Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RAMP_UP_ANGLE)));
-        SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));
-        SmartDashboard.putData("Intake Algae", new GroundIntakeAlgae(this));
-        SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
-        SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
+        
 
         //ARM PID values
         //kS, kV, kA and kG , kP, kI, kD
@@ -371,9 +374,11 @@ public class AlgaeEffector extends SubsystemBase {
        builder.addDoubleProperty("arm kS", () -> armkS, (value) -> { armkS = value; updateFeedforward(); });
        builder.addDoubleProperty("arm kV", ()-> armkV, (value) -> { armkV = value; updateFeedforward(); });
        builder.addDoubleProperty("arm kA", ()-> armkA, (value) -> { armkA = value; updateFeedforward(); } );
+       builder.addDoubleProperty("arm kG", ()-> armkG, (value) -> { armkG = value; updateFeedforward(); } );
        builder.addDoubleProperty("arm kP", () -> armkP , (value) -> { armkP = value; updateArmPID(); });
        builder.addDoubleProperty("arm kI", () -> armkI , (value) -> { armkI = value; updateArmPID(); });
        builder.addDoubleProperty("arm kD", () -> armkD, (value) -> { armkD = value; updateArmPID(); });
+    
     }
 
 }

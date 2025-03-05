@@ -92,7 +92,7 @@ public final class Constants {
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
         public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
 
-        public static final double ARM_CHAIN_GEARING = 16.0/34;
+        public static final double ARM_CHAIN_GEARING = 1;// TODO: set to 16.0/34
         public static final double ARM_GEAR_RATIO = 1.0/3;
         //TODO figure the zero out once encoder is on
         public static final double ARM_TO_ZERO = 0; //Pure vertical down
