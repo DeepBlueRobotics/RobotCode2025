@@ -506,45 +506,54 @@ public class Drivetrain extends SubsystemBase {
 ///---------------------------------------------------------
 
 //TODO: AUTOBUILDER
-    /*public void AutoBuilder() {
+    public void AutoBuilder() {
         // All other subsystem initialization
         // ...
 
         // Load the RobotConfig from the GUI settings. You should probably
         // store this in your Constants file
         RobotConfig config;
-        try{
-        config = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-        // Handle exception as needed
-        e.printStackTrace();
-        }
+        // try{
+        //     config = RobotConfig.fromGUISettings();
+        // } catch (Exception e) {
+        //     config = Constants.
+        // // Handle exception as needed
+        // e.printStackTrace();
+        // }
+        config = Constants.Drivetrainc.Autoc.robotConfig;
 
         // Configure AutoBuilder last
         AutoBuilder.configure(
+                //Supplier<Pose2d> poseSupplier,
                 this::getPose, // Robot pose supplier
+                //Consumer<Pose2d> resetPose,
                 this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                //Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
                 this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds, feedforwards) -> drive(kinematics.toSwerveModuleStates(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                //BiConsumer<ChassisSpeeds,DriveFeedforwards> output,
+                (speeds, feedforwards) -> drive(kinematics.toSwerveModuleStates(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                //PathFollowingController controller,
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants FIXME do these need to be accurate?
                         new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
                 ),
+                //RobotConfig robotConfig,
                 config, // The robot configuration
+                //BooleanSupplier shouldFlipPath,
                 () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                // This will flip the path being followed to the red side of the field.
-                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                var alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;//stolen from official pplib
+                    }
+                    return false;
                 },
+                //Subsystem... driveRequirements
                 this // Reference to this subsystem to set requirements
-            ));
-        }*/
+            );
+        }
 
 //----------------------------------------------------------
    public void autoCancelDtCommand() {
