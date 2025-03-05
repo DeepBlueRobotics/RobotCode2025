@@ -112,23 +112,26 @@ public static final double[] turnkA = { 0.17924, 0.17924, 0.17924, 0.17924 };
 	// Forward: 1.72, 1.71, 1.92, 1.94
 	// Backward: 1.92, 1.92, 2.11, 1.89
 	// Order of modules: (FL, FR, BL, BR)
+	static double pp = 1.75*1.275;
+	static double pi = 0;
+	static double pd = 0.005;
     public static final double[] drivekP = CONFIG.isSwimShady() ? new double[] { 2.8, 2.8, 2.8, 2.8 }
-    : new double[] { 1.75/4, 1.75/4, 1.75/4, .75/4 }; // {1.82/100, 1.815/100, 2.015/100,
-                                                                // 1.915/100};
-public static final double[] drivekI = { 0, 0, 0, 0 };
-public static final double[] drivekD = { 0, 0, 0, 0 };
+    : new double[] { pp,pp,pp,pp }; // {1.82/100, 1.815/100, 2.015/100,
+                                                // 1.915/100};
+public static final double[] drivekI = { pi,pi,pi,pi };
+public static final double[] drivekD = { pd,pd,pd,pd };
 public static final boolean[] driveInversion = (CONFIG.isSwimShady()
     ? new boolean[] { false, false, false, false }
     : new boolean[] { true, false, true, false });
 public static final boolean[] turnInversion = { true, true, true, true };
 	// kS
-	// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
-    public static final double[] kForwardVolts = { 0, 0, 0, 0 };
+	 public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
+   // public static final double[] kForwardVolts = { 0, 0, 0, 0 };
     public static final double[] kBackwardVolts = kForwardVolts;
 
-    public static final double[] kForwardVels = { 2.81/2, 2.9098/2, 2.8378/2, 2.7391/2 };
+    public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 }; //kV
     public static final double[] kBackwardVels = kForwardVels;
-    public static final double[] kForwardAccels = { 1.1047 / 2, 0.79422 / 2, 0.77114 / 2, 1.1003 / 2 };
+    public static final double[] kForwardAccels = {0,0,0,0};//{ 1.1047 / 2, 0.79422 / 2, 0.77114 / 2, 1.1003 / 2 }; kA
     public static final double[] kBackwardAccels = kForwardAccels;
 
 	public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
