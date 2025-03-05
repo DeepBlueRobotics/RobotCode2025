@@ -95,7 +95,7 @@ public final class Constants {
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
-	public static final double[] turnkP = { 51.078, 60.885, 60.946, 60.986 }; // {0.00374, 0.00374, 0.00374,
+	public static final double[] turnkP = { 51.078, 60.885, 60.946, 60.986/2 }; // {0.00374, 0.00374, 0.00374,
     // 0.00374};
 public static final double[] turnkI = { 0, 0, 0, 0 };
 public static final double[] turnkD = { 0/* dont edit */, 0.5, 0.42, 1 }; // todo: use d
@@ -113,7 +113,7 @@ public static final double[] turnkA = { 0.17924, 0.17924, 0.17924, 0.17924 };
 	// Backward: 1.92, 1.92, 2.11, 1.89
 	// Order of modules: (FL, FR, BL, BR)
     public static final double[] drivekP = CONFIG.isSwimShady() ? new double[] { 2.8, 2.8, 2.8, 2.8 }
-    : new double[] { 1.75, 1.75, 1.75, .75 }; // {1.82/100, 1.815/100, 2.015/100,
+    : new double[] { 1.75/4, 1.75/4, 1.75/4, .75/4 }; // {1.82/100, 1.815/100, 2.015/100,
                                                                 // 1.915/100};
 public static final double[] drivekI = { 0, 0, 0, 0 };
 public static final double[] drivekD = { 0, 0, 0, 0 };
@@ -123,10 +123,10 @@ public static final boolean[] driveInversion = (CONFIG.isSwimShady()
 public static final boolean[] turnInversion = { true, true, true, true };
 	// kS
 	// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
-    public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
+    public static final double[] kForwardVolts = { 0, 0, 0, 0 };
     public static final double[] kBackwardVolts = kForwardVolts;
 
-    public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
+    public static final double[] kForwardVels = { 2.81/2, 2.9098/2, 2.8378/2, 2.7391/2 };
     public static final double[] kBackwardVels = kForwardVels;
     public static final double[] kForwardAccels = { 1.1047 / 2, 0.79422 / 2, 0.77114 / 2, 1.1003 / 2 };
     public static final double[] kBackwardAccels = kForwardAccels;
@@ -139,7 +139,7 @@ public static final boolean[] turnInversion = { true, true, true, true };
 	// a = mu * 9.8 m/s^2
 	public static final double autoCentripetalAccel = mu * g * 2;
 
-	public static final boolean isGyroReversed = true;
+	public static final boolean isGyroReversed = false;
 
 	// PID values are listed in the order kP, kI, and kD
 	public static final double[] xPIDController = CONFIG.isSwimShady() ? new double[] { 4, 0.0, 0.0 }
@@ -160,20 +160,20 @@ public static final boolean[] turnInversion = { true, true, true, true };
 
 	// #region Ports
 	//I think all of these are right
-	public static final int driveFrontLeftPort = 11;
-	public static final int driveFrontRightPort = 12;
+	public static final int driveFrontLeftPort = 1;
+	public static final int driveFrontRightPort = 2;
 	public static final int driveBackLeftPort = 3;
-	public static final int driveBackRightPort = 14;
+	public static final int driveBackRightPort = 4;
 
-	public static final int turnFrontLeftPort = 1;
-	public static final int turnFrontRightPort = 2;
+	public static final int turnFrontLeftPort = 11;
+	public static final int turnFrontRightPort = 12;
 	public static final int turnBackLeftPort = 17;
-	public static final int turnBackRightPort = 4;
+	public static final int turnBackRightPort = 14;
 	//to be configured
-	public static final int canCoderPortFL = 1; //0
-	public static final int canCoderPortFR = 2;
-	public static final int canCoderPortBL = 3;
-	public static final int canCoderPortBR = 0; //1
+	public static final int canCoderPortFL = 0; //0
+	public static final int canCoderPortFR = 3;
+	public static final int canCoderPortBL = 2;
+	public static final int canCoderPortBR = 1; //1
 
 	// #endregion
 

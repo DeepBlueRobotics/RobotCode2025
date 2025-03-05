@@ -152,7 +152,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("kP", 0);
         SmartDashboard.putNumber("kI", 0);
         SmartDashboard.putNumber("kD", 0);
-
+    
         // SmartDashboard.putNumber("Pose Estimator t x (m)", lastSetX);
         // SmartDashboard.putNumber("Pose Estimator set y (m)", lastSetY);
         // SmartDashboard.putNumber("Pose Estimator set rotation (deg)",
@@ -161,6 +161,7 @@ public class Drivetrain extends SubsystemBase {
         // SmartDashboard.putNumber("pose estimator std dev x", STD_DEV_X_METERS);
         // SmartDashboard.putNumber("pose estimator std dev y", STD_DEV_Y_METERS);
         SmartDashboard.putNumber("GoalPos", 0);
+        //SmartDashboard.putNumber("GoalPos", 0);
         // Calibrate Gyro
         {
 
@@ -272,7 +273,7 @@ public class Drivetrain extends SubsystemBase {
             }
            
             SmartDashboard.putData("Field", field);
-
+           
             // for(SparkMax driveMotor : driveMotors)
             // driveMotor.setSmartCurrentLimit(80);
 
@@ -344,9 +345,10 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Back Right Drive", driveMotors[3].getEncoder().getPosition());
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
-        // double goal = SmartDashboard.getNumber("GoalPos", 0);
+        double goal = SmartDashboard.getNumber("GoalPos", 0);
         // PIDController pid = new PIDController(kP, kI, kD);        
         // kP = SmartDashboard.getNumber("kP", 0);
         // kI = SmartDashboard.getNumber("kI", 0);
@@ -393,7 +395,7 @@ public class Drivetrain extends SubsystemBase {
            //module.turnPeriodic();
           // module.turnPeriodic();
            module.periodic();
-            // module.move(0, goal);
+            //module.move(0.1, goal);
         }
 
         // field.setRobotPose(odometry.getPoseMeters());
