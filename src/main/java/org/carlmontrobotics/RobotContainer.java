@@ -64,8 +64,8 @@ public class RobotContainer {
   //2. Use absolute paths from constants to reduce confusion
   public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
-  private final AlgaeEffector algaeEffector = new AlgaeEffector();
-  private final CoralEffector coralEffector = new CoralEffector();
+  //private final AlgaeEffector algaeEffector = new AlgaeEffector();
+  //private final CoralEffector coralEffector = new CoralEffector();
   private final Drivetrain drivetrain =  new Drivetrain();
 
   private final SendableChooser<Command> autoChooser;
@@ -112,7 +112,7 @@ public class RobotContainer {
   private void setBindingsDriver() {}
 
   private void setBindingsManipulator() {
-    axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
+    /*axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
       .whileTrue(new IntakeCoral(coralEffector));
 
     axisTrigger(manipulatorController, OI.Manipulator.OuttakeTrigger)
@@ -123,6 +123,7 @@ public class RobotContainer {
     
     new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
       .whileFalse(new OuttakeAlgae(algaeEffector));
+    */
     }
     
     private Trigger axisTrigger(GenericHID controller, Axis axis) {
@@ -131,10 +132,10 @@ public class RobotContainer {
     }
 
     private void RegisterAutoCommands(){
-      NamedCommands.registerCommand("IntakeAlgae", new IntakeAlgae(algaeEffector));
-      NamedCommands.registerCommand("OuttakeAlgae", new OuttakeAlgae(algaeEffector));
-      NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(coralEffector));
-      NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coralEffector));
+      //NamedCommands.registerCommand("IntakeAlgae", new IntakeAlgae(algaeEffector));
+      //NamedCommands.registerCommand("OuttakeAlgae", new OuttakeAlgae(algaeEffector));
+      //NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(coralEffector));
+      //NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coralEffector));
     }
 
   /*public Command getAutonomousCommand() {

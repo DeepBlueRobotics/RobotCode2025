@@ -12,6 +12,8 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Auto Chooser Tab/SendableChooser[0]": "String Chooser",
+      "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     }
   },

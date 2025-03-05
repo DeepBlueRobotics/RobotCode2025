@@ -151,7 +151,7 @@ public class Drivetrain extends SubsystemBase {
     double kI = 0;
     double kD = 0;
     public Drivetrain() {
-        //AutoBuilder();
+        AutoBuilder();
         SmartDashboard.putNumber("Goal Velocity", 0);
         SmartDashboard.putNumber("kP", 0);
         SmartDashboard.putNumber("kI", 0);
@@ -298,7 +298,7 @@ public class Drivetrain extends SubsystemBase {
 
         // Setup autopath builder
         //configurePPLAutoBuilder();
-        AutoBuilder();
+        //AutoBuilder();
         System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 
         // SmartDashboard.putNumber("chassis speeds x", 0);
