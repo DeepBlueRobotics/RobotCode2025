@@ -353,11 +353,12 @@ public class AlgaeEffector extends SubsystemBase {
     @Override
     public void periodic() {
         //armMotor.set(0.1);
+       
         setArmPosition();
         
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("Raw Arm Angle",Units.rotationsToDegrees(armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING)-20);
-         
+        armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         if (pincherMotor != null) {
             SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
         }
