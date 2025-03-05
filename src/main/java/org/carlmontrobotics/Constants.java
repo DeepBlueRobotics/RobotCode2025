@@ -89,35 +89,42 @@ public final class Constants {
 	// public static final boolean[] reversed = {true, true, true, true};
 	// Determine correct turnZero constants (FL, FR, BL, BR)
 	public static final double[] turnZeroDeg = RobotBase.isSimulation() ? new double[] {-90.0, -90.0, -90.0, -90.0 }
-	: (CONFIG.isSwimShady() ? new double[] { 85.7812, 85.0782, -96.9433, -162.9492 }
+	: (CONFIG.isHammerHead() ? new double[] { 85.7812, 85.0782, -96.9433, -162.9492 }
 		: new double[] { 17.2266, -96.8555, -95.8008, 85.166 });/* real values here */
 
 	// kP, kI, and kD constants for turn motor controllers in the order of
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
-	public static final double[] turnkP = {12, 12, 23, 23};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
+	public static final double[] turnkP = CONFIG.isHammerHead() ? new double[] { 51.078, 60.885, 60.946, 60.986/2 } : 
+		new double[]{12, 12, 23, 23};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
 																	// 0.00374};
 	public static final double[] turnkI = {0, 0, 0, 0};//{ 0, 0.1, 0, 0 };
-	public static final double[] turnkD = {1, 1.55, 0, 2};//{ 0.2/* dont edit */, 0.3, 0.5, 0.4}; // todo: use d
+	public static final double[] turnkD = CONFIG.isHammerHead() ? new double[] { 0/* dont edit */, 0.5, 0.42, 1 } :
+		new double[]{1, 1.55, 0, 2};//{ 0.2/* dont edit */, 0.3, 0.5, 0.4}; // todo: use d
 	// public static final double[] turnkS = {0.2, 0.2, 0.2, 0.2};
-	public static final double[] turnkS = {0.050634, 0.033065, 0.018117, 0.021337};//sysid for fr that didnt't work{0.041796, 0.09111, 0.64804, 1.0873}//{ 0.13027, 0.17026, 0.2, 0.23262 };
+	public static final double[] turnkS = CONFIG.isHammerHead() ? new double[]{ 0.13027, 0.17026, 0.2, 0.23262 }:
+		new double[]{0.050634, 0.033065, 0.018117, 0.021337};//sysid for fr that didnt't work{0.041796, 0.09111, 0.64804, 1.0873}//{ 0.13027, 0.17026, 0.2, 0.23262 };
 
 	// V = kS + kV * v + kA * a
 	// 12 = 0.2 + 0.00463 * v
 	// v = (12 - 0.2) / 0.00463 = 2548.596 degrees/s
-	public static final double[] turnkV = {2.6153, 2.5924, 2.6495, 2.6705};//sysid for fr that didnt't work{2.6403, 2.6603, 2.6168, 2.5002} //{2.6532, 2.7597, 2.7445, 2.7698};
-	public static final double[] turnkA = {0.18525, 0.13879, 0.23625, 0.25589};//sysid for fr that didnt't work{0.33266, 0.25535, 0.17924, 0.17924} //{ 0.17924, 0.17924, 0.17924, 0.17924 };
+	public static final double[] turnkV = CONFIG.isHammerHead()? new double[] { 2.6532, 2.7597, 2.7445, 2.7698 }:
+		new double[] {2.6153, 2.5924, 2.6495, 2.6705};//sysid for fr that didnt't work{2.6403, 2.6603, 2.6168, 2.5002} //{2.6532, 2.7597, 2.7445, 2.7698};
+	public static final double[] turnkA = CONFIG.isHammerHead()? new double[] { 0.17924, 0.17924, 0.17924, 0.17924 }:
+		new double[]{0.18525, 0.13879, 0.23625, 0.25589};//sysid for fr that didnt't work{0.33266, 0.25535, 0.17924, 0.17924} //{ 0.17924, 0.17924, 0.17924, 0.17924 };
 
 	// kP is an average of the forward and backward kP values
 	// Forward: 1.72, 1.71, 1.92, 1.94
 	// Backward: 1.92, 1.92, 2.11, 1.89
 	// Order of modules: (FL, FR, BL, BR)
-	public static final double[] drivekP = CONFIG.isSwimShady() ? new double[] { 2.8, 2.8, 2.8, 2.8 }
+	public static final double[] drivekP = CONFIG.isHammerHead() ? new double[] { 1.75*1.275, 1.75*1.275, 1.75*1.275, 1.75*1.275 }
 	: new double[] {1.75, 1.75, 1.75, 1.75}; //{2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
 															// 1.915/100};
-	public static final double[] drivekI = { 0.1, 0.1, 0.1, 0.1 };
-	public static final double[] drivekD = { 0, 0, 0, 0 };
-	public static final boolean[] driveInversion = (CONFIG.isSwimShady()
+	public static final double[] drivekI = CONFIG.isHammerHead()? new double[] {0,0,0,0} :
+		new double[] { 0.1, 0.1, 0.1, 0.1 };
+	public static final double[] drivekD = CONFIG.isHammerHead()? new double[] {0.005,0.005,0.005,0.005}:
+		new double[] { 0, 0, 0, 0 };
+	public static final boolean[] driveInversion = (CONFIG.isHammerHead()
 	? new boolean[] { false, false, false, false }
 	: new boolean[] { false, true, false, true });
 	public static final boolean[] turnInversion = { true, true, true, true };
@@ -147,10 +154,10 @@ public final class Constants {
 	public static final boolean isGyroReversed = true;
 
 	// PID values are listed in the order kP, kI, and kD
-	public static final double[] xPIDController = CONFIG.isSwimShady() ? new double[] { 4, 0.0, 0.0 }
+	public static final double[] xPIDController = CONFIG.isHammerHead() ? new double[] { 4, 0.0, 0.0 }
 	: new double[] { 2, 0.0, 0.0 };
 	public static final double[] yPIDController = xPIDController;
-	public static final double[] thetaPIDController = CONFIG.isSwimShady() ? new double[] { 0.10, 0.0, 0.001 }
+	public static final double[] thetaPIDController = CONFIG.isHammerHead() ? new double[] { 0.10, 0.0, 0.001 }
 	: new double[] {0.05, 0.0, 0.00};
 
 	public static final SwerveConfig swerveConfig = new SwerveConfig(wheelDiameterMeters, driveGearing, mu,
