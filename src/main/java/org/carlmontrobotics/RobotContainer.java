@@ -18,6 +18,7 @@ import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
 import org.carlmontrobotics.subsystems.CoralEffector;
+import org.carlmontrobotics.subsystems.Drivetrain;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -65,6 +66,7 @@ public class RobotContainer {
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
   private final AlgaeEffector algaeEffector = new AlgaeEffector();
   private final CoralEffector coralEffector = new CoralEffector();
+  private final Drivetrain drivetrain =  new Drivetrain();
 
   private final SendableChooser<Command> autoChooser;
   /*private final String[] autoNames = new String[] {

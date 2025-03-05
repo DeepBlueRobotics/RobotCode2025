@@ -60,9 +60,9 @@ public final class Constants {
         }
     }
 	public static final class AlgaeEffectorc {
-		public static final int upperMotorID = 1;
-		public static final int lowerMotorID = 2;
-        public static final int pinchMotorID = 3;
+		public static final int upperMotorID = 17;
+		public static final int lowerMotorID = 24;
+        public static final int pinchMotorID = 56;
 		public static final int TopkS = 1;
 		public static final int BottomkS = 1;
 		public static final int PincherkS = 1;

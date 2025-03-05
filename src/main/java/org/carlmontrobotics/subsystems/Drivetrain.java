@@ -151,6 +151,7 @@ public class Drivetrain extends SubsystemBase {
     double kI = 0;
     double kD = 0;
     public Drivetrain() {
+        //AutoBuilder();
         SmartDashboard.putNumber("Goal Velocity", 0);
         SmartDashboard.putNumber("kP", 0);
         SmartDashboard.putNumber("kI", 0);
@@ -297,6 +298,9 @@ public class Drivetrain extends SubsystemBase {
 
         // Setup autopath builder
         //configurePPLAutoBuilder();
+        AutoBuilder();
+        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+
         // SmartDashboard.putNumber("chassis speeds x", 0);
         //                 SmartDashboard.putNumber("chassis speeds y", 0);
 
@@ -347,6 +351,8 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // AutoBuilder();
+
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);
@@ -507,6 +513,7 @@ public class Drivetrain extends SubsystemBase {
 
 //TODO: AUTOBUILDER
     public void AutoBuilder() {
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         // All other subsystem initialization
         // ...
 
@@ -523,6 +530,7 @@ public class Drivetrain extends SubsystemBase {
         config = Constants.Drivetrainc.Autoc.robotConfig;
 
         // Configure AutoBuilder last
+
         AutoBuilder.configure(
                 //Supplier<Pose2d> poseSupplier,
                 this::getPose, // Robot pose supplier
