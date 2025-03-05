@@ -125,17 +125,19 @@ public final class Constants {
 	public static final double[] drivekD = CONFIG.isHammerHead()? new double[] {0.005,0.005,0.005,0.005}:
 		new double[] { 0, 0, 0, 0 };
 	public static final boolean[] driveInversion = (CONFIG.isHammerHead()
-	? new boolean[] { false, false, false, false }
+	? new boolean[] { true, false, true, false }
 	: new boolean[] { false, true, false, true });
 	public static final boolean[] turnInversion = { true, true, true, true };
 	// kS
 	// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
-    public static final double[] kForwardVolts = {0, 0, 0, 0}; //{0.59395, 0.52681, 0.11097, 0.17914};      //{ 0.2, 0.2, 0.2, 0.2 };
+    public static final double[] kForwardVolts = CONFIG.isHammerHead() ? new double[] { 0.26744, 0.31897, 0.27967, 0.2461 }:
+		new double[] {0, 0, 0, 0}; //{0.59395, 0.52681, 0.11097, 0.17914};      //{ 0.2, 0.2, 0.2, 0.2 };
 	public static final double[] kBackwardVolts = kForwardVolts;
 
 	//kV
 	// public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
-    public static final double[] kForwardVels = { 0, 0, 0, 0 };//{2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
+    public static final double[] kForwardVels = CONFIG.isHammerHead() ? new double[] { 2.81, 2.9098, 2.8378, 2.7391 }:
+		new double[] { 0, 0, 0, 0 };//{2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
 	public static final double[] kBackwardVels = kForwardVels;
 
 	//kA
@@ -172,20 +174,20 @@ public final class Constants {
 
 	// #region Ports
 	//I think all of these are right
-	public static final int driveFrontLeftPort = 11;
-	public static final int driveFrontRightPort = 12;
-	public static final int driveBackLeftPort = 13;
-	public static final int driveBackRightPort = 14;
+	public static final int driveFrontLeftPort = CONFIG.isHammerHead() ? 1 : 11;
+	public static final int driveFrontRightPort = CONFIG.isHammerHead() ? 2 : 12;
+	public static final int driveBackLeftPort = CONFIG.isHammerHead() ? 3 : 13;
+	public static final int driveBackRightPort = CONFIG.isHammerHead() ? 4 : 14;
 
-	public static final int turnFrontLeftPort = 1;
-	public static final int turnFrontRightPort = 2;
-	public static final int turnBackLeftPort = 3;
-	public static final int turnBackRightPort = 4;
+	public static final int turnFrontLeftPort = CONFIG.isHammerHead() ? 11 : 1;
+	public static final int turnFrontRightPort = CONFIG.isHammerHead() ? 12 : 2;
+	public static final int turnBackLeftPort = CONFIG.isHammerHead() ? 17 : 3;
+	public static final int turnBackRightPort = CONFIG.isHammerHead() ? 14 : 4;
 	//to be configured
-	public static final int canCoderPortFL = 1; //0
-	public static final int canCoderPortFR = 2;
-	public static final int canCoderPortBL = 3;
-	public static final int canCoderPortBR = 0; //1
+	public static final int canCoderPortFL = CONFIG.isHammerHead() ? 0 : 1; 
+	public static final int canCoderPortFR = CONFIG.isHammerHead() ? 3 : 2; 
+	public static final int canCoderPortBL = CONFIG.isHammerHead() ? 2 : 3;
+	public static final int canCoderPortBR = CONFIG.isHammerHead() ? 1 : 0; 
 
 	// #endregion
 
