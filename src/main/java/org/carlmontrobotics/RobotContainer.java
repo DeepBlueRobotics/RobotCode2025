@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
@@ -47,6 +49,10 @@ public class RobotContainer {
     //   () -> ProcessedAxisValue(driverController, Axis.kRightX)),
     //   () -> driverController.getRawButton(OI.Driver.slowDriveButton)
     // ));
+
+    //camera links
+    SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
+    SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
   }
   private void setBindingsDriver() {}
   private void setBindingsManipulator() {}
@@ -54,7 +60,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
   }
-
+   
   /**
    * Flips an axis' Y coordinates upside down, but only if the select axis is a joystick axis
    * 
