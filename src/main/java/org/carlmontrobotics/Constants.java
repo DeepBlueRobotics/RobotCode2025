@@ -327,8 +327,8 @@ public final class Constants {
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
 		public static final boolean masterInverted = true;
 		public static final boolean followerInverted = true;
-		public static final double masterPositionConversionFactor = 0.55292030703; //2(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
-		public static final double followerPositionConversionFactor = 0.55292030703;
+		public static final double masterPositionConversionFactor = 2*(Math.PI * 1.76)/20; //2(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
+		public static final double followerPositionConversionFactor = 2*(Math.PI * 1.76)/20;
 		public static final double masterVelocityConversionFactor = 1000;
 		public static final double followerVelocityConversionFactor = 1000;
 		public static final double maxElevatorHeightInches = 53.2;
