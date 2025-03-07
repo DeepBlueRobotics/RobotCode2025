@@ -65,6 +65,13 @@ public class Elevator extends SubsystemBase {
   
   private final SysIdRoutine sysIdRoutine;
 
+  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+  // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+  private final MutDistance m_distance = Meters.mutable(0);
+  // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+  private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
+
   public Elevator() {
     //motors
     masterMotor = new SparkMax(Constants.Elevatorc.masterPort, MotorType.kBrushless);
@@ -80,13 +87,6 @@ public class Elevator extends SubsystemBase {
     bottomLimitSwitch = new DigitalInput(Constants.Elevatorc.elevatorBottomLimitSwitchPort);
     timer = new Timer();
     timer.start();
-
-    // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
-    private final MutVoltage m_appliedVoltage = Volts.mutable(0);
-    // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
-    private final MutDistance m_distance = Meters.mutable(0);
-    // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
-    private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
 
 
     //PID
