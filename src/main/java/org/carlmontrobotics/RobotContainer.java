@@ -45,6 +45,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 //control bindings
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
     private static boolean babyMode = false;
@@ -70,6 +71,7 @@ public class RobotContainer {
     private boolean hasSetupAutos = false;
     private final String[] autoNames = new String[] {};
     private final AlgaeEffector algaeEffector = new AlgaeEffector();
+    private final Elevator elevator = new Elevator();
 
     public RobotContainer() {
         {
@@ -124,6 +126,10 @@ public class RobotContainer {
         // RunAlgae(algaeEffector, 3, false));
         // new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new
         // RunAlgae(algaeEffector, 0, true));
+        new JoystickButton(driverController, 3).whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kForward)); //press x to run
+        new JoystickButton(driverController, 4).whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)); //press y to run
+        new JoystickButton(driverController, 1).whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kForward)); //press a to run
+        new JoystickButton(driverController, 2).whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kReverse)); //press b to run
 
     }
 

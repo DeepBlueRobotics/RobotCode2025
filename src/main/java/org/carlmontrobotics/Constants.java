@@ -329,8 +329,8 @@ public final class Constants {
 		public static final boolean followerInverted = true;
 		public static final double masterPositionConversionFactor = 2*(Math.PI * 1.76)/20; //2(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
 		public static final double followerPositionConversionFactor = 2*(Math.PI * 1.76)/20;
-		public static final double masterVelocityConversionFactor = 1000;
-		public static final double followerVelocityConversionFactor = 1000;
+		public static final double masterVelocityConversionFactor = 2*(Math.PI * 1.76)/20;
+		public static final double followerVelocityConversionFactor = 2*(Math.PI * 1.76)/20;
 		public static final double maxElevatorHeightInches = 53.2;
 		public static final double minElevatorHeightInches = 0;
 
@@ -338,7 +338,11 @@ public final class Constants {
         public static final double kP = 1;
         public static final double kI = 0;
         public static final double kD = 0;
+		//Feedforward
         public static final double kS = 0;
+		public static final double kG = 0;
+		public static final double kV = 0;
+		public static final double kA = 0;
         //Positions
         public static final double downPos = 0;
         public static final double l1 = 0;

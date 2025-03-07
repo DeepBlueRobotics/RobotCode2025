@@ -4,6 +4,16 @@
 
 package org.carlmontrobotics.subsystems;
 
+
+import static edu.wpi.first.units.Units.InchesPerSecond;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
+import java.util.Map;
+import java.util.function.Consumer;
+
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
 
@@ -17,10 +27,20 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.MutDistance;
+import edu.wpi.first.units.measure.MutLinearVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -39,9 +59,12 @@ public class Elevator extends SubsystemBase {
   private double heightGoal;
   private int elevatorState;
   //PID
-  private SparkClosedLoopController pidElevatorController;
+  private PIDController pidElevatorController;
+  private ElevatorFeedforward feedforwardElevatorController;
   private Timer timer;
   
+  private final SysIdRoutine sysIdRoutine;
+
   public Elevator() {
     //motors
     masterMotor = new SparkMax(Constants.Elevatorc.masterPort, MotorType.kBrushless);
@@ -58,8 +81,36 @@ public class Elevator extends SubsystemBase {
     timer = new Timer();
     timer.start();
 
+    // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+    private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+    // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+    private final MutDistance m_distance = Meters.mutable(0);
+    // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+    private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
+
+
     //PID
-    pidElevatorController = masterMotor.getClosedLoopController();
+    pidElevatorController = new PIDController(Constants.Elevatorc.kP, Constants.Elevatorc.kI, Constants.Elevatorc.kD);
+    //FeedForward
+    feedforwardElevatorController = new ElevatorFeedforward(Constants.Elevatorc.kS, Constants.Elevatorc.kG, Constants.Elevatorc.kV, Constants.Elevatorc.kA);
+    
+
+    sysIdRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(),
+      new SysIdRoutine.Mechanism(
+        voltage -> {
+          masterMotor.setVoltage(voltage);
+        },
+        log -> {
+          log.motor("Elevator")
+            .voltage(
+              m_appliedVoltage.mut_replace(
+                masterMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                .linearPosition(m_distance.mut_replace(masterEncoder.getPosition(), Inches))
+                .linearVelocity(m_velocity.mut_replace(masterEncoder.getVelocity(), InchesPerSecond));
+        }, 
+        this)
+      );
   }
 
   private void configureMotors () {
@@ -124,7 +175,9 @@ public class Elevator extends SubsystemBase {
   }
 
   public void getToGoal() {
-    pidElevatorController.setReference(heightGoal, ControlType.kPosition);
+    masterMotor.setVoltage(
+      pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal) + 
+      feedforwardElevatorController.calculate(heightGoal));
   }
 
   public void setSpeed(double speed){
@@ -152,6 +205,27 @@ public class Elevator extends SubsystemBase {
     }
 
   }
+
+
+  /**
+   * Returns a command that will execute a quasistatic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.quasistatic(direction);
+  }
+
+  /**
+   * Returns a command that will execute a dynamic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.dynamic(direction);
+  } 
+  
+
 
   @Override
   public void periodic() {
