@@ -202,7 +202,7 @@ public class Elevator extends SubsystemBase {
     masterMotor.set(0);
   }
 
-  public double getEncoderValue() {
+  public double getPos() {
     return masterEncoder.getPosition();
   }
 
@@ -215,7 +215,7 @@ public class Elevator extends SubsystemBase {
     }
     
     else {
-      return (Math.abs(getEncoderValue()) - heightGoal <= Constants.Elevatorc.elevatorTolerance);
+      return (Math.abs(getPos()) - heightGoal <= Constants.Elevatorc.elevatorTolerance);
     }
 
   }
@@ -238,7 +238,9 @@ public class Elevator extends SubsystemBase {
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.dynamic(direction);
   } 
-  
+  public double getEleVel() {
+    return masterEncoder.getVelocity();
+  }
 
 
   @Override

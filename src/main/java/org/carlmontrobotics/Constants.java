@@ -326,7 +326,7 @@ public final class Constants {
 		// TODO figure these parts out
 		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
-		public static final boolean masterInverted = true;
+		public static final boolean masterInverted = true; //????? Only one of these should be true
 		public static final boolean followerInverted = true;
 		public static final double masterPositionConversionFactor = 2*GEAR_RATIO*(Math.PI * 1.76)/20; // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
 		public static final double masterVelocityConversionFactor = 2*GEAR_RATIO*(Math.PI * 1.76)/20;
