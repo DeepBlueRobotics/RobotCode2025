@@ -32,6 +32,7 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putBoolean("sees reef tag", seesTag(REEF_LL));
     SmartDashboard.putNumber("distance to coral", getDistanceToApriltag(CORAL_LL, CORAL_MOUNT_ANGLE, Apriltagc.CORAL_HEIGHT_METERS, CORAL_LL_HEIGHT_FROM_GROUND_METERS));
     SmartDashboard.putNumber("distance to reef", getDistanceToApriltag(REEF_LL, REEF_MOUNT_ANGLE, Apriltagc.REEF_HEIGHT_METERS, REEF_LL_HEIGHT_FROM_GROUND_METERS));
+    SmartDashboard.putNumber("distance to reef megatag2", getDistanceToApriltagMT2());
   }
 
   public double getTYDeg(String limelightName) {
@@ -50,9 +51,16 @@ public class Limelight extends SubsystemBase {
     }
   }
 
-  public double getApriltagID(String limelightName) {
-    return LimelightHelpers.getFiducialID(limelightName);
+  public double getDistanceToApriltagMT2() { 
+    Pose3d targetPoseRobotSpace = LimelightHelpers.getTargetPose3d_RobotSpace(CORAL_LL);
+
+    double x = targetPoseRobotSpace.getX();
+    double z = targetPoseRobotSpace.getZ();
+
+    return Math.hypot(x, z);
   }
+
+  //TODO: TEST WHICH ONE IS MORE ACCURATE
 
   public double getRotateAngleRadMT2(String limelightName) {
     Pose3d targetPoseRobotSpace = LimelightHelpers.getTargetPose3d_RobotSpace(limelightName); // pose of the target

@@ -235,9 +235,13 @@ public final class Constants {
         public static final int[] CORAL_VALID_IDS = {1, 2, 12, 13};
 		public static final int[] REEF_VALID_IDS = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
         public static final double CORAL_MOUNT_ANGLE = 25; // pitch
-		public static final double REEF_MOUNT_ANGLE = 15; // pitch TODO: change
-        public static final double CORAL_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; // TODO: change
-		public static final double REEF_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; // TODO: change
+		public static final double REEF_MOUNT_ANGLE = 15; // pitch 
+        public static final double CORAL_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; // TODO: ask brandon
+		public static final double REEF_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; // TODO: ask brandon
+		// TODO: CHANGE NUMBERS ON LIMELIGHT INTERFACE
+
+		public static final double LEFT_TO_CORAL_BRANCH = Units.inchesToMeters(-6.593);
+		public static final double RIGHT_TO_CORAL_BRANCH = Units.inchesToMeters(6.345);
 
 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
