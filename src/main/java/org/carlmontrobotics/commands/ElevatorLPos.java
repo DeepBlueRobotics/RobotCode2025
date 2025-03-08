@@ -10,7 +10,7 @@ public class ElevatorLPos extends Command {
     private ElevatorPos pos;
     public ElevatorLPos(Elevator elevator, ElevatorPos pos) {
         this.elevator = elevator;
-        this.pos=pos;
+        this.pos = pos;
         addRequirements(elevator);
     }
     @Override

@@ -320,6 +320,7 @@ public final class Constants {
 		public static final int followerPort = 21;
 		public static final int elevatorTopLimitSwitchPort = 1;
 		public static final int elevatorBottomLimitSwitchPort = 2;
+		public static final double GEAR_RATIO = 0; //TODO: CHANGE TO ACTUAL GEAR RATIO
 
 		// Config
 		// TODO figure these parts out
@@ -327,10 +328,8 @@ public final class Constants {
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
 		public static final boolean masterInverted = true;
 		public static final boolean followerInverted = true;
-		public static final double masterPositionConversionFactor = 2*(Math.PI * 1.76)/20; //2(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
-		public static final double followerPositionConversionFactor = 2*(Math.PI * 1.76)/20;
-		public static final double masterVelocityConversionFactor = 2*(Math.PI * 1.76)/20;
-		public static final double followerVelocityConversionFactor = 2*(Math.PI * 1.76)/20;
+		public static final double masterPositionConversionFactor = 2*GEAR_RATIO*(Math.PI * 1.76)/20; // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
+		public static final double masterVelocityConversionFactor = 2*GEAR_RATIO*(Math.PI * 1.76)/20;
 		public static final double maxElevatorHeightInches = 53.2;
 		public static final double minElevatorHeightInches = 0;
 

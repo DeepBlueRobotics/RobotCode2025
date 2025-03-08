@@ -92,7 +92,6 @@ public class Elevator extends SubsystemBase {
     followerConfig = new SparkMaxConfig();
     followerEncoder = followerMotor.getEncoder();
     configureMotors();
-
     //Calibration
     topLimitSwitch = new DigitalInput(Constants.Elevatorc.elevatorTopLimitSwitchPort);
     bottomLimitSwitch = new DigitalInput(Constants.Elevatorc.elevatorBottomLimitSwitchPort);
@@ -120,7 +119,7 @@ public class Elevator extends SubsystemBase {
                 .linearPosition(m_distance[0].mut_replace(masterEncoder.getPosition(), Meters))
                 .linearVelocity(m_velocity[0].mut_replace(masterEncoder.getVelocity(), MetersPerSecond));//AH: use metric units always
           
-          log.motor("Elevator-Mastr")//AH: you have 2 motors, must log both
+          log.motor("Elevator-Follwr")//AH: you have 2 motors, must log both
             .voltage(
               m_appliedVoltage[1]
                 .mut_replace(followerMotor.getBusVoltage() * followerMotor.getAppliedOutput(), Volts))//AH: GET() IS NOT VOLTAGE
@@ -143,14 +142,9 @@ public class Elevator extends SubsystemBase {
         .pid(Constants.Elevatorc.kP, Constants.Elevatorc.kI,Constants.Elevatorc.kD)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     masterMotor.configure(masterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    //I don't know if this is needed
+    //I don't know if this is needed. Response: Not rly. Only the follow.
     //Follower Config
-    followerConfig
-      .inverted(Constants.Elevatorc.followerInverted)
-      .idleMode(Constants.Elevatorc.followerIdleMode);
-    followerConfig.encoder
-      .positionConversionFactor(Constants.Elevatorc.followerPositionConversionFactor)
-      .velocityConversionFactor(Constants.Elevatorc.followerVelocityConversionFactor);
+    followerConfig.apply(masterConfig);
     followerConfig.follow(Constants.Elevatorc.masterPort, Constants.Elevatorc.followerInverted);
     followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -193,9 +187,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void getToGoal() {
+    if(!elevatorAtMax() || heightGoal<masterEncoder.getPosition()) {
     masterMotor.setVoltage(
       pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal) + 
       feedforwardElevatorController.calculate(heightGoal));
+    }
   }
 
   public void setSpeed(double speed){
