@@ -192,8 +192,8 @@ public class AlgaeEffector extends SubsystemBase {
             armkP, //change to: Constants.kP[ARM_ARRAY_ORDER]
             armkI, //change to:  Constants.kI[ARM_ARRAY_ORDER]
             armkD  // Constants.kd[ARM_ARRAY_ORDER]
-            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            ;
+            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
         armMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
         armMotorConfig.closedLoop.pid(
@@ -292,7 +292,7 @@ public class AlgaeEffector extends SubsystemBase {
         //figures out the position of the arm in degrees based off pure vertical down
         //TODO update the arm to get in degrees after someone will figure out what the .getPosition gets for the TBE
 
-        return -1*(Units.rotationsToDegrees(armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING)-203); 
+        return Units.rotationsToDegrees(armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING); 
 
     }
    

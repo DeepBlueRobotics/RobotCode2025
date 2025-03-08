@@ -3,6 +3,7 @@ package org.carlmontrobotics;
 import java.security.spec.EncodedKeySpec;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController.Axis;
@@ -95,7 +96,7 @@ public final class Constants {
         public static final double ARM_CHAIN_GEARING = 1;// TODO: set to 16.0/34
         public static final double ARM_GEAR_RATIO = 1.0/3;
         //TODO figure the zero out once encoder is on
-        public static final double ARM_TO_ZERO = 0; //Pure vertical down
+        public static final double ARM_ZERO_ROT = Units.degreesToRotations(203);
         //TODO ask samo for angle to intake algae from pure vertical down
         public static final double ARM_INTAKE_ANGLE = 0;
         //TODO Figure these two out if we will be shooting algae
