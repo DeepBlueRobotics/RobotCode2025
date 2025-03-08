@@ -2,7 +2,7 @@ package org.carlmontrobotics.commands;
 
 import java.util.function.DoubleSupplier;
 
-import org.carlmontrobotics.Constants;
+import static org.carlmontrobotics.Constants.Elevatorc.*;
 import org.carlmontrobotics.subsystems.Elevator;
 
 import edu.wpi.first.math.MathUtil;
@@ -25,7 +25,7 @@ public class TeleopElevator extends Command {
         lastTime = Timer.getFPGATimestamp();
     }
     public double getReqSpeeds() {
-        return 1*joystickSupplier.getAsDouble(); //(MAX_ACCEL in radians/s^2 times joystick)
+        return MAX_ACCEL_RAD_P_S*joystickSupplier.getAsDouble(); //(MAX_ACCEL in radians/s^2 times joystick)
     }
     @Override
     public void execute() {
@@ -43,7 +43,7 @@ public class TeleopElevator extends Command {
 
     double goalEleRad = goalState.position + speeds * deltaT;// speed*time = dist
 
-    goalEleRad = MathUtil.clamp(goalEleRad, Constants.Elevatorc.minElevatorHeightInches, Constants.Elevatorc.maxElevatorHeightInches);
+    goalEleRad = MathUtil.clamp(goalEleRad, minElevatorHeightInches, maxElevatorHeightInches);
     // goalArmRad = MathUtil.clamp(goalArmRad,
     //     armSubsystem.getArmPos() + Math.pow(armSubsystem.getMaxVelRad(), 2) / MAX_FF_ACCEL_RAD_P_S,
     //     armSubsystem.getArmPos() - Math.pow(armSubsystem.getMaxVelRad(), 2) / MAX_FF_ACCEL_RAD_P_S);

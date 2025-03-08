@@ -324,6 +324,7 @@ public final class Constants {
 
 		// Config
 		// TODO figure these parts out
+		public static final double MAX_ACCEL_RAD_P_S = 1;
 		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
 		public static final boolean masterInverted = true; //????? Only one of these should be true
