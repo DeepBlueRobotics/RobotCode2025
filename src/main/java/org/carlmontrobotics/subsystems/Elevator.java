@@ -29,6 +29,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
@@ -66,11 +67,21 @@ public class Elevator extends SubsystemBase {
   private final SysIdRoutine sysIdRoutine;
 
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
-  private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+  private final MutVoltage[] m_appliedVoltage = new MutVoltage[2];//AH: its a holder, not a number.
+  //Volts.mutable(0);
   // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
-  private final MutDistance m_distance = Meters.mutable(0);
+  private final MutDistance[] m_distance = new MutDistance[2];//AH: 2 for 2 elevator motors
+  //Meters.mutable(0);
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
-  private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
+  private final MutLinearVelocity[] m_velocity = new MutLinearVelocity[2];//AH: ITS A HOLDER :o
+  //MetersPerSecond.mutable(0);
+  
+  //AH: need a config to run a test
+  private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
+    Volts.of(1).per(Units.Seconds),//ramp rate, volts/sec
+    Volts.of(1), //starting voltage, volts
+    Units.Seconds.of(5)//AH: maximum sysID test time
+  );
 
   public Elevator() {
     //motors
@@ -96,18 +107,25 @@ public class Elevator extends SubsystemBase {
     
 
     sysIdRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(),
+      defaultSysIdConfig,//AH: use custom voltage config
       new SysIdRoutine.Mechanism(
         voltage -> {
           masterMotor.setVoltage(voltage);
         },
         log -> {
-          log.motor("Elevator")
+          log.motor("Elevator-Mastr")//AH: you have 2 motors, must log both
             .voltage(
-              m_appliedVoltage.mut_replace(
-                masterMotor.get() * RobotController.getBatteryVoltage(), Volts))
-                .linearPosition(m_distance.mut_replace(masterEncoder.getPosition(), Inches))
-                .linearVelocity(m_velocity.mut_replace(masterEncoder.getVelocity(), InchesPerSecond));
+              m_appliedVoltage[0]
+                .mut_replace(masterMotor.getBusVoltage() * masterMotor.getAppliedOutput(), Volts))//AH: GET() IS NOT VOLTAGE
+                .linearPosition(m_distance[0].mut_replace(masterEncoder.getPosition(), Meters))
+                .linearVelocity(m_velocity[0].mut_replace(masterEncoder.getVelocity(), MetersPerSecond));//AH: use metric units always
+          
+          log.motor("Elevator-Mastr")//AH: you have 2 motors, must log both
+            .voltage(
+              m_appliedVoltage[1]
+                .mut_replace(followerMotor.getBusVoltage() * followerMotor.getAppliedOutput(), Volts))//AH: GET() IS NOT VOLTAGE
+                .linearPosition(m_distance[1].mut_replace(followerEncoder.getPosition(), Meters))
+                .linearVelocity(m_velocity[1].mut_replace(followerEncoder.getVelocity(), MetersPerSecond));
         }, 
         this)
       );
