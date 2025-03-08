@@ -9,9 +9,13 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
+import java.util.function.BooleanSupplier;
+
 import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.CoralIntake;
 import org.carlmontrobotics.commands.CoralOutake;
+import org.carlmontrobotics.commands.ManualCoralIntake;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 //controllers
@@ -57,10 +61,19 @@ public class RobotContainer {
   }
   private void setBindingsDriver() {}
   private void setBindingsManipulator() {
-    new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
-      .whileTrue(new CoralOutake(coralEffector))
-      .whileFalse(new CoralIntake(coralEffector));
+    // new JoystickButton(manipulatorController, OI.Manipulator.OUTAKE_BUTTON)
+    //   .whileTrue(new CoralOutake(coralEffector))
+    //   .whileFalse(new CoralIntake(coralEffector));
+    // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
+    //   .whileTrue(new ManualCoralIntake());
+    axisTrigger(manipulatorController, Axis.kLeftTrigger)
+    .whileTrue(new CoralOutake(coralEffector))
+    .whileFalse(new CoralIntake(coralEffector));
+    axisTrigger(manipulatorController, Axis.kRightTrigger)
+      .whileTrue(new ManualCoralIntake());
   }
+    
+  
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
@@ -99,5 +112,9 @@ public class RobotContainer {
    */
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
+  }
+
+  private Trigger axisTrigger(GenericHID controller, Axis axis) {
+    return new Trigger( (BooleanSupplier)(() -> Math.abs(getStickValue(controller, axis)) > 0.2) );
   }
 }

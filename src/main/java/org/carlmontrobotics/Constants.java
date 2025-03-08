@@ -9,7 +9,8 @@ public final class Constants {
         }
         public static final class Manipulator {
             public static final int PORT = 1;
-            public static final int INTAKE_BUTTON = Button.kA.value;
+            public static final int OUTAKE_BUTTON = Button.kA.value;
+            public static final int INTAKE_BUTTON = Button.kB.value;
         }
     }
     public static final class CoralEffectorConstants {
@@ -26,5 +27,8 @@ public final class Constants {
         public final static double KP = 1.3;
         public final static double KI = 0;
         public final static double KD = 0;
+        public final static double INTAKE_TIME_OUT = 0.5;
+        public final static double OUTAKE_TIME_OUT = 10;
+        public final static double MANUAL_INTAKE_TIME_OUT = 1;
     }
 }

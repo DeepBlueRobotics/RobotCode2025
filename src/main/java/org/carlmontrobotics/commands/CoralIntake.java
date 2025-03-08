@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;;
 public class CoralIntake extends Command {
     // public static double spin;
     // public static boolean fast2 = false;
-    // Timer timer = new Timer();
+    Timer timer = new Timer();
     // Timer timer2 = new Timer();
     // Timer coralInTimer = new Timer();
     public static double coralMotorPosition;
@@ -59,10 +59,13 @@ public class CoralIntake extends Command {
         if (coralEffector.coralIn){
             coralEffector.setReferencePosition(coralMotorPosition + CoralEffectorConstants.CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
         }
-        else if (coralEffector.seesCoral()){
-            coralEffector.setMotorSpeed(CoralEffectorConstants.INPUT_SLOW_SPEED);
+        else if (coralEffector.distanceSensorSeesCoral()){
+            coralEffector.setMotorSpeed(CoralEffectorConstants.INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn=true;
+        }
+        else if (coralEffector.limitSwitchSeesCoral()){
+            coralEffector.setMotorSpeed(CoralEffectorConstants.INPUT_SLOW_SPEED);
         }
     }
 
@@ -75,6 +78,6 @@ public class CoralIntake extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return coralEffector.motorAtGoal();//FIXME should add a timeout timer!!
+        return coralEffector.motorAtGoal() || timer.get() > CoralEffectorConstants.INTAKE_TIME_OUT;
     }
 }

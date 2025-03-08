@@ -34,7 +34,7 @@ import com.revrobotics.spark.SparkBase;
 public class CoralEffector extends SubsystemBase {
   
     public SparkFlex coralMotor = new SparkFlex(CoralEffectorConstants.CORAL_MOTOR_PORT, MotorType.kBrushless);
-    // public DigitalInput coralLimitSwitch = new DigitalInput(CoralEffectorConstants.coralLimitSwitchPort);
+    public DigitalInput coralLimitSwitch = new DigitalInput(CoralEffectorConstants.CORAL_LIMIT_SWITCH_PORT);
     //FIXME ADD THE LIMIT SWITCH!!
     public TimeOfFlight distanceSensor = new TimeOfFlight(CoralEffectorConstants.CORAL_DISTANCE_SENSOR_PORT);
     
@@ -71,7 +71,7 @@ public class CoralEffector extends SubsystemBase {
     return Math.abs(coralEncoder.getPosition()-targetPos) <= CoralEffectorConstants.CORAL_INTAKE_ERR;
   }
 
-  public boolean seesCoral(){
+  public boolean distanceSensorSeesCoral(){
     return distanceSensor.getRange() < CoralEffectorConstants.CORAL_DISTANCE_SENSOR_DISTANCE;
   }
 
@@ -82,9 +82,9 @@ public class CoralEffector extends SubsystemBase {
   //   coralIn = coralIsInside;
   // }
 
-  // public boolean coralDetected() {
-  //   return !coralLimitSwitch.get();
-  // }
+  public boolean limitSwitchSeesCoral() {
+    return !coralLimitSwitch.get();
+  }
 
   @Override
   public void periodic() {
@@ -93,7 +93,7 @@ public class CoralEffector extends SubsystemBase {
     // CoralGoalRPM = coralEncoder.getVelocity();
     coralOutput = coralMotor.getAppliedOutput();
 
-    SmartDashboard.putBoolean("Distance sensor", seesCoral());
+    SmartDashboard.putBoolean("Distance sensor", distanceSensorSeesCoral());
     SmartDashboard.putNumber("distance", distanceSensor.getRange());
     SmartDashboard.putBoolean("coral in", coralIn);
     // SmartDashboard.putBoolean("limit switch", limitSwitchSees);
