@@ -329,8 +329,8 @@ public final class Constants {
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
 		public static final boolean masterInverted = true; //????? Only one of these should be true
 		public static final boolean followerInverted = true;
-		public static final double masterPositionConversionFactor = 2*GEAR_RATIO*(Math.PI * 1.76)/20; // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
-		public static final double masterVelocityConversionFactor = 2*GEAR_RATIO*(Math.PI * 1.76)/20;
+		public static final double masterPositionConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)/20); // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
+		public static final double masterVelocityConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)/20);
 		public static final double maxElevatorHeightInches = 53.2;
 		public static final double minElevatorHeightInches = 0;
 
@@ -371,8 +371,8 @@ public final class Constants {
 				this.positionInches = positionInches;
 			}
 
-			public double getPosition() {
-				return positionInches;
+			public double getPositioninMeters() {
+				return Units.degreesToRadians(positionInches);
 			}
 		}
 

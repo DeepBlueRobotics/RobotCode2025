@@ -154,7 +154,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setGoal(ElevatorPos goal) {
-    heightGoal = goal.getPosition();
+    heightGoal = goal.getPositioninMeters();
   }
   
   public double getGoal() {
