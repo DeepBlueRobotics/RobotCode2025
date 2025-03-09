@@ -1,6 +1,14 @@
 package org.carlmontrobotics.subsystems;
 
-import static edu.wpi.first.units.MutableMeasure.mutable;
+
+import  edu.wpi.first.units.measure.MutAngle;
+import  edu.wpi.first.units.measure.MutAngularVelocity;
+import  edu.wpi.first.units.measure.MutDistance;
+import  edu.wpi.first.units.measure.MutLinearVelocity;
+import edu.wpi.first.units.measure.MutVelocity;
+import  edu.wpi.first.units.measure.MutVoltage;
+import  edu.wpi.first.units.Measure;
+import  edu.wpi.first.units.MutableMeasure;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -137,12 +145,15 @@ public class AlgaeEffector extends SubsystemBase {
     private double armFeedVolts;
 
     // SYS ID
-    private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
-    private final MutableMeasure<Velocity<Angle>> velocity =
-            mutable(RadiansPerSecond.of(0));
-    private final MutableMeasure<Angle> distance = mutable(Radians.of(0));
+    // private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
+    // private final MutableMeasure<Velocity<Angle>> velocity =
+    //         mutable(RadiansPerSecond.of(0));
+    // private final MutableMeasure<Angle> distance = mutable(Radians.of(0));
     
     //private final ArmFeedforward armFeed = new ArmFeedforward(kS[ARM_ARRAY_ORDER], kG[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]);
+    private final MutVoltage voltage = Volts.mutable(0);
+    private final MutAngle distance = Radians.mutable(0);
+    private final MutAngularVelocity velocity = RadiansPerSecond.mutable(0);
 
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
@@ -208,6 +219,7 @@ public class AlgaeEffector extends SubsystemBase {
             armkD  // Constants.kd[ARM_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
+        armMotorConfig.absoluteEncoder.zeroCentered(true);
         // armMotor.configure(pincherMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
         // armMotorConfig.closedLoop.pid(
@@ -400,12 +412,12 @@ public class AlgaeEffector extends SubsystemBase {
 
     public void logMotor(SysIdRoutineLog log) {
         log.motor("armMotorMaster")
-                .voltage(voltage.mut_replace(armMotorMaster.getBusVoltage()
-                        * armMotorMaster.getAppliedOutput(), Volts))
+                .voltage(voltage.mut_replace(armMotor.getBusVoltage()
+                        * armMotor.getAppliedOutput(), Volts))
                 .angularVelocity(velocity.mut_replace(
-                        armMasterEncoder.getVelocity(), RadiansPerSecond))
+                        armAbsoluteEncoder.getVelocity(), RadiansPerSecond))
                 .angularPosition(distance
-                        .mut_replace(armMasterEncoder.getPosition(), Radians));
+                        .mut_replace(armAbsoluteEncoder.getPosition(), Radians));
     }
 
     private final SysIdRoutine routine = new SysIdRoutine(defaultSysIdConfig,
@@ -413,13 +425,13 @@ public class AlgaeEffector extends SubsystemBase {
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> armMasterEncoder.setZeroOffset(0)),
+                new InstantCommand(() -> armAbsoluteEncoder.setZeroOffset(0)),
                 routine.quasistatic(direction));
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> armMasterEncoder.setZeroOffset(0)),
+                new InstantCommand(() -> armAbsoluteEncoder.setZeroOffset(0)),
                 routine.dynamic(direction));
     }
 
