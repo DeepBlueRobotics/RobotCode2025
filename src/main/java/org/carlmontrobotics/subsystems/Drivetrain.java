@@ -390,9 +390,9 @@ public class Drivetrain extends SubsystemBase {
         // moduleBR.periodic();
         // double goal = SmartDashboard.getNumber("bigoal", 0);
         for (SwerveModule module : modules) {
-           //module.turnPeriodic();
+           module.turnPeriodic();
           // module.turnPeriodic();
-           module.periodic();
+          //module.periodic();
             // module.move(0, goal);
         }
 
@@ -947,14 +947,14 @@ public class Drivetrain extends SubsystemBase {
 
             sysIdTab.add("ALL THE SYSID TESTS", allTheSYSID())// is this legal??
                     .withSize(2, 1);
-            //sysIdTab.add("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
-            //sysIdTab.add("Dynamic Forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
-            sysIdTab.add("Quackson Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
-            sysIdTab.add("Quackson Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
+            // sysIdTab.add("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
+            // sysIdTab.add("Dynamic Forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
+            SmartDashboard.putData("Quackson Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));//.withSize(2, 1);
+            SmartDashboard.putData("Quackson Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));//.withSize(2, 1);
 
-            sysIdTab.add("Dyanmic forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
-            sysIdTab.add("Dyanmic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
-            sysIdTab.add(this);
+            SmartDashboard.putData("Dyanmic forward", sysIdDynamic(SysIdRoutine.Direction.kForward));//.withSize(2, 1);
+            SmartDashboard.putData("Dyanmic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));//.withSize(2, 1);
+            //sysIdTab.add(this);
 
             for (int i = 0; i < 8; i++) {// first four are drive, next 4 are turn motors
                 m_appliedVoltage[i] = Volt.mutable(0);
@@ -988,7 +988,7 @@ public class Drivetrain extends SubsystemBase {
 
     private SysIdTest selector() {
         //SysIdTest test = sysIdChooser.getSelected();
-        SysIdTest test = SysIdTest.BACK_DRIVE;
+        SysIdTest test = SysIdTest.FRONT_DRIVE;
         System.out.println("Test Selected: " + test);
         return test;
     }
