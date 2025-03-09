@@ -179,6 +179,11 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
         SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
 
+        SmartDashboard.putData("Qualistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("Qualistatic Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putData("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
     }
     //----------------------------------------------------------------------------------------
 
@@ -385,7 +390,8 @@ public class AlgaeEffector extends SubsystemBase {
     @Override
     public void periodic() {
         //armMotor.set(0.1);
-
+        /* 
+        
         setArmTarget(0);
        
         setArmPosition();
@@ -397,11 +403,8 @@ public class AlgaeEffector extends SubsystemBase {
             SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
         }
         
-        SmartDashboard.putNumber("Arm Velocity", getArmVel());
-        SmartDashboard.putData("Qualistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
-        SmartDashboard.putData("Qualistatic Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        SmartDashboard.putData("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putNumber("Arm Velocity", getArmVel());*/
+        
 
         
 
@@ -411,9 +414,11 @@ public class AlgaeEffector extends SubsystemBase {
     }
     
 
-   
-    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
-            Velocity<VoltageUnit>.ofBaseUnits(1, Volts), Volts.of(2), Seconds.of(10));
+    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(1).per(Seconds),
+    Volts.of(1), Seconds.of(10));
+
+    // private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
+    //         Velocity<VoltageUnit>.ofBaseUnits(1, Volts), Volts.of(2), Seconds.of(10));
 
     public void logMotor(SysIdRoutineLog log) {
         log.motor("armMotorMaster")
@@ -426,21 +431,24 @@ public class AlgaeEffector extends SubsystemBase {
     }
     public void driveMotor(Voltage volts) {
         armMotor.setVoltage(volts.in(Volts));
+    
     }
+
+    
 
     private final SysIdRoutine routine = new SysIdRoutine(defaultSysIdConfig,
             new SysIdRoutine.Mechanism(this::driveMotor, this::logMotor, this));
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> armAbsoluteEncoder.setZeroOffset(0)),
-                routine.quasistatic(direction));
+                new InstantCommand(() -> 
+                routine.quasistatic(direction)));
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> armAbsoluteEncoder.setZeroOffset(0)),
-                routine.dynamic(direction));
+                new InstantCommand(() ->
+                routine.dynamic(direction)));
     }
 
     public void initSendable(SendableBuilder builder){
