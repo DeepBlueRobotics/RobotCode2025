@@ -9,6 +9,8 @@ import edu.wpi.first.units.measure.MutVelocity;
 import  edu.wpi.first.units.measure.MutVoltage;
 import  edu.wpi.first.units.Measure;
 import  edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.VoltageUnit;
+
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -407,8 +409,11 @@ public class AlgaeEffector extends SubsystemBase {
         //kS, kV, kA and kG , kP, kI, kD
 
     }
+    
+
+   
     private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
-            Volts.of(1).per(Seconds.of(1)), Volts.of(2), Seconds.of(10));
+            Velocity<VoltageUnit>.ofBaseUnits(1, Volts), Volts.of(2), Seconds.of(10));
 
     public void logMotor(SysIdRoutineLog log) {
         log.motor("armMotorMaster")
@@ -418,6 +423,9 @@ public class AlgaeEffector extends SubsystemBase {
                         armAbsoluteEncoder.getVelocity(), RadiansPerSecond))
                 .angularPosition(distance
                         .mut_replace(armAbsoluteEncoder.getPosition(), Radians));
+    }
+    public void driveMotor(Voltage volts) {
+        armMotor.setVoltage(volts.in(Volts));
     }
 
     private final SysIdRoutine routine = new SysIdRoutine(defaultSysIdConfig,
