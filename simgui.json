@@ -1,0 +1,21 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK Flex [1] RELATIVE ENCODER": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Auto Chooser Tab/SendableChooser[0]": "String Chooser",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}

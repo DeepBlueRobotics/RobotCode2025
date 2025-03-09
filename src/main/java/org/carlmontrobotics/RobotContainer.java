@@ -7,20 +7,53 @@ package org.carlmontrobotics;
 //199 files
 // import org.carlmontrobotics.subsystems.*;
 // import org.carlmontrobotics.commands.*;
-import static org.carlmontrobotics.Constants.OI;
+import static org.carlmontrobotics.Constants.OI.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.Constants.OI.Manipulator.*;
+import org.carlmontrobotics.Constants.OI.Manipulator;
+import org.carlmontrobotics.commands.OuttakeAlgae;
+import org.carlmontrobotics.subsystems.AlgaeEffector;
+import org.carlmontrobotics.subsystems.CoralEffector;
+import org.carlmontrobotics.subsystems.Drivetrain;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import org.carlmontrobotics.commands.IntakeAlgae;
+import org.carlmontrobotics.commands.IntakeCoral;
+import org.carlmontrobotics.commands.OuttakeCoral;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PS5Controller.Button;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 //control bindings
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,31 +62,148 @@ public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
-  public final GenericHID driverController = new GenericHID(OI.Driver.port);
-  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
+  public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
+  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
+  private final AlgaeEffector algaeEffector = new AlgaeEffector();
+  private final CoralEffector coralEffector = new CoralEffector();
+  private final Drivetrain drivetrain =  new Drivetrain();
+
+  private final SendableChooser<Command> autoChooser;
+  /*private final String[] autoNames = new String[] {
+          "Left 1 Piece L1 Auto", "Center 1 Piece L1 Auto", "Right 1 Piece L1 Auto",
+          "Left 1 Piece L2 Auto", "Center 1 Piece L2 Auto", "Right 1 Piece L2 Auto",
+          "Left 1 Piece L3 Auto", "Center 1 Piece L3 Auto", "Right 1 Piece L3 Auto",
+          "Left 1 Piece L4 Auto", "Center 1 Piece L4 Auto", "Right 1 Piece L4 Auto",
+
+          "Left 2 Piece L1 Auto", "Right 2 Piece L1 Auto",
+          "Left 2 Piece L2 Auto", "Right 2 Piece L2 Auto",
+          "Left 2 Piece L3 Auto", "Right 2 Piece L3 Auto",
+          "Left 2 Piece L4 Auto", "Right 2 Piece L4 Auto",
+
+          "Left 3 Piece L1 Auto", "Right 3 Piece L1 Auto",
+          "Left 3 Piece L2 Auto", "Right 3 Piece L2 Auto",
+          "Left 3 Piece L3 Auto", "Right 3 Piece L3 Auto",
+          "Left 3 Piece L4 Auto", "Right 3 Piece L4 Auto",
+
+          "Left 4 Piece L1 Auto", "Right 4 Piece L1 Auto",
+          "Left 4 Piece L2 Auto", "Right 4 Piece L2 Auto",
+          "Left 4 Piece L3 Auto", "Right 4 Piece L3 Auto",
+          "Left 4 Piece L4 Auto", "Right 4 Piece L4 Auto",
+
+          "Left Forward", "Center Forward", "Right Forward",
+
+
+  };*/
+
+
+  
 
   public RobotContainer() {
-
-    setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
+
+    RegisterAutoCommands();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
-  private void setDefaultCommands() {
-    // drivetrain.setDefaultCommand(new TeleopDrive(
-    //   drivetrain,
-    //   () -> ProcessedAxisValue(driverController, Axis.kLeftY)),
-    //   () -> ProcessedAxisValue(driverController, Axis.kLeftX)),
-    //   () -> ProcessedAxisValue(driverController, Axis.kRightX)),
-    //   () -> driverController.getRawButton(OI.Driver.slowDriveButton)
-    // ));
-  }
+
+  private void setDefaultCommands() {}
   private void setBindingsDriver() {}
-  private void setBindingsManipulator() {}
 
-  public Command getAutonomousCommand() {
+  private void setBindingsManipulator() {
+    axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
+      .whileTrue(new IntakeCoral(coralEffector));
+
+    axisTrigger(manipulatorController, OI.Manipulator.OuttakeTrigger)
+      .whileTrue(new OuttakeCoral(coralEffector));
+    
+    new JoystickButton(manipulatorController, OI.Manipulator.IntakeBumper)
+      .whileTrue(new IntakeAlgae(algaeEffector));
+    
+    new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
+      .whileFalse(new OuttakeAlgae(algaeEffector));
+    }
+    
+    private Trigger axisTrigger(GenericHID controller, Axis axis) {
+      return new Trigger(() -> Math
+              .abs(getStickValue(controller, axis)) > Constants.OI.MIN_AXIS_TRIGGER_VALUE);
+    }
+
+    private void RegisterAutoCommands(){
+      //I made some of the constants up, so change once merged
+      //AlgaeEffector
+      // NamedCommands.registerCommand("GroundIntakeAlgae", new GroundIntakeAlgae(algaeEffector));
+      // NamedCommands.registerCommand("DealgaficationIntake", new DealgaficationIntake(algaeEffector));
+      // NamedCommands.registerCommand("ShootAlgae", new ShootAlgae(algaeEffector));
+      //CoralEffector
+      // NamedCommands.registerCommand("CoralIntake", new CoralIntake(coralEffector));
+      // NamedCommands.registerCommand("CoralOutake", new CoralOutake(coralEffector));
+      // //AlgaeArm
+      // NamedCommands.registerCommand("ArmToDeAlgafy", new ArmToPosition(AlgaeEffector, Armc.DeAlgafy_Angle));
+      // NamedCommands.registerCommand("ArmToIntake", new ArmToPosition(AlgaeEffector, Armc.Intake_Angle));
+      // NamedCommands.registerCommand("ArmToShoot", new ArmToPosition(AlgaeEffector, Armc.Shoot_Angle));
+      // //Elevator
+      // NamedCommands.registerCommand("ElevatorIntake", new ElevatorLPos(Elevator, Elevatorc.IntakePos));
+      // NamedCommands.registerCommand("ElevatorL1", new ElevatorLPos(Elevator, Elevatorc.L1Pos));
+      // NamedCommands.registerCommand("ElevatorL2", new ElevatorLPos(Elevator, Elevatorc.L2Pos));
+      // NamedCommands.registerCommand("ElevatorL3", new ElevatorLPos(Elevator, Elevatorc.L3Pos));
+      // NamedCommands.registerCommand("ElevatorL4", new ElevatorLPos(Elevator, Elevatorc.L4Pos));
+
+      // //Limelight
+      // NamedCommands.registerCommand("AlignToCoralStation", new AlignToCoralStation(Limelight, drivetrain));
+      // NamedCommands.registerCommand("AlignToReef", new AlignToReef(Limelight, drivetrain));
+      // NamedCommands.registerCommand("MoveToLeftBranch", new MoveToLeftBranch(Limelight, LimelightHelpers, drivetrain));
+      // NamedCommands.registerCommand("MoveToRightBranch", new MoveToRightBranch(Limelight, LimelightHelpers, drivetrain));
+
+      //Sequential and Parralel Commands
+        /*NamedCommands.registerCommand("L2", new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+                new WaitCommand(3.0),
+                new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new AlignToReef(drivetrain, limelight),
+                                new ElevatorL2(Elevator, Elevatorc.L2Pos),
+                                new ArmToPos(arm, Armc.DeAlgafy_Angle)),
+                                new DealgaficationIntake(algaeEffector),
+                        new CoralOutake(coralEffector),
+                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
+
+        /*NamedCommands.registerCommand("L3", new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+                new WaitCommand(3.0),
+                new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new AlignToReef(drivetrain, limelight),
+                                new ElevatorL3(Elevator, Elevatorc.L3Pos),
+                                new ArmToPos(arm, Armc.DeAlgafy_Angle)),
+                                new DealgaficationIntake(algaeEffector),
+                        new CoralOutake(coralEffector),
+                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
+
+        /*NamedCommands.registerCommand("L4", new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+                new WaitCommand(3.0),
+                new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new AlignToReef(drivetrain, limelight),
+                                new ElevatorL3(Elevator, Elevatorc.L4Pos),
+                                new ArmToPos(arm, Armc.DeAlgafy_Angle)),
+                                new DealgaficationIntake(algaeEffector),
+                        new CoralOutake(coralEffector),
+                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
+                        
+        /*NamedCommands.registerCommand("IntakeCoral",
+        new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new AlignToCoralStation(drivetrain, limelight),
+                                new IntakeCoral(coralEffector))));*/
+
+    }
+
+  /*public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
-  }
+  }*/
 
   /**
    * Flips an axis' Y coordinates upside down, but only if the select axis is a joystick axis
@@ -89,4 +239,9 @@ public class RobotContainer {
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
   }
+
+    public Command getAutonomousCommand() {
+      return autoChooser.getSelected();
+    }
 }
+
