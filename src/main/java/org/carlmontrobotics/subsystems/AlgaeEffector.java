@@ -370,6 +370,34 @@ public class AlgaeEffector extends SubsystemBase {
         //kS, kV, kA and kG , kP, kI, kD
 
     }
+    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
+            Volts.of(1).per(Seconds.of(1)), Volts.of(2), Seconds.of(10));
+
+    public void logMotor(SysIdRoutineLog log) {
+        log.motor("armMotorMaster")
+                .voltage(voltage.mut_replace(armMotorMaster.getBusVoltage()
+                        * armMotorMaster.getAppliedOutput(), Volts))
+                .angularVelocity(velocity.mut_replace(
+                        armMasterEncoder.getVelocity(), RadiansPerSecond))
+                .angularPosition(distance
+                        .mut_replace(armMasterEncoder.getPosition(), Radians));
+    }
+
+    private final SysIdRoutine routine = new SysIdRoutine(defaultSysIdConfig,
+            new SysIdRoutine.Mechanism(this::driveMotor, this::logMotor, this));
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> armMasterEncoder.setZeroOffset(0)),
+                routine.quasistatic(direction));
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> armMasterEncoder.setZeroOffset(0)),
+                routine.dynamic(direction));
+    }
+
     public void initSendable(SendableBuilder builder){
        super.initSendable(builder); 
        builder.addDoubleProperty("arm kS", () -> armkS, (value) -> { armkS = value; updateFeedforward(); });
