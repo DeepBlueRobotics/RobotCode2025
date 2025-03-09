@@ -1,5 +1,10 @@
 package org.carlmontrobotics.subsystems;
 
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 import org.carlmontrobotics.lib199.MotorConfig;
 //import org.carlmontrobotics.lib199.MotorConfig;
@@ -42,7 +47,9 @@ import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
-
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Velocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -57,6 +64,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj.Encoder;
 
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
@@ -127,6 +135,12 @@ public class AlgaeEffector extends SubsystemBase {
     private TrapezoidProfile.State setPoint;
     
     private double armFeedVolts;
+
+    // SYS ID
+    private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
+    private final MutableMeasure<Velocity<Angle>> velocity =
+            mutable(RadiansPerSecond.of(0));
+    private final MutableMeasure<Angle> distance = mutable(Radians.of(0));
     
     //private final ArmFeedforward armFeed = new ArmFeedforward(kS[ARM_ARRAY_ORDER], kG[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]);
 
@@ -364,6 +378,11 @@ public class AlgaeEffector extends SubsystemBase {
         }
         
         SmartDashboard.putNumber("Arm Velocity", getArmVel());
+        SmartDashboard.putData("Qualistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("Qualistatic Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putData("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
         
 
         //ARM PID values
