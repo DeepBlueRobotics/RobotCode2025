@@ -11,6 +11,8 @@ import  edu.wpi.first.units.Measure;
 import  edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.VoltageUnit;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -235,6 +237,8 @@ public class AlgaeEffector extends SubsystemBase {
         //     Constants.kD[ARM_ARRAY_ORDER]
         //     ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
+        armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
+        armMotorConfig.absoluteEncoder.velocityConversionFactor(6); // 6 is rotations/min to degrees/second
         if (armMotor != null) {
             armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
@@ -390,8 +394,8 @@ public class AlgaeEffector extends SubsystemBase {
     @Override
     public void periodic() {
         //armMotor.set(0.1);
-        /* 
         
+        /* 
         setArmTarget(0);
        
         setArmPosition();
@@ -403,34 +407,43 @@ public class AlgaeEffector extends SubsystemBase {
             SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
         }
         
-        SmartDashboard.putNumber("Arm Velocity", getArmVel());*/
+        SmartDashboard.putNumber("Arm Velocity", getArmVel());
         
 
         
 
         //ARM PID values
         //kS, kV, kA and kG , kP, kI, kD
+        */
 
     }
     
 
-    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(1).per(Seconds),
-    Volts.of(1), Seconds.of(10));
+    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(0.1).per(Seconds),
+    Volts.of(1.5), Seconds.of(15));
 
     // private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
     //         Velocity<VoltageUnit>.ofBaseUnits(1, Volts), Volts.of(2), Seconds.of(10));
 
     public void logMotor(SysIdRoutineLog log) {
-        log.motor("armMotorMaster")
+        double voltageSign = Math.signum(lastVolts.in(Volts));
+        log.motor("armMotor")
                 .voltage(voltage.mut_replace(armMotor.getBusVoltage()
-                        * armMotor.getAppliedOutput(), Volts))
+                        * armMotor.getAppliedOutput()* voltageSign, Volts))
                 .angularVelocity(velocity.mut_replace(
-                        armAbsoluteEncoder.getVelocity(), RadiansPerSecond))
+                       Units.degreesToRadians(armAbsoluteEncoder.getVelocity()) * voltageSign , DegreesPerSecond))
                 .angularPosition(distance
-                        .mut_replace(armAbsoluteEncoder.getPosition(), Radians));
+                        .mut_replace(Units.degreesToRadians(armAbsoluteEncoder.getPosition()) * voltageSign, Radians));
     }
+    private Voltage lastVolts;
     public void driveMotor(Voltage volts) {
-        armMotor.setVoltage(volts.in(Volts));
+        lastVolts = volts;
+        armMotor.setVoltage(Math.abs(volts.in(Volts)));
+        System.out.println("drive");
+        // if (armAbsoluteEncoder.getPosition() > UPPER_ANGLE_LIMIT 
+        // || armAbsoluteEncoder.getPosition() < LOWER_ANGLE_LIMIT) {
+        //     armMotor.setVoltage(0);
+        // }
     
     }
 
@@ -440,15 +453,26 @@ public class AlgaeEffector extends SubsystemBase {
             new SysIdRoutine.Mechanism(this::driveMotor, this::logMotor, this));
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> 
-                routine.quasistatic(direction)));
+        return 
+            routine.quasistatic(direction) .onlyWhile(()->{
+                return (getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT);
+                    
+                
+                
+            });
+            
+            
+        
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return new SequentialCommandGroup(
-                new InstantCommand(() ->
-                routine.dynamic(direction)));
+        return 
+                routine.dynamic(direction).onlyWhile(()->{
+                    return (getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT);
+                        
+                    
+                    
+                });
     }
 
     public void initSendable(SendableBuilder builder){
