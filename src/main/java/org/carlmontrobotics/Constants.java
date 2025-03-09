@@ -320,7 +320,7 @@ public final class Constants {
 		public static final int followerPort = 21; // inverted
 		public static final int elevatorTopLimitSwitchPort = 1;
 		public static final int elevatorBottomLimitSwitchPort = 2;
-		public static final double GEAR_RATIO = 1/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
+		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
 
 		// Config
 		// TODO figure these parts out
@@ -329,8 +329,8 @@ public final class Constants {
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
 		public static final boolean masterInverted = false; 
 		public static final boolean followerInverted = true;
-		public static final double masterPositionConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)/20); // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
-		public static final double masterVelocityConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)/20);
+		public static final double masterPositionConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)); // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
+		public static final double masterVelocityConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)*1.0/60);
 		public static final double maxElevatorHeightInches = 53.2;
 		public static final double minElevatorHeightInches = 0;
 
@@ -346,13 +346,13 @@ public final class Constants {
         //Positions
         public static final double downPos = 0;
         public static final double l1 = 0;
-        public static final double l2 = 6.5; //inches
-        public static final double l3 = 22.5; //inches
-        public static final double l4 = 52.64;
-        public static final double net = 53.2;
+        public static final double l2 = 6.5-1.236220; //inches
+        public static final double l3 = 22.5-1.236220; //inches
+        public static final double l4 = 52.64-1.236220;
+        public static final double net = 53.2-1.236220;
         public static final double processor = 0;
-        public static final double bottomAlgaeRemoval = 22.5;
-        public static final double uppperAlgaeRemoval = 38.35;
+        public static final double bottomAlgaeRemoval = 22.5-1.236220;
+        public static final double uppperAlgaeRemoval = 38.35-1.236220;
         //ScoreENUM
         public enum ElevatorPos {
             DOWN(downPos),
