@@ -112,7 +112,7 @@ public class AlgaeEffector extends SubsystemBase {
     private double armkD = Constants.kD[ARM_ARRAY_ORDER];
     private ArmFeedforward armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
     private void updateFeedforward() {
-        armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
+        armFeedforward = new ArmFeedforward(1, armkG, armkV, armkA);
     }
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
@@ -132,7 +132,7 @@ public class AlgaeEffector extends SubsystemBase {
     private TrapezoidProfile.State armGoalState = new TrapezoidProfile.State(0,0); //please write down if armGoalState.position is in radians or degrees
 
     private static double kDt;
-    private TrapezoidProfile.State setPoint;
+    private TrapezoidProfile.State currentPosition;
     
     private double armFeedVolts;
 
@@ -151,7 +151,7 @@ public class AlgaeEffector extends SubsystemBase {
         armTrapProfile = new TrapezoidProfile(TRAP_CONSTRAINTS);
         configureMotors();
         kDt = 0.02;
-        setPoint = getArmState();
+        currentPosition = getArmState();
         
         
 
@@ -208,16 +208,16 @@ public class AlgaeEffector extends SubsystemBase {
             armkD  // Constants.kd[ARM_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
-        armMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        // armMotor.configure(pincherMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
-        armMotorConfig.closedLoop.pid(
-            Constants.kP[ARM_ARRAY_ORDER],
-            Constants.kI[ARM_ARRAY_ORDER],
-            Constants.kD[ARM_ARRAY_ORDER]
-            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        //armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
+        // armMotorConfig.closedLoop.pid(
+        //     Constants.kP[ARM_ARRAY_ORDER],
+        //     Constants.kI[ARM_ARRAY_ORDER],
+        //     Constants.kD[ARM_ARRAY_ORDER]
+        //     ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
         if (armMotor != null) {
-            armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
         
         
@@ -255,17 +255,21 @@ public class AlgaeEffector extends SubsystemBase {
     //drives arm from set point to goal position
     public void setArmPosition() {
         
-        setPoint = getArmState();
-        armGoalState = armTrapProfile.calculate(kDt, setPoint, armGoalState); 
+        currentPosition = getArmState();
+        System.out.println("origgoalpos: "+armGoalState.position);
+        TrapezoidProfile.State calculateTo = armTrapProfile.calculate(kDt, currentPosition, armGoalState); 
 
-        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoalState.position), armGoalState.velocity);
+        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(calculateTo.position), calculateTo.velocity);
+
+
         if ((getArmPos() < LOWER_ANGLE_LIMIT)
              || (getArmPos() > UPPER_ANGLE_LIMIT)) {
             armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(getArmPos()), 0);
 
         }
-        //System.out.println(armFeedVolts);
-        if (armMotor != null) {
+        System.out.println("outvolts: "+armFeedVolts);
+        System.out.println("err: "+(calculateTo.position-currentPosition.position));
+        if (true || armMotor != null) {
             pidControllerArm.setReference(armGoalState.position, ControlType.kPosition,ClosedLoopSlot.kSlot0, armFeedVolts);
         }
         
@@ -295,8 +299,8 @@ public class AlgaeEffector extends SubsystemBase {
     
     public double getArmClampedGoal(double goalAngle) {
         return MathUtil.clamp(
-            MathUtil.inputModulus(goalAngle, ARM_DISCONT_DEG, 
-                ARM_DISCONT_DEG + 360),
+            MathUtil.inputModulus(goalAngle, -180, 
+                180),
                 LOWER_ANGLE_LIMIT, UPPER_ANGLE_LIMIT
         );
     }
@@ -306,7 +310,7 @@ public class AlgaeEffector extends SubsystemBase {
         //figures out the position of the arm in degrees based off pure vertical down
         //TODO update the arm to get in degrees after someone will figure out what the .getPosition gets for the TBE
 
-        return Units.rotationsToDegrees(armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING); 
+        return Units.rotationsToDegrees(armAbsoluteEncoder.getPosition()); 
 
     }
    
@@ -367,12 +371,14 @@ public class AlgaeEffector extends SubsystemBase {
     @Override
     public void periodic() {
         //armMotor.set(0.1);
+
+        setArmTarget(0);
        
         setArmPosition();
         
         SmartDashboard.putNumber("Arm Angle", getArmPos());
-        SmartDashboard.putNumber("Raw Arm Angle",Units.rotationsToDegrees(armAbsoluteEncoder.getPosition() * ARM_CHAIN_GEARING)-20);
-        armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        SmartDashboard.putNumber("Raw Arm Angle",Units.rotationsToDegrees(armAbsoluteEncoder.getPosition()));
+        //armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         if (pincherMotor != null) {
             SmartDashboard.putBoolean("Algae Intaked?", isAlgaeIntaked());
         }
