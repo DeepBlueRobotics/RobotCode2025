@@ -11,10 +11,15 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import org.carlmontrobotics.Constants;
+import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
+
+import static org.carlmontrobotics.Config.CONFIG;
+import static org.carlmontrobotics.Constants.Drivetrainc.velocityTolerance;
 import static org.carlmontrobotics.Constants.Elevatorc.*;
 
 import org.carlmontrobotics.lib199.MotorConfig;
@@ -32,6 +37,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
@@ -40,6 +46,8 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -85,6 +93,15 @@ public class Elevator extends SubsystemBase {
     Volts.of(1), //starting voltage, volts
     Units.Seconds.of(5)//AH: maximum sysID test time
   );
+
+  private ShuffleboardTab sysIdTab = Shuffleboard.getTab("Elevator SysID");
+
+  private void sysIdSetup() {
+    sysIdTab.add("Quasistatic backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
+    sysIdTab.add("Quasistatic forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
+    sysIdTab.add("Dynamic forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
+    sysIdTab.add("Dynamic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
+  }
 
   public Elevator() {
     //motors
@@ -133,6 +150,11 @@ public class Elevator extends SubsystemBase {
         }, 
         this)
       );
+    
+  if (CONFIG.isSysIdTesting()) {
+    sysIdSetup();
+  }
+
   }
 
   private void configureMotors () {
@@ -225,14 +247,25 @@ public class Elevator extends SubsystemBase {
 
   }
 
+//safetyMethod is used to check during sysid if the elevator height and voltage are at the safe threshold
+  private boolean safetyMethod(){
+    if (maxElevatorHeightInches == masterEncoder.getPosition()){
+      return true;
+    }
+   //FIX THIS if (maxVelocityMetersPerSecond == masterEncoder.getVelocity()){
+      return true;
+    }
 
+  
   /**
    * Returns a command that will execute a quasistatic test in the given direction.
    *
    * @param direction The direction (forward or reverse) to run the test in
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction);
+    return sysIdRoutine.quasistatic(direction);//.onlyWhile(safetyMethod(false));
+    //use onlyWhile to decorate the command and therefore add safety limits (for height and voltage)
+    //TO-DO: fix safety method (add velocity) and also other bugs
   }
 
   /**
