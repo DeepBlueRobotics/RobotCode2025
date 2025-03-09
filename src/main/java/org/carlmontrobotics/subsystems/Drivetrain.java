@@ -390,9 +390,9 @@ public class Drivetrain extends SubsystemBase {
         // moduleBR.periodic();
         // double goal = SmartDashboard.getNumber("bigoal", 0);
         for (SwerveModule module : modules) {
-           module.turnPeriodic();
           // module.turnPeriodic();
-          //module.periodic();
+          // module.turnPeriodic();
+          module.periodic();
             // module.move(0, goal);
         }
 

@@ -96,7 +96,7 @@ public final class Constants {
 	// front-left, front-right, back-left, back-right.
 	// Determine correct turn PID constants
 	public static final double[] turnkP = CONFIG.isHammerHead() ? new double[] {4.0087, 60.885, 60.946, 60.986/2 } : 
-		new double[]{1.9085, /*0.21577*/0.1, /*0.12356*/0.05, 0.36431};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
+		new double[]{50,50,50,50};//{1.9085, /*0.21577*/0.1, /*0.12356*/0.05, 0.36431};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
 																	// 0.00374};
 	public static final double[] turnkI = {0, 0, 0, 0};//{ 0, 0.1, 0, 0 };
 	public static final double[] turnkD = CONFIG.isHammerHead() ? new double[] { 0/* dont edit */, 0.5, 0.42, 1 } :
