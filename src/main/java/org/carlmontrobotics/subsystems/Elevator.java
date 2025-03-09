@@ -15,7 +15,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import org.carlmontrobotics.Constants;
-import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
+import static org.carlmontrobotics.Constants.Elevatorc.*;
+
+import org.carlmontrobotics.lib199.MotorConfig;
+import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -54,7 +57,7 @@ public class Elevator extends SubsystemBase {
   private SparkMaxConfig followerConfig;
   private RelativeEncoder followerEncoder;
   // Limit Switches
-  private DigitalInput topLimitSwitch;
+  // private DigitalInput topLimitSwitch; no upper limit switch
   private DigitalInput bottomLimitSwitch;
   //Vars
   private double heightGoal;
@@ -85,24 +88,26 @@ public class Elevator extends SubsystemBase {
 
   public Elevator() {
     //motors
-    masterMotor = new SparkMax(Constants.Elevatorc.masterPort, MotorType.kBrushless);
-    masterConfig = new SparkMaxConfig();
+    // masterMotor = new SparkMax(masterPort, MotorType.kBrushless);
+    masterMotor = MotorControllerFactory.createSparkMax(masterPort, MotorConfig.NEO);
     masterEncoder = masterMotor.getEncoder();
-    followerMotor = new SparkMax(Constants.Elevatorc.followerPort, MotorType.kBrushless);
-    followerConfig = new SparkMaxConfig();
+
+    // followerMotor = new SparkMax(Constants.Elevatorc.followerPort, MotorType.kBrushless);
+    followerMotor = MotorControllerFactory.createSparkMax(followerPort, MotorConfig.NEO);
     followerEncoder = followerMotor.getEncoder();
+
     configureMotors();
     //Calibration
-    topLimitSwitch = new DigitalInput(Constants.Elevatorc.elevatorTopLimitSwitchPort);
-    bottomLimitSwitch = new DigitalInput(Constants.Elevatorc.elevatorBottomLimitSwitchPort);
+    // topLimitSwitch = new DigitalInput(elevatorTopLimitSwitchPort);
+    bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
     timer = new Timer();
     timer.start();
 
 
     //PID
-    pidElevatorController = new PIDController(Constants.Elevatorc.kP, Constants.Elevatorc.kI, Constants.Elevatorc.kD);
+    pidElevatorController = new PIDController(kP, kI, kD);
     //FeedForward
-    feedforwardElevatorController = new ElevatorFeedforward(Constants.Elevatorc.kS, Constants.Elevatorc.kG, Constants.Elevatorc.kV, Constants.Elevatorc.kA);
+    feedforwardElevatorController = new ElevatorFeedforward(kS, kG, kV, kA);
     
 
     sysIdRoutine = new SysIdRoutine(
@@ -133,20 +138,20 @@ public class Elevator extends SubsystemBase {
   private void configureMotors () {
     //Master Config
     masterConfig
-        .inverted(Constants.Elevatorc.masterInverted)
-        .idleMode(Constants.Elevatorc.masterIdleMode);
+        .inverted(masterInverted)
+        .idleMode(masterIdleMode);
     masterConfig.encoder
-        .positionConversionFactor(Constants.Elevatorc.masterPositionConversionFactor)
-        .velocityConversionFactor(Constants.Elevatorc.masterVelocityConversionFactor);
+        .positionConversionFactor(masterPositionConversionFactor)
+        .velocityConversionFactor(masterVelocityConversionFactor);
     masterConfig.closedLoop
-        .pid(Constants.Elevatorc.kP, Constants.Elevatorc.kI,Constants.Elevatorc.kD)
+        .pid(kP, kI, kD)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    masterMotor.configure(masterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    masterMotor.configure(masterConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     //I don't know if this is needed. Response: Not rly. Only the follow.
     //Follower Config
     followerConfig.apply(masterConfig);
-    followerConfig.follow(Constants.Elevatorc.masterPort, Constants.Elevatorc.followerInverted);
-    followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    followerConfig.follow(masterPort, followerInverted);
+    followerMotor.configure(followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void setGoal(double goal) {
@@ -165,29 +170,29 @@ public class Elevator extends SubsystemBase {
     return masterEncoder.getPosition();
   }
 
-  public boolean elevatorAtMax() {
-    return !topLimitSwitch.get();
-  }
+  // public boolean elevatorAtMax() {
+  //   return !topLimitSwitch.get();
+  // }
 
   public boolean elevatorAtMin() {
     return !bottomLimitSwitch.get();
   }
 
   public void updateEncoders() {
-    if (elevatorAtMax()) {
-      masterEncoder.setPosition(Constants.Elevatorc.maxElevatorHeightInches);
-      timer.reset();
-      timer.start();
-    }
-    else if (elevatorAtMin()) {
-      masterEncoder.setPosition(Constants.Elevatorc.minElevatorHeightInches);
+    // if (elevatorAtMax()) {
+    //   masterEncoder.setPosition(maxElevatorHeightInches);
+    //   timer.reset();
+    //   timer.start();
+    // }
+    if (elevatorAtMin()) {
+      masterEncoder.setPosition(minElevatorHeightInches);
       timer.reset();
       timer.start();
     }
   }
 
   public void getToGoal() {
-    if(!elevatorAtMax() || heightGoal<masterEncoder.getPosition()) {
+    if(heightGoal<masterEncoder.getPosition()) {
     masterMotor.setVoltage(
       pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal) + 
       feedforwardElevatorController.calculate(heightGoal));
@@ -207,15 +212,15 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean atGoalHeight() {
-    if (heightGoal == Constants.Elevatorc.maxElevatorHeightInches) {
-      return elevatorAtMax();
-    }
-    else if (heightGoal == Constants.Elevatorc.minElevatorHeightInches) {
+    // if (heightGoal == maxElevatorHeightInches) {
+    //   return elevatorAtMax();
+    // }
+    if (heightGoal == minElevatorHeightInches) {
       return elevatorAtMin();
     }
     
     else {
-      return (Math.abs(getPos()) - heightGoal <= Constants.Elevatorc.elevatorTolerance);
+      return (Math.abs(getPos()) - heightGoal <= elevatorTolerance);
     }
 
   }
@@ -245,10 +250,10 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (elevatorAtMax()){
-      SmartDashboard.putString("ElevatorState", "🔴STOP🔴");
-    }
-    else if (elevatorAtMin()) {
+    // if (elevatorAtMax()){
+    //   SmartDashboard.putString("ElevatorState", "🔴STOP🔴");
+    // }
+    if (elevatorAtMin()) {
       SmartDashboard.putString("ElevatorState", "🟢GO🟢");
     }
     else {

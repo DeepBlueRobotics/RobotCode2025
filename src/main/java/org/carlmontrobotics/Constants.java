@@ -317,17 +317,17 @@ public final class Constants {
 	public static final class Elevatorc {
 		// ports
 		public static final int masterPort = 20;
-		public static final int followerPort = 21;
+		public static final int followerPort = 21; // inverted
 		public static final int elevatorTopLimitSwitchPort = 1;
 		public static final int elevatorBottomLimitSwitchPort = 2;
-		public static final double GEAR_RATIO = 0; //TODO: CHANGE TO ACTUAL GEAR RATIO
+		public static final double GEAR_RATIO = 1/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
 
 		// Config
 		// TODO figure these parts out
 		public static final double MAX_ACCEL_RAD_P_S = 1;
 		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
-		public static final boolean masterInverted = true; //????? Only one of these should be true
+		public static final boolean masterInverted = false; 
 		public static final boolean followerInverted = true;
 		public static final double masterPositionConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)/20); // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
 		public static final double masterVelocityConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)/20);
