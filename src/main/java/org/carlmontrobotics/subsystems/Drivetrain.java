@@ -209,23 +209,23 @@ public class Drivetrain extends SubsystemBase {
 
 
             moduleFL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FL, 
-                driveMotors[0] = new SparkMax(driveFrontLeftPort, MotorType.kBrushless), 
-                turnMotors[0] = new SparkMax(turnFrontLeftPort, MotorType.kBrushless), 
+                driveMotors[0] = MotorControllerFactory.createSparkMax(driveFrontLeftPort, MotorConfig.NEO), 
+                turnMotors[0] = MotorControllerFactory.createSparkMax(turnFrontLeftPort, MotorConfig.NEO), 
                 turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL), 0, pitchSupplier, rollSupplier);
             SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
             moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
-                driveMotors[1] = new SparkMax(driveFrontRightPort, MotorType.kBrushless), 
-                turnMotors[1] = new SparkMax(turnFrontRightPort, MotorType.kBrushless), 
+                driveMotors[1] = MotorControllerFactory.createSparkMax(driveFrontRightPort, MotorConfig.NEO), 
+                turnMotors[1] = MotorControllerFactory.createSparkMax(turnFrontRightPort, MotorConfig.NEO), 
                 turnEncoders[1] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFR), 1, pitchSupplier, rollSupplier);
 
             moduleBL = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BL, 
-                driveMotors[2] = new SparkMax(driveBackLeftPort, MotorType.kBrushless), 
-                turnMotors[2] = new SparkMax(turnBackLeftPort, MotorType.kBrushless), 
+                driveMotors[2] = MotorControllerFactory.createSparkMax(driveBackLeftPort, MotorConfig.NEO), 
+                turnMotors[2] = MotorControllerFactory.createSparkMax(turnBackLeftPort, MotorConfig.NEO), 
                 turnEncoders[2] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBL), 2, pitchSupplier, rollSupplier);
 
             moduleBR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.BR, 
-                driveMotors[3] = new SparkMax(driveBackRightPort, MotorType.kBrushless), 
-                turnMotors[3] = new SparkMax(turnBackRightPort, MotorType.kBrushless), 
+                driveMotors[3] = MotorControllerFactory.createSparkMax(driveBackRightPort, MotorConfig.NEO), 
+                turnMotors[3] = MotorControllerFactory.createSparkMax(turnBackRightPort, MotorConfig.NEO),
                 turnEncoders[3] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortBR), 3, pitchSupplier, rollSupplier);
             modules = new SwerveModule[] { moduleFL, moduleFR, moduleBL, moduleBR };
             turnPidControllers[0] = turnMotors[0].getClosedLoopController();
