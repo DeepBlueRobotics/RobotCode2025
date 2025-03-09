@@ -176,8 +176,9 @@ public final class Constants {
 		public static final double[] drivekD = { 0.005, 0.005, 0.005, 0.005 };
 		public static final boolean[] driveInversion = (CONFIG.isSwimShady()
 				? new boolean[] { false, false, false, false }
-				: new boolean[] { false, true, false, true });
+				: new boolean[] { true, false, true, false });
 		public static final boolean[] turnInversion = { true, true, true, true };
+		// kS
 		// kS
 		// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967,
 		// 0.2461 };
