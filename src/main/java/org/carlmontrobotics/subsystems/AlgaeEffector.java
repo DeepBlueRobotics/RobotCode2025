@@ -184,9 +184,9 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
         SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
 
-        SmartDashboard.putData("Qualistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("Quasistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
-        SmartDashboard.putData("Qualistatic Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putData("Quasistatic Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         SmartDashboard.putData("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     }
@@ -240,7 +240,7 @@ public class AlgaeEffector extends SubsystemBase {
         //     Constants.kD[ARM_ARRAY_ORDER]
         //     ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
-        armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
+        armMotorConfig.absoluteEncoder.positionConversionFactor(ROTATION_TO_DEG);
         armMotorConfig.absoluteEncoder.velocityConversionFactor(6); // 6 is rotations/min to degrees/second
         if (armMotor != null) {
             armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -429,18 +429,18 @@ public class AlgaeEffector extends SubsystemBase {
     //         Velocity<VoltageUnit>.ofBaseUnits(1, Volts), Volts.of(2), Seconds.of(10));
 
     public void logMotor(SysIdRoutineLog log) {
-        double voltageSign = Math.signum(lastVolts.in(Volts));
+        
         log.motor("armMotor")
                 .voltage(voltage.mut_replace(armMotor.getBusVoltage()
-                        * armMotor.getAppliedOutput()* voltageSign, Volts))
+                        * armMotor.getAppliedOutput(), Volts))
                 .angularVelocity(velocity.mut_replace(
-                       Units.degreesToRadians(armAbsoluteEncoder.getVelocity()) * voltageSign , DegreesPerSecond))
+                       Units.degreesToRadians(armAbsoluteEncoder.getVelocity()), DegreesPerSecond))
                 .angularPosition(distance
-                        .mut_replace(Units.degreesToRadians(armAbsoluteEncoder.getPosition()) * voltageSign, Radians));
+                        .mut_replace(Units.degreesToRadians(armAbsoluteEncoder.getPosition()), Radians));
     }
-    private Voltage lastVolts;
+    
     public void driveMotor(Voltage volts) {
-        lastVolts = volts;
+        
         armMotor.setVoltage(Math.abs(volts.in(Volts)));
         System.out.println("drive");
         // if (armAbsoluteEncoder.getPosition() > UPPER_ANGLE_LIMIT 

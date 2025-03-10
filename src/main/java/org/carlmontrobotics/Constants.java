@@ -110,7 +110,7 @@ public final class Constants {
         public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
         public static final double UPPER_ANGLE_LIMIT = -20;
-        public static final double LOWER_ANGLE_LIMIT = -100;
+        public static final double LOWER_ANGLE_LIMIT = -90;
         public static final double ROTATION_TO_DEG = 360;
         public static final double DEGREES_TO_RADS = Math.PI/180;
         public static final double ARM_DISCONT_DEG = -35;
