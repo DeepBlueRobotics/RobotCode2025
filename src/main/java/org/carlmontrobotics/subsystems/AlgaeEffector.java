@@ -25,6 +25,8 @@ import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import static org.carlmontrobotics.RobotContainer.*;
 
+import java.util.function.BooleanSupplier;
+
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
 import org.carlmontrobotics.commands.DealgaficationIntake;
@@ -76,6 +78,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj.Encoder;
 
@@ -419,7 +422,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
     
 
-    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(0.1).per(Seconds),
+    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(0.5).per(Seconds),
     Volts.of(1.5), Seconds.of(15));
 
     // private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
@@ -451,15 +454,20 @@ public class AlgaeEffector extends SubsystemBase {
 
     private final SysIdRoutine routine = new SysIdRoutine(defaultSysIdConfig,
             new SysIdRoutine.Mechanism(this::driveMotor, this::logMotor, this));
-
+    public Command canStartSysId(){
+        return new WaitUntilCommand(
+            (BooleanSupplier) () -> this.getArmPos() < ARM_SYS_ID_START_ANGLE);
+        
+    }
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return 
-            routine.quasistatic(direction) .onlyWhile(()->{
-                return (getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT);
+            new SequentialCommandGroup(
+                canStartSysId(), 
+                routine.quasistatic(direction).onlyWhile(()->{
+                    return (getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT);
                     
-                
-                
-            });
+                })
+            );
             
             
         
@@ -467,12 +475,13 @@ public class AlgaeEffector extends SubsystemBase {
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return 
+            new SequentialCommandGroup(
+                canStartSysId(), 
                 routine.dynamic(direction).onlyWhile(()->{
                     return (getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT);
-                        
                     
-                    
-                });
+                })
+            );
     }
 
     public void initSendable(SendableBuilder builder){
