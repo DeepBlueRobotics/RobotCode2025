@@ -119,7 +119,7 @@ public final class Constants {
 		public static final double MAX_FF_ACCEL_RAD_P_S = (53.728 / 4)/2;
         public static final double ARM_ERROR_MARGIN = 1;
 
-        public static final double ARM_SYS_ID_START_ANGLE = 90; //TODO:
+        public static final double ARM_SYS_ID_START_ANGLE = 0; //TODO:
 
 
 	}
