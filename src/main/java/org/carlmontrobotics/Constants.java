@@ -266,7 +266,7 @@ public final class Constants {
 			public static final int port = 1;
         }
 
-		public static final double JOY_THRESH = 0.01;
+		public static final double JOY_THRESH = 0.02;
 		public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;// woah, this is high.
 
 	}
