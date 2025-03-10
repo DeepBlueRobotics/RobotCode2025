@@ -1,6 +1,6 @@
 package org.carlmontrobotics.commands;
 
-import org.carlmontrobotics.Constants.CoralEffectorConstants;
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -25,7 +25,7 @@ public class CoralIntake extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        coralEffector.setMotorSpeed(CoralEffectorConstants.INPUT_FAST_SPEED);
+        coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -57,15 +57,15 @@ public class CoralIntake extends Command {
         // SmartDashboard.getBoolean("outakeGet", coralIn);
 
         if (coralEffector.coralIn){
-            coralEffector.setReferencePosition(coralMotorPosition + CoralEffectorConstants.CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
+            coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
         }
         else if (coralEffector.distanceSensorSeesCoral()){
-            coralEffector.setMotorSpeed(CoralEffectorConstants.INPUT_FAST_SPEED);
+            coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn=true;
         }
         else if (coralEffector.limitSwitchSeesCoral()){
-            coralEffector.setMotorSpeed(CoralEffectorConstants.INPUT_SLOW_SPEED);
+            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
         }
     }
 
@@ -78,6 +78,6 @@ public class CoralIntake extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return coralEffector.motorAtGoal() || timer.get() > CoralEffectorConstants.INTAKE_TIME_OUT;
+        return coralEffector.motorAtGoal() || timer.get() > INTAKE_TIME_OUT;
     }
 }

@@ -4,7 +4,7 @@
 
 package org.carlmontrobotics.commands;
 
-import org.carlmontrobotics.Constants.CoralEffectorConstants;
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -29,7 +29,7 @@ public class ManualCoralIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    coralEffector.setMotorSpeed(CoralEffectorConstants.INPUT_FAST_SPEED);
+    coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
   }
 
   // Called once the command ends or is interrupted.
@@ -39,6 +39,6 @@ public class ManualCoralIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > CoralEffectorConstants.MANUAL_INTAKE_TIME_OUT;
+    return timer.get() > MANUAL_INTAKE_TIME_OUT;
   }
 }

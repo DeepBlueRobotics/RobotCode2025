@@ -18,6 +18,8 @@ import org.carlmontrobotics.commands.CoralOutake;
 import org.carlmontrobotics.commands.ManualCoralIntake;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
+//limit switch
+import edu.wpi.first.wpilibj.DigitalInput;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController.Axis;
@@ -34,13 +36,20 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+//constats
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
+import static org.carlmontrobotics.Constants.OI.Driver.*;
+import static org.carlmontrobotics.Constants.OI.Manipulator.*;
+
 public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
-  public final GenericHID driverController = new GenericHID(OI.Driver.PORT);
-  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.PORT);
+  public final GenericHID driverController = new GenericHID(DRIVE_CONTROLLER_PORT);
+  public final GenericHID manipulatorController = new GenericHID(MANIUPLATOR_CONTROLLER_sPORT);
   public final CoralEffector coralEffector = new CoralEffector();
+
+  public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
 
   public RobotContainer() {
     SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));

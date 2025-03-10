@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.carlmontrobotics.Constants.*;
 
-import org.carlmontrobotics.Constants.CoralEffectorConstants;
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkFlex;
@@ -33,10 +33,10 @@ import com.revrobotics.spark.SparkBase;
 
 public class CoralEffector extends SubsystemBase {
   
-    public SparkFlex coralMotor = new SparkFlex(CoralEffectorConstants.CORAL_MOTOR_PORT, MotorType.kBrushless);
-    public DigitalInput coralLimitSwitch = new DigitalInput(CoralEffectorConstants.CORAL_LIMIT_SWITCH_PORT);
+    public SparkFlex coralMotor = new SparkFlex(CORAL_MOTOR_PORT, MotorType.kBrushless);
+    public DigitalInput coralLimitSwitch = new DigitalInput(CORAL_LIMIT_SWITCH_PORT);
     //FIXME ADD THE LIMIT SWITCH!!
-    public TimeOfFlight distanceSensor = new TimeOfFlight(CoralEffectorConstants.CORAL_DISTANCE_SENSOR_PORT);
+    public TimeOfFlight distanceSensor = new TimeOfFlight(CORAL_DISTANCE_SENSOR_PORT);
     
     
     public final RelativeEncoder coralEncoder = coralMotor.getEncoder();
@@ -52,7 +52,7 @@ public class CoralEffector extends SubsystemBase {
         .idleMode(IdleMode.kBrake);
     config.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(CoralEffectorConstants.KP, CoralEffectorConstants.KI, CoralEffectorConstants.KD);
+        .pid(KP, KI, KD);
         
     coralMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
    }
@@ -68,11 +68,11 @@ public class CoralEffector extends SubsystemBase {
     coralMotor.getClosedLoopController().setReference(reference, SparkBase.ControlType.kPosition);
   }
   public boolean motorAtGoal(){
-    return Math.abs(coralEncoder.getPosition()-targetPos) <= CoralEffectorConstants.CORAL_INTAKE_ERR;
+    return Math.abs(coralEncoder.getPosition()-targetPos) <= CORAL_INTAKE_ERR;
   }
 
   public boolean distanceSensorSeesCoral(){
-    return distanceSensor.getRange() < CoralEffectorConstants.CORAL_DISTANCE_SENSOR_DISTANCE;
+    return distanceSensor.getRange() < CORAL_DISTANCE_SENSOR_DISTANCE;
   }
 
   // public boolean coralIsIn() {
@@ -100,6 +100,6 @@ public class CoralEffector extends SubsystemBase {
     // SmartDashboard.putNumber("Coral goal RPM", CoralGoalRPM);
     SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());
     SmartDashboard.putNumber("coral output", coralOutput);
-    SmartDashboard.getNumber("P", CoralEffectorConstants.KP);
+    SmartDashboard.getNumber("P", KP);
   }
 }

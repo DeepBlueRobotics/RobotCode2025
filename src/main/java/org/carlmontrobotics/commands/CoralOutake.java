@@ -4,7 +4,7 @@
 
 package org.carlmontrobotics.commands;
 
-import org.carlmontrobotics.Constants.CoralEffectorConstants;
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -25,7 +25,7 @@ public class CoralOutake extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    coralEffector.setMotorSpeed(CoralEffectorConstants.OUTPUT_SPEED);
+    coralEffector.setMotorSpeed(OUTPUT_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,6 +49,6 @@ public class CoralOutake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > CoralEffectorConstants.OUTAKE_TIME_OUT || coralEffector.distanceSensorSeesCoral()==false;
+    return timer.get() > OUTAKE_TIME_OUT || coralEffector.distanceSensorSeesCoral()==false;
   }
 }

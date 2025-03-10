@@ -5,15 +5,15 @@ import edu.wpi.first.wpilibj.StadiaController.Button;
 public final class Constants {
     public static final class OI {
         public static final class Driver {
-            public static final int PORT = 0;
+            public static final int DRIVE_CONTROLLER_PORT = 0;
         }
         public static final class Manipulator {
-            public static final int PORT = 1;
+            public static final int MANIUPLATOR_CONTROLLER_sPORT = 1;
             public static final int OUTAKE_BUTTON = Button.kA.value;
             public static final int INTAKE_BUTTON = Button.kB.value;
         }
     }
-    public static final class CoralEffectorConstants {
+    public static final class CoralEffectorc {
         public final static int CORAL_MOTOR_PORT = 1;
         public final static int CORAL_LIMIT_SWITCH_PORT = 0;
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
@@ -30,5 +30,7 @@ public final class Constants {
         public final static double INTAKE_TIME_OUT = 0.5;
         public final static double OUTAKE_TIME_OUT = 10;
         public final static double MANUAL_INTAKE_TIME_OUT = 1;
+
+        public final static int LIMIT_SWITCH_PORT = 7; //TODO: CHange
     }
 }
