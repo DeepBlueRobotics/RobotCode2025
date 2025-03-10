@@ -4,12 +4,14 @@
 
 package org.carlmontrobotics.subsystems;
 
-
 import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Seconds;
+
+import edu.wpi.first.math.util.Units;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -38,7 +40,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
@@ -89,9 +90,9 @@ public class Elevator extends SubsystemBase {
   
   //AH: need a config to run a test
   private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
-    Volts.of(1).per(Units.Seconds),//ramp rate, volts/sec
+    Volts.of(1).per(Seconds),//ramp rate, volts/sec
     Volts.of(1), //starting voltage, volts
-    Units.Seconds.of(5)//AH: maximum sysID test time
+    Seconds.of(5)//AH: maximum sysID test time
   );
 
   private ShuffleboardTab sysIdTab = Shuffleboard.getTab("Elevator SysID");
@@ -249,7 +250,7 @@ public class Elevator extends SubsystemBase {
 
 //safetyMethod is used to check during sysid if the elevator height and voltage are at the safe threshold
   private boolean safetyMethod(){
-    if (maxElevatorHeightInches == masterEncoder.getPosition()){
+    if (Units.inchesToMeters(maxElevatorHeightInches) == masterEncoder.getPosition()){
       return true;
     }
    //FIX THIS if (maxVelocityMetersPerSecond == masterEncoder.getVelocity()){
