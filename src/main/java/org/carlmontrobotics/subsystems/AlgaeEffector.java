@@ -128,7 +128,7 @@ public class AlgaeEffector extends SubsystemBase {
     private ArmFeedforward armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
     private void updateFeedforward() {
         armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
-        System.out.println("kG" + armkG);
+        System.out.println("kG" + armkG+"*********************");
     }
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
@@ -136,6 +136,7 @@ public class AlgaeEffector extends SubsystemBase {
         armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
        
     }
+
     //private SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(armkS, armkV, armkA);
     
     //private final SimpleMotorFeedforward armFeedforward = new SimpleMotorFeedforward(kS[ARM_ARRAY_ORDER], kV[ARM_ARRAY_ORDER], kA[ARM_ARRAY_ORDER]); //change
@@ -184,6 +185,7 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putData("Intake Algae", new GroundIntakeAlgae(this));
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
         SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
+        SmartDashboard.putData("UPDATE COMMAND",new InstantCommand(()->{updateArmPID();updateFeedforward();}));
 
         SmartDashboard.putData("Quasistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -283,7 +285,7 @@ public class AlgaeEffector extends SubsystemBase {
     public void setArmPosition() {
         
         currentPosition = getArmState();
-        System.out.println("origgoalpos: "+armGoalState.position);
+        // System.out.println("origgoalpos: "+armGoalState.position);
         TrapezoidProfile.State calculateTo = armTrapProfile.calculate(kDt, currentPosition, armGoalState); 
 
         armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(0), 0);
@@ -294,8 +296,9 @@ public class AlgaeEffector extends SubsystemBase {
             armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(getArmPos()), 0);
 
         }
-        System.out.println("outvolts: "+armFeedVolts);
-        System.out.println("err: "+(calculateTo.position-currentPosition.position));
+
+        // System.out.println("outvolts: "+armFeedVolts);
+        // System.out.println("err: "+(calculateTo.position-currentPosition.position));
         if (true || armMotor != null) {
             pidControllerArm.setReference(armGoalState.position, ControlType.kPosition,ClosedLoopSlot.kSlot0, armFeedVolts);
         }
