@@ -115,7 +115,7 @@ public class RobotContainer {
         //         () -> ProcessedAxisValue(driverController, Axis.kLeftX),
         //         () -> ProcessedAxisValue(driverController, Axis.kRightX),
         //         () -> driverController.getRawButton(OI.Driver.slowDriveButton), elevator));
-        //elevator.setDefaultCommand(new TeleopElevator(elevator, () -> ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
+        elevator.setDefaultCommand(new TeleopElevator(elevator, () -> ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
     }
 
     private void setBindingsDriver() {

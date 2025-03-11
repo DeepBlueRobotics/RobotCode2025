@@ -28,6 +28,7 @@ import static org.carlmontrobotics.Constants.Elevatorc.*;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
 
+import com.pathplanner.lib.path.GoalEndState;
 import com.playingwithfusion.CANVenom.BrakeCoastMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -94,6 +95,7 @@ public class Elevator extends SubsystemBase {
   //Meters.mutable(0);
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
   private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);//AH: ITS A HOLDER :o
+  private double goalHeight;
   //MetersPerSecond.mutable(0);
   
   //AH: need a config to run a test
@@ -115,6 +117,7 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
     
     encoderTimer = new Timer();
+    SmartDashboard.putNumber("Goal", goalHeight);
     //motors
     // masterMotor = new SparkMax(masterPort, MotorType.kBrushless);
     masterMotor = MotorControllerFactory.createSparkMax(masterPort, MotorConfig.NEO);
@@ -322,8 +325,12 @@ public class Elevator extends SubsystemBase {
     // if (elevatorAtMax()){
     //   SmartDashboard.putString("ElevatorState", "🔴STOP🔴");
     // }
-    //masterMotor.set(0);
+    // //masterMotor.set(0);
+    // goalHeight = SmartDashboard.getNumber("Goal", 0);
+    // System.out.println(goalHeight);
+    setGoal(.2);
     SmartDashboard.putBoolean("SAFE?", isBruh());
+
     if (elevatorAtMin()) {
       SmartDashboard.putString("ElevatorState", "🟢GO🟢");
     }
@@ -334,7 +341,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
-   // goToGoal();
+   goToGoal();
 
     if(isUNSAFE() && masterMotor.getBusVoltage() > 0) {
       //masterMotor.set(0); 
