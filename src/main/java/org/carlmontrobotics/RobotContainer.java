@@ -9,10 +9,22 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
+import java.util.function.BooleanSupplier;
+
+import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.Constants.OI.Manipulator;
+import org.carlmontrobotics.commands.CoralIntake;
+import org.carlmontrobotics.commands.CoralOuttake;
+import org.carlmontrobotics.commands.CoralIntakeManual;
+import org.carlmontrobotics.subsystems.CoralEffector;
+
+//limit switch
+import edu.wpi.first.wpilibj.DigitalInput;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,15 +37,24 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+//constats
+import static org.carlmontrobotics.Constants.CoralEffectorc.*;
+import static org.carlmontrobotics.Constants.OI.Driver.*;
+import static org.carlmontrobotics.Constants.OI.Manipulator.*;
+
 public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
-  public final GenericHID driverController = new GenericHID(OI.Driver.port);
-  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
+  public final GenericHID driverController = new GenericHID(DRIVE_CONTROLLER_PORT);
+  public final GenericHID manipulatorController = new GenericHID(MANIPULATOR_CONTROLLER_PORT);
+  public final CoralEffector coralEffector = new CoralEffector();
+
+  public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
 
   public RobotContainer() {
-
+    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
+    SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
     setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
@@ -49,7 +70,23 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {}
-  private void setBindingsManipulator() {}
+  private void setBindingsManipulator() {
+    // new JoystickButton(manipulatorController, OI.Manipulator.OUTAKE_BUTTON)
+    //   .whileTrue(new CoralOutake(coralEffector))
+    //   .whileFalse(new CoralIntake(coralEffector));
+    // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
+    //   .whileTrue(new ManualCoralIntake());
+    axisTrigger(manipulatorController, Axis.kLeftTrigger)
+    .whileTrue(new CoralOuttake(coralEffector));
+
+    
+    axisTrigger(manipulatorController, Axis.kRightTrigger)
+      .whileTrue(new CoralIntakeManual(coralEffector));
+    
+    new JoystickButton(manipulatorController, (Button.kA.value)).whileTrue(new CoralIntake(coralEffector));
+  }
+    
+  
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
@@ -88,5 +125,9 @@ public class RobotContainer {
    */
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
+  }
+
+  private Trigger axisTrigger(GenericHID controller, Axis axis) {
+    return new Trigger( (BooleanSupplier)(() -> Math.abs(getStickValue(controller, axis)) > 0.2) );
   }
 }
