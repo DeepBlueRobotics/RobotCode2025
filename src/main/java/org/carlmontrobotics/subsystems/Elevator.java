@@ -222,13 +222,12 @@ public class Elevator extends SubsystemBase {
   // }
 
   public void goToGoal() {
-     System.out.println("GOing to GOAL");
-     System.out.println(heightGoal);
-    double voltage = pidElevatorController.calculate(masterEncoder.getVelocity()) +
-    feedforwardElevatorController.calculate(masterEncoder.getVelocity());
-    System.out.println(voltage);
-    masterMotor.setVoltage(voltage);
-    
+    System.out.println("GOing to GOAL");
+    System.out.println(heightGoal);
+    double vel = pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal);
+    double feed = feedforwardElevatorController.calculate(vel);
+    masterMotor.setVoltage(vel + feed);
+
   }
 
   public void setSpeed(double speed){
