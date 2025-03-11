@@ -317,7 +317,7 @@ public final class Constants {
 		public static final int masterPort = 20;
 		public static final int followerPort = 21; // inverted
 		//public static final int elevatorTopLimitSwitchPort = 1;
-		public static final int elevatorBottomLimitSwitchPort = 2;
+		public static final int elevatorBottomLimitSwitchPort = 0;
 		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
 
 		// Config
@@ -331,7 +331,7 @@ public final class Constants {
 		public static final double masterVelocityConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)*1.0/60);
 		public static final double maxElevatorHeightInches = 53.2;
 		public static final double minElevatorHeightInches = 0;
-
+		
         //PID
         public static final double kP = 1;
         public static final double kI = 0;

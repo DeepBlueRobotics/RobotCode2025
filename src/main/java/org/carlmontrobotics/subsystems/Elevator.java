@@ -15,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 import org.carlmontrobotics.Constants;
@@ -68,6 +69,7 @@ public class Elevator extends SubsystemBase {
   // Limit Switches
   // private DigitalInput topLimitSwitch; no upper limit switch
   private DigitalInput bottomLimitSwitch;
+  private double maxVelocityMetersPerSecond = 10;
   //Vars
   private double heightGoal;
   private int elevatorState;
@@ -75,9 +77,12 @@ public class Elevator extends SubsystemBase {
   private PIDController pidElevatorController;
   private ElevatorFeedforward feedforwardElevatorController;
   private Timer timer;
-  
+  private Timer encoderTimer; 
   private final SysIdRoutine sysIdRoutine;
-
+  private double lastMeasuredTime;
+  private double currTime;
+  private double lastElevPos;
+  private double lastElevVel;
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
   private final MutVoltage[] m_appliedVoltage = new MutVoltage[2];//AH: its a holder, not a number.
   //Volts.mutable(0);
@@ -105,6 +110,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public Elevator() {
+    encoderTimer = new Timer();
     //motors
     // masterMotor = new SparkMax(masterPort, MotorType.kBrushless);
     masterMotor = MotorControllerFactory.createSparkMax(masterPort, MotorConfig.NEO);
@@ -247,15 +253,33 @@ public class Elevator extends SubsystemBase {
     }
 
   }
+  //private boolean isEncoderDisconnected() {
+  //   double currentElevPos = getPos();
+  //   double currentRelativeElevVel = masterEncoder.getVelocity();
+    
+  //   if ((currentRelativeElevVel != 0)) {
+  //           lastMeasuredTime = currTime;
+  //           lastElevPos = currentElevPos;
+  //           lastElevVel = currentRelativeElevVel;
+  //           return false;
+  //       } else {
+  //         if(lastMeasuredTime > currTime+1 && lastElevPos == currentElevPos) {
+  //           return true;
+  //         }
+  //       }
+  //       // currTime - lastMeasuredTime <
+  //                                    // DISCONNECTED_ENCODER_TIMEOUT_SEC;
+
+        
+  // }
 
 //safetyMethod is used to check during sysid if the elevator height and voltage are at the safe threshold
-  private boolean safetyMethod(){
-    if (Units.inchesToMeters(maxElevatorHeightInches) == masterEncoder.getPosition()){
+  private boolean isUNSAFE(){
+    if (Units.inchesToMeters(maxElevatorHeightInches) >= masterEncoder.getPosition() || maxVelocityMetersPerSecond >= masterEncoder.getVelocity() || Units.inchesToMeters(minElevatorHeightInches) <=masterEncoder.getPosition()){
       return true;
     }
-   //FIX THIS if (maxVelocityMetersPerSecond == masterEncoder.getVelocity()){
-      return true;
-    }
+    return false;
+  }
 
   
   /**
@@ -264,7 +288,8 @@ public class Elevator extends SubsystemBase {
    * @param direction The direction (forward or reverse) to run the test in
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction);//.onlyWhile(safetyMethod(false));
+    // BooleanSupplier bruh = Elevator::safetyMethod();
+    return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isUNSAFE());
     //use onlyWhile to decorate the command and therefore add safety limits (for height and voltage)
     //TO-DO: fix safety method (add velocity) and also other bugs
   }
@@ -275,7 +300,7 @@ public class Elevator extends SubsystemBase {
    * @param direction The direction (forward or reverse) to run the test in
    */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction);
+    return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isUNSAFE());
   } 
   public double getEleVel() {
     return masterEncoder.getVelocity();
@@ -297,5 +322,12 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Since Calibrated", timer.get());
     updateEncoders();
     getToGoal();
+    if(isUNSAFE() && masterMotor.getBusVoltage() > 0) {
+      masterMotor.set(0); 
+    }
+  //   if (isEncoderDisconnected()) {
+  //     masterMotor.set(0);
+      
+  // }
   }
 }
