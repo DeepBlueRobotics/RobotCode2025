@@ -34,7 +34,7 @@ import com.revrobotics.spark.SparkBase;
 public class CoralEffector extends SubsystemBase {
   
     public SparkFlex coralMotor = new SparkFlex(CORAL_MOTOR_PORT, MotorType.kBrushless);
-    public DigitalInput coralLimitSwitch = new DigitalInput(CORAL_LIMIT_SWITCH_PORT);
+    // public DigitalInput coralLimitSwitch = new DigitalInput(CORAL_LIMIT_SWITCH_PORT);
     //FIXME ADD THE LIMIT SWITCH!!
     public TimeOfFlight distanceSensor = new TimeOfFlight(CORAL_DISTANCE_SENSOR_PORT);
     
