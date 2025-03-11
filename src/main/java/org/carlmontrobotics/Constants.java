@@ -3,6 +3,11 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package org.carlmontrobotics;
 
 import org.carlmontrobotics.lib199.swerve.SwerveConfig;
@@ -26,6 +31,37 @@ import edu.wpi.first.wpilibj.util.Color;
 
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
+
+/**
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
+ * globally (i.e. public static). Do not put anything functional in this class.
+ *
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
+ * constants are needed, to reduce verbosity.
+ */
+import edu.wpi.first.math.util.Units;
+
+import org.carlmontrobotics.lib199.swerve.SwerveConfig;
+
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.path.PathConstraints;
+
+import static org.carlmontrobotics.Config.CONFIG;
+
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController.Axis;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj.util.Color;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -410,5 +446,32 @@ public final class Constants {
 
 		public static final double ARM_ERROR_MARGIN = 1;
 
+	}
+
+	public static final class Limelightc {
+		public static final String CORAL_LL = "limelight-coral";
+		public static final String REEF_LL = "limelight-reef";
+
+		public static final int[] CORAL_VALID_IDS = { 1, 2, 12, 13 };
+		public static final int[] REEF_VALID_IDS = { 6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22 };
+		public static final double CORAL_MOUNT_ANGLE = 25; // pitch
+		public static final double REEF_MOUNT_ANGLE = 15; // pitch
+		public static final double CORAL_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; // TODO: ask brandon
+		public static final double REEF_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; // TODO: ask brandon
+		// TODO: CHANGE NUMBERS ON LIMELIGHT INTERFACE
+
+		public static final double LEFT_TO_CORAL_BRANCH = Units.inchesToMeters(-6.593);
+		public static final double RIGHT_TO_CORAL_BRANCH = Units.inchesToMeters(6.345);
+
+		public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
+		public static final double STD_DEV_Y_METERS = 0.7; // uncertainty of 0.7 meters on the field
+		public static final int STD_DEV_HEADING_RADS = 9999999; // (gyro) heading standard deviation, set extremely high
+
+		public static final class Apriltagc {
+			public static final double CORAL_HEIGHT_METERS = Units.inchesToMeters(47.88); // Going to re-assume that
+																							// this is for Apriltag
+																							// center.
+			public static final double REEF_HEIGHT_METERS = Units.inchesToMeters(8.75); // Also center of Reef
+		}
 	}
 }
