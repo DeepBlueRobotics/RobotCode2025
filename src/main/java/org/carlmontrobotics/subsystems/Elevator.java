@@ -76,7 +76,7 @@ public class Elevator extends SubsystemBase {
   //PID
   private PIDController pidElevatorController;
   private ElevatorFeedforward feedforwardElevatorController;
-  private Timer timer;
+  // private Timer timer;
   private Timer encoderTimer; 
   private final SysIdRoutine sysIdRoutine;
   private double lastMeasuredTime;
@@ -124,8 +124,8 @@ public class Elevator extends SubsystemBase {
     //Calibration
     // topLimitSwitch = new DigitalInput(elevatorTopLimitSwitchPort);
     bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
-    timer = new Timer();
-    timer.start();
+    // timer = new Timer();
+    // timer.start();
 
 
     //PID
@@ -196,7 +196,7 @@ public class Elevator extends SubsystemBase {
   }
   
   public double getCurrentHeight() {
-    return masterEncoder.getPosition();
+    return masterEncoder.getPosition();//conversion done in config/constants
   }
 
   // public boolean elevatorAtMax() {
@@ -204,23 +204,23 @@ public class Elevator extends SubsystemBase {
   // }
 
   public boolean elevatorAtMin() {
-    return !bottomLimitSwitch.get();
+    return !bottomLimitSwitch.get();//limit switches are opposite
   }
 
-  public void updateEncoders() {
-    // if (elevatorAtMax()) {
-    //   masterEncoder.setPosition(maxElevatorHeightInches);
-    //   timer.reset();
-    //   timer.start();
-    // }
-    if (elevatorAtMin()) {
-      masterEncoder.setPosition(minElevatorHeightInches);
-      timer.reset();
-      timer.start();
-    }
-  }
+  // public void updateEncoders() {//what the fuck??
+  //   // if (elevatorAtMax()) {
+  //   //   masterEncoder.setPosition(maxElevatorHeightInches);
+  //   //   timer.reset();
+  //   //   timer.start();
+  //   // }
+  //   if (elevatorAtMin()) {
+  //     masterEncoder.setPosition(minElevatorHeightInches);
+  //     timer.reset();
+  //     timer.start();
+  //   }
+  // }
 
-  public void getToGoal() {
+  public void goToGoal() {
     if(heightGoal<masterEncoder.getPosition()) {
     masterMotor.setVoltage(
       pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal) + 
@@ -236,9 +236,9 @@ public class Elevator extends SubsystemBase {
     masterMotor.set(0);
   }
 
-  public double getPos() {
-    return masterEncoder.getPosition();
-  }
+  // public double getPos() {
+  //   return masterEncoder.getPosition();
+  // }
 
   public boolean atGoalHeight() {
     // if (heightGoal == maxElevatorHeightInches) {
@@ -249,7 +249,7 @@ public class Elevator extends SubsystemBase {
     }
     
     else {
-      return (Math.abs(getPos()) - heightGoal <= elevatorTolerance);
+      return (Math.abs(getCurrentHeight() - heightGoal) <= elevatorTolerance);
     }
 
   }
@@ -274,11 +274,17 @@ public class Elevator extends SubsystemBase {
   // }
 
 //safetyMethod is used to check during sysid if the elevator height and voltage are at the safe threshold
-  private boolean isUNSAFE(){
-    if (Units.inchesToMeters(maxElevatorHeightInches) >= masterEncoder.getPosition() || maxVelocityMetersPerSecond >= masterEncoder.getVelocity() || Units.inchesToMeters(minElevatorHeightInches) <=masterEncoder.getPosition()){
-      return true;
+  public boolean isUNSAFE(){
+    if (Units.inchesToMeters(maxElevatorHeightInches) >= masterEncoder.getPosition() 
+    || maxVelocityMetersPerSecond <= masterEncoder.getVelocity() 
+    || Units.inchesToMeters(minElevatorHeightInches) <=masterEncoder.getPosition()){
+      return false;
     }
-    return false;
+    return true;
+  }
+
+  public boolean isSAFE() {
+    return !isUNSAFE();
   }
 
   
@@ -289,7 +295,7 @@ public class Elevator extends SubsystemBase {
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     // BooleanSupplier bruh = Elevator::safetyMethod();
-    return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isUNSAFE());
+    return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isSAFE());
     //use onlyWhile to decorate the command and therefore add safety limits (for height and voltage)
     //TO-DO: fix safety method (add velocity) and also other bugs
   }
@@ -300,7 +306,7 @@ public class Elevator extends SubsystemBase {
    * @param direction The direction (forward or reverse) to run the test in
    */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isUNSAFE());
+    return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isSAFE());
   } 
   public double getEleVel() {
     return masterEncoder.getVelocity();
@@ -316,14 +322,18 @@ public class Elevator extends SubsystemBase {
       SmartDashboard.putString("ElevatorState", "🟢GO🟢");
     }
     else {
-      SmartDashboard.putString("ElevatorState", "🟡CAUTION🟡");
-    }
+      SmartDashboard.putString("ElevatorState", "🟡AT MIN🟡");
+    }//add one for max height
+    //add one for if unsafe
     SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
-    SmartDashboard.putNumber("Since Calibrated", timer.get());
-    updateEncoders();
-    getToGoal();
+   // SmartDashboard.putNumber("Since Calibrated", timer.get());
+    // updateEncoders();
+    goToGoal();
+
     if(isUNSAFE() && masterMotor.getBusVoltage() > 0) {
       masterMotor.set(0); 
+      System.err.println("Bad Bad nightmare bad. Elevator unsafe");
+      //hey tell them they're unsafe and a bad happened
     }
   //   if (isEncoderDisconnected()) {
   //     masterMotor.set(0);
