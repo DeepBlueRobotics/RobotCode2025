@@ -37,18 +37,21 @@ public class TeleopDrive extends Command {
   private boolean babyMode;
   Elevator elevator;
   AlgaeEffector arm;
-  private double height = elevator.getCurrentHeight();
-  
+  private double height;
   /**
    * Creates a new TeleopDrive.
    */
+  
+ 
   public TeleopDrive(Drivetrain drivetrain, DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rcw,
-      BooleanSupplier slow) {
+      BooleanSupplier slow, Elevator elevator) {
     addRequirements(this.drivetrain = drivetrain);
     this.fwd = fwd;
     this.str = str;
     this.rcw = rcw;
     this.slow = slow;
+    addRequirements(this.elevator = elevator);
+    this.height = elevator.getCurrentHeight();
   }
 
   // Called when the command is initially scheduled.
@@ -69,7 +72,9 @@ public class TeleopDrive extends Command {
     double[] speeds = getRequestedSpeeds();
     // SmartDashboard.putNumber("Elapsed time", currentTime - prevTimestamp);
     prevTimestamp = currentTime;
+    
     babyMode = SmartDashboard.getBoolean("babymode", false);
+    
     // kSlowDriveRotation = SmartDashboard.getNumber("slow turn const", kSlowDriveRotation);
     // kSlowDriveSpeed = SmartDashboard.getNumber("slow speed const", kSlowDriveSpeed);
     // kNormalDriveRotation = SmartDashboard.getNumber("normal turn const", kNormalDriveRotation);
