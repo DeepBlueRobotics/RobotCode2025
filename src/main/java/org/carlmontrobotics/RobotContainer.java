@@ -102,9 +102,9 @@ public class RobotContainer {
   public RobotContainer() {
     setBindingsDriver();
     setBindingsManipulator();
-    RegisterCustomAutos();
     RegisterAutoCommands();
     autoChooser = AutoBuilder.buildAutoChooser();
+    RegisterCustomAutos();
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -139,6 +139,7 @@ public class RobotContainer {
       //NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coralEffector));
     }
     private void RegisterCustomAutos(){
+      SmartDashboard.putData(new LastResortAuto(drivetrain));
       autoChooser.addOption("LastResortAuto", new LastResortAuto(drivetrain));
     }
 
