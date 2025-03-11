@@ -3,7 +3,6 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.UsbCameraInfo;
 import edu.wpi.first.util.PixelFormat;
 public class Camera {
     public Camera(){

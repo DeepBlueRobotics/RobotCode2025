@@ -10,35 +10,6 @@ import org.carlmontrobotics.subsystems.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.IdealStartingState;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
-
-import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
-import org.carlmontrobotics.Constants.OI;
-import org.carlmontrobotics.Constants.OI.Manipulator;
-import org.carlmontrobotics.Constants.OI.Manipulator.*;
-import org.carlmontrobotics.commands.*;
-import org.carlmontrobotics.subsystems.*;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.IdealStartingState;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
-
-import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
-import org.carlmontrobotics.Constants.OI;
-import org.carlmontrobotics.Constants.OI.Manipulator;
-import org.carlmontrobotics.Constants.OI.Manipulator.*;
-import org.carlmontrobotics.commands.*;
-import static org.carlmontrobotics.Constants.OI;
-
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 
@@ -47,6 +18,12 @@ import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI.Manipulator.*;
+import org.carlmontrobotics.commands.OuttakeAlgae;
+import org.carlmontrobotics.commands.ShootAlgae;
+import org.carlmontrobotics.subsystems.AlgaeEffector;
+import org.carlmontrobotics.commands.ArmToPosition;
+import org.carlmontrobotics.commands.DealgaficationIntake;
+import org.carlmontrobotics.commands.GroundIntakeAlgae;
 
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
 
@@ -56,32 +33,22 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 //control bindings
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
     private static boolean babyMode = false;
@@ -141,6 +108,7 @@ public class RobotContainer {
             autoSelectorTab.add(autoSelector).withSize(2, 1);
         }
 
+        SmartDashboard.putData(algaeEffector);
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();

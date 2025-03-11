@@ -1,11 +1,12 @@
 package org.carlmontrobotics.subsystems;
 
+import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.commands.DealgaficationIntake;
 import org.carlmontrobotics.commands.GroundIntakeAlgae;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.commands.ShootAlgae;
-import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
+import org.carlmontrobotics.lib199.MotorConfig;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -139,10 +140,17 @@ public class AlgaeEffector extends SubsystemBase {
         setPoint = getArmState();
         armGoalState = armTrapProfile.calculate(kDt, setPoint, armGoalState);
 
+<<<<<<< HEAD
         armFeedVolts = armFeedforward.calculate(armGoalState.velocity);
         if ((getArmPos() < LOWER_ANGLE_LIMIT)
                 || (getArmPos() > UPPER_ANGLE_LIMIT)) {
             armFeedVolts = armFeedforward.calculate(getArmVel());
+=======
+        armFeedVolts = armFeedforward.calculate(armGoalState.position, armGoalState.velocity);
+        if ((getArmPos() < LOWER_ANGLE_LIMIT)
+                || (getArmPos() > UPPER_ANGLE_LIMIT)) {
+            armFeedVolts = armFeedforward.calculate(getArmPos(), 0);
+>>>>>>> elevatorCodeKarena
 
         }
 

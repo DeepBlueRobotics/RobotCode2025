@@ -10,57 +10,22 @@
 
 package org.carlmontrobotics;
 
-import org.carlmontrobotics.lib199.swerve.SwerveConfig;
-
-import com.pathplanner.lib.config.RobotConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import org.carlmontrobotics.lib199.swerve.SwerveConfig;
-import com.pathplanner.lib.path.PathConstraints;
-
-import static org.carlmontrobotics.Config.CONFIG;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController.Axis;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj.util.Color;
-
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
-
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController.Axis;
+import edu.wpi.first.wpilibj.XboxController.Button;
 
 import org.carlmontrobotics.lib199.swerve.SwerveConfig;
 
-import com.pathplanner.lib.config.RobotConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import com.pathplanner.lib.path.PathConstraints;
 
 import static org.carlmontrobotics.Config.CONFIG;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController.Axis;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj.util.Color;
 
 
 /**
