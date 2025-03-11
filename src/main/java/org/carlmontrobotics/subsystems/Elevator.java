@@ -28,6 +28,7 @@ import static org.carlmontrobotics.Constants.Elevatorc.*;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
 
+import com.playingwithfusion.CANVenom.BrakeCoastMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -60,11 +61,11 @@ public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   //Master
   private SparkMax masterMotor;
-  private SparkMaxConfig masterConfig;
+  private SparkMaxConfig masterConfig = new SparkMaxConfig();
   private RelativeEncoder masterEncoder;
   //Follower
   private SparkMax followerMotor;
-  private SparkMaxConfig followerConfig;
+  private SparkMaxConfig followerConfig = new SparkMaxConfig();
   private RelativeEncoder followerEncoder;
   // Limit Switches
   // private DigitalInput topLimitSwitch; no upper limit switch
@@ -123,7 +124,7 @@ public class Elevator extends SubsystemBase {
     configureMotors();
     //Calibration
     // topLimitSwitch = new DigitalInput(elevatorTopLimitSwitchPort);
-    bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
+   bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
     // timer = new Timer();
     // timer.start();
 

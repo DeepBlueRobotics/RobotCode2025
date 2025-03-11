@@ -34,19 +34,21 @@ public class TeleopDrive extends Command {
   private boolean babyMode;
   Elevator elevator;
   AlgaeEffector arm;
-  private double height = elevator.getCurrentHeight();
+  private double height;
   /**
    * Creates a new TeleopDrive.
    */
   
  
   public TeleopDrive(Drivetrain drivetrain, DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rcw,
-      BooleanSupplier slow) {
+      BooleanSupplier slow, Elevator elevator) {
     addRequirements(this.drivetrain = drivetrain);
     this.fwd = fwd;
     this.str = str;
     this.rcw = rcw;
     this.slow = slow;
+    this.elevator = elevator;
+    this.height = elevator.getCurrentHeight();
   }
 
   // Called when the command is initially scheduled.

@@ -55,7 +55,7 @@ public class RobotContainer {
     public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
     public final GenericHID manipulatorController = new GenericHID(Manipulator.manipulatorPort);
 
-    private final Drivetrain drivetrain = new Drivetrain();
+    //private final Drivetrain drivetrain = new Drivetrain();
 
     /* These are assumed to be equal to the AUTO ames in pathplanner */
     /* These must be equal to the pathPlanner path names from the GUI! */
@@ -65,43 +65,43 @@ public class RobotContainer {
     // the last auto is hard-coded to go straight. since we have __3__ Autos, port 4
     // is simplePz
     // straight
-    private List<Command> autoCommands;
-    private SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
+    // private List<Command> autoCommands;
+    // private SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
 
-    private boolean hasSetupAutos = false;
-    private final String[] autoNames = new String[] {};
-    private final AlgaeEffector algaeEffector = new AlgaeEffector();
-    private final Elevator elevator = new Elevator();
+    // private boolean hasSetupAutos = false;
+    // private final String[] autoNames = new String[] {};
+    // private final AlgaeEffector algaeEffector = new AlgaeEffector();
+     private final Elevator elevator = new Elevator();
 
     public RobotContainer() {
         {
             // Put any configuration overrides to the dashboard and the terminal
-            SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
-            SmartDashboard.putData(drivetrain);
-            System.out.println(Config.CONFIG);
+            // SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
+            // SmartDashboard.putData(drivetrain);
+            // System.out.println(Config.CONFIG);
 
-            SmartDashboard.putData("BuildConstants", BuildInfo.getInstance());
+            // SmartDashboard.putData("BuildConstants", BuildInfo.getInstance());
 
-            SmartDashboard.setDefaultBoolean("babymode", babyMode);
-            SmartDashboard.setPersistent("babymode");
-            // safe auto setup... stuff in setupAutos() is not safe to run here - will break
-            // robot
-            registerAutoCommands();
-            SmartDashboard.putData(autoSelector);
-            SmartDashboard.setPersistent("SendableChooser[0]");
+            // SmartDashboard.setDefaultBoolean("babymode", babyMode);
+            // SmartDashboard.setPersistent("babymode");
+            // // safe auto setup... stuff in setupAutos() is not safe to run here - will break
+            // // robot
+            // registerAutoCommands();
+            // SmartDashboard.putData(autoSelector);
+            // SmartDashboard.setPersistent("SendableChooser[0]");
 
-            autoSelector.addOption("Nothing", 0);
-            autoSelector.addOption("Raw Forward", 1);
-            autoSelector.addOption("PP Simple Forward", 2);// index corresponds to index in autoCommands[]
+            // autoSelector.addOption("Nothing", 0);
+            // autoSelector.addOption("Raw Forward", 1);
+            // autoSelector.addOption("PP Simple Forward", 2);// index corresponds to index in autoCommands[]
 
-            int i = 3;
-            for (String n : autoNames) {
-                autoSelector.addOption(n, i);
-                i++;
-            }
+            // int i = 3;
+            // for (String n : autoNames) {
+            //     autoSelector.addOption(n, i);
+            //     i++;
+            // }
 
-            ShuffleboardTab autoSelectorTab = Shuffleboard.getTab("Auto Chooser Tab");
-            autoSelectorTab.add(autoSelector).withSize(2, 1);
+            // ShuffleboardTab autoSelectorTab = Shuffleboard.getTab("Auto Chooser Tab");
+            // autoSelectorTab.add(autoSelector).withSize(2, 1);
         }
 
         setDefaultCommands();
@@ -110,11 +110,11 @@ public class RobotContainer {
     }
 
     private void setDefaultCommands() {
-        drivetrain.setDefaultCommand(new TeleopDrive(drivetrain,
-                () -> ProcessedAxisValue(driverController, Axis.kLeftY),
-                () -> ProcessedAxisValue(driverController, Axis.kLeftX),
-                () -> ProcessedAxisValue(driverController, Axis.kRightX),
-                () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
+        // drivetrain.setDefaultCommand(new TeleopDrive(drivetrain,
+        //         () -> ProcessedAxisValue(driverController, Axis.kLeftY),
+        //         () -> ProcessedAxisValue(driverController, Axis.kLeftX),
+        //         () -> ProcessedAxisValue(driverController, Axis.kRightX),
+        //         () -> driverController.getRawButton(OI.Driver.slowDriveButton), elevator));
         elevator.setDefaultCommand(new TeleopElevator(elevator, () -> ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
     }
 
@@ -136,27 +136,27 @@ public class RobotContainer {
 
     private void setBindingsManipulator() {
         // intake
-        new JoystickButton(manipulatorController, INTAKE_BUMPER)
-                .whileTrue(new SequentialCommandGroup(
-                        new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
-                        new GroundIntakeAlgae(algaeEffector)));
+        // new JoystickButton(manipulatorController, INTAKE_BUMPER)
+        //         .whileTrue(new SequentialCommandGroup(
+        //                 new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
+        //                 new GroundIntakeAlgae(algaeEffector)));
 
         // outake
 
         // dealgify
 
-        new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
-                .whileFalse(new OuttakeAlgae(algaeEffector));
+    //     new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
+    //             .whileFalse(new OuttakeAlgae(algaeEffector));
 
-        new JoystickButton(manipulatorController, XboxController.Button.kA.value)
-                .onTrue(new DealgaficationIntake(algaeEffector));
+    //     new JoystickButton(manipulatorController, XboxController.Button.kA.value)
+    //             .onTrue(new DealgaficationIntake(algaeEffector));
 
-        new JoystickButton(manipulatorController, XboxController.Button.kB.value)
-                .onTrue(new ShootAlgae(algaeEffector));
-        new JoystickButton(manipulatorController, XboxController.Button.kY.value)
-                .onTrue(new InstantCommand(() -> {
-                    algaeEffector.stopMotors();
-                }));
+    //     new JoystickButton(manipulatorController, XboxController.Button.kB.value)
+    //             .onTrue(new ShootAlgae(algaeEffector));
+    //     new JoystickButton(manipulatorController, XboxController.Button.kY.value)
+    //             .onTrue(new InstantCommand(() -> {
+    //                 algaeEffector.stopMotors();
+    //             }));
     }
 
     /**
@@ -238,13 +238,13 @@ public class RobotContainer {
 
     private void setupAutos() {
         //// CREATING PATHS from files
-        if (!hasSetupAutos) {
-            autoCommands = new ArrayList<Command>();// clear old/nonexistent autos
+        // if (!hasSetupAutos) {
+        //     autoCommands = new ArrayList<Command>();// clear old/nonexistent autos
 
-            for (int i = 0; i < autoNames.length; i++) {
-                String name = autoNames[i];
+        //     for (int i = 0; i < autoNames.length; i++) {
+        //         String name = autoNames[i];
 
-                autoCommands.add(new PathPlannerAuto(name));
+        //         autoCommands.add(new PathPlannerAuto(name));
 
                 /*
                  * // Charles' opinion: we shouldn't have it path find to the starting pose at
@@ -257,21 +257,21 @@ public class RobotContainer {
                  * Autoc.pathConstraints),
                  * new PathPlannerAuto(name));
                  */
-            }
-            hasSetupAutos = true;
+            //}
+        //     hasSetupAutos = true;
 
-            // NOTHING
-            autoCommands.add(0, new PrintCommand("Running NULL Auto!"));
-            // RAW FORWARD command
-            // autoCommands.add(1, new SequentialCommandGroup(
-            // new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), new
-            // WaitCommand(0.5),
-            // new LastResortAuto(drivetrain)));
-            // dumb PP forward command
-            autoCommands.add(2, new PrintCommand("PPSimpleAuto not Configured!"));
-        }
-        // force regeneration each auto call
-        autoCommands.set(2, constructPPSimpleAuto());// overwrite this slot each time auto runs
+        //     // NOTHING
+        //     autoCommands.add(0, new PrintCommand("Running NULL Auto!"));
+        //     // RAW FORWARD command
+        //     // autoCommands.add(1, new SequentialCommandGroup(
+        //     // new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), new
+        //     // WaitCommand(0.5),
+        //     // new LastResortAuto(drivetrain)));
+        //     // dumb PP forward command
+        //     autoCommands.add(2, new PrintCommand("PPSimpleAuto not Configured!"));
+        // }
+        // // force regeneration each auto call
+        // autoCommands.set(2, constructPPSimpleAuto());// overwrite this slot each time auto runs
     }
 
     public Command constructPPSimpleAuto() {
@@ -283,40 +283,41 @@ public class RobotContainer {
          * (guesses!)
          */
         // default origin is on BLUE ALIANCE DRIVER RIGHT CORNER
-        Pose2d currPos = drivetrain.getPose();
+        // Pose2d currPos = drivetrain.getPose();
 
         // FIXME running red PP file autos seems to break something, so the robot
         // drivetrain drives in the wrong direction.
         // running blue PP autos is fine though
         // Note: alliance detection and path generation work correctly!
         // Solution: Redeploy after auto.
-        Pose2d endPos = (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
-                ? currPos.transformBy(new Transform2d(1, 0, new Rotation2d(0)))
-                : currPos.transformBy(new Transform2d(-1, 0, new Rotation2d(0)));
+        // Pose2d endPos = (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
+        //         ? currPos.transformBy(new Transform2d(1, 0, new Rotation2d(0)))
+        //         : currPos.transformBy(new Transform2d(-1, 0, new Rotation2d(0)));
 
-        List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currPos, endPos);
+        // List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currPos, endPos);
 
-        // Create the path using the bezier points created above, /* m/s, m/s^2, rad/s,
-        // rad/s^2 */
-        PathPlannerPath path = new PathPlannerPath(bezierPoints,
-                Autoc.pathConstraints, null, new GoalEndState(0, currPos.getRotation()));
+        // // Create the path using the bezier points created above, /* m/s, m/s^2, rad/s,
+        // // rad/s^2 */
+        // PathPlannerPath path = new PathPlannerPath(bezierPoints,
+        //         Autoc.pathConstraints, null, new GoalEndState(0, currPos.getRotation()));
 
-        path.preventFlipping = false;// don't flip, we do that manually already.
+        // path.preventFlipping = false;// don't flip, we do that manually already.
 
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), // align drivetrain wheels.
-                AutoBuilder.followPath(path).beforeStarting(new WaitCommand(1)));
+        // return new SequentialCommandGroup(
+        //         new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), // align drivetrain wheels.
+        //         AutoBuilder.followPath(path).beforeStarting(new WaitCommand(1)));
+        return new PrintCommand("I HAT EEEYTHI");
     }
 
     public Command getAutonomousCommand() {
-        setupAutos();
+        // setupAutos();
 
-        Integer autoIndex = autoSelector.getSelected();
+        // Integer autoIndex = autoSelector.getSelected();
 
-        if (autoIndex != null && autoIndex != 0) {
-            new PrintCommand("Running selected auto: " + autoSelector.toString());
-            return autoCommands.get(autoIndex.intValue());
-        }
+        // if (autoIndex != null && autoIndex != 0) {
+        //     new PrintCommand("Running selected auto: " + autoSelector.toString());
+        //     return autoCommands.get(autoIndex.intValue());
+        // }
         return new PrintCommand("No auto :(");
     }
 }

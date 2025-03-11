@@ -274,12 +274,12 @@ public final class Constants {
 
 		public static final class Driver {
 			public static final int driverPort = 0;
-			public static final int EFFECTOR_TOP_MOTOR_ID = 31;
-			public static final int EFFECTOR_BOTTOM_MOTOR_ID = 33;
-			public static final int EFFECTOR_PINCHER_MOTOR_ID = 31;
-			public static final int EFFECTOR_ARM_MOTOR_ID = 34;
-			public static final int effectorDistanceSensorID = 5;
-			/*
+			// public static final int EFFECTOR_TOP_MOTOR_ID = 31;
+			// public static final int EFFECTOR_BOTTOM_MOTOR_ID = 33;
+			// public static final int EFFECTOR_PINCHER_MOTOR_ID = 31;
+			// public static final int EFFECTOR_ARM_MOTOR_ID = 34;
+			// public static final int effectorDistanceSensorID = 5;
+		 /*
 			 * public static final int A = 1;
 			 * public static final int B = 2;
 			 * public static final int X = 3;
@@ -383,10 +383,10 @@ public final class Constants {
 
 		// EFFECTOR
 
-		public static final int UPPER_MOTOR_PORT = 1;
-		public static final int LOWER_MOTOR_PORT = 2;
-		public static final int PINCH_MOTOR_PORT = 3;
-		public static final int ARM_MOTOR_PORT = 4;
+		public static final int UPPER_MOTOR_PORT = 32;
+		public static final int LOWER_MOTOR_PORT =33;
+		public static final int PINCH_MOTOR_PORT = 31;
+		public static final int ARM_MOTOR_PORT = 34;
 		public static final int aChannelEnc = 0;
 		public static final int bChannelEnc = 1;
 
