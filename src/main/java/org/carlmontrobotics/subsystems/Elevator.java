@@ -42,6 +42,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
@@ -70,7 +72,7 @@ public class Elevator extends SubsystemBase {
   // Limit Switches
   // private DigitalInput topLimitSwitch; no upper limit switch
   private DigitalInput bottomLimitSwitch;
-  private double maxVelocityMetersPerSecond = 10;
+  private double maxVelocityMetersPerSecond = 5;
   //Vars
   private double heightGoal;
   private int elevatorState;
@@ -85,13 +87,13 @@ public class Elevator extends SubsystemBase {
   private double lastElevPos;
   private double lastElevVel;
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
-  private final MutVoltage[] m_appliedVoltage = new MutVoltage[2];//AH: its a holder, not a number.
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0);//AH: its a holder, not a number.
   //Volts.mutable(0);
   // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
-  private final MutDistance[] m_distance = new MutDistance[2];//AH: 2 for 2 elevator motors
+  private final MutDistance m_distance = Meters.mutable(0);//AH: 2 for 2 elevator motors
   //Meters.mutable(0);
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
-  private final MutLinearVelocity[] m_velocity = new MutLinearVelocity[2];//AH: ITS A HOLDER :o
+  private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);//AH: ITS A HOLDER :o
   //MetersPerSecond.mutable(0);
   
   //AH: need a config to run a test
@@ -111,6 +113,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public Elevator() {
+    
     encoderTimer = new Timer();
     //motors
     // masterMotor = new SparkMax(masterPort, MotorType.kBrushless);
@@ -144,18 +147,11 @@ public class Elevator extends SubsystemBase {
         log -> {
           log.motor("Elevator-Mastr")//AH: you have 2 motors, must log both
             .voltage(
-              m_appliedVoltage[0]
+              m_appliedVoltage
                 .mut_replace(masterMotor.getBusVoltage() * masterMotor.getAppliedOutput(), Volts))//AH: GET() IS NOT VOLTAGE
-                .linearPosition(m_distance[0].mut_replace(masterEncoder.getPosition(), Meters))
-                .linearVelocity(m_velocity[0].mut_replace(masterEncoder.getVelocity(), MetersPerSecond));//AH: use metric units always
-          
-          log.motor("Elevator-Follwr")//AH: you have 2 motors, must log both
-            .voltage(
-              m_appliedVoltage[1]
-                .mut_replace(followerMotor.getBusVoltage() * followerMotor.getAppliedOutput(), Volts))//AH: GET() IS NOT VOLTAGE
-                .linearPosition(m_distance[1].mut_replace(followerEncoder.getPosition(), Meters))
-                .linearVelocity(m_velocity[1].mut_replace(followerEncoder.getVelocity(), MetersPerSecond));
-        }, 
+                .linearPosition(m_distance.mut_replace(masterEncoder.getPosition(), Meters))
+                .linearVelocity(m_velocity.mut_replace(masterEncoder.getVelocity(), MetersPerSecond));//AH: use metric units always
+        },
         this)
       );
     
@@ -276,9 +272,9 @@ public class Elevator extends SubsystemBase {
 
 //safetyMethod is used to check during sysid if the elevator height and voltage are at the safe threshold
   public boolean isUNSAFE(){
-    if (Units.inchesToMeters(maxElevatorHeightInches) >= masterEncoder.getPosition() 
+    if (1.33>= masterEncoder.getPosition() 
     || maxVelocityMetersPerSecond <= masterEncoder.getVelocity() 
-    || Units.inchesToMeters(minElevatorHeightInches) <=masterEncoder.getPosition()){
+    || 0 <=masterEncoder.getPosition()){
       return false;
     }
     return true;
@@ -288,7 +284,13 @@ public class Elevator extends SubsystemBase {
     return !isUNSAFE();
   }
 
-  
+  public boolean isBruh() {
+    if(getCurrentHeight()>1.33 || getCurrentHeight() < 0) {
+      return false;
+      
+    }
+    return true;
+  }
   /**
    * Returns a command that will execute a quasistatic test in the given direction.
    *
@@ -296,7 +298,7 @@ public class Elevator extends SubsystemBase {
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     // BooleanSupplier bruh = Elevator::safetyMethod();
-    return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isSAFE());
+    return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isBruh());
     //use onlyWhile to decorate the command and therefore add safety limits (for height and voltage)
     //TO-DO: fix safety method (add velocity) and also other bugs
   }
@@ -307,7 +309,7 @@ public class Elevator extends SubsystemBase {
    * @param direction The direction (forward or reverse) to run the test in
    */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isSAFE());
+    return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isBruh());
   } 
   public double getEleVel() {
     return masterEncoder.getVelocity();
@@ -316,9 +318,12 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
     // if (elevatorAtMax()){
     //   SmartDashboard.putString("ElevatorState", "🔴STOP🔴");
     // }
+    //masterMotor.set(0);
+    SmartDashboard.putBoolean("SAFE?", isBruh());
     if (elevatorAtMin()) {
       SmartDashboard.putString("ElevatorState", "🟢GO🟢");
     }
@@ -329,10 +334,10 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
-    goToGoal();
+   // goToGoal();
 
     if(isUNSAFE() && masterMotor.getBusVoltage() > 0) {
-      masterMotor.set(0); 
+      //masterMotor.set(0); 
       System.err.println("Bad Bad nightmare bad. Elevator unsafe");
       //hey tell them they're unsafe and a bad happened
     }
