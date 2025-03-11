@@ -139,8 +139,9 @@ public class RobotContainer {
       //NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coralEffector));
     }
     private void RegisterCustomAutos(){
-      SmartDashboard.putData(new LastResortAuto(drivetrain));
-      autoChooser.addOption("LastResortAuto", new LastResortAuto(drivetrain));
+      autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
+      autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
+  
     }
 
   /*public Command getAutonomousCommand() {
