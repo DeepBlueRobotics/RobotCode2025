@@ -56,17 +56,15 @@ public class CoralIntake extends Command {
         //SmartDashboard.putNumber("timer", timer.get());
         // SmartDashboard.getBoolean("outtakeGet", coralIn);
 
-        if (coralEffector.coralIn){
-            coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
-        }
-        else if (coralEffector.distanceSensorSeesCoral()){
-            coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+        // if (coralEffector.coralIn){
+        //     coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
+        // }
+        if (coralEffector.distanceSensorSeesCoral()){
+            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn=true;
         }
-        else if (coralEffector.limitSwitchSeesCoral()){
-            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
-        }
+       
     }
 
     // Called once the command ends or is interrupted.

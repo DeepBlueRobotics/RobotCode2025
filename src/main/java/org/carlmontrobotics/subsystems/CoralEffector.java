@@ -63,10 +63,10 @@ public class CoralEffector extends SubsystemBase {
   public void setMotorSpeed(double speed) {
     coralMotor.set(speed);
   }
-  public void setReferencePosition(double reference) {
-    targetPos = reference;
-    coralMotor.getClosedLoopController().setReference(reference, SparkBase.ControlType.kPosition);
-  }
+  // public void setReferencePosition(double reference) {
+  //   targetPos = reference;
+  //   coralMotor.getClosedLoopController().setReference(reference, SparkBase.ControlType.kPosition);
+  // }
   public boolean motorAtGoal(){
     return Math.abs(coralEncoder.getPosition()-targetPos) <= CORAL_INTAKE_ERR;
   }
@@ -82,9 +82,9 @@ public class CoralEffector extends SubsystemBase {
   //   coralIn = coralIsInside;
   // }
 
-  public boolean limitSwitchSeesCoral() {
-    return !coralLimitSwitch.get();
-  }
+  // public boolean limitSwitchSeesCoral() {
+  //   return !coralLimitSwitch.get();
+  // }
 
   @Override
   public void periodic() {
