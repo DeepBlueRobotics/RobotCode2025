@@ -7,15 +7,33 @@ package org.carlmontrobotics;
 //199 files
 // import org.carlmontrobotics.subsystems.*;
 // import org.carlmontrobotics.commands.*;
-import static org.carlmontrobotics.Constants.OI;
+import static org.carlmontrobotics.Constants.OI.*;
+import static org.carlmontrobotics.Constants.OI.Manipulator.*;
+
+import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.Constants.OI.Manipulator.*;
+import org.carlmontrobotics.Constants.OI.Manipulator;
+import org.carlmontrobotics.commands.OuttakeAlgae;
+import org.carlmontrobotics.commands.ShootAlgae;
+import org.carlmontrobotics.subsystems.AlgaeEffector;
+import org.carlmontrobotics.commands.ArmToPosition;
+import org.carlmontrobotics.commands.DealgaficationIntake;
+import org.carlmontrobotics.commands.GroundIntakeAlgae;
+
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
+
+
 
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS5Controller.Button;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -29,12 +47,12 @@ public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
-  public final GenericHID driverController = new GenericHID(OI.Driver.port);
-  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
-
+  public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
+  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
+  private final AlgaeEffector algaeEffector = new AlgaeEffector();
   public RobotContainer() {
 
-    setDefaultCommands();
+    SmartDashboard.putData(algaeEffector);
     setBindingsDriver();
     setBindingsManipulator();
   }
@@ -48,8 +66,57 @@ public class RobotContainer {
     //   () -> driverController.getRawButton(OI.Driver.slowDriveButton)
     // ));
   }
-  private void setBindingsDriver() {}
-  private void setBindingsManipulator() {}
+  private void setBindingsDriver() {
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new RunAlgae(algaeEffector, 1, false)); //wrong
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new RunAlgae(algaeEffector, 2, false));
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new RunAlgae(algaeEffector, 3, false));
+    // new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new RunAlgae(algaeEffector, 0, true));
+
+  }
+
+
+  private void setBindingsManipulator() {
+    //intake
+    new JoystickButton(manipulatorController, INTAKE_BUMPER)
+      .whileTrue(new SequentialCommandGroup(
+        // new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
+        //new GroundIntakeAlgae(algaeEffector)
+        //the command seems to take care of arm angles by itself. please change the command.
+      ));
+      
+      
+    //outake
+
+    //dealgify
+    
+    
+    // new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
+    //   .whileFalse(new OuttakeAlgae(algaeEffector));
+
+    // new JoystickButton(manipulatorController, XboxController.Button.kA.value)
+    //   .onTrue(new DealgaficationIntake(algaeEffector));
+    
+    //   new JoystickButton(manipulatorController, XboxController.Button.kB.value)
+    //   .onTrue(new ShootAlgae(algaeEffector));
+    //   new JoystickButton(manipulatorController, XboxController.Button.kY.value)
+    //   .onTrue(new InstantCommand(()->{algaeEffector.stopMotors();}));
+
+    /*
+     * THE COMMANDS AND WHAT SUBCOMMANDS THEY NEED TO RUN IN ORDER!!
+     * 
+     * outtake: clear arm out of way, outtake
+     * dealgify: move elevator to L1/L2/L3, move arm out, dealgify&intake
+     * shoot: Not Important
+     * ground intake: elevator to ground, arm to intake angle, intake
+     */
+  }
+    
+
+    private Trigger axisTrigger(GenericHID controller, Axis axis) {
+      return new Trigger(() -> Math
+              .abs(getStickValue(controller, axis)) > Constants.OI.MIN_AXIS_TRIGGER_VALUE);
+    }
+
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
