@@ -288,13 +288,22 @@ public class AlgaeEffector extends SubsystemBase {
         // System.out.println("origgoalpos: "+armGoalState.position);
         TrapezoidProfile.State calculateTo = armTrapProfile.calculate(kDt, currentPosition, armGoalState); 
 
-        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(0), 0);
+        updateFeedforward();
+        // armFeedVolts = armFeedforward.calculate(calculateTo.position, 0);
+        // armFeedVolts = armFeedforward.calculate(currentPosition.position, 0);
+        double s = (getArmPos()>calculateTo.position) ? -armkS : armkS;
+        armFeedVolts = s + Math.cos(Units.degreesToRadians(getArmPos()))*armkG;
 
+        System.out.println("### feed volts: "+armFeedVolts);
 
         if ((getArmPos() < LOWER_ANGLE_LIMIT)
              || (getArmPos() > UPPER_ANGLE_LIMIT)) {
-            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(getArmPos()), 0);
-
+            
+            // armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(getArmPos()), 0);
+            // double s = (getArmPos()>calculateTo.position) ? -armkS : armkS;
+            // armFeedVolts = s + Math.cos(Units.degreesToRadians(getArmPos()))*armkG;
+            // armFeedVolts=1;
+            System.out.println("### feed volts: "+armFeedVolts);
         }
 
         // System.out.println("outvolts: "+armFeedVolts);
@@ -302,13 +311,15 @@ public class AlgaeEffector extends SubsystemBase {
         if (true || armMotor != null) {
             pidControllerArm.setReference(armGoalState.position, ControlType.kPosition,ClosedLoopSlot.kSlot0, armFeedVolts);
         }
+
+        // pidControllerArm.setReference(0, ControlType.kPosition,ClosedLoopSlot.kSlot0, armFeedVolts);
         
         //((setPoint.position),ControlType.kPosition,armFeedVolts);
     }
     
     // // use trapezoid 
     public void setArmTarget(double targetPos){
-        armGoalState.position = getArmClampedGoal(targetPos); 
+        armGoalState.position = targetPos;//getArmClampedGoal(targetPos); 
         armGoalState.velocity = 0;
     }
 
@@ -403,11 +414,15 @@ public class AlgaeEffector extends SubsystemBase {
         //armMotor.set(0.1);
         
         
-        setArmTarget(0);
+        setArmTarget(-20);
        
         setArmPosition();
-        /* 
+        // System.out.println(".");
+        
         SmartDashboard.putNumber("Arm Angle", getArmPos());
+        SmartDashboard.putNumber("goal position", armGoalState.position);
+        SmartDashboard.putNumber("Raw Arm Angle",(armAbsoluteEncoder.getPosition()));
+        /*
         SmartDashboard.putNumber("Raw Arm Angle",Units.rotationsToDegrees(armAbsoluteEncoder.getPosition()));
         //armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         if (pincherMotor != null) {

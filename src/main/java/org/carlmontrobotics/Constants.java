@@ -16,14 +16,14 @@ public final class Constants {
 
 
 
-    public static final double[] kP = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
+    public static final double[] kP = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.00005};
     public static final double[] kI = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
-    public static final double[] kD = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
+    public static final double[] kD = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0001};
 
-    public static final double[] kS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
+    public static final double[] kS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.15};//.15 arm
     public static final double[] kV = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
     public static final double[] kA = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
-    public static final double[] kG = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};
+    public static final double[] kG = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.54};//.54 arm
     
     public static final class OI {
         public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;
@@ -92,11 +92,11 @@ public final class Constants {
         public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
         public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
-
+        
         public static final double ARM_CHAIN_GEARING = 1;// TODO: set to 16.0/34
         public static final double ARM_GEAR_RATIO = 1.0/3;
         //TODO figure the zero out once encoder is on
-        public static final double ARM_ZERO_ROT = Units.degreesToRotations(207+41+40+12);
+        public static final double ARM_ZERO_ROT = Units.degreesToRotations(207+41+40+12+12);
         //TODO ask samo for angle to intake algae from pure vertical down
         public static final double ARM_INTAKE_ANGLE = 0;
         //TODO Figure these two out if we will be shooting algae
