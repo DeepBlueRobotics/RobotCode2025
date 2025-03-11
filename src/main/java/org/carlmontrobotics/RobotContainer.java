@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController.Axis;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
@@ -76,10 +77,13 @@ public class RobotContainer {
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
     axisTrigger(manipulatorController, Axis.kLeftTrigger)
-    .whileTrue(new CoralOuttake(coralEffector))
-    .whileFalse(new CoralIntake(coralEffector));
+    .whileTrue(new CoralOuttake(coralEffector));
+
+    
     axisTrigger(manipulatorController, Axis.kRightTrigger)
       .whileTrue(new CoralIntakeManual(coralEffector));
+    
+    new JoystickButton(manipulatorController, (Button.kA.value)).whileTrue(new CoralIntake(coralEffector));
   }
     
   

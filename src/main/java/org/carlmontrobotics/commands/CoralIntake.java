@@ -63,6 +63,7 @@ public class CoralIntake extends Command {
             coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn=true;
+            timer.start();
         }
        
     }
@@ -76,6 +77,6 @@ public class CoralIntake extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return coralEffector.motorAtGoal() || timer.get() > INTAKE_TIME_OUT;
+        return timer.get() > INTAKE_TIME_OUT;
     }
 }

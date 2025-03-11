@@ -74,7 +74,7 @@ public class CoralEffector extends SubsystemBase {
   public boolean distanceSensorSeesCoral(){
     return distanceSensor.getRange() < CORAL_DISTANCE_SENSOR_DISTANCE;
   }
-
+  
   // public boolean coralIsIn() {
   //   return coralIn;
   // }

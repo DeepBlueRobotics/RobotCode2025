@@ -19,14 +19,14 @@ public final class Constants {
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
         public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
-        public final static double INPUT_FAST_SPEED = 0.07; //TODO: tune this
-        public final static double INPUT_SLOW_SPEED = 0.035; //TODO: tune this
+        public final static double INPUT_FAST_SPEED = 0.5; //TODO: tune this
+        public final static double INPUT_SLOW_SPEED = 0.15; //TODO: tune this
         public final static double OUTPUT_SPEED = 0.1; //TODO: tune this
         public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = -0.1; //TOD: tune this?
         public final static double KP = 1.3; //TODO: tune this
         public final static double KI = 0;
         public final static double KD = 0;
-        public final static double INTAKE_TIME_OUT = 0.5;
+        public final static double INTAKE_TIME_OUT = 0.25;
         public final static double OUTTAKE_TIME_OUT = 10;
         public final static double MANUAL_INTAKE_TIME_OUT = 1;
 
