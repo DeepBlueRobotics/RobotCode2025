@@ -126,7 +126,12 @@ public final class Constants {
 																						* empirical
 																						* correction
 																						*/;
-		public static final double mu = 1; /* 70/83.2; */
+		public static final double mu = 1; /* 70/83.2; */ // coefficient of friction. less means less max acceleration.
+		public static final double ROBOTMASS_KG = 135;// max is 135kg
+		// moment of inertia, kg/mm
+		// calculated by integral of mass * radius^2 for every point of the robot
+		// easy way? just do total mass * radius^2
+		public static final double MOI = ROBOTMASS_KG * swerveRadius * swerveRadius;
 
 		public static final double NEOFreeSpeed = 5676 * (2 * Math.PI) / 60; // radians/s
 		// Angular speed to translational speed --> v = omega * r / gearing
