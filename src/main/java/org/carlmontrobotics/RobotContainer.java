@@ -67,45 +67,15 @@ public class RobotContainer {
   // is simplePz
   // straight
   private List<Command> autoCommands;
-  private SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
-
-  private boolean hasSetupAutos = false;
-  private final String[] autoNames = new String[] {};
+  private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    {
-      // Put any configuration overrides to the dashboard and the terminal
-      SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
-      SmartDashboard.putData(drivetrain);
-      System.out.println(Config.CONFIG);
-
-      SmartDashboard.putData("BuildConstants", BuildInfo.getInstance());
-
-      SmartDashboard.setDefaultBoolean("babymode", babyMode);
-      SmartDashboard.setPersistent("babymode");
-      // safe auto setup... stuff in setupAutos() is not safe to run here - will break
-      // robot
-      registerAutoCommands();
-      SmartDashboard.putData(autoSelector);
-      SmartDashboard.setPersistent("SendableChooser[0]");
-
-      autoSelector.addOption("Nothing", 0);
-      autoSelector.addOption("Raw Forward", 1);
-      autoSelector.addOption("PP Simple Forward", 2);// index corresponds to index in autoCommands[]
-
-      int i = 3;
-      for (String n : autoNames) {
-          autoSelector.addOption(n, i);
-          i++;
-      }
-
-      ShuffleboardTab autoSelectorTab = Shuffleboard.getTab("Auto Chooser Tab");
-      autoSelectorTab.add(autoSelector).withSize(2, 1);
-    }
-
-    setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
+    RegisterAutoCommands();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    RegisterCustomAutos();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void setDefaultCommands() {
@@ -193,88 +163,19 @@ public class RobotContainer {
   }
 
 
-  private void registerAutoCommands() {
-        //// AUTO-USABLE COMMANDS
-        // NamedCommands.registerCommand("Intake", new Intake(intakeShooter));
-    }
+  private void RegisterAutoCommands(){
+    //NamedCommands.registerCommand("IntakeAlgae", new IntakeAlgae(algaeEffector));
+    //NamedCommands.registerCommand("OuttakeAlgae", new OuttakeAlgae(algaeEffector));
+    //NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(coralEffector));
+    //NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coralEffector));
+  }
+  private void RegisterCustomAutos(){
+    autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
+    autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
 
-    private void setupAutos() {
-        //// CREATING PATHS from files
-        if (!hasSetupAutos) {
-            autoCommands=new ArrayList<Command>();//clear old/nonexistent autos
-
-            for (int i = 0; i < autoNames.length; i++) {
-                String name = autoNames[i];
-
-                autoCommands.add(new PathPlannerAuto(name));
-
-                /*
-                 * // Charles' opinion: we shouldn't have it path find to the starting pose at the start of match
-                 * new SequentialCommandGroup( 
-                 *      AutoBuilder.pathfindToPose(
-                 *          PathPlannerAuto.getStaringPoseFromAutoFile(name),
-                 *          PathPlannerAuto.getPathGroupFromAutoFile(name).get(0).
-                 *          getPreviewStartingHolonomicPose(),
-                 *          Autoc.pathConstraints), 
-                 *      new PathPlannerAuto(name));
-                 */
-            }
-            hasSetupAutos = true;
-
-            // NOTHING
-            autoCommands.add(0, new PrintCommand("Running NULL Auto!"));
-            // RAW FORWARD command
-            // autoCommands.add(1, new SequentialCommandGroup(
-            //                 new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), new WaitCommand(0.5),
-            //                 new LastResortAuto(drivetrain)));
-            // dumb PP forward command
-            autoCommands.add(2, new PrintCommand("PPSimpleAuto not Configured!"));
-        }
-        // force regeneration each auto call
-        autoCommands.set(2, constructPPSimpleAuto());//overwrite this slot each time auto runs
-    }
-
-    public Command constructPPSimpleAuto() {
-        /**
-         * PATHPLANNER SETTINGS Robot Width (m): .91 Robot Length(m): .94 Max Module Spd
-         * (m/s): 4.30
-         * Default Constraints Max Vel: 1.54, Max Accel: 6.86 Max Angvel: 360, Max
-         * AngAccel: 360
-         * (guesses!)
-         */
-        // default origin is on BLUE ALIANCE DRIVER RIGHT CORNER
-        Pose2d currPos = drivetrain.getPose(); 
-
-        //FIXME running red PP file autos seems to break something, so the robot drivetrain drives in the wrong direction.
-            //running blue PP autos is fine though
-        //Note: alliance detection and path generation work correctly!
-        //Solution: Redeploy after auto.
-        Pose2d endPos = (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
-                        ? currPos.transformBy(new Transform2d(1, 0, new Rotation2d(0)))
-                        : currPos.transformBy(new Transform2d(-1, 0, new Rotation2d(0)));
-
-        List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currPos, endPos);
-
-        // Create the path using the bezier points created above, /* m/s, m/s^2, rad/s, rad/s^2 */
-        PathPlannerPath path = new PathPlannerPath(bezierPoints,
-                Autoc.pathConstraints, null, new GoalEndState(0, currPos.getRotation()));
-        
-        path.preventFlipping = false;// don't flip, we do that manually already.
-
-        return new SequentialCommandGroup(
-            new InstantCommand(()->drivetrain.drive(-.0001, 0, 0)),//align drivetrain wheels.
-            AutoBuilder.followPath(path).beforeStarting(new WaitCommand(1)));
-    }
+  }
 
     public Command getAutonomousCommand() {
-        setupAutos();
-
-        Integer autoIndex = autoSelector.getSelected();
-
-        if (autoIndex != null && autoIndex != 0) {
-            new PrintCommand("Running selected auto: " + autoSelector.toString());
-            return autoCommands.get(autoIndex.intValue());
-        }
-        return new PrintCommand("No auto :(");
+      return autoChooser.getSelected();
     }
 }
