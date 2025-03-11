@@ -28,6 +28,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import org.carlmontrobotics.commands.IntakeAlgae;
 import org.carlmontrobotics.commands.IntakeCoral;
+import org.carlmontrobotics.commands.LastResortAuto;
 import org.carlmontrobotics.commands.OuttakeCoral;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -101,7 +102,7 @@ public class RobotContainer {
   public RobotContainer() {
     setBindingsDriver();
     setBindingsManipulator();
-
+    RegisterCustomAutos();
     RegisterAutoCommands();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -136,6 +137,9 @@ public class RobotContainer {
       //NamedCommands.registerCommand("OuttakeAlgae", new OuttakeAlgae(algaeEffector));
       //NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(coralEffector));
       //NamedCommands.registerCommand("OuttakeCoral", new OuttakeCoral(coralEffector));
+    }
+    private void RegisterCustomAutos(){
+      autoChooser.addOption("LastResortAuto", new LastResortAuto(drivetrain));
     }
 
   /*public Command getAutonomousCommand() {
