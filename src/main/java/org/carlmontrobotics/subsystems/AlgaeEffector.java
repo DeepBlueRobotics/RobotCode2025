@@ -127,7 +127,8 @@ public class AlgaeEffector extends SubsystemBase {
     private double armkD = Constants.kD[ARM_ARRAY_ORDER];
     private ArmFeedforward armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
     private void updateFeedforward() {
-        armFeedforward = new ArmFeedforward(1, armkG, armkV, armkA);
+        armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
+        System.out.println("kG" + armkG);
     }
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
@@ -285,7 +286,7 @@ public class AlgaeEffector extends SubsystemBase {
         System.out.println("origgoalpos: "+armGoalState.position);
         TrapezoidProfile.State calculateTo = armTrapProfile.calculate(kDt, currentPosition, armGoalState); 
 
-        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(calculateTo.position), calculateTo.velocity);
+        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(0), 0);
 
 
         if ((getArmPos() < LOWER_ANGLE_LIMIT)
@@ -336,7 +337,7 @@ public class AlgaeEffector extends SubsystemBase {
         //figures out the position of the arm in degrees based off pure vertical down
         //TODO update the arm to get in degrees after someone will figure out what the .getPosition gets for the TBE
 
-        return Units.rotationsToDegrees(armAbsoluteEncoder.getPosition()); 
+        return armAbsoluteEncoder.getPosition(); 
 
     }
    
@@ -398,11 +399,11 @@ public class AlgaeEffector extends SubsystemBase {
     public void periodic() {
         //armMotor.set(0.1);
         
-        /* 
+        
         setArmTarget(0);
        
         setArmPosition();
-        
+        /* 
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("Raw Arm Angle",Units.rotationsToDegrees(armAbsoluteEncoder.getPosition()));
         //armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
@@ -422,7 +423,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
     
 
-    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(0.5).per(Seconds),
+    private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(10).per(Seconds),
     Volts.of(1.5), Seconds.of(15));
 
     // private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(
@@ -434,14 +435,14 @@ public class AlgaeEffector extends SubsystemBase {
                 .voltage(voltage.mut_replace(armMotor.getBusVoltage()
                         * armMotor.getAppliedOutput(), Volts))
                 .angularVelocity(velocity.mut_replace(
-                       Units.degreesToRadians(armAbsoluteEncoder.getVelocity()), DegreesPerSecond))
+                       armAbsoluteEncoder.getVelocity(), DegreesPerSecond))
                 .angularPosition(distance
-                        .mut_replace(Units.degreesToRadians(armAbsoluteEncoder.getPosition()), Radians));
+                        .mut_replace(armAbsoluteEncoder.getPosition(), Degrees));
     }
     
     public void driveMotor(Voltage volts) {
         
-        armMotor.setVoltage(Math.abs(volts.in(Volts)));
+        armMotor.setVoltage(volts.in(Volts));
         System.out.println("drive");
         // if (armAbsoluteEncoder.getPosition() > UPPER_ANGLE_LIMIT 
         // || armAbsoluteEncoder.getPosition() < LOWER_ANGLE_LIMIT) {
@@ -456,10 +457,12 @@ public class AlgaeEffector extends SubsystemBase {
             new SysIdRoutine.Mechanism(this::driveMotor, this::logMotor, this));
     public Command canStartSysId(){
         return new WaitUntilCommand(
-            (BooleanSupplier) () -> this.getArmPos() < ARM_SYS_ID_START_ANGLE);
+            (BooleanSupplier) () -> this.getArmPos() < ARM_SYS_ID_START_COMMAND_ANGLE);
         
     }
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+       
+        
         return 
             new SequentialCommandGroup(
                 canStartSysId(), 
@@ -493,7 +496,7 @@ public class AlgaeEffector extends SubsystemBase {
        builder.addDoubleProperty("arm kP", () -> armkP , (value) -> { armkP = value; updateArmPID(); });
        builder.addDoubleProperty("arm kI", () -> armkI , (value) -> { armkI = value; updateArmPID(); });
        builder.addDoubleProperty("arm kD", () -> armkD, (value) -> { armkD = value; updateArmPID(); });
-    
+       builder.addDoubleProperty("arm angle (degrees)", () -> getArmPos(), null);
     }
 
 }
