@@ -10,35 +10,45 @@ import org.carlmontrobotics.subsystems.CoralEffector;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
-import org.carlmontrobotics.subsystems.CoralEffector;
-
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ManualCoralIntake extends Command {
-  /** Creates a new ManualCoralIntake. */
+public class CoralOuttake extends Command {
+  /** Creates a new SetCoralOut. */
   private CoralEffector coralEffector;
-  Timer timer = new Timer();
-  public ManualCoralIntake() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  Timer timer;
+  public CoralOuttake(CoralEffector coralEffector) {
     addRequirements(this.coralEffector = coralEffector);
+    // Use addRequirements() here to declare subsystem dependencies.
+    timer = new Timer();
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer.reset();
+    timer.start();
+coralEffector.setMotorSpeed(OUTPUT_SPEED);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+/*    if (coralEffector.coralDetected()) {
+      coralEffector.setMotorSpeed(CoralEffectorConstants.coralEffectorMotorOutputSpeed);
+      timer.reset();
+      timer.start();
+    }
+    else */
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    coralEffector.setMotorSpeed(0);
+    coralEffector.coralIn = false;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > MANUAL_INTAKE_TIME_OUT;
+    return timer.get() > OUTTAKE_TIME_OUT || !coralEffector.distanceSensorSeesCoral();
   }
 }

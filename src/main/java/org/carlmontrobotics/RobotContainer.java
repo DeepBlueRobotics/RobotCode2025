@@ -14,8 +14,8 @@ import java.util.function.BooleanSupplier;
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.CoralIntake;
-import org.carlmontrobotics.commands.CoralOutake;
-import org.carlmontrobotics.commands.ManualCoralIntake;
+import org.carlmontrobotics.commands.CoralOuttake;
+import org.carlmontrobotics.commands.CoralIntakeManual;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 //limit switch
@@ -46,14 +46,14 @@ public class RobotContainer {
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
   public final GenericHID driverController = new GenericHID(DRIVE_CONTROLLER_PORT);
-  public final GenericHID manipulatorController = new GenericHID(MANIUPLATOR_CONTROLLER_sPORT);
+  public final GenericHID manipulatorController = new GenericHID(MANIPULATOR_CONTROLLER_PORT);
   public final CoralEffector coralEffector = new CoralEffector();
 
   public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
 
   public RobotContainer() {
     SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
-    SmartDashboard.putData("coral out", new CoralOutake(coralEffector));
+    SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
     setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
@@ -76,10 +76,10 @@ public class RobotContainer {
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
     axisTrigger(manipulatorController, Axis.kLeftTrigger)
-    .whileTrue(new CoralOutake(coralEffector))
+    .whileTrue(new CoralOuttake(coralEffector))
     .whileFalse(new CoralIntake(coralEffector));
     axisTrigger(manipulatorController, Axis.kRightTrigger)
-      .whileTrue(new ManualCoralIntake());
+      .whileTrue(new CoralIntakeManual(coralEffector));
   }
     
   

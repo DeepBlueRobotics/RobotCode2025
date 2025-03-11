@@ -5,7 +5,7 @@ import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class CoralIntake extends Command {
     // public static double spin;
@@ -54,7 +54,7 @@ public class CoralIntake extends Command {
         // spin = 10;
         // SmartDashboard.putNumber("spin", spin);
         //SmartDashboard.putNumber("timer", timer.get());
-        // SmartDashboard.getBoolean("outakeGet", coralIn);
+        // SmartDashboard.getBoolean("outtakeGet", coralIn);
 
         if (coralEffector.coralIn){
             coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
