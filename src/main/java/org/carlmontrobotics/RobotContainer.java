@@ -15,9 +15,6 @@ import java.util.List;
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator.*;
 import org.carlmontrobotics.Constants.OI.Manipulator;
-import org.carlmontrobotics.commands.OuttakeAlgae;
-import org.carlmontrobotics.subsystems.AlgaeEffector;
-import org.carlmontrobotics.subsystems.CoralEffector;
 import org.carlmontrobotics.subsystems.Drivetrain;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -25,10 +22,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathPlannerPath;
-
-import org.carlmontrobotics.commands.IntakeAlgae;
-import org.carlmontrobotics.commands.IntakeCoral;
-import org.carlmontrobotics.commands.OuttakeCoral;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -64,8 +57,6 @@ public class RobotContainer {
   //2. Use absolute paths from constants to reduce confusion
   public final GenericHID driverController = new GenericHID(OI.Driver.driverPort);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.manipulatorPort);
-  private final AlgaeEffector algaeEffector = new AlgaeEffector();
-  private final CoralEffector coralEffector = new CoralEffector();
   private final Drivetrain drivetrain =  new Drivetrain();
 
   private final SendableChooser<Command> autoChooser;
@@ -111,24 +102,7 @@ public class RobotContainer {
   private void setDefaultCommands() {}
   private void setBindingsDriver() {}
 
-  private void setBindingsManipulator() {
-    axisTrigger(manipulatorController, OI.Manipulator.IntakeTrigger)
-      .whileTrue(new IntakeCoral(coralEffector));
-
-    axisTrigger(manipulatorController, OI.Manipulator.OuttakeTrigger)
-      .whileTrue(new OuttakeCoral(coralEffector));
-    
-    new JoystickButton(manipulatorController, OI.Manipulator.IntakeBumper)
-      .whileTrue(new IntakeAlgae(algaeEffector));
-    
-    new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
-      .whileFalse(new OuttakeAlgae(algaeEffector));
-    }
-    
-    private Trigger axisTrigger(GenericHID controller, Axis axis) {
-      return new Trigger(() -> Math
-              .abs(getStickValue(controller, axis)) > Constants.OI.MIN_AXIS_TRIGGER_VALUE);
-    }
+  private void setBindingsManipulator() {}
 
     private void RegisterAutoCommands(){
       //I made some of the constants up, so change once merged
