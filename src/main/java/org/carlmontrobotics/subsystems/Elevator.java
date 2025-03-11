@@ -42,6 +42,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.KalmanFilterLatencyCompensator;
 import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -221,11 +222,13 @@ public class Elevator extends SubsystemBase {
   // }
 
   public void goToGoal() {
-    if(heightGoal<masterEncoder.getPosition()) {
-    masterMotor.setVoltage(
-      pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal) + 
-      feedforwardElevatorController.calculate(heightGoal));
-    }
+     System.out.println("GOing to GOAL");
+     System.out.println(heightGoal);
+    double voltage = pidElevatorController.calculate(masterEncoder.getVelocity()) +
+    feedforwardElevatorController.calculate(masterEncoder.getVelocity());
+    System.out.println(voltage);
+    masterMotor.setVoltage(voltage);
+    
   }
 
   public void setSpeed(double speed){
@@ -328,7 +331,7 @@ public class Elevator extends SubsystemBase {
     // //masterMotor.set(0);
     // goalHeight = SmartDashboard.getNumber("Goal", 0);
     // System.out.println(goalHeight);
-    setGoal(.2);
+    setGoal(1);
     SmartDashboard.putBoolean("SAFE?", isBruh());
 
     if (elevatorAtMin()) {
@@ -342,8 +345,9 @@ public class Elevator extends SubsystemBase {
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
    goToGoal();
+   
 
-    if(isUNSAFE() && masterMotor.getBusVoltage() > 0) {
+    if(isBruh() && masterMotor.getBusVoltage() > 0) {
       //masterMotor.set(0); 
       System.err.println("Bad Bad nightmare bad. Elevator unsafe");
       //hey tell them they're unsafe and a bad happened
