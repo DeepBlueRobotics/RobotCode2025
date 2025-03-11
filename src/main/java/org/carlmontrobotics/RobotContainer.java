@@ -56,6 +56,7 @@ public class RobotContainer {
   public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
 
   private final Drivetrain drivetrain = new Drivetrain();
+  private Elevator elevator = new Elevator();
 
   /* These are assumed to be equal to the AUTO ames in pathplanner */
   /* These must be equal to the pathPlanner path names from the GUI! */
@@ -113,6 +114,8 @@ public class RobotContainer {
             () -> ProcessedAxisValue(driverController, Axis.kLeftX),
             () -> ProcessedAxisValue(driverController, Axis.kRightX),
             () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
+    elevator.setDefaultCommand(
+      new TeleopElevator(elevator, ()->ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
   }
   private void setBindingsDriver() {}
   private void setBindingsManipulator() {}

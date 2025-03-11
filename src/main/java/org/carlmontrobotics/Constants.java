@@ -9,6 +9,7 @@ import org.carlmontrobotics.lib199.swerve.SwerveConfig;
 
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import static org.carlmontrobotics.Config.CONFIG;
 
@@ -36,16 +37,71 @@ import edu.wpi.first.wpilibj.util.Color;
  */
 public final class Constants {
 	public static final double g = 9.81; // meters per second squared
-	public static final class Led {
-
-	}
-
-	public static final class Effectorc {
 	
-	}
+	public static final class Elevatorc {
+		// ports
+		public static final int masterPort = 20;
+		public static final int followerPort = 21; // inverted
+		//public static final int elevatorTopLimitSwitchPort = 1;
+		public static final int elevatorBottomLimitSwitchPort = 0;
+		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
 
-	public static final class Armc {
+		// Config
+		// TODO figure these parts out
+		public static final double MAX_ACCEL_RAD_P_S = 1;
+		public static final IdleMode masterIdleMode = IdleMode.kCoast; //TODO: Change back to break
+		public static final IdleMode followerIdleMode = IdleMode.kCoast;
+		public static final boolean masterInverted = false; 
+		public static final boolean followerInverted = true;
+		public static final double masterPositionConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)); // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
+		public static final double masterVelocityConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)*1.0/60);
+		public static final double maxElevatorHeightInches = 52.5;
+		public static final double minElevatorHeightInches = 0;
+		
+        //PID
+        public static final double kP = 2.7859;
+        public static final double kI = 0.4;
+        public static final double kD = 0;
+		//Feedforward
+        public static final double kS = 0.1447;
+		public static final double kG = 0.17398+0.05;
+		public static final double kV = 8.8598+2;
+		public static final double kA = 1.7037;
+        //Positions
+        public static final double downPos = 0;
+        public static final double l1 = 0;
+        public static final double l2 = 6.5-1.236220; //inches
+        public static final double l3 = 22.5-1.236220; //inches
+        public static final double l4 = 52.64-1.236220;
+        public static final double net = 53.2-1.236220;
+        public static final double processor = 0;
+        public static final double bottomAlgaeRemoval = 22.5-1.236220;
+        public static final double uppperAlgaeRemoval = 38.35-1.236220;
+        //ScoreENUM
+        public enum ElevatorPos {
+            DOWN(downPos),
+            L1(l1),
+            L2(l2),
+            L3(l3),
+            L4(l4),
+            NET(net),
+            PROCESSOR(processor),
+            BOTTOMALGAE(bottomAlgaeRemoval),
+            UPPERALGAE(uppperAlgaeRemoval);
 
+			public final double positionInches;
+
+			ElevatorPos(double positionInches) {
+				this.positionInches = positionInches;
+			}
+
+			public double getPositioninMeters() {
+				return Units.degreesToRadians(positionInches);
+			}
+		}
+
+		// Tolerance
+		public static final double elevatorTolerance = 0.4;
 
 	}
 
