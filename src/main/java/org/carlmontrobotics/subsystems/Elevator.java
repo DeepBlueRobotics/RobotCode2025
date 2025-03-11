@@ -225,7 +225,7 @@ public class Elevator extends SubsystemBase {
     System.out.println("GOing to GOAL");
     System.out.println(heightGoal);
     double vel = pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal);
-    double feed = feedforwardElevatorController.calculate(vel);
+    double feed = feedforwardElevatorController.calculate(0);
     masterMotor.setVoltage(vel + feed);
 
   }
@@ -330,7 +330,7 @@ public class Elevator extends SubsystemBase {
     // //masterMotor.set(0);
     // goalHeight = SmartDashboard.getNumber("Goal", 0);
     // System.out.println(goalHeight);
-    setGoal(1);
+    setGoal(.75);
     SmartDashboard.putBoolean("SAFE?", isBruh());
 
     if (elevatorAtMin()) {
