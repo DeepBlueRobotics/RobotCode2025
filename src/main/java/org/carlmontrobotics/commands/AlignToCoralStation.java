@@ -35,7 +35,6 @@ public class AlignToCoralStation extends Command {
     SendableRegistry.addChild(this, rotationPID);
     time.reset();
     time.start();
-    startTime = Timer.getFPGATimestamp();
     addRequirements(drivetrain);
   }
 
@@ -85,6 +84,6 @@ public class AlignToCoralStation extends Command {
     // return false;
     // SmartDashboard.putBoolean("At Setpoint", rotationPID.atSetpoint());
     // SmartDashboard.putNumber("Error", rotationPID.getPositionError());
-    return rotationPID.atSetpoint() || (Timer.getFPGATimestamp() - startTime) > 3;
+    return rotationPID.atSetpoint() || time.get() > 3;
   }
 }
