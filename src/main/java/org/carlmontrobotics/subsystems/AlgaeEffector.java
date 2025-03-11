@@ -1,10 +1,11 @@
 package org.carlmontrobotics.subsystems;
 
-import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.commands.DealgaficationIntake;
 import org.carlmontrobotics.commands.GroundIntakeAlgae;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.commands.ShootAlgae;
+import org.carlmontrobotics.lib199.MotorConfig;
+import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -16,6 +17,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
@@ -25,20 +27,20 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
-import static org.carlmontrobotics.Constants.*;
 
 public class AlgaeEffector extends SubsystemBase {
 
-    // motors
-    private final SparkFlex topMotor = new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
-    private final SparkFlex bottomMotor = new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless);
-    private final SparkFlex pincherMotor = new SparkFlex(PINCH_MOTOR_PORT, MotorType.kBrushless);
-    private final SparkMax armMotor = new SparkMax(ARM_MOTOR_PORT, MotorType.kBrushless);
-
+    // dean want use lib199
     private SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
     private SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
     private SparkFlexConfig topMotorConfig = new SparkFlexConfig();
     private SparkMaxConfig armMotorConfig = new SparkMaxConfig();
+
+    // motors
+    private final SparkFlex topMotor = MotorControllerFactory.createSparkFlex(TOP_MOTOR_ID, topMotorConfig);
+    private final SparkFlex bottomMotor = MotorControllerFactory.createSparkFlex(BOTTOM_MOTOR_ID, bottomMotorConfig);
+    private final SparkFlex pincherMotor = MotorControllerFactory.createSparkFlex(PINCHER_MOTOR_ID, pincherMotorConfig);
+    private final SparkMax armMotor = MotorControllerFactory.createSparkMax(ARM_MOTOR_ID, MotorConfig.NEO);
 
     private final RelativeEncoder topEncoder = topMotor.getEncoder();
     private final RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
@@ -85,33 +87,33 @@ public class AlgaeEffector extends SubsystemBase {
 
     private void configureMotors() {
         topMotorConfig.closedLoop.pid(
-                Constants.kP[TOP_ARRAY_ORDER],
-                Constants.kI[TOP_ARRAY_ORDER],
-                Constants.kD[TOP_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+                kP[TOP_ARRAY_ORDER],
+                kI[TOP_ARRAY_ORDER],
+                kD[TOP_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         topMotor.configure(topMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
         bottomMotorConfig.closedLoop.pid(
-                Constants.kP[BOTTOM_ARRAY_ORDER],
-                Constants.kI[BOTTOM_ARRAY_ORDER],
-                Constants.kD[BOTTOM_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+                kP[BOTTOM_ARRAY_ORDER],
+                kI[BOTTOM_ARRAY_ORDER],
+                kD[BOTTOM_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         bottomMotor.configure(bottomMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
         pincherMotorConfig.closedLoop.pid(
-                Constants.kP[PINCHER_ARRAY_ORDER],
-                Constants.kI[PINCHER_ARRAY_ORDER],
-                Constants.kD[PINCHER_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+                kP[PINCHER_ARRAY_ORDER],
+                kI[PINCHER_ARRAY_ORDER],
+                kD[PINCHER_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
         armMotorConfig.closedLoop.pid(
-                Constants.kP[ARM_ARRAY_ORDER],
-                Constants.kI[ARM_ARRAY_ORDER],
-                Constants.kD[ARM_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+                kP[ARM_ARRAY_ORDER],
+                kI[ARM_ARRAY_ORDER],
+                kD[ARM_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
         armMotorConfig.closedLoop.pid(
-                Constants.kP[ARM_ARRAY_ORDER],
-                Constants.kI[ARM_ARRAY_ORDER],
-                Constants.kD[ARM_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+                kP[ARM_ARRAY_ORDER],
+                kI[ARM_ARRAY_ORDER],
+                kD[ARM_ARRAY_ORDER]).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
     }
 
@@ -137,10 +139,10 @@ public class AlgaeEffector extends SubsystemBase {
         setPoint = getArmState();
         armGoalState = armTrapProfile.calculate(kDt, setPoint, armGoalState);
 
-        armFeedVolts = armFeedforward.calculate(armGoalState.position, armGoalState.velocity);
+        armFeedVolts = armFeedforward.calculate(armGoalState.velocity);
         if ((getArmPos() < LOWER_ANGLE_LIMIT)
                 || (getArmPos() > UPPER_ANGLE_LIMIT)) {
-            armFeedVolts = armFeedforward.calculate(getArmPos(), 0);
+            armFeedVolts = armFeedforward.calculate(getArmVel());
 
         }
 
