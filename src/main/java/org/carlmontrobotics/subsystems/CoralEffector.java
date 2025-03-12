@@ -48,7 +48,7 @@ public class CoralEffector extends SubsystemBase {
     SparkFlexConfig config = new SparkFlexConfig();
     public CoralEffector(){
     config
-        .inverted(false)
+        .inverted(true)
         .idleMode(IdleMode.kBrake);
     config.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -70,9 +70,11 @@ public class CoralEffector extends SubsystemBase {
   public boolean motorAtGoal(){
     return Math.abs(coralEncoder.getPosition()-targetPos) <= CORAL_INTAKE_ERR;
   }
-
+  public double getVel() {
+    return coralEncoder.getVelocity();
+  }
   public boolean distanceSensorSeesCoral(){
-    return distanceSensor.getRange() < CORAL_DISTANCE_SENSOR_DISTANCE;
+    return distanceSensor.getRange() < CORAL_DISTANCE_SENSOR_DISTANCE-50;
   }
   
   // public boolean coralIsIn() {
@@ -101,5 +103,6 @@ public class CoralEffector extends SubsystemBase {
     SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());
     SmartDashboard.putNumber("coral output", coralOutput);
     SmartDashboard.getNumber("P", KP);
+//coralMotor.set(INPUT_FAST_SPEED);
   }
 }

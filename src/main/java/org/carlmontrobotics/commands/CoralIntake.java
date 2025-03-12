@@ -15,6 +15,7 @@ public class CoralIntake extends Command {
     // Timer coralInTimer = new Timer();
     public static double coralMotorPosition;
     private CoralEffector coralEffector;
+    private boolean isIn = false;
 
     public CoralIntake(CoralEffector coralEffector) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -26,11 +27,18 @@ public class CoralIntake extends Command {
     @Override
     public void initialize() {
         coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+        timer.stop();
+        timer.reset();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        if(coralEffector.getVel() <  COAST_VELOCITY_AT_INPUT && coralEffector.distanceSensorSeesCoral()) {
+            isIn=true;
+        } else {
+            isIn = false;
+        }
         // if (CoralEffector.distanceSensorSees) {
         //     coralIn = true;
         //     if (CoralEffector.limitSwitchSees) {
@@ -59,11 +67,13 @@ public class CoralIntake extends Command {
         // if (coralEffector.coralIn){
         //     coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
         // }
-        if (coralEffector.distanceSensorSeesCoral()){
-            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
+        if (coralEffector.distanceSensorSeesCoral() && isIn == true){
+            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED/2);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn=true;
-            timer.start();
+           // timer.start();
+        } else {
+            coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
         }
        
     }
@@ -72,11 +82,12 @@ public class CoralIntake extends Command {
     @Override
     public void end(boolean interrupted) {
         coralEffector.setMotorSpeed(0);
+        isIn = false;
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return timer.get() > INTAKE_TIME_OUT;
+        return false;
     }
 }

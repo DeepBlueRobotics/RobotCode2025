@@ -15,6 +15,7 @@ import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.CoralIntake;
 import org.carlmontrobotics.commands.CoralOuttake;
+import org.carlmontrobotics.commands.hkasjhkasdg;
 import org.carlmontrobotics.commands.CoralIntakeManual;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
@@ -50,7 +51,7 @@ public class RobotContainer {
   public final GenericHID manipulatorController = new GenericHID(MANIPULATOR_CONTROLLER_PORT);
   public final CoralEffector coralEffector = new CoralEffector();
 
-  public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
+  //public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
 
   public RobotContainer() {
     SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
@@ -76,12 +77,15 @@ public class RobotContainer {
     //   .whileFalse(new CoralIntake(coralEffector));
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
-    axisTrigger(manipulatorController, Axis.kLeftTrigger)
-    .whileTrue(new CoralOuttake(coralEffector));
 
+    axisTrigger(manipulatorController, Axis.kLeftTrigger)
+    .whileTrue(new CoralIntake(coralEffector))
+    .onFalse(new hkasjhkasdg(coralEffector));
+    
     
     axisTrigger(manipulatorController, Axis.kRightTrigger)
-      .whileTrue(new CoralIntakeManual(coralEffector));
+      .whileTrue(new CoralIntakeManual(coralEffector))
+      .onFalse(new hkasjhkasdg(coralEffector));
     
     new JoystickButton(manipulatorController, (Button.kA.value)).whileTrue(new CoralIntake(coralEffector));
   }
