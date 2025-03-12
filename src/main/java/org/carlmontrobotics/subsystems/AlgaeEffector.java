@@ -93,6 +93,9 @@ public class AlgaeEffector extends SubsystemBase {
     private double armGoal = LOWER_ANGLE_LIMIT;
     private double armMaxVelocityDegreesPerSecond;
 
+
+    private double upperLimitAdjustmentVoltage;
+    private double lowerLimitAdjustmentVoltage;
     //motors
     private final SparkFlex topMotor = null; //new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
     private final SparkFlex bottomMotor = null; //new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless); 
@@ -466,11 +469,11 @@ public class AlgaeEffector extends SubsystemBase {
         System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
 
         if(getArmPos() < LOWER_ANGLE_LIMIT && armAbsoluteEncoder.getVelocity() < 0){
-            armMotor.set(0);
+            armMotor.set(-0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
           
         } 
         if(getArmPos()> UPPER_ANGLE_LIMIT && armAbsoluteEncoder.getVelocity()> 0){
-            armMotor.set(0);
+            armMotor.set(0.02 * armAbsoluteEncoder.getVelocity() + upperLimitAdjustmentVoltage);
         }
         
         //System.out.println("!!!!!!!!" + getArmPos());
@@ -567,6 +570,8 @@ public class AlgaeEffector extends SubsystemBase {
        builder.addDoubleProperty("arm kP", () -> armkP , (value) -> { armkP = value; updateArmPID(); });
        builder.addDoubleProperty("arm kI", () -> armkI , (value) -> { armkI = value; updateArmPID(); });
        builder.addDoubleProperty("arm kD", () -> armkD, (value) -> { armkD = value; updateArmPID(); });
+       builder.addDoubleProperty("Upper Voltage Counter limit", () -> upperLimitAdjustmentVoltage, (value) -> { upperLimitAdjustmentVoltage = value;});
+       builder.addDoubleProperty("Lower Voltage Counter limit", () -> lowerLimitAdjustmentVoltage, (value) -> { lowerLimitAdjustmentVoltage = value;});
        builder.addDoubleProperty("Set Arm Max Velocity", () -> armMaxVelocityDegreesPerSecond, (value) -> { armMaxVelocityDegreesPerSecond = value; updateArmPID(); });
        builder.addDoubleProperty("arm angle (degrees)", () -> getArmPos(), null);
        builder.addDoubleProperty("output volts", () -> armMotor.getAppliedOutput()*armMotor.getBusVoltage(), null);
