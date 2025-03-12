@@ -13,6 +13,7 @@ import org.carlmontrobotics.subsystems.CoralEffector;
 public class CoralIntakeManual extends Command {
   /** Creates a new CoralIntakeManual. */
   private CoralEffector coralEffector;
+  public static double coralMotorPosition;
   Timer timer = new Timer();
   public CoralIntakeManual(CoralEffector coralEffector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,11 +28,14 @@ public class CoralIntakeManual extends Command {
   @Override
   public void execute() {
     coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
-  }
+    coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
+  } 
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
+  }
 
   // Returns true when the command should end.
   @Override

@@ -64,9 +64,9 @@ public class CoralIntake extends Command {
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn=true;
         }
-        else if (coralEffector.limitSwitchSeesCoral()){
-            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
-        }
+        // else if (coralEffector.limitSwitchSeesCoral()){
+        //     coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
+        // }
     }
 
     // Called once the command ends or is interrupted.

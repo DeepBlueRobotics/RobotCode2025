@@ -79,7 +79,7 @@ public class RobotContainer {
     .whileTrue(new CoralOuttake(coralEffector))
     .whileFalse(new CoralIntake(coralEffector));
     axisTrigger(manipulatorController, Axis.kRightTrigger)
-      .whileTrue(new CoralIntakeManual(coralEffector));
+    .whileTrue(new CoralIntakeManual(coralEffector));
   }
     
   
