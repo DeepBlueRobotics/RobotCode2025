@@ -14,44 +14,48 @@ public class TeleopElevator extends Command {
     private Elevator elevator;
     private DoubleSupplier joystickSupplier;
     private TrapezoidProfile.State goalState;
-    private double lastTime;
+
     public TeleopElevator(Elevator elevator, DoubleSupplier joystickSupplier) {
         this.joystickSupplier = joystickSupplier;
         addRequirements(this.elevator = elevator);
     }
     @Override
     public void initialize() {
-        goalState = new TrapezoidProfile.State(elevator.getCurrentHeight(), elevator.getEleVel());
-        lastTime = Timer.getFPGATimestamp();
+        
     }
-    public double getReqSpeeds() {
-        return MAX_ACCEL_RAD_P_S*joystickSupplier.getAsDouble(); //(MAX_ACCEL in radians/s^2 times joystick)
-    }
+    
     @Override
     public void execute() {
-    double speeds = getReqSpeeds();
-    //SmartDashboard.putNumber("speeds", speeds);
+        double maxdist = .02/*robot period*/ * MAX_ACCEL_RAD_P_S;
+        double dist = maxdist * joystickSupplier.getAsDouble();
 
-    if (speeds == 0) {// if no input, don't set any goals.
-      lastTime = Timer.getFPGATimestamp();// update deltaT even when not running
-      return;
-    }
+        goalState = new TrapezoidProfile.State(elevator.getCurrentHeight()+dist, 0);
 
-    double currTime = Timer.getFPGATimestamp();
-    double deltaT = currTime - lastTime;// only move by a tick of distance at once
-    lastTime = currTime;
+        elevator.setGoal(goalState.position);
+            
+        // double speeds = getReqSpeeds();
+        // //SmartDashboard.putNumber("speeds", speeds);
 
-    double goalEleRad = goalState.position + speeds * deltaT;// speed*time = dist
+        // if (speeds == 0) {// if no input, don't set any goals.
+        // lastTime = Timer.getFPGATimestamp();// update deltaT even when not running
+        // return;
+        // }
 
-    goalEleRad = MathUtil.clamp(goalEleRad, minElevatorHeightInches, maxElevatorHeightInches);
-    // goalArmRad = MathUtil.clamp(goalArmRad,
-    //     armSubsystem.getArmPos() + Math.pow(armSubsystem.getMaxVelRad(), 2) / MAX_FF_ACCEL_RAD_P_S,
-    //     armSubsystem.getArmPos() - Math.pow(armSubsystem.getMaxVelRad(), 2) / MAX_FF_ACCEL_RAD_P_S);
+        // double currTime = Timer.getFPGATimestamp();
+        // double deltaT = currTime - lastTime;// only move by a tick of distance at once
+        // lastTime = currTime;
 
-    goalState.position = goalEleRad;
-    goalState.velocity = 0;
-    // don't put in constants bc it's always zero
-    elevator.setGoal(goalState.position);
+        // double goalEleRad = goalState.position + speeds * deltaT;// speed*time = dist
+
+        // goalEleRad = MathUtil.clamp(goalEleRad, minElevatorHeightInches, maxElevatorHeightInches);
+        // // goalArmRad = MathUtil.clamp(goalArmRad,
+        // //     armSubsystem.getArmPos() + Math.pow(armSubsystem.getMaxVelRad(), 2) / MAX_FF_ACCEL_RAD_P_S,
+        // //     armSubsystem.getArmPos() - Math.pow(armSubsystem.getMaxVelRad(), 2) / MAX_FF_ACCEL_RAD_P_S);
+
+        // goalState.position = goalEleRad;
+        // goalState.velocity = 0;
+        // // don't put in constants bc it's always zero
+        // elevator.setGoal(goalState.position);
     }
     @Override
     public void end(boolean interrupted) {

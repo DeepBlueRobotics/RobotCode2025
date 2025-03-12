@@ -40,6 +40,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.KalmanFilterLatencyCompensator;
@@ -189,7 +190,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setGoal(ElevatorPos goal) {
-    heightGoal = goal.getPositioninMeters();
+    heightGoal = MathUtil.clamp(goal.getPositioninMeters(),0,1.33);
   }
   
   public double getGoal() {
@@ -222,10 +223,10 @@ public class Elevator extends SubsystemBase {
   // }
 
   public void goToGoal() {
-    System.out.println("GOing to GOAL");
-    System.out.println(heightGoal);
+    System.out.println("GOing to GOAL: err: "+(heightGoal-getCurrentHeight()));
+    // System.out.println(heightGoal);
     double vel = pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal);
-    double feed = feedforwardElevatorController.calculate(vel);
+    double feed = feedforwardElevatorController.calculate(0);
     masterMotor.setVoltage(vel + feed);
 
   }
@@ -290,7 +291,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean isBruh() {
-    if(getCurrentHeight()>1.33 || getCurrentHeight() < 0) {
+    if(getCurrentHeight()>1.33 || getCurrentHeight() <= 0) {
       return false;
       
     }
@@ -330,7 +331,7 @@ public class Elevator extends SubsystemBase {
     // //masterMotor.set(0);
     // goalHeight = SmartDashboard.getNumber("Goal", 0);
     // System.out.println(goalHeight);
-    setGoal(1);
+    // setGoal(.75);
     SmartDashboard.putBoolean("SAFE?", isBruh());
 
     if (elevatorAtMin()) {
@@ -340,7 +341,7 @@ public class Elevator extends SubsystemBase {
       SmartDashboard.putString("ElevatorState", "🟡AT MIN🟡");
     }//add one for max height
     //add one for if unsafe
-    SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
+    // SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
    goToGoal();

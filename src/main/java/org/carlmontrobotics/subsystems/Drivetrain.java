@@ -148,6 +148,7 @@ public class Drivetrain extends SubsystemBase {
     double kI = 0;
     double kD = 0;
     public Drivetrain() {
+        AutoBuilder();
         SmartDashboard.putNumber("Goal Velocity", 0);
         SmartDashboard.putNumber("kP", 0);
         SmartDashboard.putNumber("kI", 0);
@@ -542,39 +543,59 @@ public class Drivetrain extends SubsystemBase {
 //     );
 
     
-    /*  AutoBuilder.configureHolonomic(
-    () -> getPose().plus(new Transform2d(autoGyroOffset.getTranslation(),autoGyroOffset.getRotation())),//position supplier
-    (Pose2d pose) -> { autoGyroOffset=pose.times(-1); }, //position reset (by subtracting current pos)
-    this::getSpeeds, //chassisSpeed supplier
-    (ChassisSpeeds cs) -> drive(
-            cs.vxMetersPerSecond, 
-            -cs.vyMetersPerSecond,
-            //flipped because drive assumes up is negative, but PPlanner assumes up is positive
-            cs.omegaRadiansPerSecond
-    ),
-    new HolonomicPathFollowerConfig(
-        new PIDConstants(drivekP[0], drivekI[0], drivekD[0], driveIzone), //translation (drive) pid vals
-        new PIDConstants(turnkP_avg, 0., 0., turnIzone), //rotation pid vals
-        maxSpeed,
-        swerveRadius,
-        Autoc.replanningConfig,
-        Robot.robot.getPeriod()//robot period
-    ),
-    () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent())
-            return alliance.get() == DriverStation.Alliance.Red;
-        //else:
-        return false;
-      },
-      this
-    );
-    */
-   
-//  }
+//TODO: AUTOBUILDER
+    public void AutoBuilder() {
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        // All other subsystem initialization
+        // ...
+
+        // Load the RobotConfig from the GUI settings. You should probably
+        // store this in your Constants file
+        RobotConfig config;
+        // try{
+        //     config = RobotConfig.fromGUISettings();
+        // } catch (Exception e) {
+        //     config = Constants.
+        // // Handle exception as needed
+        // e.printStackTrace();
+        // }
+        config = Constants.Drivetrainc.Autoc.robotConfig;
+
+        // Configure AutoBuilder last
+
+        AutoBuilder.configure(
+                //Supplier<Pose2d> poseSupplier,
+                this::getPose, // Robot pose supplier
+                //Consumer<Pose2d> resetPose,
+                this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                //Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+                this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                //BiConsumer<ChassisSpeeds,DriveFeedforwards> output,
+                (speeds, feedforwards) -> drive(kinematics.toSwerveModuleStates(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                //PathFollowingController controller,
+                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                        new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
+                        new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
+                ),
+                //RobotConfig robotConfig,
+                config, // The robot configuration
+                //BooleanSupplier shouldFlipPath,
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;//stolen from official pplib
+                    }
+                    return false;
+                },
+                //Subsystem... driveRequirements
+                this // Reference to this subsystem to set requirements
+            );
+        }
+
+//----------------------------------------------------------
 
    public void autoCancelDtCommand() {
        if(!(getDefaultCommand() instanceof TeleopDrive) || DriverStation.isAutonomous()) return;
@@ -737,6 +758,8 @@ public class Drivetrain extends SubsystemBase {
                 thetaPIDController
         };
     }
+
+
 
     // #region SysId Code
 

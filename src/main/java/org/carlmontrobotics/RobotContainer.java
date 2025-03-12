@@ -75,6 +75,7 @@ public class RobotContainer {
     RegisterAutoCommands();
     autoChooser = AutoBuilder.buildAutoChooser();
     RegisterCustomAutos();
+    setDefaultCommands();
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -84,8 +85,7 @@ public class RobotContainer {
             () -> ProcessedAxisValue(driverController, Axis.kLeftX),
             () -> ProcessedAxisValue(driverController, Axis.kRightX),
             () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
-    elevator.setDefaultCommand(
-      new TeleopElevator(elevator, ()->ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
+    elevator.setDefaultCommand(new TeleopElevator(elevator, ()->ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
   }
   private void setBindingsDriver() {}
   private void setBindingsManipulator() {}

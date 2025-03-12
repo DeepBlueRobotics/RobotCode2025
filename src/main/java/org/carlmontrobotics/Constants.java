@@ -62,14 +62,14 @@ public final class Constants {
 		public static final double minElevatorHeightInches = 0;
 		
         //PID
-        public static final double kP = 2.7859;
-        public static final double kI = 0.4;
-        public static final double kD = 0;
+        public static final double kP = 40;
+        public static final double kI = 0;
+        public static final double kD = 10.609;
 		//Feedforward
-        public static final double kS = 0.1447;
-		public static final double kG = 0.17398+0.05;
-		public static final double kV = 8.8598+2;
-		public static final double kA = 1.7037;
+        public static final double kS = 0.12666;
+		public static final double kG = 0.177;
+		public static final double kV = 8.9921;
+		public static final double kA = 1.4586;
         //Positions
         public static final double downPos = 0;
         public static final double l1 = 0;
