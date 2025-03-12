@@ -237,8 +237,74 @@ public class RobotContainer {
     }
 
     private void registerAutoCommands() {
-        //// AUTO-USABLE COMMANDS
-        // NamedCommands.registerCommand("Intake", new Intake(intakeShooter));
+      //I made some of the constants up, so change once merged
+      //AlgaeEffector
+      // NamedCommands.registerCommand("GroundIntakeAlgae", new GroundIntakeAlgae(algaeEffector));
+      // NamedCommands.registerCommand("DealgaficationIntake", new DealgaficationIntake(algaeEffector));
+      // NamedCommands.registerCommand("ShootAlgae", new ShootAlgae(algaeEffector));
+      //CoralEffector
+      // NamedCommands.registerCommand("CoralIntake", new CoralIntake(coralEffector));
+      // NamedCommands.registerCommand("CoralOutake", new CoralOutake(coralEffector));
+      // //AlgaeArm
+      // NamedCommands.registerCommand("ArmToDeAlgafy", new ArmToPosition(AlgaeEffector, Armc.DeAlgafy_Angle));
+      // NamedCommands.registerCommand("ArmToIntake", new ArmToPosition(AlgaeEffector, Armc.Intake_Angle));
+      // NamedCommands.registerCommand("ArmToShoot", new ArmToPosition(AlgaeEffector, Armc.Shoot_Angle));
+      // //Elevator
+      // NamedCommands.registerCommand("ElevatorIntake", new ElevatorLPos(Elevator, Elevatorc.IntakePos));
+      // NamedCommands.registerCommand("ElevatorL1", new ElevatorLPos(Elevator, Elevatorc.L1Pos));
+      // NamedCommands.registerCommand("ElevatorL2", new ElevatorLPos(Elevator, Elevatorc.L2Pos));
+      // NamedCommands.registerCommand("ElevatorL3", new ElevatorLPos(Elevator, Elevatorc.L3Pos));
+      // NamedCommands.registerCommand("ElevatorL4", new ElevatorLPos(Elevator, Elevatorc.L4Pos));
+
+      // //Limelight
+      // NamedCommands.registerCommand("AlignToCoralStation", new AlignToCoralStation(Limelight, drivetrain));
+      // NamedCommands.registerCommand("AlignToReef", new AlignToReef(Limelight, drivetrain));
+      // NamedCommands.registerCommand("MoveToLeftBranch", new MoveToLeftBranch(Limelight, LimelightHelpers, drivetrain));
+      // NamedCommands.registerCommand("MoveToRightBranch", new MoveToRightBranch(Limelight, LimelightHelpers, drivetrain));
+
+      //Sequential and Parralel Commands
+        /*NamedCommands.registerCommand("L2", new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+                new WaitCommand(3.0),
+                new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new AlignToReef(drivetrain, limelight),
+                                new ElevatorL2(Elevator, Elevatorc.L2Pos),
+                                new ArmToPos(arm, Armc.DeAlgafy_Angle)),
+                                new DealgaficationIntake(algaeEffector),
+                        new CoralOutake(coralEffector),
+                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
+
+        /*NamedCommands.registerCommand("L3", new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+                new WaitCommand(3.0),
+                new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new AlignToReef(drivetrain, limelight),
+                                new ElevatorL3(Elevator, Elevatorc.L3Pos),
+                                new ArmToPos(arm, Armc.DeAlgafy_Angle)),
+                                new DealgaficationIntake(algaeEffector),
+                        new CoralOutake(coralEffector),
+                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
+
+        /*NamedCommands.registerCommand("L4", new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+                new WaitCommand(3.0),
+                new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new AlignToReef(drivetrain, limelight),
+                                new ElevatorL3(Elevator, Elevatorc.L4Pos),
+                                new ArmToPos(arm, Armc.DeAlgafy_Angle)),
+                                new DealgaficationIntake(algaeEffector),
+                        new CoralOutake(coralEffector),
+                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
+                        
+        /*NamedCommands.registerCommand("IntakeCoral",
+        new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new AlignToCoralStation(drivetrain, limelight),
+                                new IntakeCoral(coralEffector))));*/
+
     }
 
     private void setupAutos() {
