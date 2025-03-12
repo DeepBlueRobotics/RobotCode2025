@@ -15,6 +15,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 
 import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
+import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.Constants.OI.Manipulator.*;
@@ -31,6 +32,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.StadiaController.Button;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -85,10 +87,15 @@ public class RobotContainer {
             () -> ProcessedAxisValue(driverController, Axis.kLeftX),
             () -> ProcessedAxisValue(driverController, Axis.kRightX),
             () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
-    elevator.setDefaultCommand(new TeleopElevator(elevator, ()->ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
+
+    //elevator.setDefaultCommand(new TeleopElevator(elevator, ()->ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
   }
   private void setBindingsDriver() {}
-  private void setBindingsManipulator() {}
+  private void setBindingsManipulator() {
+
+    new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, ElevatorPos.L2));
+    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, ElevatorPos.DOWN));
+  }
 
   /**
      * Flips an axis' Y coordinates upside down, but only if the select axis is a

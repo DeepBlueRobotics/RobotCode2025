@@ -62,7 +62,7 @@ public final class Constants {
 		public static final double minElevatorHeightInches = 0;
 		
         //PID
-        public static final double kP = 40;
+        public static final double kP = 35;
         public static final double kI = 0;
         public static final double kD = 10.609;
 		//Feedforward
@@ -73,7 +73,7 @@ public final class Constants {
         //Positions
         public static final double downPos = 0;
         public static final double l1 = 0;
-        public static final double l2 = 6.5-1.236220; //inches
+        public static final double l2 = 0.75;// 6.5-1.236220; //inches
         public static final double l3 = 22.5-1.236220; //inches
         public static final double l4 = 52.64-1.236220;
         public static final double net = 53.2-1.236220;
@@ -357,6 +357,7 @@ public final class Constants {
 
 		public static final class Manipulator {
 			public static final int port = 1;
+			public static final int Y = Button.kY.value;
         }
 
 		public static final double JOY_THRESH = 0.02;

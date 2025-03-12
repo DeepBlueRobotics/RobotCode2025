@@ -280,7 +280,7 @@ public class Elevator extends SubsystemBase {
   public boolean isUNSAFE(){
     if (1.33>= masterEncoder.getPosition() 
     || maxVelocityMetersPerSecond <= masterEncoder.getVelocity() 
-    || 0 <=masterEncoder.getPosition()){
+    || 0.04 <=masterEncoder.getPosition()){
       return false;
     }
     return true;
@@ -291,7 +291,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean isBruh() {
-    if(getCurrentHeight()>1.33 || getCurrentHeight() <= 0) {
+    if(getCurrentHeight()>1.33 || (getCurrentHeight() <= 0 && heightGoal<0.04)) {
       return false;
       
     }
@@ -330,10 +330,10 @@ public class Elevator extends SubsystemBase {
     // }
     // //masterMotor.set(0);
     // goalHeight = SmartDashboard.getNumber("Goal", 0);
-    // System.out.println(goalHeight);
+     System.out.println(goalHeight);
     // setGoal(.75);
     SmartDashboard.putBoolean("SAFE?", isBruh());
-
+    SmartDashboard.putNumber("ele pos", masterEncoder.getPosition());
     if (elevatorAtMin()) {
       SmartDashboard.putString("ElevatorState", "🟢GO🟢");
     }
