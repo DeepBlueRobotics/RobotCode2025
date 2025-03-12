@@ -56,6 +56,8 @@ public class RobotContainer {
     // 2. Use absolute paths from constants to reduce confusion
     public final GenericHID driverController = new GenericHID(Driver.port);
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
+    private final Drivetrain drivetrain =  new Drivetrain();
+
 
     //private final Drivetrain drivetrain = new Drivetrain();
 
@@ -74,6 +76,8 @@ public class RobotContainer {
     // private final String[] autoNames = new String[] {};
     // private final AlgaeEffector algaeEffector = new AlgaeEffector();
      private final Elevator elevator = new Elevator();
+     private final SendableChooser<Command> autoChooser;
+
 
     public RobotContainer() {
         {
@@ -106,6 +110,10 @@ public class RobotContainer {
             // autoSelectorTab.add(autoSelector).withSize(2, 1);
         }
 
+        RegisterAutoCommands();
+        autoChooser = AutoBuilder.buildAutoChooser();
+        RegisterCustomAutos();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
@@ -236,7 +244,7 @@ public class RobotContainer {
                 .abs(getStickValue(controller, axis)) > OI.MIN_AXIS_TRIGGER_VALUE);
     }
 
-    private void registerAutoCommands() {
+    private void RegisterAutoCommands() {
       //I made some of the constants up, so change once merged
       //AlgaeEffector
       // NamedCommands.registerCommand("GroundIntakeAlgae", new GroundIntakeAlgae(algaeEffector));
@@ -307,7 +315,12 @@ public class RobotContainer {
 
     }
 
-    private void setupAutos() {
+    private void RegisterCustomAutos(){
+        autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
+        autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
+    
+    }
+    //private void setupAutos() {
         //// CREATING PATHS from files
         // if (!hasSetupAutos) {
         //     autoCommands = new ArrayList<Command>();// clear old/nonexistent autos
@@ -343,9 +356,9 @@ public class RobotContainer {
         // }
         // // force regeneration each auto call
         // autoCommands.set(2, constructPPSimpleAuto());// overwrite this slot each time auto runs
-    }
+    //}
 
-    public Command constructPPSimpleAuto() {
+    //public Command constructPPSimpleAuto() {
         /**
          * PATHPLANNER SETTINGS Robot Width (m): .91 Robot Length(m): .94 Max Module Spd
          * (m/s): 4.30
@@ -377,8 +390,8 @@ public class RobotContainer {
         // return new SequentialCommandGroup(
         //         new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), // align drivetrain wheels.
         //         AutoBuilder.followPath(path).beforeStarting(new WaitCommand(1)));
-        return new PrintCommand("I HAT EEEYTHI");
-    }
+        //return new PrintCommand("I HAT EEEYTHI");
+    //}
 
     public Command getAutonomousCommand() {
         // setupAutos();
@@ -389,6 +402,7 @@ public class RobotContainer {
         //     new PrintCommand("Running selected auto: " + autoSelector.toString());
         //     return autoCommands.get(autoIndex.intValue());
         // }
-        return new PrintCommand("No auto :(");
+        return autoChooser.getSelected();
+        //return new PrintCommand("No auto :(");
     }
 }
