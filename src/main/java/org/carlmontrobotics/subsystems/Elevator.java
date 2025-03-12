@@ -226,7 +226,7 @@ public class Elevator extends SubsystemBase {
     System.out.println(heightGoal);
     double vel = pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal);
     double feed = feedforwardElevatorController.calculate(0);
-    followerMotor.setVoltage(vel+feed);
+    //followerMotor.setVoltage(vel+feed);
     masterMotor.setVoltage(vel + feed);
 
   }
