@@ -73,13 +73,13 @@ public final class Constants {
         //Positions
         public static final double downPos = 0;
         public static final double l1 = 0;
-        public static final double l2 = 6.5-1.236220; //inches
-        public static final double l3 = 22.5-1.236220; //inches
-        public static final double l4 = 52.64-1.236220;
-        public static final double net = 53.2-1.236220;
+        public static final double l2 = Units.inchesToMeters(6.5-1.236220); 
+        public static final double l3 = Units.inchesToMeters(22.5-1.236220); 
+        public static final double l4 = Units.inchesToMeters(52.64-1.236220);
+        public static final double net = Units.inchesToMeters(53.2-1.236220);
         public static final double processor = 0;
-        public static final double bottomAlgaeRemoval = 22.5-1.236220;
-        public static final double uppperAlgaeRemoval = 38.35-1.236220;
+        public static final double bottomAlgaeRemoval = Units.inchesToMeters(22.5-1.236220);
+        public static final double uppperAlgaeRemoval = Units.inchesToMeters(38.35-1.236220);
         //ScoreENUM
         public enum ElevatorPos {
             DOWN(downPos),
