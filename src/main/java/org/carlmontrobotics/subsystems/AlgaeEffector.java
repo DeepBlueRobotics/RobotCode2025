@@ -56,6 +56,7 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -89,7 +90,9 @@ import edu.wpi.first.util.sendable.*;
 
 public class AlgaeEffector extends SubsystemBase {
 
-    
+    private double armGoal = LOWER_ANGLE_LIMIT;
+    private double armMaxVelocityDegreesPerSecond;
+
     //motors
     private final SparkFlex topMotor = null; //new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
     private final SparkFlex bottomMotor = null; //new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless); 
@@ -132,7 +135,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
-        armMotorConfig.closedLoop.pid(armkP, armkI , armkD);
+        armMotorConfig.closedLoop.pid(armkP, armkI , armkD).maxMotion.maxVelocity(armMaxVelocityDegreesPerSecond).maxAcceleration(1000);
         armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
        
     }
@@ -172,7 +175,7 @@ public class AlgaeEffector extends SubsystemBase {
         configureMotors();
         kDt = 0.02;
         currentPosition = getArmState();
-        
+        setArmTarget(0);
         
 
         SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmTarget(0)));
@@ -232,7 +235,7 @@ public class AlgaeEffector extends SubsystemBase {
             armkP, //change to: Constants.kP[ARM_ARRAY_ORDER]
             armkI, //change to:  Constants.kI[ARM_ARRAY_ORDER]
             armkD  // Constants.kd[ARM_ARRAY_ORDER]
-            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+            ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
         armMotorConfig.absoluteEncoder.zeroCentered(true);
         // armMotor.configure(pincherMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -282,6 +285,7 @@ public class AlgaeEffector extends SubsystemBase {
     //arm methods
 
     //drives arm from set point to goal position
+    /* 
     public void setArmPosition() {
         
         currentPosition = getArmState();
@@ -292,7 +296,7 @@ public class AlgaeEffector extends SubsystemBase {
         // armFeedVolts = armFeedforward.calculate(calculateTo.position, 0);
         // armFeedVolts = armFeedforward.calculate(currentPosition.position, 0);
         double s = (getArmPos()>calculateTo.position) ? -armkS : armkS;
-        armFeedVolts = s + Math.cos(Units.degreesToRadians(getArmPos()))*armkG;
+        //armFeedVolts = s + Math.cos(Units.degreesToRadians(getArmPos()))*armkG;
 
         System.out.println("### feed volts: "+armFeedVolts);
 
@@ -316,11 +320,38 @@ public class AlgaeEffector extends SubsystemBase {
         
         //((setPoint.position),ControlType.kPosition,armFeedVolts);
     }
-    
+    */
+
+    public double manualFF(double goalRad){
+        double cvel = Units.degreesToRadians(Units.rotationsToDegrees(armAbsoluteEncoder.getVelocity()));
+        double cpos = Units.degreesToRadians(getArmPos());
+        double err = goalRad - cpos;
+
+        double ks_volts = armkS * (Math.abs(err)/err);
+        double kg_volts = Math.cos(goalRad) * armkG;
+
+        double kv_calc = 1 / (DCMotor.getNEO(1).withReduction(ARM_GEAR_RATIO).KvRadPerSecPerVolt);// 1 / (rad/s/v) = Vs/rad
+        // double kv_volts = kv_calc * cvel;
+        double kv_volts=0;
+
+        armFeedVolts = ks_volts + kg_volts + kv_volts;
+
+        return armFeedVolts;
+    }
     // // use trapezoid 
     public void setArmTarget(double targetPos){
-        armGoalState.position = targetPos;//getArmClampedGoal(targetPos); 
-        armGoalState.velocity = 0;
+        // armGoalState.position = targetPos;//getArmClampedGoal(targetPos); 
+        // armGoalState.velocity = 0;
+        armGoal = targetPos;
+
+        if (armMotor != null) {
+            // armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoal), -0.00001*(armGoal- getArmPos()));
+            armFeedVolts = manualFF(Units.degreesToRadians(armGoal));
+            // System.out.println("feedVolts: "+ armFeedVolts);
+            pidControllerArm.setReference(armGoal, ControlType.kPosition,ClosedLoopSlot.kSlot0, armFeedVolts);
+        }
+        
+        
     }
 
 
@@ -412,16 +443,25 @@ public class AlgaeEffector extends SubsystemBase {
     @Override
     public void periodic() {
         //armMotor.set(0.1);
-        
-        
-        setArmTarget(-20);
+
+        // armkI = SmartDashboard.getNumber("arm kI", 0);
+        // armkP = SmartDashboard.getNumber("arm kP", 0);
+        // armkD = SmartDashboard.getNumber("arm kD", 0);
+        updateArmPID();
+        setArmTarget(armGoal);
        
-        setArmPosition();
+        // setArmPosition();
         // System.out.println(".");
+        // System.out.println("feedVolts: "+ armFeedVolts);
         
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("goal position", armGoalState.position);
-        SmartDashboard.putNumber("Raw Arm Angle",(armAbsoluteEncoder.getPosition()));
+        SmartDashboard.putNumber("Raw Arm Angle",armAbsoluteEncoder.getPosition());
+        System.out.println("_feedVolts: "+ armFeedVolts);
+        System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
+        
+        //System.out.println("!!!!!!!!" + getArmPos());
+        // System.out.println("outvolts: "+ armFeedVolts);
         /*
         SmartDashboard.putNumber("Raw Arm Angle",Units.rotationsToDegrees(armAbsoluteEncoder.getPosition()));
         //armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
@@ -514,7 +554,11 @@ public class AlgaeEffector extends SubsystemBase {
        builder.addDoubleProperty("arm kP", () -> armkP , (value) -> { armkP = value; updateArmPID(); });
        builder.addDoubleProperty("arm kI", () -> armkI , (value) -> { armkI = value; updateArmPID(); });
        builder.addDoubleProperty("arm kD", () -> armkD, (value) -> { armkD = value; updateArmPID(); });
+       builder.addDoubleProperty("Set Arm Max Velocity", () -> armMaxVelocityDegreesPerSecond, (value) -> { armMaxVelocityDegreesPerSecond = value; updateArmPID(); });
        builder.addDoubleProperty("arm angle (degrees)", () -> getArmPos(), null);
+       builder.addDoubleProperty("output volts", () -> armMotor.getAppliedOutput()*armMotor.getBusVoltage(), null);
+       builder.addDoubleProperty("Set Goal Angle in Degrees", () -> armGoal, (value) -> {setArmTarget(value); });
     }
+
 
 }
