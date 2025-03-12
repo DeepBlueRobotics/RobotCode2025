@@ -340,9 +340,12 @@ public class AlgaeEffector extends SubsystemBase {
     }
     // // use trapezoid 
     public void setArmTarget(double targetPos){
-        // armGoalState.position = targetPos;//getArmClampedGoal(targetPos); 
-        // armGoalState.velocity = 0;
+        // 
+
         armGoal = targetPos;
+        getArmClampedGoal(targetPos); 
+        //armGoalState.velocity = 0;
+
 
         if (armMotor != null) {
             // armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoal), -0.00001*(armGoal- getArmPos()));
@@ -442,6 +445,8 @@ public class AlgaeEffector extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        
         //armMotor.set(0.1);
 
         // armkI = SmartDashboard.getNumber("arm kI", 0);
@@ -459,6 +464,14 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putNumber("Raw Arm Angle",armAbsoluteEncoder.getPosition());
         System.out.println("_feedVolts: "+ armFeedVolts);
         System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
+
+        if(getArmPos() < LOWER_ANGLE_LIMIT && armAbsoluteEncoder.getVelocity() < 0){
+            armMotor.set(0);
+          
+        } 
+        if(getArmPos()> UPPER_ANGLE_LIMIT && armAbsoluteEncoder.getVelocity()> 0){
+            armMotor.set(0);
+        }
         
         //System.out.println("!!!!!!!!" + getArmPos());
         // System.out.println("outvolts: "+ armFeedVolts);
