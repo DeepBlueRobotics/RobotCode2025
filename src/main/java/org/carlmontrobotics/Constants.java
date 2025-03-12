@@ -21,7 +21,7 @@ public final class Constants {
         public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
         public final static double INPUT_FAST_SPEED = 0.2; //TODO: tune this
         public final static double INPUT_SLOW_SPEED = 0.1; //TODO: tune this
-        public final static double OUTPUT_SPEED = 0.1; //TODO: tune this
+        public final static double OUTPUT_SPEED = 0.5; //TODO: tune this
         public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = -0.1; //TOD: tune this?
         public final static double KP = 1.3; //TODO: tune this
         public final static double KI = 0;

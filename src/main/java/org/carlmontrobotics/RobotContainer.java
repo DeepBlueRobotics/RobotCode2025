@@ -15,7 +15,7 @@ import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.CoralIntake;
 import org.carlmontrobotics.commands.CoralOuttake;
-import org.carlmontrobotics.commands.hkasjhkasdg;
+import org.carlmontrobotics.commands.StopCoralMotor;
 import org.carlmontrobotics.commands.CoralIntakeManual;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
@@ -80,12 +80,12 @@ public class RobotContainer {
 
     axisTrigger(manipulatorController, Axis.kLeftTrigger)
     .whileTrue(new CoralIntake(coralEffector))
-    .onFalse(new hkasjhkasdg(coralEffector));
+    .onFalse(new StopCoralMotor(coralEffector));
     
     
     axisTrigger(manipulatorController, Axis.kRightTrigger)
       .whileTrue(new CoralIntakeManual(coralEffector))
-      .onFalse(new hkasjhkasdg(coralEffector));
+      .onFalse(new StopCoralMotor(coralEffector));
     
     new JoystickButton(manipulatorController, (Button.kA.value)).whileTrue(new CoralIntake(coralEffector));
   }

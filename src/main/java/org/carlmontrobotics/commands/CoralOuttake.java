@@ -25,7 +25,7 @@ public class CoralOuttake extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-coralEffector.setMotorSpeed(-OUTPUT_SPEED+0.4);
+coralEffector.setMotorSpeed(-OUTPUT_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
