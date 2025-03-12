@@ -93,8 +93,8 @@ public class RobotContainer {
   private void setBindingsDriver() {}
   private void setBindingsManipulator() {
 
-    new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, ElevatorPos.L2));
-    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, ElevatorPos.DOWN));
+    new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, 0.5));
+    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, 0.05));
   }
 
   /**

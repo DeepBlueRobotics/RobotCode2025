@@ -31,7 +31,7 @@ public class TeleopElevator extends Command {
 
         goalState = new TrapezoidProfile.State(elevator.getCurrentHeight()+dist, 0);
 
-        elevator.setGoal(goalState.position);
+        //elevator.setGoal(goalState.position);
             
         // double speeds = getReqSpeeds();
         // //SmartDashboard.putNumber("speeds", speeds);
