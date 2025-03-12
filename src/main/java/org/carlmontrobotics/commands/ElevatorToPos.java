@@ -6,17 +6,23 @@ import org.carlmontrobotics.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ElevatorToPos extends Command {
-    Elevator elevator;
-    ElevatorPos bruh;
-
-    public ElevatorToPos(Elevator elevator, ElevatorPos pos) {
+    private Elevator elevator;
+    private double pos;
+    public ElevatorToPos(Elevator elevator, double pos) {
         this.elevator = elevator;
-        bruh = pos;
+        this.pos = pos;
         addRequirements(elevator);
     }
     @Override
     public void initialize() {
-        elevator.setGoal(bruh);
+
+    }
+    @Override
+    public void execute() {
+        elevator.setGoal(pos);
+    }
+    public boolean isFinished() {
+        return false;
     }
 
 }

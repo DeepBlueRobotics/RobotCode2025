@@ -62,18 +62,18 @@ public final class Constants {
 		public static final double minElevatorHeightInches = 0;
 		
         //PID
-        public static final double kP = 35;
+        public static final double kP = 15;//45.476;
         public static final double kI = 0;
         public static final double kD = 10.609;
 		//Feedforward
-        public static final double kS = 0.12666;
+        public static final double kS = 0; //.12666
 		public static final double kG = 0.177;
 		public static final double kV = 8.9921;
 		public static final double kA = 1.4586;
         //Positions
         public static final double downPos = 0;
         public static final double l1 = 0;
-        public static final double l2 = 0.75;// 6.5-1.236220; //inches
+        public static final double l2 = 6.5-1.236220; //inches
         public static final double l3 = 22.5-1.236220; //inches
         public static final double l4 = 52.64-1.236220;
         public static final double net = 53.2-1.236220;
@@ -103,10 +103,11 @@ public final class Constants {
 			}
 		}
 
-		// Tolerance
 		public static final double elevatorTolerance = 0.4;
 
-	}
+
+	}// Tolerance
+	
 
 	public static final class Drivetrainc {
 		// #region Subsystem Constants
