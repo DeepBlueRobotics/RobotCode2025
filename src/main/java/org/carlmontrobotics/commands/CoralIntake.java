@@ -15,7 +15,8 @@ public class CoralIntake extends Command {
     // Timer coralInTimer = new Timer();
     public static double coralMotorPosition;
     private CoralEffector coralEffector;
-    private boolean isIn = false;
+    private boolean isSeen = false;
+    private boolean isTouching = false;
 
     public CoralIntake(CoralEffector coralEffector) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -34,10 +35,11 @@ public class CoralIntake extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(coralEffector.getVel() <  COAST_VELOCITY_AT_INPUT && coralEffector.distanceSensorSeesCoral()) {
-            isIn=true;
+        isSeen = coralEffector.distanceSensorSeesCoral();
+        if(coralEffector.getVel() <  COAST_VELOCITY_AT_INPUT && isSeen) {
+            isTouching=true;
         } else {
-            isIn = false;
+            isTouching = false;
         }
         // if (CoralEffector.distanceSensorSees) {
         //     coralIn = true;
@@ -67,7 +69,7 @@ public class CoralIntake extends Command {
         // if (coralEffector.coralIn){
         //     coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
         // }
-        if (coralEffector.distanceSensorSeesCoral() && isIn == true){
+        if (coralEffector.distanceSensorSeesCoral() && isSeen == true){
             coralEffector.setMotorSpeed(INPUT_SLOW_SPEED/2);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn=true;
@@ -82,12 +84,12 @@ public class CoralIntake extends Command {
     @Override
     public void end(boolean interrupted) {
         coralEffector.setMotorSpeed(0);
-        isIn = false;
+        
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return isTouching && isSeen;
     }
 }
