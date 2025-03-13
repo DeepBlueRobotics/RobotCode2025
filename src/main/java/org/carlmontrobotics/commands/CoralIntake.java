@@ -25,7 +25,7 @@ public class CoralIntake extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+       
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -56,13 +56,13 @@ public class CoralIntake extends Command {
         //SmartDashboard.putNumber("timer", timer.get());
         // SmartDashboard.getBoolean("outtakeGet", coralIn);
 
-        if (coralEffector.coralIn){
+        if (!coralEffector.distanceSensorSeesCoral() && coralEffector.coralIn){
             coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
         }
         else if (coralEffector.distanceSensorSeesCoral()){
             coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
-            coralEffector.coralIn=true;
+            coralEffector.coralIn = true;
         }
         // else if (coralEffector.limitSwitchSeesCoral()){
         //     coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
@@ -72,12 +72,13 @@ public class CoralIntake extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        coralEffector.setMotorSpeed(0);
+        // coralEffector.setMotorSpeed(0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return coralEffector.motorAtGoal() || timer.get() > INTAKE_TIME_OUT;
+        // return coralEffector.motorAtGoal() || timer.get() > INTAKE_TIME_OUT;
+        return false;
     }
 }

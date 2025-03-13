@@ -48,7 +48,7 @@ public class CoralEffector extends SubsystemBase {
     SparkFlexConfig config = new SparkFlexConfig();
     public CoralEffector(){
     config
-        .inverted(false)
+        .inverted(true)
         .idleMode(IdleMode.kBrake);
     config.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)

@@ -49,7 +49,7 @@ public class RobotContainer {
   public final GenericHID manipulatorController = new GenericHID(MANIPULATOR_CONTROLLER_PORT);
   public final CoralEffector coralEffector = new CoralEffector();
 
-  public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
+  // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
 
   public RobotContainer() {
     SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
