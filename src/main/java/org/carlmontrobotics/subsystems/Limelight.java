@@ -20,19 +20,25 @@ public class Limelight extends SubsystemBase {
     LimelightHelpers.SetFiducialIDFiltersOverride(CORAL_LL, CORAL_VALID_IDS);
     LimelightHelpers.SetFiducialIDFiltersOverride(REEF_LL, REEF_VALID_IDS);
 
-    SmartDashboard.putBoolean("sees coral station tag", seesTag(CORAL_LL));
+    // SmartDashboard.putBoolean("sees coral station tag", seesTag(CORAL_LL));
     SmartDashboard.putBoolean("sees reef tag", seesTag(REEF_LL));
-    SmartDashboard.putNumber("distance to coral", getDistanceToApriltag(CORAL_LL, CORAL_MOUNT_ANGLE, Apriltagc.CORAL_HEIGHT_METERS, CORAL_LL_HEIGHT_FROM_GROUND_METERS));
-    SmartDashboard.putNumber("distance to reef", getDistanceToApriltag(REEF_LL, REEF_MOUNT_ANGLE, Apriltagc.REEF_HEIGHT_METERS, REEF_LL_HEIGHT_FROM_GROUND_METERS));
+    // SmartDashboard.putNumber("distance to coral", getDistanceToApriltag(CORAL_LL, CORAL_MOUNT_ANGLE, Apriltagc.CORAL_HEIGHT_METERS, CORAL_LL_HEIGHT_FROM_GROUND_METERS));
+    // SmartDashboard.putNumber("distance to reef", getDistanceToApriltag(REEF_LL, REEF_MOUNT_ANGLE, Apriltagc.REEF_HEIGHT_METERS, REEF_LL_HEIGHT_FROM_GROUND_METERS));
+    SmartDashboard.putNumber("distance to reef mt2", getDistanceToApriltagMT2(REEF_LL));
+
+    SmartDashboard.putNumber("strafe left", 0);
+    SmartDashboard.putNumber("strafe right", 0);
+
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("sees coral station tag", seesTag(CORAL_LL));
+    // SmartDashboard.putBoolean("sees coral station tag", seesTag(CORAL_LL));
     SmartDashboard.putBoolean("sees reef tag", seesTag(REEF_LL));
-    SmartDashboard.putNumber("distance to coral", getDistanceToApriltag(CORAL_LL, CORAL_MOUNT_ANGLE, Apriltagc.CORAL_HEIGHT_METERS, CORAL_LL_HEIGHT_FROM_GROUND_METERS));
-    SmartDashboard.putNumber("distance to reef", getDistanceToApriltag(REEF_LL, REEF_MOUNT_ANGLE, Apriltagc.REEF_HEIGHT_METERS, REEF_LL_HEIGHT_FROM_GROUND_METERS));
-    SmartDashboard.putNumber("distance to reef megatag2", getDistanceToApriltagMT2());
+    // SmartDashboard.putNumber("distance to coral", getDistanceToApriltag(CORAL_LL, CORAL_MOUNT_ANGLE, Apriltagc.CORAL_HEIGHT_METERS, CORAL_LL_HEIGHT_FROM_GROUND_METERS));
+    // SmartDashboard.putNumber("distance to reef", getDistanceToApriltag(REEF_LL, REEF_MOUNT_ANGLE, Apriltagc.REEF_HEIGHT_METERS, REEF_LL_HEIGHT_FROM_GROUND_METERS));
+    SmartDashboard.putNumber("distance to reef megatag2", getDistanceToApriltagMT2(REEF_LL));
+
   }
 
   public double getTYDeg(String limelightName) {
@@ -51,8 +57,8 @@ public class Limelight extends SubsystemBase {
     }
   }
 
-  public double getDistanceToApriltagMT2() { 
-    Pose3d targetPoseRobotSpace = LimelightHelpers.getTargetPose3d_RobotSpace(CORAL_LL);
+  public double getDistanceToApriltagMT2(String limelightName) { 
+    Pose3d targetPoseRobotSpace = LimelightHelpers.getTargetPose3d_RobotSpace(limelightName);
 
     double x = targetPoseRobotSpace.getX();
     double z = targetPoseRobotSpace.getZ();

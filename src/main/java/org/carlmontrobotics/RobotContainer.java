@@ -56,6 +56,7 @@ public class RobotContainer {
   public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
 
   private final Drivetrain drivetrain = new Drivetrain();
+  private final Limelight limelight = new Limelight(drivetrain);
 
   /* These are assumed to be equal to the AUTO ames in pathplanner */
   /* These must be equal to the pathPlanner path names from the GUI! */
@@ -113,7 +114,12 @@ public class RobotContainer {
             () -> ProcessedAxisValue(driverController, Axis.kRightX),
             () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
   }
-  private void setBindingsDriver() {}
+  private void setBindingsDriver() {
+    new JoystickButton(driverController, 1)
+                .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
+    new JoystickButton(driverController, 2)
+                .whileTrue(new MoveToRightBranch(drivetrain, limelight));
+  }
   private void setBindingsManipulator() {}
 
   /**

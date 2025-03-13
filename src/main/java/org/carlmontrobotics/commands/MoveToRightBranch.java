@@ -8,6 +8,7 @@ import org.carlmontrobotics.subsystems.Drivetrain;
 import org.carlmontrobotics.subsystems.Limelight;
 import org.carlmontrobotics.subsystems.LimelightHelpers;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import static org.carlmontrobotics.Constants.Limelightc.*;
 
@@ -15,6 +16,7 @@ public class MoveToRightBranch extends Command {
   private final Drivetrain dt;
   private final Limelight ll;
   private boolean originalFieldOrientation;
+  double strafeErr;
 
   /** Creates a new MoveToLeftBranch. */
   public MoveToRightBranch(Drivetrain dt, Limelight ll) {
@@ -33,12 +35,13 @@ public class MoveToRightBranch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("strafe left", strafeErr);
     if (ll.seesTag(CORAL_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
-      double strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(CORAL_LL))) * ll.getDistanceToApriltag(CORAL_LL, CORAL_MOUNT_ANGLE, REEF_LL_HEIGHT_FROM_GROUND_METERS, CORAL_LL_HEIGHT_FROM_GROUND_METERS);
+      strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
       dt.drive(0, strafeErr, 0);
     }
     else {
-      dt.drive(0, RIGHT_TO_CORAL_BRANCH,0);
+      dt.drive(0, RIGHT_CORAL_BRANCH,0);
     }
   }
 
