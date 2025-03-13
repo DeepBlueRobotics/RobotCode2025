@@ -52,8 +52,8 @@ public final class Constants {
 		// Config
 		// TODO figure these parts out
 		public static final double MAX_ACCEL_RAD_P_S = 1;
-		public static final IdleMode masterIdleMode = IdleMode.kCoast; //TODO: Change back to break
-		public static final IdleMode followerIdleMode = IdleMode.kCoast;
+		public static final IdleMode masterIdleMode = !CONFIG.isMonkeyElevator() ? IdleMode.kCoast : IdleMode.kBrake; //TODO: Change back to break
+		public static final IdleMode followerIdleMode = masterIdleMode;
 		public static final boolean masterInverted = false; 
 		public static final boolean followerInverted = true;
 		public static final double masterPositionConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)); // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76

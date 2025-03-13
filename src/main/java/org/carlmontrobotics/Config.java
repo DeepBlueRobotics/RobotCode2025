@@ -22,6 +22,7 @@ public abstract class Config implements Sendable {
 
     // Add additional config settings by declaring a protected field, and...
     protected boolean exampleFlagEnabled = false;
+    protected boolean isMonkeyElevator = false;
     protected boolean hammerHead = false;
     protected boolean setupSysId = true;
     protected boolean useSmartDashboardControl = false; // whether to control arm position + rpm of
@@ -32,7 +33,9 @@ public abstract class Config implements Sendable {
 
     // ...a public getter starting with "is" for booleans or "get" for other types.
     // Do NOT remove this example. It is used by unit tests.
-
+    public boolean isMonkeyElevator() {
+        return isMonkeyElevator;
+    }
     public boolean isExampleFlagEnabled() {
         return exampleFlagEnabled;
     }

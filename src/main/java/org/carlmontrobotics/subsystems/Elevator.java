@@ -285,7 +285,30 @@ public class Elevator extends SubsystemBase {
     }
     return true;
   }
-
+  private int getDirection(double pos) {
+    int direction = 1;
+    if(getCurrentHeight() > pos) {
+      direction = -1;
+    } else {
+      direction = 1;
+    }
+    return direction;
+  }
+  public boolean monkeyElevatorPos(double pos) {
+    masterMotor.set(0.3 * getDirection(pos));
+    if(getDirection(pos)>0) {
+      if(getCurrentHeight() >= pos) {
+        masterMotor.set(0);
+        return true;
+      }
+    } else {
+      if(getCurrentHeight() <= pos) {
+        masterMotor.set(0);
+        return true;
+      }
+    }
+    return false;
+  }
   public boolean isSAFE() {
     return !isUNSAFE();
   }
@@ -344,7 +367,8 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
-   goToGoal();
+    if(!CONFIG.isMonkeyElevator())
+      goToGoal();
    
     //masterMotor.set(0.1);
     if(!isBruh() && masterMotor.getBusVoltage() > 0) {
