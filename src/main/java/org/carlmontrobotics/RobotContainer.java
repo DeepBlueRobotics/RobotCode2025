@@ -145,43 +145,13 @@ public class RobotContainer {
    
 
     private void setBindingsDriver() {
-        // new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new
-        // RunAlgae(algaeEffector, 1, false)); //wrong
-        // new Trigger(() -> driverController.getRawButton(OI.Driver.Y)).onTrue(new
-        // RunAlgae(algaeEffector, 2, false));
-        // new Trigger(() -> driverController.getRawButton(OI.Driver.B)).onTrue(new
-        // RunAlgae(algaeEffector, 3, false));
-        // new Trigger(() -> driverController.getRawButton(OI.Driver.A)).onTrue(new
-        // RunAlgae(algaeEffector, 0, true));
-        new JoystickButton(driverController, 3).whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kForward)); //press x to run
-        new JoystickButton(driverController, 4).whileTrue(elevator.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)); //press y to run
-        new JoystickButton(driverController, 1).whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kForward)); //press a to run
-        new JoystickButton(driverController, 2).whileTrue(elevator.sysIdDynamic(SysIdRoutine.Direction.kReverse)); //press b to run
-
+       
+      new JoystickButton(driverController, Driver.resetFieldOrientationButton)
+                .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
     }
 
    
-        // new JoystickButton(manipulatorController, INTAKE_BUMPER)
-        //         .whileTrue(new SequentialCommandGroup(
-        //                 new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
-        //                 new GroundIntakeAlgae(algaeEffector)));
-
-        // outake
-
-        // dealgify
-
-    //     new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)
-    //             .whileFalse(new OuttakeAlgae(algaeEffector));
-
-    //     new JoystickButton(manipulatorController, XboxController.Button.kA.value)
-    //             .onTrue(new DealgaficationIntake(algaeEffector));
-
-    //     new JoystickButton(manipulatorController, XboxController.Button.kB.value)
-    //             .onTrue(new ShootAlgae(algaeEffector));
-    //     new JoystickButton(manipulatorController, XboxController.Button.kY.value)
-    //             .onTrue(new InstantCommand(() -> {
-    //                 algaeEffector.stopMotors();
-    //             }));
+        
     
 
     /**
@@ -313,8 +283,8 @@ public class RobotContainer {
     }
 
     private void RegisterCustomAutos(){
-        // autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
-        // autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
+         autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
+         autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
     
     }
     //private void setupAutos() {
