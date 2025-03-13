@@ -134,7 +134,7 @@ public class Elevator extends SubsystemBase {
    bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
     // timer = new Timer();
     // timer.start();
-
+    SmartDashboard.putBoolean("Is Unsafe", false);
 
     //PID
     pidElevatorController = new PIDController(kP, kI, kD);
@@ -344,13 +344,14 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
+    SmartDashboard.putBoolean("Is Unsafe", isBruh());
    goToGoal();
    //masterEncoder.setPosition(0);
     //masterMotor.set(0.1);
     if(!isBruh() && masterMotor.getBusVoltage() > 0) {
       masterMotor.set(0); 
       System.err.println("Bad Bad nightmare bad. Elevator unsafe");
-      //hey tell them they're unsafe and a bad happened
+      
     }
   //   if (isEncoderDisconnected()) {
   //     masterMotor.set(0);
