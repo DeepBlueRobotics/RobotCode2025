@@ -407,15 +407,19 @@ public class RobotContainer {
     //   .whileFalse(new CoralIntake(coralEffector));
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
-    axisTrigger(manipulatorController, Axis.kLeftTrigger)
-    .whileTrue(new CoralOuttake(coralEffector))
-    .whileFalse(new CoralIntake(coralEffector));
     axisTrigger(manipulatorController, Axis.kRightTrigger)
+    .whileTrue(new CoralOuttake(coralEffector));
+    //.whileFalse(new CoralIntake(coralEffector));
+    axisTrigger(manipulatorController, Axis.kLeftTrigger)
+    .whileTrue(new CoralOuttake(coralEffector));
+    new JoystickButton(manipulatorController, Button.kRightBumper.value)
     .whileTrue(new CoralIntakeManual(coralEffector));
-new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l2));
+    new JoystickButton(manipulatorController, Button.kLeftBumper.value)
+    .whileTrue(new CoralIntakeBackwards(coralEffector));
+new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
         new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
         new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
-        new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l4));
+        new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));
   }
     
   
