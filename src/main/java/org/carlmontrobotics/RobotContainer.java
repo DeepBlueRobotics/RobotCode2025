@@ -56,6 +56,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static org.carlmontrobotics.Constants.Elevatorc.l1;
 import static org.carlmontrobotics.Constants.Elevatorc.l2;
+import static org.carlmontrobotics.Constants.Elevatorc.l3;
+import static org.carlmontrobotics.Constants.Elevatorc.l4;
 //constats
 //import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import static org.carlmontrobotics.Constants.OI.Driver.*;
@@ -412,7 +414,8 @@ public class RobotContainer {
     .whileTrue(new CoralIntakeManual(coralEffector));
 new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l2));
         new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
-        new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, .5));
+        new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
+        new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l4));
   }
     
   

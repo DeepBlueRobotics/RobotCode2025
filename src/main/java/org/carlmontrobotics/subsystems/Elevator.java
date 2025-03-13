@@ -222,8 +222,8 @@ public class Elevator extends SubsystemBase {
   // }
 
   public void goToGoal() {
-    System.out.println("GOing to GOAL");
-    System.out.println(heightGoal);
+    //System.out.println("GOing to GOAL");
+    //System.out.println(heightGoal);
     double vel = pidElevatorController.calculate(masterEncoder.getPosition(), heightGoal);
     double feed = feedforwardElevatorController.calculate(0);
     //followerMotor.setVoltage(vel+feed);
@@ -345,10 +345,10 @@ public class Elevator extends SubsystemBase {
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
    goToGoal();
-   
+   //masterEncoder.setPosition(0);
     //masterMotor.set(0.1);
     if(!isBruh() && masterMotor.getBusVoltage() > 0) {
-     // masterMotor.set(0); 
+      masterMotor.set(0); 
       System.err.println("Bad Bad nightmare bad. Elevator unsafe");
       //hey tell them they're unsafe and a bad happened
     }

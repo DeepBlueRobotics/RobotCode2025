@@ -56,8 +56,8 @@ public final class Constants {
 		// Config
 		// TODO figure these parts out
 		public static final double MAX_ACCEL_RAD_P_S = 1;
-		public static final IdleMode masterIdleMode = IdleMode.kCoast; //TODO: Change back to break
-		public static final IdleMode followerIdleMode = IdleMode.kCoast;
+		public static final IdleMode masterIdleMode = IdleMode.kBrake; //TODO: Change back to break
+		public static final IdleMode followerIdleMode = IdleMode.kBrake;
 		public static final boolean masterInverted = false; 
 		public static final boolean followerInverted = true;
 		public static final double masterPositionConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)); // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
@@ -66,9 +66,9 @@ public final class Constants {
 		public static final double minElevatorHeightInches = 0;
 		
         //PID
-        public static final double kP = 15;//45.476;
+        public static final double kP = 20;//45.476;
         public static final double kI = 0;
-        public static final double kD = 10.609;
+        public static final double kD = 10.609/2;
 		//Feedforward
         public static final double kS = 0; //.12666
 		public static final double kG = 0.177;
