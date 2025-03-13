@@ -29,7 +29,7 @@ public final class Constants {
         public final static double INTAKE_TIME_OUT = 0.25;
         public final static double OUTTAKE_TIME_OUT = 10;
         public final static double MANUAL_INTAKE_TIME_OUT = 1;
-        public final static double COAST_VELOCITY_AT_INPUT = 400;
+        public final static double COAST_VELOCITY_AT_INPUT = 300;
         //public final static int LIMIT_SWITCH_PORT = 7; //TODO: Change
     }
 }

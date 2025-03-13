@@ -16,6 +16,7 @@ import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.CoralIntake;
 import org.carlmontrobotics.commands.CoralOuttake;
 import org.carlmontrobotics.commands.StopCoralMotor;
+import org.carlmontrobotics.commands.TapCoralIn;
 import org.carlmontrobotics.commands.CoralIntakeManual;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
@@ -87,7 +88,7 @@ public class RobotContainer {
       .whileTrue(new CoralIntakeManual(coralEffector))
       .onFalse(new StopCoralMotor(coralEffector));
     
-    new JoystickButton(manipulatorController, (Button.kA.value)).whileTrue(new CoralIntake(coralEffector));
+    new JoystickButton(manipulatorController, (Button.kA.value)).onTrue(new TapCoralIn(coralEffector));
   }
     
   

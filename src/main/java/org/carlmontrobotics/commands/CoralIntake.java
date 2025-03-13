@@ -17,7 +17,8 @@ public class CoralIntake extends Command {
     private CoralEffector coralEffector;
     private boolean isSeen = false;
     private boolean isTouching = false;
-
+    private boolean firstTime = true;
+    private boolean bruh = false;
     public CoralIntake(CoralEffector coralEffector) {
         // Use addRequirements() here to declare subsystem dependencies.
         // addRequirements(this.CoralEffector = CoralEffector);
@@ -35,12 +36,18 @@ public class CoralIntake extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        isSeen = coralEffector.distanceSensorSeesCoral();
-        if(coralEffector.getVel() <  COAST_VELOCITY_AT_INPUT && isSeen) {
-            isTouching=true;
-        } else {
-            isTouching = false;
+        if(firstTime) {
+        if(coralEffector.distanceSensorSeesCoral()) {
+            firstTime = false;
+            bruh = coralEffector.distanceSensorSeesCoral();
         }
+        
+        }
+        // if(coralEffector.getVel() <  COAST_VELOCITY_AT_INPUT && isSeen) {
+        //     isTouching=true;
+        // } else {
+        //     isTouching = false;
+        //}
         // if (CoralEffector.distanceSensorSees) {
         //     coralIn = true;
         //     if (CoralEffector.limitSwitchSees) {
@@ -69,11 +76,11 @@ public class CoralIntake extends Command {
         // if (coralEffector.coralIn){
         //     coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
         // }
-        if (coralEffector.distanceSensorSeesCoral() && isSeen == true){
+        if (coralEffector.distanceSensorSeesCoral()){
             coralEffector.setMotorSpeed(INPUT_SLOW_SPEED/2);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn=true;
-           // timer.start();
+            timer.start();
         } else {
             coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
         }
@@ -84,12 +91,15 @@ public class CoralIntake extends Command {
     @Override
     public void end(boolean interrupted) {
         coralEffector.setMotorSpeed(0);
-        
+        bruh = false;
+        if(interrupted != true) {
+            firstTime = true;
+        }
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return isTouching && isSeen;
+        return !coralEffector.distanceSensorSeesCoral() && bruh;
     }
 }

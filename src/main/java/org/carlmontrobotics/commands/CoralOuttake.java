@@ -44,6 +44,7 @@ coralEffector.setMotorSpeed(-OUTPUT_SPEED);
   public void end(boolean interrupted) {
     coralEffector.setMotorSpeed(0);
     coralEffector.coralIn = false;
+    coralEffector.setIn(false);
   }
 
   // Returns true when the command should end.

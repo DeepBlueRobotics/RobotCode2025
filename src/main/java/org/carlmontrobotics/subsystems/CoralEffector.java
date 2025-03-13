@@ -38,7 +38,7 @@ public class CoralEffector extends SubsystemBase {
     //FIXME ADD THE LIMIT SWITCH!!
     public TimeOfFlight distanceSensor = new TimeOfFlight(CORAL_DISTANCE_SENSOR_PORT);
     
-    
+    private boolean isIn = false;
     public final RelativeEncoder coralEncoder = coralMotor.getEncoder();
     
     private double coralOutput;
@@ -87,7 +87,12 @@ public class CoralEffector extends SubsystemBase {
   // public boolean limitSwitchSeesCoral() {
   //   return !coralLimitSwitch.get();
   // }
-
+  public boolean getIn() {
+    return isIn;
+  }
+  public void setIn(boolean in) {
+    isIn = in;
+  }
   @Override
   public void periodic() {
     //coralMotor.getClosedLoopController().setReference(1, ControlType.kVelocity);

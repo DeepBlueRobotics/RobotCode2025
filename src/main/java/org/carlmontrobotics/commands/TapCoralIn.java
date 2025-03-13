@@ -50,6 +50,6 @@ public class TapCoralIn extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > .2 || coralEffector.coralIn == true;
+    return timer.get() > .2; //|| coralEffector.coralIn == true;
   }
 }
