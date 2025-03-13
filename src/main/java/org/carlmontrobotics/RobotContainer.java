@@ -399,6 +399,8 @@ public class RobotContainer {
       () -> ProcessedAxisValue(driverController, Axis.kLeftX),
       () -> ProcessedAxisValue(driverController, Axis.kRightX),
       () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
+      SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
+    SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
   }
 
   private void setBindingsManipulator() {
