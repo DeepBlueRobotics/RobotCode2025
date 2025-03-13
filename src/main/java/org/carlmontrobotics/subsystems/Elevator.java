@@ -295,7 +295,7 @@ public class Elevator extends SubsystemBase {
     return direction;
   }
   public boolean monkeyElevatorPos(double pos) {
-    masterMotor.set(0.3 * getDirection(pos));
+    masterMotor.set(0.15 * getDirection(pos));
     if(getDirection(pos)>0) {
       if(getCurrentHeight() >= pos) {
         masterMotor.set(0);
