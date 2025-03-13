@@ -32,10 +32,6 @@ import java.util.function.BooleanSupplier;
 
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator;
-import org.carlmontrobotics.commands.CoralIntake;
-import org.carlmontrobotics.commands.CoralOuttake;
-import org.carlmontrobotics.commands.CoralIntakeManual;
-import org.carlmontrobotics.subsystems.CoralEffector;
 
 //limit switch
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -44,9 +40,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -55,8 +54,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import static org.carlmontrobotics.Constants.Elevatorc.l1;
+import static org.carlmontrobotics.Constants.Elevatorc.l2;
 //constats
-import static org.carlmontrobotics.Constants.CoralEffectorc.*;
+//import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import static org.carlmontrobotics.Constants.OI.Driver.*;
 import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -88,66 +89,58 @@ public class RobotContainer {
     // private final String[] autoNames = new String[] {};
     // private final AlgaeEffector algaeEffector = new AlgaeEffector();
      private final Elevator elevator = new Elevator();
-     private final SendableChooser<Command> autoChooser;
-
-
-  //1. using GenericHID allows us to use different kinds of controllers
-  //2. Use absolute paths from constants to reduce confusion
-  public final GenericHID driverController = new GenericHID(DRIVE_CONTROLLER_PORT);
-  public final GenericHID manipulatorController = new GenericHID(MANIPULATOR_CONTROLLER_PORT);
-  public final CoralEffector coralEffector = new CoralEffector();
-
-  // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
-
-    public RobotContainer() {
-        {
-            // Put any configuration overrides to the dashboard and the terminal
-            // SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
-            // SmartDashboard.putData(drivetrain);
-            // System.out.println(Config.CONFIG);
-
-            // SmartDashboard.putData("BuildConstants", BuildInfo.getInstance());
-
-            // SmartDashboard.setDefaultBoolean("babymode", babyMode);
-            // SmartDashboard.setPersistent("babymode");
-            // // safe auto setup... stuff in setupAutos() is not safe to run here - will break
-            // // robot
-            // registerAutoCommands();
-            // SmartDashboard.putData(autoSelector);
-            // SmartDashboard.setPersistent("SendableChooser[0]");
-
-            // autoSelector.addOption("Nothing", 0);
-            // autoSelector.addOption("Raw Forward", 1);
-            // autoSelector.addOption("PP Simple Forward", 2);// index corresponds to index in autoCommands[]
-
-            // int i = 3;
-            // for (String n : autoNames) {
-            //     autoSelector.addOption(n, i);
-            //     i++;
-            // }
-
-            // ShuffleboardTab autoSelectorTab = Shuffleboard.getTab("Auto Chooser Tab");
-            // autoSelectorTab.add(autoSelector).withSize(2, 1);
-        }
-
-        RegisterAutoCommands();
-        autoChooser = AutoBuilder.buildAutoChooser();
+     private SendableChooser<Command> autoChooser = new SendableChooser<>();
+     
+     
+       //1. using GenericHID allows us to use different kinds of controllers
+       //2. Use absolute paths from constants to reduce confusion
+       
+       public final CoralEffector coralEffector = new CoralEffector();
+     
+       // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
+     
+         public RobotContainer() {
+             {
+                 // Put any configuration overrides to the dashboard and the terminal
+                 // SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
+                 // SmartDashboard.putData(drivetrain);
+                 // System.out.println(Config.CONFIG);
+     
+                 // SmartDashboard.putData("BuildConstants", BuildInfo.getInstance());
+     
+                 // SmartDashboard.setDefaultBoolean("babymode", babyMode);
+                 // SmartDashboard.setPersistent("babymode");
+                 // // safe auto setup... stuff in setupAutos() is not safe to run here - will break
+                 // // robot
+                 // registerAutoCommands();
+                 // SmartDashboard.putData(autoSelector);
+                 // SmartDashboard.setPersistent("SendableChooser[0]");
+     
+                 // autoSelector.addOption("Nothing", 0);
+                 // autoSelector.addOption("Raw Forward", 1);
+                 // autoSelector.addOption("PP Simple Forward", 2);// index corresponds to index in autoCommands[]
+     
+                 // int i = 3;
+                 // for (String n : autoNames) {
+                 //     autoSelector.addOption(n, i);
+                 //     i++;
+                 // }
+     
+                 // ShuffleboardTab autoSelectorTab = Shuffleboard.getTab("Auto Chooser Tab");
+                 // autoSelectorTab.add(autoSelector).withSize(2, 1);
+             }
+     
+             RegisterAutoCommands();
+             autoChooser = AutoBuilder.buildAutoChooser();
         RegisterCustomAutos();
-        SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
-    SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
+         SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
+          SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
     }
 
-    private void setDefaultCommands() {
-        // drivetrain.setDefaultCommand(new TeleopDrive(drivetrain,
-        //         () -> ProcessedAxisValue(driverController, Axis.kLeftY),
-        //         () -> ProcessedAxisValue(driverController, Axis.kLeftX),
-        //         () -> ProcessedAxisValue(driverController, Axis.kRightX),
-        //         () -> driverController.getRawButton(OI.Driver.slowDriveButton), elevator));
-       // elevator.setDefaultCommand(new TeleopElevator(elevator, () -> ProcessedAxisValue(manipulatorController, Axis.kLeftY)));
-    }
+   
 
     private void setBindingsDriver() {
         // new Trigger(() -> driverController.getRawButton(OI.Driver.X)).onTrue(new
@@ -165,11 +158,7 @@ public class RobotContainer {
 
     }
 
-    private void setBindingsManipulator() {
-        new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, .75));
-        new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, .05));
-        new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, .5));
-        // intake
+   
         // new JoystickButton(manipulatorController, INTAKE_BUMPER)
         //         .whileTrue(new SequentialCommandGroup(
         //                 new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
@@ -191,7 +180,7 @@ public class RobotContainer {
     //             .onTrue(new InstantCommand(() -> {
     //                 algaeEffector.stopMotors();
     //             }));
-    }
+    
 
     /**
      * Flips an axis' Y coordinates upside down, but only if the select axis is a
@@ -201,10 +190,7 @@ public class RobotContainer {
      * @param axis The processed axis
      * @return The processed value.
      */
-    private double getStickValue(GenericHID hid, Axis axis) {
-        return hid.getRawAxis(axis.value)
-                * (axis == Axis.kLeftY || axis == Axis.kRightY ? -1 : 1);
-    }
+   
 
     /**
      * Processes an input from the joystick into a value between -1 and 1,
@@ -214,14 +200,7 @@ public class RobotContainer {
      * @param value The value to be processed.
      * @return The processed value.
      */
-    private double inputProcessing(double value) {
-        double processedInput;
-        // processedInput =
-        // (((1-Math.cos(value*Math.PI))/2)*((1-Math.cos(value*Math.PI))/2))*(value/Math.abs(value));
-        processedInput = Math.copySign(((1 - Math.cos(value * Math.PI)) / 2)
-                * ((1 - Math.cos(value * Math.PI)) / 2), value);
-        return processedInput;
-    }
+   
 
     /**
      * Combines both getStickValue and inputProcessing into a single function for
@@ -232,9 +211,7 @@ public class RobotContainer {
      * @param axis The processed axis
      * @return The processed value.
      */
-    private double ProcessedAxisValue(GenericHID hid, Axis axis) {
-        return DeadzonedAxis(inputProcessing(getStickValue(hid, axis)));
-    }
+    
 
     /**
      * Returns zero if a axis input is inside the deadzone
@@ -260,10 +237,7 @@ public class RobotContainer {
      *         objects. * @throws
      *         NullPointerException if either stick or axis is null.
      */
-    private Trigger axisTrigger(GenericHID controller, Axis axis) {
-        return new Trigger(() -> Math
-                .abs(getStickValue(controller, axis)) > OI.MIN_AXIS_TRIGGER_VALUE);
-    }
+   
 
     private void RegisterAutoCommands() {
       //I made some of the constants up, so change once merged
@@ -337,8 +311,8 @@ public class RobotContainer {
     }
 
     private void RegisterCustomAutos(){
-        autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
-        autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
+        // autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
+        // autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
     
     }
     //private void setupAutos() {
@@ -414,29 +388,17 @@ public class RobotContainer {
         //return new PrintCommand("I HAT EEEYTHI");
     //}
 
-    public Command getAutonomousCommand() {
-        // setupAutos();
+    
 
-        // Integer autoIndex = autoSelector.getSelected();
-
-        // if (autoIndex != null && autoIndex != 0) {
-        //     new PrintCommand("Running selected auto: " + autoSelector.toString());
-        //     return autoCommands.get(autoIndex.intValue());
-        // }
-        return autoChooser.getSelected();
-        //return new PrintCommand("No auto :(");
-    }
-}
   private void setDefaultCommands() {
-    // drivetrain.setDefaultCommand(new TeleopDrive(
-    //   drivetrain,
-    //   () -> ProcessedAxisValue(driverController, Axis.kLeftY)),
-    //   () -> ProcessedAxisValue(driverController, Axis.kLeftX)),
-    //   () -> ProcessedAxisValue(driverController, Axis.kRightX)),
-    //   () -> driverController.getRawButton(OI.Driver.slowDriveButton)
-    // ));
+    drivetrain.setDefaultCommand(new TeleopDrive(
+      drivetrain,
+      () -> ProcessedAxisValue(driverController, Axis.kLeftY),
+      () -> ProcessedAxisValue(driverController, Axis.kLeftX),
+      () -> ProcessedAxisValue(driverController, Axis.kRightX),
+      () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
   }
-  private void setBindingsDriver() {}
+
   private void setBindingsManipulator() {
     // new JoystickButton(manipulatorController, OI.Manipulator.OUTAKE_BUTTON)
     //   .whileTrue(new CoralOutake(coralEffector))
@@ -448,6 +410,9 @@ public class RobotContainer {
     .whileFalse(new CoralIntake(coralEffector));
     axisTrigger(manipulatorController, Axis.kRightTrigger)
     .whileTrue(new CoralIntakeManual(coralEffector));
+new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l2));
+        new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
+        new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, .5));
   }
     
   

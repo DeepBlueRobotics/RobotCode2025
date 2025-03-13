@@ -352,7 +352,7 @@ public final class Constants {
 
 			public static final int slowDriveButton = Button.kLeftBumper.value;
 			public static final int resetFieldOrientationButton = Button.kRightBumper.value;
-			public static final int toggleFieldOrientedButton = Button.kStart.value;
+			public static final int toggleFieldOrientedButton = Button.kStadia.value;
 
 			public static final int y = Button.kY.value;
 			public static final int b = Button.kB.value;
@@ -369,4 +369,23 @@ public final class Constants {
 		public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;// woah, this is high.
 
 	}
+	public static final class CoralEffectorc{
+        public final static int CORAL_MOTOR_PORT = 30;
+        public final static int CORAL_LIMIT_SWITCH_PORT = 0;
+        public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
+        public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
+        public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
+        public final static double INPUT_FAST_SPEED = 0.07; //TODO: tune this
+        public final static double INPUT_SLOW_SPEED = 0.02; //TODO: tune this
+        public final static double OUTPUT_SPEED = 0.4; //TODO: tune this
+        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = -0.3; //TOD: tune this?
+        public final static double KP = 2; //TODO: tune this
+        public final static double KI = 0;
+        public final static double KD = 0;
+        public final static double INTAKE_TIME_OUT = 0.5;
+        public final static double OUTTAKE_TIME_OUT = 10;
+        public final static double MANUAL_INTAKE_TIME_OUT = 1;
+
+        // public final static int LIMIT_SWITCH_PORT = 7; //TODO: Change
+    }
 }

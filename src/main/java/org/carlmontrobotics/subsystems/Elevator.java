@@ -348,7 +348,7 @@ public class Elevator extends SubsystemBase {
    
     //masterMotor.set(0.1);
     if(!isBruh() && masterMotor.getBusVoltage() > 0) {
-      //masterMotor.set(0); 
+     // masterMotor.set(0); 
       System.err.println("Bad Bad nightmare bad. Elevator unsafe");
       //hey tell them they're unsafe and a bad happened
     }
