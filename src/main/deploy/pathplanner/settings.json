@@ -7,7 +7,6 @@
     "Daniel Stuff",
     "Forward",
     "Left Paths",
-    "Defensive",
     "Other Stuff",
     "Right Paths"
   ],
@@ -28,8 +27,7 @@
     "4 Piece L2",
     "4 Piece L3",
     "4 Piece L4",
-    "Forward",
-    "Defensive Autos lmao"
+    "Forward"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
