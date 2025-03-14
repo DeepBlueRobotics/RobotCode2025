@@ -11,21 +11,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "L4NoLL&NoAlgae"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Right Piece(2)"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Right Piece(5)"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Piece(6)"
+            "name": "IntakeCoralNoLL"
           }
         },
         {
@@ -35,9 +35,45 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "L4NoLL&NoAlgae"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Right Piece(6)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(5)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4NoLL&NoAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(6)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
           }
         }
       ]

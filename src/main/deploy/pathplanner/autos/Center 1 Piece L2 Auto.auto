@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "L2NoLL&NoAlgae"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Center Piece(2)"

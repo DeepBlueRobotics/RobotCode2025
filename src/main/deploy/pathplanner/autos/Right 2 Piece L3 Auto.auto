@@ -11,9 +11,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "L3NoLL&NoAlgae"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Right Piece(2)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
           }
         },
         {
@@ -23,9 +35,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "L3NoLL&NoAlgae"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Right Piece(6)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
           }
         }
       ]

@@ -11,15 +11,33 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "L1NoLL&NoAlgae"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left Piece(2)"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left Piece(3)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L1NoLL&NoAlgae"
           }
         },
         {
@@ -29,9 +47,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left Piece(3)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L1NoLL&NoAlgae"
           }
         },
         {
@@ -41,9 +71,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left Piece(3)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L1NoLL&NoAlgae"
           }
         }
       ]

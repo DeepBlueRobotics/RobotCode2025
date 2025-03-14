@@ -252,7 +252,13 @@ public class RobotContainer {
         new SequentialCommandGroup(
                         new ParallelCommandGroup(
                                 new CoralIntake(coralEffector))));
-        
+
+        NamedCommands.registerCommand("L1NoLL&NoAlgae", new SequentialCommandGroup(
+                new SequentialCommandGroup(
+                        new ElevatorToPos(elevator, Elevatorc.l1),
+                        new CoralOuttake(coralEffector),
+                        new ElevatorToPos(elevator, Elevatorc.downPos))));
+
         NamedCommands.registerCommand("L2NoLL&NoAlgae", new SequentialCommandGroup(
                 new SequentialCommandGroup(
                         new ElevatorToPos(elevator, Elevatorc.l2),
