@@ -72,8 +72,8 @@ public class CoralIntake extends Command {
             coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn = true;
-            driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
-            manipulatorController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+            driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
+            manipulatorController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
         }
         // else if (coralEffector.limitSwitchSeesCoral()){
         //     coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
