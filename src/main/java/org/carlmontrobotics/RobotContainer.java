@@ -140,8 +140,8 @@ public class RobotContainer {
              RegisterAutoCommands();
              autoChooser = AutoBuilder.buildAutoChooser();
         RegisterCustomAutos();
-         SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
-          SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
+        SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector, driverController, manipulatorController));
+        SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
@@ -225,7 +225,7 @@ public class RobotContainer {
       // NamedCommands.registerCommand("ShootAlgae", new ShootAlgae(algaeEffector));
 
       //CoralEffector
-      NamedCommands.registerCommand("CoralIntake", new CoralIntake(coralEffector));
+      NamedCommands.registerCommand("CoralIntake", new CoralIntake(coralEffector, driverController, manipulatorController));
       NamedCommands.registerCommand("CoralOutake", new CoralOuttake(coralEffector));
       
       //AlgaeArm
@@ -251,7 +251,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeCoralNoLL",
         new SequentialCommandGroup(
                         new ParallelCommandGroup(
-                                new CoralIntake(coralEffector))));
+                                new CoralIntake(coralEffector, driverController, manipulatorController))));
 
         NamedCommands.registerCommand("L1NoLL&NoAlgae", new SequentialCommandGroup(
                 new SequentialCommandGroup(

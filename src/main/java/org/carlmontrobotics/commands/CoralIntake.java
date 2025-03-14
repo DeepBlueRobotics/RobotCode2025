@@ -3,6 +3,7 @@ package org.carlmontrobotics.commands;
 import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,10 +16,16 @@ public class CoralIntake extends Command {
     // Timer coralInTimer = new Timer();
     public static double coralMotorPosition;
     private CoralEffector coralEffector;
+    private GenericHID driverController;
+    private GenericHID manipulatorController;
 
-    public CoralIntake(CoralEffector coralEffector) {
+
+    public CoralIntake(CoralEffector coralEffector, GenericHID driverController, GenericHID manipulatorController) {
         // Use addRequirements() here to declare subsystem dependencies.
         // addRequirements(this.CoralEffector = CoralEffector);
+        this.driverController = driverController;
+        this.manipulatorController = manipulatorController;
+
         addRequirements(this.coralEffector = coralEffector);
     }
 
@@ -58,11 +65,15 @@ public class CoralIntake extends Command {
 
         if (!coralEffector.distanceSensorSeesCoral() && coralEffector.coralIn){
             coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
+            driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+            manipulatorController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
         }
         else if (coralEffector.distanceSensorSeesCoral()){
             coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
             coralEffector.coralIn = true;
+            driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+            manipulatorController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
         }
         // else if (coralEffector.limitSwitchSeesCoral()){
         //     coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
