@@ -150,10 +150,9 @@ public class RobotContainer {
    
 
     private void setBindingsDriver() {
-       
       new JoystickButton(driverController, Driver.resetFieldOrientationButton)
                 .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
-    }
+      }
 
    
         
@@ -322,7 +321,8 @@ public class RobotContainer {
     }
 
     private void RegisterCustomAutos(){
-         autoChooser.addOption("DriveRaiseAutonL4", new DriveRaiseAutonl4(drivetrain, elevator, 1, coralEffector));
+         autoChooser.addOption("DriveRaiseAutonL4", new DriveRaiseAutonl4(drivetrain, elevator, 1));
+         autoChooser.addOption("DriveRaiseAutonL4Score", new DriveRaiseAutonl4Score(drivetrain, elevator, 1, coralEffector));
          autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
          autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
     
