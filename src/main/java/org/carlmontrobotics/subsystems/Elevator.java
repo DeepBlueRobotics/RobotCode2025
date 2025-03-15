@@ -208,18 +208,7 @@ public class Elevator extends SubsystemBase {
     return !bottomLimitSwitch.get();//limit switches are opposite
   }
 
-  // public void updateEncoders() {//what the fuck??
-  //   // if (elevatorAtMax()) {
-  //   //   masterEncoder.setPosition(maxElevatorHeightInches);
-  //   //   timer.reset();
-  //   //   timer.start();
-  //   // }
-  //   if (elevatorAtMin()) {
-  //     masterEncoder.setPosition(minElevatorHeightInches);
-  //     timer.reset();
-  //     timer.start();
-  //   }
-  // }
+
 
   public void goToGoal() {
     //System.out.println("GOing to GOAL");
@@ -256,8 +245,8 @@ public class Elevator extends SubsystemBase {
     }
 
   }
-  //private boolean isEncoderDisconnected() {
-  //   double currentElevPos = getPos();
+  // private boolean isEncoderDisconnected() {
+  //   double currentElevPos = getCurrentHeight();
   //   double currentRelativeElevVel = masterEncoder.getVelocity();
     
   //   if ((currentRelativeElevVel != 0)) {
@@ -277,21 +266,12 @@ public class Elevator extends SubsystemBase {
   // }
 
 //safetyMethod is used to check during sysid if the elevator height and voltage are at the safe threshold
-  public boolean isUNSAFE(){
-    if (1.33>= masterEncoder.getPosition() 
-    || maxVelocityMetersPerSecond <= masterEncoder.getVelocity() 
-    || 0 <=masterEncoder.getPosition()){
-      return false;
-    }
-    return true;
+  
+  public void zeroPosition() {
+    masterEncoder.setPosition(0);
   }
-
-  public boolean isSAFE() {
-    return !isUNSAFE();
-  }
-
-  public boolean isBruh() {
-    if(getCurrentHeight()>1.33 || getCurrentHeight() < 0 && masterEncoder.getVelocity() < 0) {
+  public boolean isSafe() {
+    if((getCurrentHeight()>1.33 && masterEncoder.getVelocity() > 0) || (getCurrentHeight() < 0 && masterEncoder.getVelocity() < 0)) {
       return false;
       
     }
@@ -304,7 +284,7 @@ public class Elevator extends SubsystemBase {
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     // BooleanSupplier bruh = Elevator::safetyMethod();
-    return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isBruh());
+    return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isSafe());
     //use onlyWhile to decorate the command and therefore add safety limits (for height and voltage)
     //TO-DO: fix safety method (add velocity) and also other bugs
   }
@@ -315,7 +295,7 @@ public class Elevator extends SubsystemBase {
    * @param direction The direction (forward or reverse) to run the test in
    */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isBruh());
+    return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isSafe());
   } 
   public double getEleVel() {
     return masterEncoder.getVelocity();
@@ -332,30 +312,24 @@ public class Elevator extends SubsystemBase {
     // goalHeight = SmartDashboard.getNumber("Goal", 0);
     // System.out.println(goalHeight);
     //setGoal(.75);
-    SmartDashboard.putBoolean("SAFE?", isBruh());
+    SmartDashboard.putBoolean("SAFE?", isSafe());
 
-    if (elevatorAtMin()) {
-      SmartDashboard.putString("ElevatorState", "🟢GO🟢");
-    }
-    else {
-      SmartDashboard.putString("ElevatorState", "🟡AT MIN🟡");
-    }//add one for max height
+    // if (elevatorAtMin()) {
+    //   SmartDashboard.putString("ElevatorState", "🟢GO🟢");
+    // }
+    // else {
+    //   SmartDashboard.putString("ElevatorState", "🟡AT MIN🟡");
+    // }//add one for max height
     //add one for if unsafe
     SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
-    SmartDashboard.putBoolean("Is Unsafe", isBruh());
    goToGoal();
    //masterEncoder.setPosition(0);
     //masterMotor.set(0.1);
-    if(!isBruh() && masterMotor.getBusVoltage() > 0) {
+    if(!isSafe() && masterMotor.getBusVoltage() > 0) {
       masterMotor.set(0); 
       System.err.println("Bad Bad nightmare bad. Elevator unsafe");
-      
     }
-  //   if (isEncoderDisconnected()) {
-  //     masterMotor.set(0);
-      
-  // }
   }
 }
