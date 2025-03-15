@@ -65,8 +65,6 @@ public class CoralIntake extends Command {
 
         if (!coralEffector.distanceSensorSeesCoral() && coralEffector.coralIn){
             coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
-            driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
-            manipulatorController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
         }
         else if (coralEffector.distanceSensorSeesCoral()){
             coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
