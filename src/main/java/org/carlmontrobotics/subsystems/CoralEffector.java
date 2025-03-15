@@ -2,6 +2,8 @@ package org.carlmontrobotics.subsystems;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
 
+//import static org.carlmontrobotics.lib199.MotorControllerFactory;
+
 import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.servohub.ServoHub.ResetMode;
@@ -33,7 +35,7 @@ import com.revrobotics.spark.SparkBase;
 
 public class CoralEffector extends SubsystemBase {
   
-    public SparkFlex coralMotor = new SparkFlex(CORAL_MOTOR_PORT, MotorType.kBrushless);
+    public SparkFlex coralMotor = MotorControllerFactory.createSparkFlex(CORAL_MOTOR_PORT,MotorControllerFactory.baseSparkFlexConfig());
     // public DigitalInput coralLimitSwitch = new DigitalInput(CORAL_LIMIT_SWITCH_PORT);
     //FIXME ADD THE LIMIT SWITCH!!
     public TimeOfFlight distanceSensor = new TimeOfFlight(CORAL_DISTANCE_SENSOR_PORT);
