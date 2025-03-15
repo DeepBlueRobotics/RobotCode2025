@@ -38,10 +38,10 @@ public class MoveToLeftBranch extends Command {
     SmartDashboard.putNumber("strafe left", strafeErr);
     if (ll.seesTag(CORAL_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0, strafeErr, 0);
+      dt.drive(0.0000001, strafeErr, 0);
     }
     else {
-      dt.drive(0, LEFT_CORAL_BRANCH,0);
+      dt.drive(0.0000001, LEFT_CORAL_BRANCH,0);
     }
   }
 

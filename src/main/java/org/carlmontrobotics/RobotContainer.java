@@ -77,6 +77,7 @@ public class RobotContainer {
     public final GenericHID driverController = new GenericHID(Driver.port);
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
     private final Drivetrain drivetrain =  new Drivetrain();
+    private final Limelight limelight = new Limelight(drivetrain);
 
 
     //private final Drivetrain drivetrain = new Drivetrain();
@@ -155,6 +156,13 @@ public class RobotContainer {
        axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
                 .onTrue(new InstantCommand(()->drivetrain.setFieldOriented(false)))
                 .onFalse(new InstantCommand(()->drivetrain.setFieldOriented(true)));
+
+
+        new JoystickButton(driverController, Driver.a)
+          .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
+
+        new JoystickButton(driverController, Driver.x)
+          .whileTrue(new MoveToRightBranch(drivetrain, limelight));
       }
 
    
