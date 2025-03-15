@@ -322,7 +322,7 @@ public class RobotContainer {
     }
 
     private void RegisterCustomAutos(){
-         autoChooser.addOption("DriveRaiseAutonL4", new DriveRaiseAutonl4(drivetrain, elevator, 1));
+         autoChooser.addOption("DriveRaiseAutonL4", new DriveRaiseAutonl4(drivetrain, elevator, 1, coralEffector));
          autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
          autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
     

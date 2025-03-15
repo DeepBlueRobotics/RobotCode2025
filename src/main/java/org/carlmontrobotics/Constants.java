@@ -107,7 +107,7 @@ public final class Constants {
 			}
 		}
 
-		public static final double elevatorTolerance = 0.4;
+		public static final double elevatorTolerance = 0.02;
 
 
 	}// Tolerance

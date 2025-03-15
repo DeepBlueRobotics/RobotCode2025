@@ -236,13 +236,13 @@ public class Elevator extends SubsystemBase {
     // if (heightGoal == maxElevatorHeightInches) {
     //   return elevatorAtMax();
     // }
-    if (heightGoal == minElevatorHeightInches) {
-      return elevatorAtMin();
-    }
+    // if (heightGoal == minElevatorHeightInches) {
+    //   return elevatorAtMin();
+    // }
     
-    else {
+    // else {
       return (Math.abs(getCurrentHeight() - heightGoal) <= elevatorTolerance);
-    }
+    //}
 
   }
   // private boolean isEncoderDisconnected() {
