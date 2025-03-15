@@ -94,8 +94,8 @@ public class AlgaeEffector extends SubsystemBase {
     private double armMaxVelocityDegreesPerSecond;
 
 
-    private double upperLimitAdjustmentVoltage;
-    private double lowerLimitAdjustmentVoltage;
+    private double upperLimitAdjustmentVoltage = 0.2;
+    private double lowerLimitAdjustmentVoltage = -0.2;
     //motors
     private final SparkFlex topMotor = null; //new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
     private final SparkFlex bottomMotor = null; //new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless); 
@@ -468,11 +468,11 @@ public class AlgaeEffector extends SubsystemBase {
         System.out.println("_feedVolts: "+ armFeedVolts);
         System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
 
-        if(getArmPos() < LOWER_ANGLE_LIMIT && armAbsoluteEncoder.getVelocity() < 0){
+        if(getArmPos() < LOWER_ANGLE_LIMIT){
             armMotor.set(-0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
           
         } 
-        if(getArmPos()> UPPER_ANGLE_LIMIT && armAbsoluteEncoder.getVelocity()> 0){
+        if(getArmPos()> UPPER_ANGLE_LIMIT){
             armMotor.set(0.02 * armAbsoluteEncoder.getVelocity() + upperLimitAdjustmentVoltage);
         }
         
