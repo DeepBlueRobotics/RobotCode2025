@@ -138,11 +138,12 @@ public class RobotContainer {
                  // autoSelectorTab.add(autoSelector).withSize(2, 1);
              }
      
-             RegisterAutoCommands();
-             autoChooser = AutoBuilder.buildAutoChooser();
+        RegisterAutoCommands();
+        autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, 1));
         RegisterCustomAutos();
-         SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
-          SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
+        SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
+        SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
@@ -160,10 +161,10 @@ public class RobotContainer {
                 .onFalse(new InstantCommand(()->drivetrain.setFieldOriented(true)));
 
 
-        new JoystickButton(driverController, Driver.a)
+        new JoystickButton(driverController, Driver.x)
           .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
 
-        new JoystickButton(driverController, Driver.x)
+        new JoystickButton(driverController, Driver.b)
           .whileTrue(new MoveToRightBranch(drivetrain, limelight));
       }
 

@@ -49,6 +49,7 @@ public class MoveToLeftBranch extends Command {
   @Override
   public void end(boolean interrupted) {
     dt.setFieldOriented(originalFieldOrientation);
+    dt.drive(0,0,0);
   }
 
   // Returns true when the command should end.
