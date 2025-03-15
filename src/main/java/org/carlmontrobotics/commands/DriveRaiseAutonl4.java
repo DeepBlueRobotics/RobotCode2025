@@ -34,7 +34,7 @@ public class DriveRaiseAutonl4 extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(timer.get() == 4.0){
+    if(timer.get() >= 4.0){
       drivetrain.drive(0.00000000000000000000000000001, 0, 0);
       elevator.setGoal(Constants.Elevatorc.l4);
     }
