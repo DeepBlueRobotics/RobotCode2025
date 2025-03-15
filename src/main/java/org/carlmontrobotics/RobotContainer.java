@@ -152,6 +152,9 @@ public class RobotContainer {
     private void setBindingsDriver() {
       new JoystickButton(driverController, Driver.resetFieldOrientationButton)
                 .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
+       axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
+                .onTrue(new InstantCommand(()->drivetrain.setFieldOriented(false)))
+                .onFalse(new InstantCommand(()->drivetrain.setFieldOriented(true)));
       }
 
    
