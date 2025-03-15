@@ -77,6 +77,7 @@ public class RobotContainer {
     public final GenericHID driverController = new GenericHID(Driver.port);
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
     private final Drivetrain drivetrain =  new Drivetrain();
+    private final Limelight limelight = new Limelight(drivetrain);
 
 
     //private final Drivetrain drivetrain = new Drivetrain();
@@ -151,8 +152,13 @@ public class RobotContainer {
 
     private void setBindingsDriver() {
       new JoystickButton(driverController, Driver.resetFieldOrientationButton)
-                .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
-      }
+        .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
+
+      new JoystickButton(driverController, 1)
+        .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
+      new JoystickButton(driverController, 2)
+        .whileTrue(new MoveToRightBranch(drivetrain, limelight));
+    }
 
    
         
@@ -436,46 +442,52 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
         new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
         new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));
   }
-    
-  
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
   }
 
   /**
-   * Flips an axis' Y coordinates upside down, but only if the select axis is a joystick axis
-   * 
-   * @param hid The controller/plane joystick the axis is on
-   * @param axis The processed axis
-   * @return The processed value.
-   */
-  private double getStickValue(GenericHID hid, Axis axis) {
-    return hid.getRawAxis(axis.value) * (axis == Axis.kLeftY || axis == Axis.kRightY ? -1 : 1);
+     * Flips an axis' Y coordinates upside down, but only if the select axis is a
+     * joystick axis
+     *
+     * @param hid  The controller/plane joystick the axis is on
+     * @param axis The processed axis
+     * @return The processed value.
+     */
+    private double getStickValue(GenericHID hid, Axis axis) {
+      return hid.getRawAxis(axis.value)
+              * (axis == Axis.kLeftY || axis == Axis.kRightY ? -1 : 1);
   }
+
   /**
-   * Processes an input from the joystick into a value between -1 and 1, sinusoidally instead of linearly
-   * 
+   * Processes an input from the joystick into a value between -1 and 1,
+   * sinusoidally instead of
+   * linearly
+   *
    * @param value The value to be processed.
    * @return The processed value.
    */
   private double inputProcessing(double value) {
-    double processedInput;
-    // processedInput =
-    // (((1-Math.cos(value*Math.PI))/2)*((1-Math.cos(value*Math.PI))/2))*(value/Math.abs(value));
-    processedInput = Math.copySign(((1 - Math.cos(value * Math.PI)) / 2) * ((1 - Math.cos(value * Math.PI)) / 2),
-        value);
-    return processedInput;
+      double processedInput;
+      // processedInput =
+      // (((1-Math.cos(value*Math.PI))/2)*((1-Math.cos(value*Math.PI))/2))*(value/Math.abs(value));
+      processedInput = Math.copySign(((1 - Math.cos(value * Math.PI)) / 2)
+              * ((1 - Math.cos(value * Math.PI)) / 2), value);
+      return processedInput;
   }
+
   /**
-   * Combines both getStickValue and inputProcessing into a single function for processing joystick outputs
-   * 
-   * @param hid The controller/plane joystick the axis is on
+   * Combines both getStickValue and inputProcessing into a single function for
+   * processing joystick
+   * outputs
+   *
+   * @param hid  The controller/plane joystick the axis is on
    * @param axis The processed axis
    * @return The processed value.
    */
-  private double ProcessedAxisValue(GenericHID hid, Axis axis){
-    return inputProcessing(getStickValue(hid, axis));
+  private double ProcessedAxisValue(GenericHID hid, Axis axis) {
+      return DeadzonedAxis(inputProcessing(getStickValue(hid, axis)));
   }
 
   private Trigger axisTrigger(GenericHID controller, Axis axis) {
