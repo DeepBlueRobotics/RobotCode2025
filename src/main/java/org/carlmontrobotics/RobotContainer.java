@@ -147,7 +147,9 @@ public class RobotContainer {
         setBindingsDriver();
         setBindingsManipulator();
     }
-
+    public void resetFieldOrientation() {
+      drivetrain.resetFieldOrientation();
+    }
    
 
     private void setBindingsDriver() {
