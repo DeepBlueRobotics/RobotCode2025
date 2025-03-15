@@ -450,7 +450,10 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
   
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    // return Commands.print("No autonomous command configured");
+    Command cmd = autoChooser.getSelected();
+    System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
+    return cmd;
   }
 
   /**
