@@ -375,7 +375,14 @@ public class RobotContainer {
         
         autoChooser.addOption("ForwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));
         autoChooser.addOption("BackwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));        
-//------------------------------------------------------------------------------------------------        
+//------------------------------------------------------------------------------------------------
+/*deep blue is what DYNAMITE 
+  deep blue is what DYNAMITE 
+  deep blue is tick tick tick tick tick tick 
+  BOOM dynamite
+  OH YEAH
+  OH YEAHHHHHHHHH       
+*/ 
         autoChooser.addOption("forward4sec+autoalign+l4+Left", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,3),
           new MoveToLeftBranch(drivetrain, limelight),
