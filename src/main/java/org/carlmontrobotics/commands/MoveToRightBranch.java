@@ -25,7 +25,7 @@ public class MoveToRightBranch extends Command {
     this.ll = ll;
   }
 
-  // Called when the command is initially scheduled.
+  // Called when the comman d is initially scheduled.
   @Override
   public void initialize() {
     originalFieldOrientation = dt.getFieldOriented();
@@ -36,9 +36,9 @@ public class MoveToRightBranch extends Command {
   @Override
   public void execute() {
     SmartDashboard.putNumber("strafe left", strafeErr);
-    if (ll.seesTag(CORAL_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+    if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0.00001, strafeErr, 0);
+      dt.drive(0.00001, strafeErr + RIGHT_CORAL_BRANCH, 0);
     }
     else {
       dt.drive(0.00001, RIGHT_CORAL_BRANCH,0);
