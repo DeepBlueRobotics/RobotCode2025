@@ -29,6 +29,8 @@ public class Limelight extends SubsystemBase {
 
     SmartDashboard.putNumber("limelight strafing kp", 1);
 
+
+    SmartDashboard.putNumber("limelight forward kp", 6);
   }
 
   @Override
