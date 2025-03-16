@@ -140,7 +140,7 @@ public class RobotContainer {
      
         RegisterAutoCommands();
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, 1));
+        autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, 1, 4, 8));
         RegisterCustomAutos();
         SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
         SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
@@ -341,19 +341,19 @@ public class RobotContainer {
 
     private void RegisterCustomAutos(){
         autoChooser.addOption("DriveRaiseAutonL2", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1), 
+          new LastResortAuto(drivetrain, 1, 4, 8), 
           new ElevatorToPos(elevator, l2)));
         autoChooser.addOption("DriveRaiseAutonL2Score", 
-            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1), 
+            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 8), 
             new ElevatorToPos(elevator, l2), new CoralFastOutake(coralEffector)));
         autoChooser.addOption("DriveRaiseAutonL4", new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1), 
+            new LastResortAuto(drivetrain, 1, 4, 8),  
             new ElevatorToPos(elevator, l4)));
         autoChooser.addOption("DriveRaiseAutonL4Score", 
-            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1), 
+            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 8),  
             new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));
-        autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
-        autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
+        autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1, 4, 8));
+        autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, 1, 4, 8));
     
     }
     //private void setupAutos() {

@@ -15,12 +15,16 @@ public class LastResortAuto extends Command {
   private final Drivetrain drivetrain;
   private boolean prev;
   private int dir;
+  private int speed;
+  private int time;
 
   int MAX_SECONDS_DRIVE = 4;
 
-  public LastResortAuto(Drivetrain drivetrain, int direction) {
+  public LastResortAuto(Drivetrain drivetrain, int direction, int speed, int time) {
     dir = direction;
     addRequirements(this.drivetrain = drivetrain);
+    this.speed = speed;
+    this.time = time;
   }
 
   // Called when the command is initially scheduled.
@@ -30,7 +34,7 @@ public class LastResortAuto extends Command {
     timer.start();
     prev = drivetrain.getFieldOriented();
     drivetrain.setFieldOriented(false);
-    drivetrain.drive(1*dir, 0, 0);
+    drivetrain.drive(speed*dir, 0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,6 +52,6 @@ public class LastResortAuto extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(6);
+    return timer.hasElapsed(time);
   }
 }
