@@ -209,16 +209,16 @@ public class RobotContainer {
      */
     
 
-    /**
-     * Returns zero if a axis input is inside the deadzone
-     *
-     * @param hid  The controller/plane joystick the axis is on
-     * @param axis The processed axis
-     * @return The processed value.
-     */
-    private double DeadzonedAxis(double axOut) {
-        return (Math.abs(axOut) <= OI.JOY_THRESH) ? 0.0 : axOut;
-    }
+    // /**
+    //  * Returns zero if a axis input is inside the deadzone
+    //  *
+    //  * @param hid  The controller/plane joystick the axis is on
+    //  * @param axis The processed axis
+    //  * @return The processed value.
+    //  */
+    // private double DeadzonedAxis(double axOut) {
+    //     return (Math.abs(axOut) <= OI.JOY_THRESH) ? 0.0 : axOut;
+    // }
 
     /**
      * Returns a new instance of Trigger based on the given Joystick and Axis
@@ -357,87 +357,15 @@ public class RobotContainer {
         autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, 1, 4, 8));
     
     }
-    //private void setupAutos() {
-        //// CREATING PATHS from files
-        // if (!hasSetupAutos) {
-        //     autoCommands = new ArrayList<Command>();// clear old/nonexistent autos
-
-        //     for (int i = 0; i < autoNames.length; i++) {
-        //         String name = autoNames[i];
-
-        //         autoCommands.add(new PathPlannerAuto(name));
-
-                /*
-                 * // Charles' opinion: we shouldn't have it path find to the starting pose at
-                 * the start of match
-                 * new SequentialCommandGroup(
-                 * AutoBuilder.pathfindToPose(
-                 * PathPlannerAuto.getStaringPoseFromAutoFile(name),
-                 * PathPlannerAuto.getPathGroupFromAutoFile(name).get(0).
-                 * getPreviewStartingHolonomicPose(),
-                 * Autoc.pathConstraints),
-                 * new PathPlannerAuto(name));
-                 */
-            //}
-        //     hasSetupAutos = true;
-
-        //     // NOTHING
-        //     autoCommands.add(0, new PrintCommand("Running NULL Auto!"));
-        //     // RAW FORWARD command
-        //     // autoCommands.add(1, new SequentialCommandGroup(
-        //     // new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), new
-        //     // WaitCommand(0.5),
-        //     // new LastResortAuto(drivetrain)));
-        //     // dumb PP forward command
-        //     autoCommands.add(2, new PrintCommand("PPSimpleAuto not Configured!"));
-        // }
-        // // force regeneration each auto call
-        // autoCommands.set(2, constructPPSimpleAuto());// overwrite this slot each time auto runs
-    //}
-
-    //public Command constructPPSimpleAuto() {
-        /**
-         * PATHPLANNER SETTINGS Robot Width (m): .91 Robot Length(m): .94 Max Module Spd
-         * (m/s): 4.30
-         * Default Constraints Max Vel: 1.54, Max Accel: 6.86 Max Angvel: 360, Max
-         * AngAccel: 360
-         * (guesses!)
-         */
-        // default origin is on BLUE ALIANCE DRIVER RIGHT CORNER
-        // Pose2d currPos = drivetrain.getPose();
-
-        // FIXME running red PP file autos seems to break something, so the robot
-        // drivetrain drives in the wrong direction.
-        // running blue PP autos is fine though
-        // Note: alliance detection and path generation work correctly!
-        // Solution: Redeploy after auto.
-        // Pose2d endPos = (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
-        //         ? currPos.transformBy(new Transform2d(1, 0, new Rotation2d(0)))
-        //         : currPos.transformBy(new Transform2d(-1, 0, new Rotation2d(0)));
-
-        // List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currPos, endPos);
-
-        // // Create the path using the bezier points created above, /* m/s, m/s^2, rad/s,
-        // // rad/s^2 */
-        // PathPlannerPath path = new PathPlannerPath(bezierPoints,
-        //         Autoc.pathConstraints, null, new GoalEndState(0, currPos.getRotation()));
-
-        // path.preventFlipping = false;// don't flip, we do that manually already.
-
-        // return new SequentialCommandGroup(
-        //         new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), // align drivetrain wheels.
-        //         AutoBuilder.followPath(path).beforeStarting(new WaitCommand(1)));
-        //return new PrintCommand("I HAT EEEYTHI");
-    //}
 
     
 
   private void setDefaultCommands() {
     drivetrain.setDefaultCommand(new TeleopDrive(
       drivetrain,
-      () -> ProcessedAxisValue(driverController, Axis.kLeftY),
-      () -> ProcessedAxisValue(driverController, Axis.kLeftX),
-      () -> ProcessedAxisValue(driverController, Axis.kRightX),
+      () -> DeadzonedAxis(ProcessedAxisValue(driverController, Axis.kLeftY)),//.06 drift purple, .10 drift black
+      () -> DeadzonedAxis(ProcessedAxisValue(driverController, Axis.kLeftX)),
+      () -> DeadzonedAxis(ProcessedAxisValue(driverController, Axis.kRightX)),
       () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
       SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
@@ -508,7 +436,20 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
     return inputProcessing(getStickValue(hid, axis));
   }
 
+   /**
+     * Returns zero if a axis input is inside the deadzone
+     *
+     * @param hid  The controller/plane joystick the axis is on
+     * @param axis The processed axis
+     * @return The processed value.
+     */
+    private double DeadzonedAxis(double axOut) {
+        return (Math.abs(axOut) <= OI.JOY_THRESH) ? 0.0 : axOut;
+    }
+
   private Trigger axisTrigger(GenericHID controller, Axis axis) {
     return new Trigger( (BooleanSupplier)(() -> Math.abs(getStickValue(controller, axis)) > 0.2) );
   }
+
+  
 }
