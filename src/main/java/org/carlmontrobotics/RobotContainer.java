@@ -345,13 +345,13 @@ public class RobotContainer {
           new ElevatorToPos(elevator, l2)));
         autoChooser.addOption("DriveRaiseAutonL2Score", 
             new SequentialCommandGroup(new LastResortAuto(drivetrain, 1), 
-            new ElevatorToPos(elevator, l2), new CoralOuttake(coralEffector)));
+            new ElevatorToPos(elevator, l2), new CoralFastOutake(coralEffector)));
         autoChooser.addOption("DriveRaiseAutonL4", new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1), 
             new ElevatorToPos(elevator, l4)));
         autoChooser.addOption("DriveRaiseAutonL4Score", 
             new SequentialCommandGroup(new LastResortAuto(drivetrain, 1), 
-            new ElevatorToPos(elevator, l4), new CoralOuttake(coralEffector)));
+            new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));
         autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
         autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
     
