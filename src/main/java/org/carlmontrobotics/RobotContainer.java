@@ -342,36 +342,55 @@ public class RobotContainer {
     }
 
     private void RegisterCustomAutos(){
-        autoChooser.addOption("DriveRaiseAutonL2", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4, 3), 
+        autoChooser.addOption("DriveRaiseAutonL2Center", new SequentialCommandGroup(
+          new LastResortAuto(drivetrain, 1, 4, 2.5), 
           new ElevatorToPos(elevator, l2)));
-        autoChooser.addOption("DriveRaiseAutonL2Score", 
-            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 8), 
+        autoChooser.addOption("DriveRaiseAutonL2Left/Right", new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 3), 
+            new ElevatorToPos(elevator, l2)));
+
+        autoChooser.addOption("DriveRaiseAutonL2ScoreCenter", 
+            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 2.5), 
             new ElevatorToPos(elevator, l2), new CoralFastOutake(coralEffector)));
-        autoChooser.addOption("DriveRaiseAutonL4", new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 4, 8),  
+        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/Right", 
+            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 3), 
+            new ElevatorToPos(elevator, l2), new CoralFastOutake(coralEffector)));
+
+        autoChooser.addOption("DriveRaiseAutonL4Center", new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
             new ElevatorToPos(elevator, l4)));
-        autoChooser.addOption("DriveRaiseAutonL4Score", 
-            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 8),  
+        autoChooser.addOption("DriveRaiseAutonL4Left/Right", new SequentialCommandGroup(
+              new LastResortAuto(drivetrain, 1, 4, 3),  
+              new ElevatorToPos(elevator, l4)));
+
+        autoChooser.addOption("DriveRaiseAutonL4ScoreCenter", 
+            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 2.5),  
             new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));
-        autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1, 4, 8));
-        autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, 1, 4, 8));
+        autoChooser.addOption("DriveRaiseAutonL4ScoreLeft/Right", 
+            new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 3),  
+            new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));
+
+        autoChooser.addOption("ForwardLastResortAutoCenter", new LastResortAuto(drivetrain, 1, 4, 2.5));
+        autoChooser.addOption("BackwardLastResortAutoCenter", new LastResortAuto(drivetrain, 1, 4, 2.5));
         
+        autoChooser.addOption("ForwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));
+        autoChooser.addOption("BackwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));        
+//------------------------------------------------------------------------------------------------        
         autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4,4),
+          new LastResortAuto(drivetrain, 1, 4,3),
           new MoveToLeftBranch(drivetrain, limelight),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
         ));
 
         autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4,4),
+          new LastResortAuto(drivetrain, 1, 4,3),
           new MoveToLeftBranch(drivetrain, limelight),
           new L4Backup(drivetrain),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
         ));   
         
         autoChooser.addOption("forward4sec+autoalign+l2", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4,4),
+          new LastResortAuto(drivetrain, 1, 4,3),
           new MoveToLeftBranch(drivetrain, limelight),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
         ));   

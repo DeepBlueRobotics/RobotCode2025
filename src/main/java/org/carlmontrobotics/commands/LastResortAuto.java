@@ -17,14 +17,16 @@ public class LastResortAuto extends Command {
   private int dir;
   private int speed;
   private double time;
+  private double distance;
 
   int MAX_SECONDS_DRIVE = 4;
 
-  public LastResortAuto(Drivetrain drivetrain, int direction, int speed, double time) {
+  public LastResortAuto(Drivetrain drivetrain, int direction, int speed, double distance) {
     dir = direction;
     addRequirements(this.drivetrain = drivetrain);
     this.speed = speed;
-    this.time = time;
+    //this.time = time;
+    this.distance = distance;
   }
 
   // Called when the command is initially scheduled.
@@ -35,6 +37,7 @@ public class LastResortAuto extends Command {
     prev = drivetrain.getFieldOriented();
     drivetrain.setFieldOriented(false);
     drivetrain.drive(speed*dir, 0, 0);
+    time = distance/speed;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
