@@ -7,6 +7,7 @@ package org.carlmontrobotics.commands;
 import org.carlmontrobotics.subsystems.Drivetrain;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -23,7 +24,7 @@ public class L4Backup extends Command {
   public void initialize() {
     originalFieldOrientation = dt.getFieldOriented();
     dt.setFieldOriented(false);
-    dt.drive(-Units.inchesToMeters(13), 0, 0);
+    dt.drive(-Units.inchesToMeters(13) * SmartDashboard.getNumber("limelight forward kp", 6), 0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
