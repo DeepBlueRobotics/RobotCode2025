@@ -376,24 +376,33 @@ public class RobotContainer {
         autoChooser.addOption("ForwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));
         autoChooser.addOption("BackwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));        
 //------------------------------------------------------------------------------------------------        
-        autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
+        autoChooser.addOption("forward4sec+autoalign+l4+Left", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,3),
           new MoveToLeftBranch(drivetrain, limelight),
+          new LastResortAuto(drivetrain, -1, 1, 0.33),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
         ));
 
-        autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
+        autoChooser.addOption("forward4sec+autoalign+l4+Right", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,3),
-          new MoveToLeftBranch(drivetrain, limelight),
-          new L4Backup(drivetrain),
+          new MoveToRightBranch(drivetrain, limelight),
+          new LastResortAuto(drivetrain, -1, 1, 0.33),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
         ));   
         
-        autoChooser.addOption("forward4sec+autoalign+l2", new SequentialCommandGroup(
+        autoChooser.addOption("forward4sec+autoalign+l2+Left", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,3),
-          new MoveToLeftBranch(drivetrain, limelight),
+          new MoveToRightBranch(drivetrain, limelight),
+          new LastResortAuto(drivetrain, -1, 1, 0.33),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
-        ));   
+        )); 
+
+        autoChooser.addOption("forward4sec+autoalign+l2+Right", new SequentialCommandGroup(
+          new LastResortAuto(drivetrain, 1, 4,3),
+          new MoveToRightBranch(drivetrain, limelight),
+          new LastResortAuto(drivetrain, -1, 1, 0.33),
+          new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
+        ));         
     }
 
     
