@@ -142,7 +142,7 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModuleSim[] moduleSims;
     private SimDouble gyroYawSim;
     private Timer simTimer = new Timer();
-    private int overrideMax = 0;
+    public double extraSpeedMult = 0;
 
     private double lastSetX = 0, lastSetY = 0, lastSetTheta = 0;
     double kP = 0;
@@ -488,8 +488,8 @@ public class Drivetrain extends SubsystemBase {
      * @param rotation The desired rotation speed, in rad/s. Counter clockwise is
      *                 positive
      */
-    public void overrideSpeed(int set) {
-        overrideMax=set;
+    public void setExtraSpeedMult(double set) {
+        extraSpeedMult=set;
     }
     public void drive(double forward, double strafe, double rotation) {
         drive(getSwerveStates(forward, strafe, rotation));
@@ -497,7 +497,7 @@ public class Drivetrain extends SubsystemBase {
     
     public void drive(SwerveModuleState[] moduleStates) {
         //Max speed override
-        double max = maxSpeed+overrideMax;
+        double max = maxSpeed;
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, max);
         for (int i = 0; i < 4; i++) {
             // SmartDashboard.putNumber("moduleIn" + Integer.toString(i), moduleStates[i].angle.getDegrees());

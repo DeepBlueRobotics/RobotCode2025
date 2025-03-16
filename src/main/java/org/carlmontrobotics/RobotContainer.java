@@ -165,7 +165,8 @@ public class RobotContainer {
         new JoystickButton(driverController, Driver.b)
           .whileTrue(new MoveToRightBranch(drivetrain, limelight));
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
-          .whileTrue(new InstantCommand(() -> drivetrain.overrideSpeed(driverController.getAxisType(Axis.kLeftTrigger.value))));
+          .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))
+          .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
 
 
       /*new JoystickButton(driverController, Driver.a)

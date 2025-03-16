@@ -94,8 +94,11 @@ public class TeleopDrive extends Command {
     else
       rotateClockwise *= maxRCW;
 
-    double driveMultiplier = slow.getAsBoolean() ? kSlowDriveSpeed : kNormalDriveSpeed;
-    double rotationMultiplier = slow.getAsBoolean() ? kSlowDriveRotation : kNormalDriveRotation;
+    // double driveMultiplier = drivetrain.extraSpeedMult + (slow.getAsBoolean() ? kSlowDriveSpeed : kNormalDriveSpeed);
+    // double rotationMultiplier = drivetrain.extraSpeedMult + (slow.getAsBoolean() ? kSlowDriveRotation : kNormalDriveRotation);
+    double driveMultiplier = (slow.getAsBoolean() ? kSlowDriveSpeed : kNormalDriveSpeed);
+    double rotationMultiplier = (slow.getAsBoolean() ? kSlowDriveRotation : kNormalDriveRotation);
+    
     if(babyMode == true){
       driveMultiplier = kBabyDriveSpeed; 
       rotationMultiplier = kBabyDriveRotation;
