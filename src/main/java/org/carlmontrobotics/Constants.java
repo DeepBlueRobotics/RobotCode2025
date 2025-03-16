@@ -385,7 +385,7 @@ public final class Constants {
 			public static final int Y = Button.kY.value;
         }
 
-		public static final double JOY_THRESH = 0.1;
+		public static final double JOY_THRESH = 0.13;
 		public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;// woah, this is high.
 
 	}
