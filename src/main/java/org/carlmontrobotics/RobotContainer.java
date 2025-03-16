@@ -165,7 +165,7 @@ public class RobotContainer {
         new JoystickButton(driverController, Driver.b)
           .whileTrue(new MoveToRightBranch(drivetrain, limelight));
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
-          .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))
+          .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(2.5)))
           .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
 
 
@@ -342,7 +342,7 @@ public class RobotContainer {
 
     private void RegisterCustomAutos(){
         autoChooser.addOption("DriveRaiseAutonL2", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4, 8), 
+          new LastResortAuto(drivetrain, 1, 4, 3), 
           new ElevatorToPos(elevator, l2)));
         autoChooser.addOption("DriveRaiseAutonL2Score", 
             new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 8), 
