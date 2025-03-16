@@ -94,6 +94,7 @@ public class TeleopDrive extends Command {
     else
       rotateClockwise *= maxRCW;
 
+    System.out.println(drivetrain.extraSpeedMult);
     double driveMultiplier = drivetrain.extraSpeedMult + (slow.getAsBoolean() ? kSlowDriveSpeed : kNormalDriveSpeed);
     double rotationMultiplier = drivetrain.extraSpeedMult + (slow.getAsBoolean() ? kSlowDriveRotation : kNormalDriveRotation);
     // double driveMultiplier = (slow.getAsBoolean() ? kSlowDriveSpeed : kNormalDriveSpeed);

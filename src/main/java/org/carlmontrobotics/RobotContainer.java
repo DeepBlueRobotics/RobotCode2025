@@ -13,6 +13,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 
 import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
+import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
 import org.carlmontrobotics.Constants.Elevatorc;
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Driver;
@@ -355,7 +356,25 @@ public class RobotContainer {
             new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));
         autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1, 4, 8));
         autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, 1, 4, 8));
-    
+        
+        autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
+          new LastResortAuto(drivetrain, 1, 4,4),
+          new MoveToLeftBranch(drivetrain, limelight),
+          new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
+        ));
+
+        autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
+          new LastResortAuto(drivetrain, 1, 4,4),
+          new MoveToLeftBranch(drivetrain, limelight),
+          new L4Backup(drivetrain),
+          new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
+        ));   
+        
+        autoChooser.addOption("forward4sec+autoalign+l2", new SequentialCommandGroup(
+          new LastResortAuto(drivetrain, 1, 4,4),
+          new MoveToLeftBranch(drivetrain, limelight),
+          new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
+        ));   
     }
 
     

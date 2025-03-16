@@ -16,11 +16,11 @@ public class LastResortAuto extends Command {
   private boolean prev;
   private int dir;
   private int speed;
-  private int time;
+  private double time;
 
   int MAX_SECONDS_DRIVE = 4;
 
-  public LastResortAuto(Drivetrain drivetrain, int direction, int speed, int time) {
+  public LastResortAuto(Drivetrain drivetrain, int direction, int speed, double time) {
     dir = direction;
     addRequirements(this.drivetrain = drivetrain);
     this.speed = speed;
