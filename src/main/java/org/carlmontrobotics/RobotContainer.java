@@ -363,9 +363,9 @@ public class RobotContainer {
   private void setDefaultCommands() {
     drivetrain.setDefaultCommand(new TeleopDrive(
       drivetrain,
-      () -> DeadzonedAxis(ProcessedAxisValue(driverController, Axis.kLeftY)),//.06 drift purple, .10 drift black
-      () -> DeadzonedAxis(ProcessedAxisValue(driverController, Axis.kLeftX)),
-      () -> DeadzonedAxis(ProcessedAxisValue(driverController, Axis.kRightX)),
+      () -> ProcessedAxisValue(driverController, Axis.kLeftY),//.06 drift purple, .10 drift black
+      () -> ProcessedAxisValue(driverController, Axis.kLeftX),
+      () -> ProcessedAxisValue(driverController, Axis.kRightX),
       () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
       SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");

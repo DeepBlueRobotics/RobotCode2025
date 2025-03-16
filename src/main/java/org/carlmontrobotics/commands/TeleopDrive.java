@@ -115,7 +115,7 @@ public class TeleopDrive extends Command {
     double accelerationY = (strafe - currentStrafeVel) / robotPeriod;
     double translationalAcceleration = Math.hypot(accelerationX, accelerationY);
     // SmartDashboard.putNumber("Translational Acceleration", translationalAcceleration);
-    if (translationalAcceleration > autoMaxAccelMps2 && false) {
+    if (translationalAcceleration > autoMaxAccelMps2 && false) {//DOES NOT RUN!!
       Translation2d limitedAccelerationVector = new Translation2d(autoMaxAccelMps2,
           Rotation2d.fromRadians(Math.atan2(accelerationY, accelerationX)));
       Translation2d limitedVelocityVector = limitedAccelerationVector.times(robotPeriod);
