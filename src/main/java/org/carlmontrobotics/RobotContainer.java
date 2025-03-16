@@ -148,9 +148,7 @@ public class RobotContainer {
         setBindingsDriver();
         setBindingsManipulator();
     }
-    public void resetFieldOrientation() {
-      drivetrain.resetFieldOrientation();
-    }
+   
    
 
     private void setBindingsDriver() {
@@ -166,6 +164,8 @@ public class RobotContainer {
 
         new JoystickButton(driverController, Driver.b)
           .whileTrue(new MoveToRightBranch(drivetrain, limelight));
+        axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
+          .whileTrue(new InstantCommand(() -> drivetrain.overrideSpeed(driverController.getAxisType(Axis.kLeftTrigger.value))));
       }
 
    

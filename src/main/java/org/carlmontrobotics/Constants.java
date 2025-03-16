@@ -372,6 +372,7 @@ public final class Constants {
 			public static final int slowDriveButton = Button.kLeftBumper.value;
 			public static final int resetFieldOrientationButton = Button.kRightBumper.value;
 			public static final Axis RIGHT_TRIGGER_BUTTON = Axis.kRightTrigger;
+			public static final Axis LEFT_TRIGGER_BUTTON = Axis.kLeftTrigger;
 
 			public static final int y = Button.kY.value;
 			public static final int b = Button.kB.value;
