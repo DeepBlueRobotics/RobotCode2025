@@ -376,10 +376,10 @@ public class RobotContainer {
             new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));
 
         autoChooser.addOption("ForwardLastResortAutoCenter", new LastResortAuto(drivetrain, 1, 4, 2.5));
-        autoChooser.addOption("BackwardLastResortAutoCenter", new LastResortAuto(drivetrain, 1, 4, 2.5));
+        autoChooser.addOption("BackwardLastResortAutoCenter", new LastResortAuto(drivetrain, -1, 4, 2.5));
         
         autoChooser.addOption("ForwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));
-        autoChooser.addOption("BackwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));        
+        autoChooser.addOption("BackwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, -1, 4, 3));        
 //------------------------------------------------------------------------------------------------
 /*deep blue is what DYNAMITE 
   deep blue is what DYNAMITE 
