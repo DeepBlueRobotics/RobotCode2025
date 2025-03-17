@@ -81,8 +81,9 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("fwdIN", forward);
     // SmartDashboard.putNumber("strafeIN", strafe);
     // SmartDashboard.putNumber("turnIN", rotateClockwise);
+    System.out.println("fwd str rcw: "+forward+", "+strafe+", "+rotateClockwise);
     if (Math.abs(forward) <= Constants.OI.JOY_THRESH)
-      forward = 0.0;
+      forward = 0;
     else
       forward *= maxForward;
     if (Math.abs(strafe) <= Constants.OI.JOY_THRESH)
