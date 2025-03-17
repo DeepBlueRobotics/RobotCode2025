@@ -397,12 +397,12 @@ public class RobotContainer {
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
         ));
 
-        /*autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
+        autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,4),
           new MoveToLeftBranch(drivetrain, limelight),
           new L4Backup(drivetrain),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
-        ));*/
+        ));   
         
         autoChooser.addOption("forward4sec+autoalign+l2+Left", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,3),
