@@ -169,8 +169,10 @@ public class RobotContainer {
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
           .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
           .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
-          new POVButton(manipulatorController, 180)
-          .whileTrue(new InstantCommand(() -> drivetrain.stop()));
+        new POVButton(driverController, 180)
+          .whileTrue(new ParallelCommandGroup(
+            new InstantCommand(() -> drivetrain.stop()),
+            new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
         // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
         //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
 

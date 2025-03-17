@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class L4Backup extends Command {
-  Drivetrain dt = new Drivetrain();
+  Drivetrain dt;
   boolean originalFieldOrientation;
   /** Creates a new L4Backup. */
   public L4Backup(Drivetrain dt) {
