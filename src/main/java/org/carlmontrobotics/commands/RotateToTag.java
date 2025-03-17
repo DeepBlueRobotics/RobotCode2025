@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RotateToTag extends Command {
   private Drivetrain drivetrain;
   private Limelight limelight;
+  private boolean setFieldOrientaton;
   public RotateToTag(Drivetrain drivetrain, Limelight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.drivetrain = drivetrain);
@@ -25,7 +26,10 @@ public class RotateToTag extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    setFieldOrientaton = drivetrain.getFieldOriented();
+    drivetrain.setFieldOriented(false);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -40,6 +44,8 @@ public class RotateToTag extends Command {
   @Override
   public void end(boolean interrupted) {
     drivetrain.stop();
+    drivetrain.setFieldOriented(setFieldOrientaton);
+
   }
 
   // Returns true when the command should end.

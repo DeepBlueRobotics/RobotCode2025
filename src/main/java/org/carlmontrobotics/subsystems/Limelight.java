@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Limelight extends SubsystemBase {
 
 
-  // NEEDS TO SEE: Barge, Reef, Processor, Coral Dropoff
   public Limelight() {
     LimelightHelpers.SetFiducialIDFiltersOverride(CORAL_LL, CORAL_VALID_IDS);
     LimelightHelpers.SetFiducialIDFiltersOverride(REEF_LL, REEF_VALID_IDS);
