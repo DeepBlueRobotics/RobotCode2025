@@ -54,4 +54,8 @@ public class LastResortAuto extends Command {
   public boolean isFinished() {
     return timer.hasElapsed(time);
   }
+
+  public String toString(){
+    return "Last Resort Auto: "+dir+speed+time;
+  }
 }

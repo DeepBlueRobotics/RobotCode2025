@@ -726,7 +726,7 @@ public class Drivetrain extends SubsystemBase {
         fieldOffset = gyro.getAngle();
     }
     public void resetFieldOrientationBackwards() {
-        fieldOffset += 180;
+        fieldOffset = 180 + gyro.getAngle();
     }
 
     public void resetPoseEstimator() {

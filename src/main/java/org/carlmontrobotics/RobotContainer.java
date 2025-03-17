@@ -58,6 +58,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 //control bindings
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static org.carlmontrobotics.Constants.Elevatorc.l1;
@@ -77,7 +78,7 @@ public class RobotContainer {
     // 2. Use absolute paths from constants to reduce confusion
     public final GenericHID driverController = new GenericHID(Driver.port);
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
-    private final Drivetrain drivetrain =  new Drivetrain();
+    public final Drivetrain drivetrain =  new Drivetrain();
     private final Limelight limelight = new Limelight(drivetrain);
 
 
@@ -141,7 +142,7 @@ public class RobotContainer {
      
         RegisterAutoCommands();
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, 1, 4, 8));
+        autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, -1, 4, 8));
         RegisterCustomAutos();
         SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
         SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
@@ -166,8 +167,12 @@ public class RobotContainer {
         new JoystickButton(driverController, Driver.b)
           .whileTrue(new MoveToRightBranch(drivetrain, limelight));
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
-          .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(2.5)))
+          .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
           .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
+          new POVButton(manipulatorController, 180)
+          .whileTrue(new InstantCommand(() -> drivetrain.stop()));
+        // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
+        //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
 
 
       /*new JoystickButton(driverController, Driver.a)
@@ -363,18 +368,20 @@ public class RobotContainer {
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
         ));
 
-        autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4,4),
-          new MoveToLeftBranch(drivetrain, limelight),
-          new L4Backup(drivetrain),
-          new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
-        ));   
+        // autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
+        //   new LastResortAuto(drivetrain, 1, 4,4),
+        //   new MoveToLeftBranch(drivetrain, limelight),
+        //   new L4Backup(drivetrain),
+        //   new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
+        // ));   
         
         autoChooser.addOption("forward4sec+autoalign+l2", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,4),
           new MoveToLeftBranch(drivetrain, limelight),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
         ));   
+
+        
     }
 
     
@@ -409,6 +416,9 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
         new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
         new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
         new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));
+
+        
+       
   }
     
   

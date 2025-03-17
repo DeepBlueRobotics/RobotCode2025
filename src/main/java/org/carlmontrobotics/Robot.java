@@ -46,10 +46,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.drivetrain.resetFieldOrientation();
+    //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     if (m_autonomousCommand != null) {
       Thread.currentThread().setPriority(autoFirstPri);
       m_autonomousCommand.cancel();
     }
+    
   }
 
   @Override
