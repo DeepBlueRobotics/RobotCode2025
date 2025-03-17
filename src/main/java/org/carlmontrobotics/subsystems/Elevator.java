@@ -169,6 +169,7 @@ public class Elevator extends SubsystemBase {
     //Master Config
     masterConfig
         .inverted(masterInverted)
+        .smartCurrentLimit(20)
         .idleMode(masterIdleMode);
     masterConfig.encoder
         .positionConversionFactor(masterPositionConversionFactor)
