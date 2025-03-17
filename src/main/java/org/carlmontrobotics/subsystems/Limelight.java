@@ -14,7 +14,7 @@ public class Limelight extends SubsystemBase {
 
   public Limelight() {
     LimelightHelpers.SetFiducialIDFiltersOverride(CORAL_LL, CORAL_VALID_IDS);
-    LimelightHelpers.SetFiducialIDFiltersOverride(REEF_LL, REEF_VALID_IDS);
+    LimelightHelpers.SetFiducialIDFiltersOverride(CORAL_LL, REEF_VALID_IDS);
   }
 
   public double getTx(String cameraName) {

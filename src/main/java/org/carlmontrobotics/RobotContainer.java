@@ -160,8 +160,22 @@ public class RobotContainer {
 
       new JoystickButton(driverController, Driver.x).onTrue(
         new SequentialCommandGroup(
-          new RotateToTag(drivetrain, limelight),
-          new DriveToleftTag(drivetrain, limelight)
+          new RotateToReefTag(drivetrain, limelight),
+          new DriveToLeftReefTag(drivetrain, limelight)
+        )
+      );
+
+      new JoystickButton(driverController, Driver.b).onTrue(
+        new SequentialCommandGroup(
+          new RotateToIntakeTag(drivetrain, limelight),
+          new DriveToRightReefTag(drivetrain, limelight)
+        )
+      );
+
+      new JoystickButton(driverController, Driver.a).onTrue(
+        new SequentialCommandGroup(
+          new RotateToIntakeTag(drivetrain, limelight),
+          new DriveToIntakeTag(drivetrain, limelight)
         )
       );
 

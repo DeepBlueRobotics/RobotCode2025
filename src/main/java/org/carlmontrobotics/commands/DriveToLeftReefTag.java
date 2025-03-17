@@ -6,22 +6,25 @@ package org.carlmontrobotics.commands;
 
 import org.carlmontrobotics.subsystems.Limelight;
 
-import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
+import static org.carlmontrobotics.Constants.Limelightc.*;
 
+import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.subsystems.Drivetrain;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RotateToTag extends Command {
+public class DriveToLeftReefTag extends Command {
+  /** Creates a new drivetotag. */
   private Drivetrain drivetrain;
   private Limelight limelight;
   private boolean setFieldOrientaton;
-  public RotateToTag(Drivetrain drivetrain, Limelight limelight) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  private double strafeError = 100;
+  private double distanceZ = 100;
+  public DriveToLeftReefTag(Drivetrain drivetrain, Limelight limelight){
     addRequirements(this.drivetrain = drivetrain);
     addRequirements(this.limelight = limelight);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -34,9 +37,10 @@ public class RotateToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (limelight.seesTag(REEF_LL)) {
-      double radiansOff = Units.degreesToRadians(limelight.getTx(REEF_LL));
-      drivetrain.drive(0.0000001, 0, radiansOff*2);
+    if(limelight.seesTag(CORAL_LL)){
+      distanceZ = limelight.getZ(CORAL_LL);
+      strafeError = Math.tan(limelight.getTx(CORAL_LL))*distanceZ;
+      drivetrain.drive(distanceZ, (strafeError+LEFT_CORAL_BRANCH)*6, 0);
     }
   }
 
@@ -45,16 +49,13 @@ public class RotateToTag extends Command {
   public void end(boolean interrupted) {
     drivetrain.stop();
     drivetrain.setFieldOriented(setFieldOrientaton);
-
   }
-
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    if (!limelight.seesTag(REEF_LL)) {
-      return true;
-    }
-    return Math.abs(limelight.getTx(REEF_LL)) < 1;
+      if (!limelight.seesTag(REEF_LL)) {
+        return true;
+      }
+      return (distanceZ*100 < 2 && Math.abs((strafeError - LEFT_CORAL_BRANCH))*100 < 2);
   }
 }
