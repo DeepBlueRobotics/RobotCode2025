@@ -77,7 +77,7 @@ public class RobotContainer {
     public final GenericHID driverController = new GenericHID(Driver.port);
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
     private final Drivetrain drivetrain =  new Drivetrain();
-    private final Limelight limelight = new Limelight(drivetrain);
+    private final Limelight limelight = new Limelight();
 
 
     //private final Drivetrain drivetrain = new Drivetrain();
@@ -158,15 +158,12 @@ public class RobotContainer {
                 .onTrue(new InstantCommand(()->drivetrain.setFieldOriented(false)))
                 .onFalse(new InstantCommand(()->drivetrain.setFieldOriented(true)));
 
-
-        new JoystickButton(driverController, Driver.x)
-          .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
-
-        new JoystickButton(driverController, Driver.b)
-          .whileTrue(new MoveToRightBranch(drivetrain, limelight));
-        axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
-          .whileTrue(new InstantCommand(() -> drivetrain.overrideSpeed(driverController.getAxisType(Axis.kLeftTrigger.value))));
-
+      new JoystickButton(driverController, Driver.x).onTrue(
+        new SequentialCommandGroup(
+          new RotateToTag(drivetrain, limelight),
+          new DriveToleftTag(drivetrain, limelight)
+        )
+      );
 
       /*new JoystickButton(driverController, Driver.a)
         .onTrue(new L4Backup(drivetrain));
