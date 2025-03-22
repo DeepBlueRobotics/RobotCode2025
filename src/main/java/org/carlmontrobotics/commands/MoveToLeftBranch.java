@@ -41,6 +41,7 @@ public class MoveToLeftBranch extends Command {
       dt.drive(0.0000001, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0);
     }
     else {
+      System.out.println("Left Branch Align: No Tag Detected");
       dt.drive(0.0000001, LEFT_CORAL_BRANCH,0);
     }
   }
