@@ -187,7 +187,7 @@ public final class Constants {
 		// Backward: 1.92, 1.92, 2.11, 1.89
 		// Order of modules: (FL, FR, BL, BR)
 		public static final double[] drivekP = CONFIG.isHammerHead() ? new double[] { 1.75*1.275, 1.75*1.275, 1.75*1.275, 1.75*1.275 }
-		: new double[] {1.99+.6, 1.99+.5, 1.99+ .1 , 1.99}; //{2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
+		: new double[] {2.54-1.99, 2.54-1.99, 2.54-1.99 , 2.54-1.99};//trust guys //{2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
 																// 1.915/100};
 		public static final double[] drivekI = CONFIG.isHammerHead()? new double[] {0,0,0,0} :
 			new double[] { 0.1, 0.1, 0.1, 0.1 };
@@ -206,7 +206,7 @@ public final class Constants {
 		//kV
 		// public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
 		public static final double[] kForwardVels = CONFIG.isHammerHead() ? new double[] { 2.81, 2.9098, 2.8378, 2.7391 }:
-			new double[] { 0, 0, 0, 0 };//{2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
+			new double[] { 2.9875, 2.9875, 2.7323, 2.9264 };//{2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
 		public static final double[] kBackwardVels = kForwardVels;
 
 		//kA
