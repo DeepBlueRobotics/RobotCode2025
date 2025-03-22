@@ -7,6 +7,7 @@ package org.carlmontrobotics.commands;
 import org.carlmontrobotics.subsystems.Limelight;
 
 import static org.carlmontrobotics.Constants.Limelightc.CORAL_LL;
+import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
 import org.carlmontrobotics.subsystems.Drivetrain;
 
@@ -34,8 +35,8 @@ public class RotateToReefTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (limelight.seesTag(CORAL_LL)) {
-      double radiansOff = Units.degreesToRadians(limelight.getTx(CORAL_LL));
+    if (limelight.seesTag(REEF_LL)) {
+      double radiansOff = Units.degreesToRadians(limelight.getTx(REEF_LL));
       drivetrain.drive(0.0000001, 0, radiansOff*2);
     }
   }
@@ -52,9 +53,9 @@ public class RotateToReefTag extends Command {
   @Override
   public boolean isFinished() {
 
-    if (!limelight.seesTag(CORAL_LL)) {
+    if (!limelight.seesTag(REEF_LL)) {
       return true;
     }
-    return Math.abs(limelight.getTx(CORAL_LL)) < 1;
+    return Math.abs(limelight.getTx(REEF_LL)) < 1;
   }
 }

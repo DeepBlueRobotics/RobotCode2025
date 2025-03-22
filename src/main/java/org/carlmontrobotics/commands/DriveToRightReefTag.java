@@ -37,9 +37,9 @@ public class DriveToRightReefTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(limelight.seesTag(CORAL_LL)){
-      distanceZ = limelight.getZ(CORAL_LL);
-      strafeError = Math.tan(limelight.getTx(CORAL_LL))*distanceZ;
+    if(limelight.seesTag(REEF_LL)){
+      distanceZ = limelight.getZ(REEF_LL);
+      strafeError = Math.tan(limelight.getTx(REEF_LL))*distanceZ;
       drivetrain.drive(distanceZ, (strafeError+RIGHT_CORAL_BRANCH)*6, 0);
     }
   }
