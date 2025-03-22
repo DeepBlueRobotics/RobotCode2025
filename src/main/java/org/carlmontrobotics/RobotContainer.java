@@ -106,6 +106,8 @@ public class RobotContainer {
        //2. Use absolute paths from constants to reduce confusion
        
        public final CoralEffector coralEffector = new CoralEffector();
+      //TODO activate arm
+       //public final AlgaeEffector algaeEffector = new AlgaeEffector();
      
        // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
      
