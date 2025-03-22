@@ -372,7 +372,7 @@ public class Drivetrain extends SubsystemBase {
         // turnPidControllers[0].setReference(goal
 
         // , ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        
+        //keepRotateMotorsAtDegrees(180);
         
         // 167 -> -200
         // 138 -> 360
@@ -394,7 +394,7 @@ public class Drivetrain extends SubsystemBase {
         for (SwerveModule module : modules) {
           // module.turnPeriodic();
           // module.turnPeriodic();
-          module.periodic();
+        module.periodic();
             // module.move(0, goal);
         }
 
@@ -805,7 +805,7 @@ public class Drivetrain extends SubsystemBase {
     // SysIdRoutine.Config(Volts.of(.1).per(Seconds.of(.1)), Volts.of(.6),
     // Seconds.of(5));
     private SysIdRoutine.Config defaultSysIdConfig = new SysIdRoutine.Config(Volts.of(1).per(Seconds),
-            Volts.of(2.891), Seconds.of(10));
+            Volts.of(5), Seconds.of(5));
 
     // DRIVE
     private void motorLogShort_drive(SysIdRoutineLog log, int id) {
@@ -1020,7 +1020,7 @@ public class Drivetrain extends SubsystemBase {
 
     private SysIdTest selector() {
         //SysIdTest test = sysIdChooser.getSelected();
-        SysIdTest test = SysIdTest.FRONT_DRIVE;
+        SysIdTest test = SysIdTest.BACK_DRIVE;
         System.out.println("Test Selected: " + test);
         return test;
     }

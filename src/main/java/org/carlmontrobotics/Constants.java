@@ -186,11 +186,13 @@ public final class Constants {
 		// Forward: 1.72, 1.71, 1.92, 1.94
 		// Backward: 1.92, 1.92, 2.11, 1.89
 		// Order of modules: (FL, FR, BL, BR)
-		public static final double[] drivekP = CONFIG.isHammerHead() ? new double[] { 1.75*1.275, 1.75*1.275, 1.75*1.275, 1.75*1.275 }
-		: new double[] {1.99+.6, 1.99+.5, 1.99+ .1 , 1.99}; //{2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
+		static double cuzz = 1.75*1.275;
+		static double cuzzbruzz = 0;//1.75*1.275;
+		public static final double[] drivekP = CONFIG.isHammerHead() ? new double[] {cuzz,cuzz,cuzz,cuzz}
+		: new double[] {cuzzbruzz,cuzzbruzz,cuzzbruzz,cuzzbruzz};//{0.48809, 0.48809, 0.41442 ,  0.48809 	}; //{2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
 																// 1.915/100};
 		public static final double[] drivekI = CONFIG.isHammerHead()? new double[] {0,0,0,0} :
-			new double[] { 0.1, 0.1, 0.1, 0.1 };
+			new double[] { 0, 0, 0, 0 };
 		public static final double[] drivekD = CONFIG.isHammerHead()? new double[] {0.005,0.005,0.005,0.005}:
 			new double[] { 0, 0, 0, 0 };
 		public static final boolean[] driveInversion = (CONFIG.isHammerHead()
@@ -200,18 +202,18 @@ public final class Constants {
 		// kS
 		// public static final double[] kForwardVolts = { 0.26744, 0.31897, 0.27967, 0.2461 };
 		public static final double[] kForwardVolts = CONFIG.isHammerHead() ? new double[] { 0.26744, 0.31897, 0.27967, 0.2461 }:
-			new double[] {0, 0, 0, 0}; //{0.59395, 0.52681, 0.11097, 0.17914};      //{ 0.2, 0.2, 0.2, 0.2 };
+			new double[] {0,0,0,0}; //{0.59395, 0.52681, 0.11097, 0.17914};      //{ 0.2, 0.2, 0.2, 0.2 };
 		public static final double[] kBackwardVolts = kForwardVolts;
 
 		//kV
 		// public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
 		public static final double[] kForwardVels = CONFIG.isHammerHead() ? new double[] { 2.81, 2.9098, 2.8378, 2.7391 }:
-			new double[] { 0, 0, 0, 0 };//{2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
+			new double[] {2.9875, 2.9875, 2.7323, 2.9264};//{2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
 		public static final double[] kBackwardVels = kForwardVels;
 
 		//kA
 		// public static final double[] kForwardAccels = { 1.1047 / 2, 0.79422 / 2, 0.77114 / 2, 1.1003 / 2 };
-		public static final double[] kForwardAccels = { 0, 0, 0, 0 };//{0.31958, 0.33557, 0.70264, 0.46644};    //{ 0, 0, 0, 0 };// volts per m/s^2
+		public static final double[] kForwardAccels = {cuzzbruzz, cuzzbruzz, cuzzbruzz, cuzzbruzz};//{0.47296, 0.47296, 0.83677, 0.8681};//{0.31958, 0.33557, 0.70264, 0.46644};    //{ 0, 0, 0, 0 };// volts per m/s^2
 		public static final double[] kBackwardAccels = kForwardAccels;
 
 		public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
