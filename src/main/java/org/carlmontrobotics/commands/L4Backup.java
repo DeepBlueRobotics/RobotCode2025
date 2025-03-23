@@ -43,6 +43,6 @@ public class L4Backup extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return t.get() > .15;
+    return t.get() > .12;
   }
 }
