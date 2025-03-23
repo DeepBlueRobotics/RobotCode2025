@@ -357,6 +357,8 @@ public final class Constants {
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = Units.inchesToMeters(6.345);
 
+		public static final double areaPercentageForL4 = 0; //TODO figure this out por favor
+
 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
 		public static final double STD_DEV_Y_METERS = 0.7; // uncertainty of 0.7 meters on the field

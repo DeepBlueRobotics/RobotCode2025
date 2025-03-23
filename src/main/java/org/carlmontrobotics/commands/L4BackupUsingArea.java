@@ -4,22 +4,24 @@
 
 package org.carlmontrobotics.commands;
 
+import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
+import static org.carlmontrobotics.Constants.Limelightc.areaPercentageForL4;
+
 import org.carlmontrobotics.subsystems.Drivetrain;
 import org.carlmontrobotics.subsystems.Limelight;
 import org.carlmontrobotics.subsystems.LimelightHelpers;
-import edu.wpi.first.math.util.Units;
+import org.carlmontrobotics.Constants.Limelightc.*;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import static org.carlmontrobotics.Constants.Limelightc.*;
 
-public class MoveToLeftBranch extends Command {
+public class L4BackupUsingArea extends Command {
   private final Drivetrain dt;
   private final Limelight ll;
   private boolean originalFieldOrientation;
-  double strafeErr;
-
-  /** Creates a new MoveToLeftBranch. */
-  public MoveToLeftBranch(Drivetrain dt, Limelight ll) {
+  double backUpErr;
+  /** Creates a new L4BackupUsingArea. */
+  public L4BackupUsingArea(Drivetrain dt, Limelight ll) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.dt=dt);
     this.ll = ll;
@@ -35,14 +37,11 @@ public class MoveToLeftBranch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("strafe left", strafeErr);
-    if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
-      strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0);
-    }
-    else {
-      System.out.println("Left Branch Align: No Tag Detected");
-      dt.drive(0, LEFT_CORAL_BRANCH,0);
+    SmartDashboard.putBoolean("AprilTagSeen", ll.seesTag(REEF_LL));
+    SmartDashboard.putNumber("PercentageSeen", LimelightHelpers.getTA(REEF_LL));
+    if (ll.seesTag(REEF_LL)) {
+      backUpErr = areaPercentageForL4 - LimelightHelpers.getTA(REEF_LL);
+      dt.drive(backUpErr*6,0,0);
     }
   }
 
