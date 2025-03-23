@@ -77,9 +77,9 @@ public final class Constants {
         //Positions
         public static final double downPos = 0;
         public static final double l1 = 0;
-        public static final double l2 = Units.inchesToMeters(6.5-1.236220); 
-        public static final double l3 = Units.inchesToMeters(22.5-1.236220); 
-        public static final double l4 = Units.inchesToMeters(52.64-1.236220);
+        public static final double l2 = Units.inchesToMeters(6.5-1.236220+1); 
+        public static final double l3 = Units.inchesToMeters(22.5-1.236220+1); 
+        public static final double l4 = Units.inchesToMeters(52.64-1.236220+3);
         public static final double net = Units.inchesToMeters(53.2-1.236220);
         public static final double processor = 0;
         public static final double bottomAlgaeRemoval = Units.inchesToMeters(22.5-1.236220);
@@ -400,7 +400,7 @@ public final class Constants {
         public final static double INPUT_SLOW_SPEED = 0.02; //TODO: tune this
         public final static double OUTPUT_SPEED = 0.4; //TODO: tune this
 		public final static double FAST_OUTPUT_SPEED = 0.6;
-        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = -0.3; //TOD: tune this?
+        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0; //TOD: tune this?
         public final static double KP = 2; //TODO: tune this
         public final static double KI = 0;
         public final static double KD = 0;

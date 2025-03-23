@@ -175,8 +175,8 @@ public class RobotContainer {
             new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
         // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
         //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
-
-
+        new JoystickButton(driverController, Driver.a)
+        .onTrue(new L4Backup(drivetrain));
       /*new JoystickButton(driverController, Driver.a)
         .onTrue(new L4Backup(drivetrain));
     }*/
@@ -439,7 +439,7 @@ public class RobotContainer {
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
     axisTrigger(manipulatorController, Axis.kRightTrigger)
-    .whileTrue(new CoralOuttake(coralEffector));
+    .whileTrue(new CoralFastOutake(coralEffector));
     //.whileFalse(new CoralIntake(coralEffector));
     axisTrigger(manipulatorController, Axis.kLeftTrigger)
     .whileTrue(new CoralOuttake(coralEffector));
@@ -451,6 +451,7 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
         new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
         new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
         new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));
+      
 
         
        

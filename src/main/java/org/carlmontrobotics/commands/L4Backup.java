@@ -7,6 +7,7 @@ package org.carlmontrobotics.commands;
 import org.carlmontrobotics.subsystems.Drivetrain;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class L4Backup extends Command {
   Drivetrain dt;
   boolean originalFieldOrientation;
+  Timer t = new Timer();
   /** Creates a new L4Backup. */
   public L4Backup(Drivetrain dt) {
     addRequirements(this.dt = dt);
@@ -23,8 +25,10 @@ public class L4Backup extends Command {
   @Override
   public void initialize() {
     originalFieldOrientation = dt.getFieldOriented();
+    t.reset();
+    t.start();
     dt.setFieldOriented(false);
-    dt.drive(-Units.inchesToMeters(13) * SmartDashboard.getNumber("limelight forward kp", 6), 0, 0);
+    dt.drive(-Units.inchesToMeters(13) * 6, 0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,6 +42,6 @@ public class L4Backup extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return t.get() > .15;
   }
 }

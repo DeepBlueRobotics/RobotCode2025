@@ -169,7 +169,7 @@ public class Elevator extends SubsystemBase {
     //Master Config
     masterConfig
         .inverted(masterInverted)
-        .smartCurrentLimit(20)
+        .smartCurrentLimit(25)
         .idleMode(masterIdleMode);
     masterConfig.encoder
         .positionConversionFactor(masterPositionConversionFactor)
@@ -330,7 +330,7 @@ public class Elevator extends SubsystemBase {
     //masterMotor.set(0.1);
     if(!isSafe() && masterMotor.getBusVoltage() > 0) {
       masterMotor.set(0); 
-      System.err.println("Bad Bad nightmare bad. Elevator unsafe");
+     // System.err.println("Bad Bad nightmare bad. Elevator unsafe");
     }
   }
 }
