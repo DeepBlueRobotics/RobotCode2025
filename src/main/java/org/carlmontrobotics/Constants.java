@@ -82,7 +82,7 @@ public final class Constants {
         public static final double l1 = 0;
         public static final double l2 = Units.inchesToMeters(6.5-1.236220+1); 
         public static final double l3 = Units.inchesToMeters(22.5-1.236220+1); 
-        public static final double l4 = Units.inchesToMeters(52.64-1.236220+3);
+        public static final double l4 = Units.inchesToMeters(52.64-1.236220+3+.15);
         public static final double net = Units.inchesToMeters(53.2-1.236220);
         public static final double processor = 0;
         public static final double bottomAlgaeRemoval = Units.inchesToMeters(22.5-1.236220);

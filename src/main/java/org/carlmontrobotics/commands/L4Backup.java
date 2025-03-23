@@ -28,6 +28,7 @@ public class L4Backup extends Command {
     t.reset();
     t.start();
     dt.setFieldOriented(false);
+    dt.keepRotateMotorsAtDegrees(0);
     dt.drive(-Units.inchesToMeters(13) * 6, 0, 0);
   }
 
