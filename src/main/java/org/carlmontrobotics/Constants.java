@@ -60,7 +60,7 @@ public final class Constants {
 		public static final int UPPER_MOTOR_PORT = 1; 
 		public static final int LOWER_MOTOR_PORT = 2;
         public static final int PINCH_MOTOR_PORT = 3;
-        public static final int ARM_MOTOR_PORT = 14;
+        public static final int ARM_MOTOR_PORT = 20;
         public static final int aChannelEnc = 0;
         public static final int bChannelEnc = 1;
 
@@ -96,7 +96,7 @@ public final class Constants {
         public static final double ARM_CHAIN_GEARING = 1;// TODO: set to 16.0/34
         public static final double ARM_GEAR_RATIO = 1.0/3;
         //TODO figure the zero out once encoder is on
-        public static final double ARM_ZERO_ROT = Units.degreesToRotations(207+41+40+12+12);
+        public static final double ARM_ZERO_ROT = Units.degreesToRotations(70);
         //TODO ask samo for angle to intake algae from pure vertical down
         public static final double ARM_INTAKE_ANGLE = 0;
         //TODO Figure these two out if we will be shooting algae
@@ -117,7 +117,7 @@ public final class Constants {
         public static TrapezoidProfile.Constraints TRAP_CONSTRAINTS;
         public static final double MAX_FF_VEL_RAD_P_S = (Math.PI * .5)/2;
 		public static final double MAX_FF_ACCEL_RAD_P_S = (53.728 / 4)/2;
-        public static final double ARM_ERROR_MARGIN = 1;
+        public static final double ARM_ERROR_MARGIN = 5;
 
         public static final double ARM_SYS_ID_START_COMMAND_ANGLE = -22; //TODO:
 
