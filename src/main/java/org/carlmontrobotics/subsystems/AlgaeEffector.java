@@ -94,8 +94,8 @@ public class AlgaeEffector extends SubsystemBase {
     private double armMaxVelocityDegreesPerSecond;
 
 
-    private double upperLimitAdjustmentVoltage = 0.2;
-    private double lowerLimitAdjustmentVoltage = -0.2;
+    private double upperLimitAdjustmentVoltage = -0.2;
+    private double lowerLimitAdjustmentVoltage = 0.2;
     //motors
     private final SparkFlex topMotor = null; //new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
     private final SparkFlex bottomMotor = null; //new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless); 
@@ -353,7 +353,10 @@ public class AlgaeEffector extends SubsystemBase {
 
 
         if (armMotor != null) {
-            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoal), -0.00001*(armGoal- getArmPos()));
+            
+            armFeedVolts = armkS + armkG + armkV; //armFeedforward.calculate(Units.degreesToRadians(armGoal), -0.00001*(armGoal- getArmPos()));
+            
+            
             //armFeedVolts = manualFF(Units.degreesToRadians(armGoal));
             // System.out.println("feedVolts: "+ armFeedVolts);
             pidControllerArm.setReference(Units.degreesToRotations(armGoal), ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts);
@@ -470,21 +473,28 @@ public class AlgaeEffector extends SubsystemBase {
         System.out.println("_feedVolts: "+ armFeedVolts);
         System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
         System.out.println("goal angle:" + armGoal);
-        if (getArmPos() > UPPER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT){
-            setArmTarget(armGoal);
+        
+        setArmTarget(armGoal);
             
-        }
+        
         if (getArmPos() < LOWER_ANGLE_LIMIT) {
         
             //armMotor.set(0);
             System.out.println("arm past lower limit!");
-            armMotor.set(-0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
+            armMotor.set(0);
+            if (Math.abs(getArmPos()-LOWER_ANGLE_LIMIT) > ARM_ERROR_MARGIN){
+                armMotor.set(0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
+            }
+            
         }
         if (getArmPos() > UPPER_ANGLE_LIMIT) {
             
-            //armMotor.set(0);
+            armMotor.set(0);
             System.out.println("arm past upper limit");
-            armMotor.set(0.02 * armAbsoluteEncoder.getVelocity() + upperLimitAdjustmentVoltage);
+            if (Math.abs(getArmPos() - LOWER_ANGLE_LIMIT) > ARM_ERROR_MARGIN) {
+                armMotor.set(-0.02 * armAbsoluteEncoder.getVelocity() + upperLimitAdjustmentVoltage);
+            }
+            
             
         }
         
