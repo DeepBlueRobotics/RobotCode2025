@@ -175,6 +175,8 @@ public class RobotContainer {
           .whileTrue(new ParallelCommandGroup(
             new InstantCommand(() -> drivetrain.stop()),
             new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
+        new POVButton(driverController, 0)
+          .onTrue(new RotateToNearest60(drivetrain));
         // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
         //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
 
