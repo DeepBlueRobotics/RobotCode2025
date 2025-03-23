@@ -20,7 +20,9 @@ import static org.carlmontrobotics.Config.CONFIG;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 //import edu.wpi.first.wpilibj.XboxController.Button;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.Encoder;
 
 
 /**
@@ -187,7 +190,7 @@ public final class Constants {
 		// Backward: 1.92, 1.92, 2.11, 1.89
 		// Order of modules: (FL, FR, BL, BR)
 		public static final double[] drivekP = CONFIG.isHammerHead() ? new double[] { 1.75*1.275, 1.75*1.275, 1.75*1.275, 1.75*1.275 }
-		: new double[] {1.99+.6, 1.99+.5, 1.99+ .1 , 1.99}; //{2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
+		: new double[] {2.54-1.99, 2.54-1.99, 2.54-1.99 , 2.54-1.99};//trust guys //{2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
 																// 1.915/100};
 		public static final double[] drivekI = CONFIG.isHammerHead()? new double[] {0,0,0,0} :
 			new double[] { 0.1, 0.1, 0.1, 0.1 };
@@ -206,7 +209,7 @@ public final class Constants {
 		//kV
 		// public static final double[] kForwardVels = { 2.81, 2.9098, 2.8378, 2.7391 };
 		public static final double[] kForwardVels = CONFIG.isHammerHead() ? new double[] { 2.81, 2.9098, 2.8378, 2.7391 }:
-			new double[] { 0, 0, 0, 0 };//{2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
+			new double[] { 2.9875, 2.9875, 2.7323, 2.9264 };//{2.4114, 2.7465, 2.7546, 2.7412};        //{ 0, 0, 0, 0 };//volts per m/s
 		public static final double[] kBackwardVels = kForwardVels;
 
 		//kA
@@ -354,6 +357,8 @@ public final class Constants {
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = Units.inchesToMeters(6.345);
 
+		public static final double areaPercentageForL4 = 0; //TODO figure this out por favor
+
 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
 		public static final double STD_DEV_Y_METERS = 0.7; // uncertainty of 0.7 meters on the field
@@ -410,4 +415,86 @@ public final class Constants {
 
         // public final static int LIMIT_SWITCH_PORT = 7; //TODO: Change
     }
+	public static final class AlgaeEffectorc {
+
+        //EFFECTOR
+
+        
+		public static final int UPPER_MOTOR_PORT = 1; 
+		public static final int LOWER_MOTOR_PORT = 2;
+        public static final int PINCH_MOTOR_PORT = 3;
+        public static final int ARM_MOTOR_PORT = 14;
+        public static final int aChannelEnc = 0;
+        public static final int bChannelEnc = 1;
+
+		public static final int TOP_ARRAY_ORDER = 0;
+		public static final int BOTTOM_ARRAY_ORDER = 1;
+		public static final int PINCHER_ARRAY_ORDER = 2;
+        public static final int ARM_ARRAY_ORDER = 3;
+        //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
+        //TODO find these values out 
+        public static double INTAKE_TOP_RPM = 1000;  
+        public static double INTAKE_BOTTOM_RPM = 1000;  
+        public static double INTAKE_PINCHER_RPM = 1000;  
+
+        public static double OUTTAKE_TOP_RPM = -2100;  
+        public static double OUTTAKE_BOTTOM_RPM = -2100;  
+        public static double OUTTAKE_PINCHER_RPM = -2100;  
+
+        public static double SHOOT_TOP_RPM = -2100;//ask design
+        public static double SHOOT_BOTTOM_RPM = -2100; 
+        public static double SHOOT_PINCHER_RPM = -2100; 
+
+        public static double DEALGAFY_TOP_RPM = 1000;  
+        public static double DEALGAFY_BOTTOM_RPM = 1000;  
+        public static double DEALGAFY_PINCHER_RPM = 1000; 
+
+        public static double RPM_ALLOWED_ERROR = 150;//rpm
+
+        public static final int TBE_CPR = 8192; //Through-Bore Encoder
+        public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
+        public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
+        public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
+        
+        public static final double ARM_CHAIN_GEARING = 1;// TODO: set to 16.0/34
+        public static final double ARM_GEAR_RATIO = 1.0/3;
+        //TODO figure the zero out once encoder is on
+        public static final double ARM_ZERO_ROT = Units.degreesToRotations(207+41+40+12+12);
+        //TODO ask samo for angle to intake algae from pure vertical down
+        public static final double ARM_INTAKE_ANGLE = 0;
+        //TODO Figure these two out if we will be shooting algae
+        public static final double ARM_RAMP_UP_ANGLE = 0;
+        public static final double ARM_SHOOT_ANGLE = 0;
+        //TODO Figure angle for dealgafying
+        public static final double ARM_DEALGAFYING_ANGLE = 0;
+        //TODO figure out resting angle of the arm while algae inside
+        public static final double ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE = 0.0;
+        //TODO figure out current threshold for pincher wheels
+        public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
+
+        public static final double UPPER_ANGLE_LIMIT = -20;
+        public static final double LOWER_ANGLE_LIMIT = -90;
+        public static final double ROTATION_TO_DEG = 360;
+        public static final double DEGREES_TO_RADS = Math.PI/180;
+        public static final double ARM_DISCONT_DEG = -35;
+        public static TrapezoidProfile.Constraints TRAP_CONSTRAINTS;
+        public static final double MAX_FF_VEL_RAD_P_S = (Math.PI * .5)/2;
+		public static final double MAX_FF_ACCEL_RAD_P_S = (53.728 / 4)/2;
+        public static final double ARM_ERROR_MARGIN = 1;
+
+        public static final double ARM_SYS_ID_START_COMMAND_ANGLE = -22; //TODO:
+
+		public static final double[] armKP = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0018};
+    	public static final double[] armKI = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};//DO NOT USE
+    	public static final double[] armKD = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.08};
+
+    	public static final double[] armKS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};//DOES NOT WORK
+    	public static final double[] armKV = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};//NOT IMPLEMENTED
+    	public static final double[] armKA = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};//NOT IMPLEMENTED
+    	public static final double[] armKG = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.63};
+
+
+
+	}
+    
 }

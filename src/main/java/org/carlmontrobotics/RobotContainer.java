@@ -106,6 +106,8 @@ public class RobotContainer {
        //2. Use absolute paths from constants to reduce confusion
        
        public final CoralEffector coralEffector = new CoralEffector();
+      //TODO activate arm
+       //public final AlgaeEffector algaeEffector = new AlgaeEffector();
      
        // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
      
@@ -173,6 +175,8 @@ public class RobotContainer {
           .whileTrue(new ParallelCommandGroup(
             new InstantCommand(() -> drivetrain.stop()),
             new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
+        new POVButton(driverController, 0)
+          .onTrue(new RotateToNearest60(drivetrain));
         // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
         //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
         new JoystickButton(driverController, Driver.a)
