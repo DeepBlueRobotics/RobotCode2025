@@ -354,12 +354,11 @@ public class AlgaeEffector extends SubsystemBase {
 
         if (armMotor != null) {
             
-            armFeedVolts = armkS + armkG + armkV; //armFeedforward.calculate(Units.degreesToRadians(armGoal), -0.00001*(armGoal- getArmPos()));
-            
-            
-            //armFeedVolts = manualFF(Units.degreesToRadians(armGoal));
+            //armFeedforward.calculate(Units.degreesToRadians(armGoal), -0.00001*(armGoal- getArmPos()));
+            armFeedVolts = manualFF(Units.degreesToRadians(armGoal));
             // System.out.println("feedVolts: "+ armFeedVolts);
             pidControllerArm.setReference(Units.degreesToRotations(armGoal), ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts);
+
         }
         
         
@@ -477,12 +476,12 @@ public class AlgaeEffector extends SubsystemBase {
         setArmTarget(armGoal);
             
         
-        if (getArmPos() < LOWER_ANGLE_LIMIT) {
+        if (getArmPos() < LOWER_ANGLE_LIMIT) { //if the arm is below this angle limit it is supposed to stop applying voltage
         
             //armMotor.set(0);
             System.out.println("arm past lower limit!");
             armMotor.set(0);
-            if (Math.abs(getArmPos()-LOWER_ANGLE_LIMIT) > ARM_ERROR_MARGIN){
+            if (Math.abs(getArmPos()-LOWER_ANGLE_LIMIT) > ARM_ERROR_MARGIN){ //this is supposed to make it so that if the arm gets too far from the angle limit it applies a reverse voltage to slow it down
                 armMotor.set(0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
             }
             
