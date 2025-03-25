@@ -374,7 +374,7 @@ public class AlgaeEffector extends SubsystemBase {
         setPincherRPM(2100);
     }
 
-    public void stopMotors() {
+    public void stopPincherMotor() {
         setPincherRPM(0);
     }
 

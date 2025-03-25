@@ -36,7 +36,7 @@ public class GroundIntakeAlgae extends Command {
   @Override
   public void end(boolean interrupted) {
     //algae.setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
-    algae.stopMotors();
+    algae.stopPincherMotor();
     timer.stop();
   }
 

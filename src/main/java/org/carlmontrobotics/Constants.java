@@ -70,20 +70,16 @@ public final class Constants {
         public static final int ARM_ARRAY_ORDER = 3;
         //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
         //TODO find these values out 
-        public static double INTAKE_TOP_RPM = 1000;  
-        public static double INTAKE_BOTTOM_RPM = 1000;  
+          
         public static double INTAKE_PINCHER_RPM = 1000;  
 
-        public static double OUTTAKE_TOP_RPM = -2100;  
-        public static double OUTTAKE_BOTTOM_RPM = -2100;  
+        
         public static double OUTTAKE_PINCHER_RPM = -2100;  
 
-        public static double SHOOT_TOP_RPM = -2100;//ask design
-        public static double SHOOT_BOTTOM_RPM = -2100; 
+         
         public static double SHOOT_PINCHER_RPM = -2100; 
 
-        public static double DEALGAFY_TOP_RPM = 1000;  
-        public static double DEALGAFY_BOTTOM_RPM = 1000;  
+         
         public static double DEALGAFY_PINCHER_RPM = 1000; 
 
         public static double RPM_ALLOWED_ERROR = 150;//rpm
