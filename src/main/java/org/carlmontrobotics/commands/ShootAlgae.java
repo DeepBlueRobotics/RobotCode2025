@@ -1,5 +1,5 @@
 package org.carlmontrobotics.commands;
-import static org.carlmontrobotics.Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE;
+
 
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.subsystems.AlgaeEffector;

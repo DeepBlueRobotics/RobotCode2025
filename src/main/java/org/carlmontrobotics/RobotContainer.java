@@ -76,18 +76,24 @@ public class RobotContainer {
 
 
   private void setBindingsManipulator() {
-    //intake
+    //intake and maybe dealgification as well
     new JoystickButton(manipulatorController, INTAKE_BUMPER)
       .whileTrue(new SequentialCommandGroup(
-        // new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
-        //new GroundIntakeAlgae(algaeEffector)
+         new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
+        new GroundIntakeAlgae(algaeEffector), 
+        new ArmToPosition(algaeEffector, ARM_HOLDING_ALGAE_ANGLE)
         //the command seems to take care of arm angles by itself. please change the command.
       ));
       
       
     //outake
-
-    //dealgify
+    new JoystickButton(manipulatorController, OUTTAKE_BUMPER)
+      .whileTrue(new SequentialCommandGroup(
+         new ArmToPosition(algaeEffector, ARM_OUTTAKE_ANGLE),
+        new OuttakeAlgae(algaeEffector)
+        //the command seems to take care of arm angles by itself. please change the command.
+      ));
+    
     
     
     // new JoystickButton(manipulatorController, OI.Manipulator.OuttakeBumper)

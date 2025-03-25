@@ -28,6 +28,6 @@ public class ArmToPosition extends Command{
     // public void end(){boolean interrupted}
     
     public boolean isFinished(){
-        return false;//rreturn algaeArm.armAtGoal();
+        return algaeArm.armAtGoal();
     }
 }

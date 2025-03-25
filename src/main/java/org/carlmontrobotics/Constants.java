@@ -48,7 +48,7 @@ public final class Constants {
             //public static final int X = 0;
             public static final Axis OuttakeTrigger = Axis.kRightTrigger;
             public static final Axis IntakeTrigger = Axis.kLeftTrigger;
-            public static final int OuttakeBumper = Button.kRightBumper.value;
+            public static final int OUTTAKE_BUMPER = Button.kRightBumper.value;
             public static final int INTAKE_BUMPER = Button.kLeftBumper.value;
         }
     }
@@ -95,13 +95,14 @@ public final class Constants {
         public static final double ARM_ZERO_ROT = Units.degreesToRotations(70);
         //TODO ask samo for angle to intake algae from pure vertical down
         public static final double ARM_INTAKE_ANGLE = 0;
-        //TODO Figure these two out if we will be shooting algae
+        //TODO Figure these two out 
         public static final double ARM_RAMP_UP_ANGLE = 0;
-        public static final double ARM_SHOOT_ANGLE = 0;
+        public static final double ARM_OUTTAKE_ANGLE = 0;
+        
         //TODO Figure angle for dealgafying
         public static final double ARM_DEALGAFYING_ANGLE = 0;
         //TODO figure out resting angle of the arm while algae inside
-        public static final double ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE = 0.0;
+        public static final double ARM_HOLDING_ALGAE_ANGLE = 0.0;
         //TODO figure out current threshold for pincher wheels
         public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
