@@ -20,8 +20,7 @@ public class DealgaficationIntake extends Command {
     timer.reset();
     timer.start();
 
-    algae.setTopRPM(DEALGAFY_TOP_RPM); 
-    algae.setBottomRPM(DEALGAFY_BOTTOM_RPM);
+    
     algae.setPincherRPM(DEALGAFY_PINCHER_RPM);
   }
 

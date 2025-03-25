@@ -22,8 +22,7 @@ public class ShootAlgae extends Command {
     timer.reset();
     timer.start();
 
-    algae.setTopRPM(Constants.AlgaeEffectorc.SHOOT_TOP_RPM);
-    algae.setBottomRPM(Constants.AlgaeEffectorc.SHOOT_BOTTOM_RPM);
+    
     algae.setPincherRPM(Constants.AlgaeEffectorc.SHOOT_PINCHER_RPM);
   }
 

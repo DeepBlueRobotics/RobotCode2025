@@ -20,8 +20,7 @@ public class OuttakeAlgae extends Command {
     timer.reset();
     timer.start();
 
-    algae.setTopRPM(OUTTAKE_TOP_RPM);
-    algae.setBottomRPM(OUTTAKE_BOTTOM_RPM);
+    
     algae.setPincherRPM(OUTTAKE_PINCHER_RPM);
   }
 

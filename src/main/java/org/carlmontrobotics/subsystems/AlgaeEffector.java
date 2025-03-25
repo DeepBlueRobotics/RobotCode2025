@@ -97,30 +97,25 @@ public class AlgaeEffector extends SubsystemBase {
     private double upperLimitAdjustmentVoltage = -0.2;
     private double lowerLimitAdjustmentVoltage = 0.2;
     //motors
-    private final SparkFlex topMotor = null; //new SparkFlex(UPPER_MOTOR_PORT, MotorType.kBrushless);
-    private final SparkFlex bottomMotor = null; //new SparkFlex(LOWER_MOTOR_PORT, MotorType.kBrushless); 
+     
     private final SparkFlex pincherMotor = null; //new SparkFlex(PINCH_MOTOR_PORT, MotorType.kBrushless);
     private final SparkMax armMotor = MotorControllerFactory.createSparkMax(ARM_MOTOR_PORT, MotorConfig.NEO);
 
     private SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
-    private SparkFlexConfig bottomMotorConfig = new SparkFlexConfig();
-    private SparkFlexConfig topMotorConfig = new SparkFlexConfig();
+    
     private SparkMaxConfig  armMotorConfig = new SparkMaxConfig();
     
     
-    private final RelativeEncoder topEncoder = (topMotor != null ? topMotor.getEncoder() : null); //for testing purposes: when testing set unused motors to null and code should still run
-    private final RelativeEncoder bottomEncoder = (bottomMotor != null ? bottomMotor.getEncoder() : null);
+    
     private final RelativeEncoder pincherEncoder = (pincherMotor != null ? pincherMotor.getEncoder() : null);
     private final RelativeEncoder armEncoder = (armMotor != null ? armMotor.getEncoder() : null);
     private final AbsoluteEncoder armAbsoluteEncoder = (armMotor != null ? armMotor.getAbsoluteEncoder() : null);
 
-    private final SparkClosedLoopController pidControllerTop = (topMotor != null ? topMotor.getClosedLoopController() : null);
-    private final SparkClosedLoopController pidControllerBottom = (bottomMotor != null ? bottomMotor.getClosedLoopController() : null);
+    
     private final SparkClosedLoopController pidControllerPincher = (pincherMotor != null ? pincherMotor.getClosedLoopController() : null);
     private final SparkClosedLoopController pidControllerArm = (armMotor != null ? armMotor.getClosedLoopController() : null);
     
-    private final SimpleMotorFeedforward topFeedforward = new SimpleMotorFeedforward(kS[TOP_ARRAY_ORDER], kV[TOP_ARRAY_ORDER], kA[TOP_ARRAY_ORDER]);
-    private final SimpleMotorFeedforward bottomFeedforward = new SimpleMotorFeedforward(kS[BOTTOM_ARRAY_ORDER], kV[BOTTOM_ARRAY_ORDER], kA[BOTTOM_ARRAY_ORDER]);
+    
     private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(kS[PINCHER_ARRAY_ORDER], kV[PINCHER_ARRAY_ORDER], kA[PINCHER_ARRAY_ORDER]);
     AbsoluteEncoderConfig config = new AbsoluteEncoderConfig();
     //for sendable we need this stuff; TODO: remove
@@ -202,26 +197,7 @@ public class AlgaeEffector extends SubsystemBase {
     //----------------------------------------------------------------------------------------
 
     private void configureMotors () {
-        topMotorConfig.closedLoop.pid(
-            Constants.kP[TOP_ARRAY_ORDER],
-            Constants.kI[TOP_ARRAY_ORDER],
-            Constants.kD[TOP_ARRAY_ORDER]
-            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-
-        if (topMotor != null) {
-            topMotor.configure(topMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        }
-       
         
-        bottomMotorConfig.closedLoop.pid(
-            Constants.kP[BOTTOM_ARRAY_ORDER],
-            Constants.kI[BOTTOM_ARRAY_ORDER],
-            Constants.kD[BOTTOM_ARRAY_ORDER]
-            ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        if (bottomMotor != null) {
-            bottomMotor.configure(bottomMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        }
-           
     
         pincherMotorConfig.closedLoop.pid(
             Constants.kP[PINCHER_ARRAY_ORDER],
@@ -262,23 +238,7 @@ public class AlgaeEffector extends SubsystemBase {
         
     }
 
-    public void setTopRPM(double toprpm) {
-        if (topMotor != null) {
-            pidControllerTop.setReference(toprpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-            topFeedforward.calculate(toprpm);
-        }
-        
-        //ALL THIS DOES IS RETURN THE CALCULATED VOLTAGE TO ADD!! IT DOES NOT DO ANYTHING!!
-        //also, only the arm generally needs feedforward - unless you have a flywheel.
-    }
-
-    public void setBottomRPM(double bottomrpm) {
-        if (bottomMotor != null) {
-            pidControllerBottom.setReference(bottomrpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-            bottomFeedforward.calculate(bottomrpm);
-        }
-        
-    }
+    
 
     public void setPincherRPM(double pincherrpm) {
         if (pincherMotor != null) {
@@ -410,32 +370,18 @@ public class AlgaeEffector extends SubsystemBase {
 
     public void runRPM() {
         //TODO: Change RPM according to design
-        setTopRPM(1000);
-        setBottomRPM(2100);
+        
         setPincherRPM(2100);
     }
 
     public void stopMotors() {
-        setTopRPM(0);
-        setBottomRPM(0);
         setPincherRPM(0);
     }
 
-    public boolean checkIfAtTopRPM(double rpm) {
-        return Math.abs(topEncoder.getVelocity()-rpm) <= RPM_ALLOWED_ERROR;
-    }
-
-    public boolean checkIfAtBottomRPM(double rpm) {
-        return Math.abs(bottomEncoder.getVelocity()-rpm) <= RPM_ALLOWED_ERROR;
-    }
+    
 
     public void setMotorSpeed(double topSpeed, double bottomSpeed, double pincherSpeed) {
-        if (topMotor != null) {
-            topMotor.set(topSpeed);
-        }
-        if (bottomMotor != null) {
-            bottomMotor.set(bottomSpeed);
-        }
+        
         if (pincherMotor != null) {
             pincherMotor.set(pincherSpeed);
         }

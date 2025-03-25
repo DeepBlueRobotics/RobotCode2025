@@ -22,8 +22,7 @@ public class GroundIntakeAlgae extends Command {
     //algae.setArmTarget(ARM_INTAKE_ANGLE);
     //this command is strange in that it seems to handle the arm movement by itself, but I will leave it that way until someone changes it.
 
-    algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
-    algae.setBottomRPM(Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM);
+    
     algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
   }
 
