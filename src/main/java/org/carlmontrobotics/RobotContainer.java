@@ -119,6 +119,8 @@ public class RobotContainer {
                 .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
     new JoystickButton(driverController, 2)
                 .whileTrue(new MoveToRightBranch(drivetrain, limelight));
+    new JoystickButton(driverController, 3)
+                .whileTrue(new AlignToCoralStation(drivetrain, limelight, 2*Math.PI));
   }
   private void setBindingsManipulator() {}
 
