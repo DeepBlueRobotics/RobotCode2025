@@ -164,10 +164,10 @@ public class RobotContainer {
 
 
         new JoystickButton(driverController, Driver.x)
-          .onTrue(new MoveToLeftBranch(drivetrain, limelight));
+          .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
 
         new JoystickButton(driverController, Driver.b)
-          .onTrue(new MoveToRightBranch(drivetrain, limelight));
+          .whileTrue(new MoveToRightBranch(drivetrain, limelight));
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
           .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
           .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
@@ -469,7 +469,8 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
     // System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
     Command cmd = new LastResortAuto(drivetrain, -1, 4, 8);
     System.out.println("running getAutounmousCommand");
-    return cmd;
+    //return cmd;
+    return autoChooser.getSelected();
   }
 
   /**
