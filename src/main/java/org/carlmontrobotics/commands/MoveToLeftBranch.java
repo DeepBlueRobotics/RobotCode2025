@@ -30,6 +30,7 @@ public class MoveToLeftBranch extends Command {
   public void initialize() {
     originalFieldOrientation = dt.getFieldOriented();
     dt.setFieldOriented(false);
+    SmartDashboard.putNumber("strafe left", strafeErr);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,11 +39,9 @@ public class MoveToLeftBranch extends Command {
     SmartDashboard.putNumber("strafe left", strafeErr);
     if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0);
-    }
-    else {
-      System.out.println("Left Branch Align: No Tag Detected");
-      dt.drive(0, LEFT_CORAL_BRANCH,0);
+      dt.drive(0.0, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0);
+    }else{
+      dt.stop();
     }
   }
 
@@ -56,6 +55,8 @@ public class MoveToLeftBranch extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH < .1 
+    && Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH > -.1)
+    || !ll.seesTag(REEF_LL);
   }
 }

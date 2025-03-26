@@ -618,7 +618,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void stop() {
         for (SwerveModule module : modules)
-            module.move(0, 0);
+            module.move(0.000000000000000000000000000000000000000000001, 0);
     }
 
     public boolean isStopped() {

@@ -164,10 +164,10 @@ public class RobotContainer {
 
 
         new JoystickButton(driverController, Driver.x)
-          .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
+          .onTrue(new MoveToLeftBranch(drivetrain, limelight));
 
         new JoystickButton(driverController, Driver.b)
-          .whileTrue(new MoveToRightBranch(drivetrain, limelight));
+          .onTrue(new MoveToRightBranch(drivetrain, limelight));
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
           .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
           .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
