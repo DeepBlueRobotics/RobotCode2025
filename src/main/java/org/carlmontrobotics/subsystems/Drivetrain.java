@@ -580,8 +580,10 @@ public class Drivetrain extends SubsystemBase {
                 (speeds, feedforwards) -> drive(kinematics.toSwerveModuleStates(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
                 //PathFollowingController controller,
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                        new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
-                        new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
+                        //new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
+                        //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants FIXME do these need to be accurate?
+                        new PIDConstants(5.0, 0.0, 0.0)
                 ),
                 //RobotConfig robotConfig,
                 config, // The robot configuration
