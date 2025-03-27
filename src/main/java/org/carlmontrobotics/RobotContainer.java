@@ -497,7 +497,7 @@ public class RobotContainer {
     }
 
     private void RegisterCustomAutos(){
-        autoChooser.addOption("DriveRaiseAutonL2Center", new SequentialCommandGroup(
+        /*autoChooser.addOption("DriveRaiseAutonL2Center", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4, 2.5), 
           new ElevatorToPos(elevator, l2)));
         autoChooser.addOption("DriveRaiseAutonL2Left/Right", new SequentialCommandGroup(
@@ -523,13 +523,201 @@ public class RobotContainer {
             new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));
         autoChooser.addOption("DriveRaiseAutonL4ScoreLeft/Right", 
             new SequentialCommandGroup(new LastResortAuto(drivetrain, 1, 4, 3),  
-            new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));
+            new ElevatorToPos(elevator, l4), new CoralFastOutake(coralEffector)));*/
 
+        //TODO: Friday Testing
+
+
+        //-----------------------------------------
+
+        //Center Last Resort
         autoChooser.addOption("ForwardLastResortAutoCenter", new LastResortAuto(drivetrain, 1, 4, 2.5));
         autoChooser.addOption("BackwardLastResortAutoCenter", new LastResortAuto(drivetrain, -1, 4, 2.5));
-        
+
+        //Left/Right Last Resort
         autoChooser.addOption("ForwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, 1, 4, 3));
-        autoChooser.addOption("BackwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, -1, 4, 3));        
+        autoChooser.addOption("BackwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, -1, 4, 3)); 
+        
+        //Center L1
+        autoChooser.addOption("DriveRaiseAutonL1ScoreCenterLeftBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l1), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos))); 
+        autoChooser.addOption("DriveRaiseAutonL1ScoreCenterRightBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l1), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+
+        //Left/Right L1
+        autoChooser.addOption("DriveRaiseAutonL1ScoreLeft/RightLeftBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l1), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+        autoChooser.addOption("DriveRaiseAutonL1ScoreLeft/RightRightBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l1), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos))); 
+
+        //Center L2(Dealgify)
+        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/RightLeftBranchDealgify", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new ParallelCommandGroup(
+                new ElevatorToPos(elevator, l2),
+                new SequentialCommandGroup(
+                    new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+                    new DealgaficationIntake(algaeEffector))),
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/RightRightBranchDealgify", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new ParallelCommandGroup(
+                new ElevatorToPos(elevator, l2),
+                new SequentialCommandGroup(
+                    new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+                    new DealgaficationIntake(algaeEffector))),
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));  
+            
+        //Left/Right L2
+        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/RightLeftBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l2), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/RightRightBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l2), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));      
+
+        //Center L3
+        autoChooser.addOption("DriveRaiseAutonL3ScoreCenterLeftBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l3), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));     
+        autoChooser.addOption("DriveRaiseAutonL3ScoreCenterRightBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l3), 
+            new CoralFastOutake(coralEffector), 
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+            
+        //Left/Right L3(Dealgify)
+        autoChooser.addOption("DriveRaiseAutonL3ScoreLeft/RightLeftBranchDealgify", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new ParallelCommandGroup(
+                new ElevatorToPos(elevator, l3),
+                new SequentialCommandGroup(
+                    new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+                    new DealgaficationIntake(algaeEffector))),
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+        autoChooser.addOption("DriveRaiseAutonL3ScoreLeft/RightRightBranchDealgify", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new ParallelCommandGroup(
+                new ElevatorToPos(elevator, l3),
+                new SequentialCommandGroup(
+                    new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+                    new DealgaficationIntake(algaeEffector))),
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));
+
+        //Center L4
+        autoChooser.addOption("DriveRaiseAutonL4ScoreCenterLeftBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l4), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos))); 
+        autoChooser.addOption("DriveRaiseAutonL4ScoreCenterRightBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l4), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+
+        //Left/Right L4
+        autoChooser.addOption("DriveRaiseAutonL4ScoreLeft/RightLeftBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l4), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+        autoChooser.addOption("DriveRaiseAutonL4ScoreLeft/RightRightBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, l4), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));  
+
+        //Center L4(Backup)
+        autoChooser.addOption("DriveRaiseAutonL4ScoreCenterLeftBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new L4BackupUsingArea(drivetrain, limelight),
+            new ElevatorToPos(elevator, l4), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos))); 
+        autoChooser.addOption("DriveRaiseAutonL4ScoreCenterRightBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.0),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new L4BackupUsingArea(drivetrain, limelight),
+            new ElevatorToPos(elevator, l4), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+
+        //Left/Right L4(Backup)
+        autoChooser.addOption("DriveRaiseAutonL4ScoreLeft/RightLeftBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToLeftBranch(drivetrain, limelight),
+            new L4BackupUsingArea(drivetrain, limelight),
+            new ElevatorToPos(elevator, l4), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+        autoChooser.addOption("DriveRaiseAutonL4ScoreLeft/RightRightBranch", 
+            new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 4, 2.5),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new L4BackupUsingArea(drivetrain, limelight),
+            new ElevatorToPos(elevator, l4), 
+            new CoralFastOutake(coralEffector),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));
+    }
 //------------------------------------------------------------------------------------------------
 /*deep blue is what DYNAMITE 
   deep blue is what DYNAMITE 
@@ -548,7 +736,7 @@ SHARK IN THE TANK
 SHARK IN THE TANK
  */
 
-        autoChooser.addOption("forward4sec+autoalign+l4+Left", new SequentialCommandGroup(
+       /* autoChooser.addOption("forward4sec+autoalign+l4+Left", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,3),
           new MoveToLeftBranch(drivetrain, limelight),
           new LastResortAuto(drivetrain, -1, 1, 0.33),
@@ -575,7 +763,7 @@ SHARK IN THE TANK
           new LastResortAuto(drivetrain, -1, 1, 0.33),
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
         ));   
-    }
+    }*/
 
     
 
