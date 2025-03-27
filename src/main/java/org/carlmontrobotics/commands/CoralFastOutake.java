@@ -49,6 +49,6 @@ public class CoralFastOutake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > 1;
+    return false;
   }
 }

@@ -49,6 +49,6 @@ coralEffector.setMotorSpeed(OUTPUT_SPEED);
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > OUTTAKE_TIME_OUT || !coralEffector.distanceSensorSeesCoral();
+    return false;
   }
 }
