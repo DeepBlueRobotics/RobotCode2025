@@ -539,14 +539,14 @@ public class RobotContainer {
         autoChooser.addOption("BackwardLastResortAutoLeft/Right", new LastResortAuto(drivetrain, -1, 4, 3)); 
         
         //Center L1
-        autoChooser.addOption("DriveRaiseAutonL1ScoreCenterLeftBranch", 
+        autoChooser.addOption("CustomL1ScoreCenterLeftBranch", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.0),  
             new MoveToLeftBranch(drivetrain, limelight),
             new ElevatorToPos(elevator, l1), 
             new CoralFastOutake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos))); 
-        autoChooser.addOption("DriveRaiseAutonL1ScoreCenterRightBranch", 
+        autoChooser.addOption("CustomL1ScoreCenterRightBranch", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.0),  
             new MoveToRightBranch(drivetrain, limelight),
@@ -555,14 +555,14 @@ public class RobotContainer {
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
 
         //Left/Right L1
-        autoChooser.addOption("DriveRaiseAutonL1ScoreLeft/RightLeftBranch", 
+        autoChooser.addOption("CustomL1ScoreLeftBranchL/R", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.5),  
             new MoveToLeftBranch(drivetrain, limelight),
             new ElevatorToPos(elevator, l1), 
             new CoralFastOutake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
-        autoChooser.addOption("DriveRaiseAutonL1ScoreLeft/RightRightBranch", 
+        autoChooser.addOption("CustomL1ScoreRightBranchL/R", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.5),  
             new MoveToRightBranch(drivetrain, limelight),
@@ -571,7 +571,7 @@ public class RobotContainer {
             new ElevatorToPos(elevator, Elevatorc.downPos))); 
 
         //Center L2(Dealgify)
-        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/RightLeftBranchDealgify", 
+        autoChooser.addOption("CustomDealgifyingL2ScoreLeftBranchL/R", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.0),  
             new MoveToLeftBranch(drivetrain, limelight),
@@ -582,7 +582,7 @@ public class RobotContainer {
                     new DealgaficationIntake(algaeEffector))),
             new CoralFastOutake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
-        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/RightRightBranchDealgify", 
+        autoChooser.addOption("CustomDealgifyingL2ScoreRightBranchL/R", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.5),  
             new MoveToRightBranch(drivetrain, limelight),
@@ -595,14 +595,14 @@ public class RobotContainer {
             new ElevatorToPos(elevator, Elevatorc.downPos)));  
             
         //Left/Right L2
-        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/RightLeftBranch", 
+        autoChooser.addOption("CustomL2ScoreLeftBranchL/R", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.5),  
             new MoveToLeftBranch(drivetrain, limelight),
             new ElevatorToPos(elevator, l2), 
             new CoralFastOutake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
-        autoChooser.addOption("DriveRaiseAutonL2ScoreLeft/RightRightBranch", 
+        autoChooser.addOption("CustomL2ScoreRightBranchL/R", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.5),  
             new MoveToRightBranch(drivetrain, limelight),
