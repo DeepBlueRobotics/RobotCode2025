@@ -339,7 +339,7 @@ public class AlgaeEffector extends SubsystemBase {
 
     public void startManualSysID() { //initializes test by starting timers
         
-       voltsApplied = 0;
+        voltsApplied = 0;
         
         timer.reset();
         timer.start();
@@ -365,8 +365,8 @@ public class AlgaeEffector extends SubsystemBase {
             System.out.println("(DYNAMIC) | Voltage:" + voltsApplied + "| Arm Angle (radians):" + Units.degreesToRadians(getArmPos()) + "| Arm Velocity (rad/s):" + Units.degreesToRadians(getArmVel()));
             
             }
-        // Apply voltage
-        armMotor.setVoltage(voltsApplied);
+            // Apply voltage
+            armMotor.setVoltage(voltsApplied);
         }
 
         armMotor.setVoltage(0);
