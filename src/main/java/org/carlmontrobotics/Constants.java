@@ -109,6 +109,7 @@ public final class Constants {
         public static final double UPPER_ANGLE_LIMIT = -20;
         public static final double LOWER_ANGLE_LIMIT = -93;
         public static final double ROTATION_TO_DEG = 360;
+        public static final double ROTATION_TO_RAD = 2*Math.PI;
         public static final double DEGREES_TO_RADS = Math.PI/180;
         public static final double ARM_DISCONT_DEG = -35;
         public static TrapezoidProfile.Constraints TRAP_CONSTRAINTS;
