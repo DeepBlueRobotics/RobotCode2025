@@ -638,7 +638,7 @@ public class RobotContainer {
                     new DealgaficationIntake(algaeEffector))),
             new CoralFastOutake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
-        autoChooser.addOption("CustomDealgifyingL3ScoreLeftBranchL/R", 
+        autoChooser.addOption("CustomDealgifyingL3ScoreRightBranchL/R", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 4, 2.5),  
             new MoveToRightBranch(drivetrain, limelight),
