@@ -90,7 +90,7 @@ import edu.wpi.first.util.sendable.*;
 
 public class AlgaeEffector extends SubsystemBase {
 
-    private double armGoal = LOWER_ANGLE_LIMIT;
+    private double armGoal = 0; //LOWER_ANGLE_LIMIT
     private double armMaxVelocityDegreesPerSecond;
 
 
@@ -218,6 +218,8 @@ public class AlgaeEffector extends SubsystemBase {
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
         armMotorConfig.absoluteEncoder.zeroCentered(true);
         armMotorConfig.absoluteEncoder.inverted(true);
+        armMotorConfig.inverted(true);
+        
         //armMotorConfig.inverted(true);
         // armMotor.configure(pincherMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         armMotorConfig.idleMode(IdleMode.kBrake);
@@ -314,8 +316,8 @@ public class AlgaeEffector extends SubsystemBase {
 
         if (armMotor != null) {
             
-            //armFeedforward.calculate(Units.degreesToRadians(armGoal), -0.00001*(armGoal- getArmPos()));
-            armFeedVolts = manualFF(Units.degreesToRadians(armGoal));
+            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoal),0);//-0.00001*(armGoal- getArmPos())
+            //armFeedVolts = manualFF(Units.degreesToRadians(armGoal));
             // System.out.println("feedVolts: "+ armFeedVolts);
             pidControllerArm.setReference(Units.degreesToRotations(armGoal), ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts);
 
@@ -414,13 +416,15 @@ public class AlgaeEffector extends SubsystemBase {
         
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("goal position", armGoalState.position);
+        SmartDashboard.putNumber("raw arm posution", armEncoder.getPosition());
         //SmartDashboard.putNumber("Raw Arm Angle",armAbsoluteEncoder.getPosition());
         System.out.println("_feedVolts: "+ armFeedVolts);
         System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
         System.out.println("goal angle:" + armGoal);
+
         
         setArmTarget(armGoal);
-            
+         
         
         if (getArmPos() < LOWER_ANGLE_LIMIT) { //if the arm is below this angle limit it is supposed to stop applying voltage
         

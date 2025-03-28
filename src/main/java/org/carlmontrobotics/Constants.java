@@ -92,7 +92,7 @@ public final class Constants {
         public static final double ARM_CHAIN_GEARING = 1;// TODO: set to 16.0/34
         public static final double ARM_GEAR_RATIO = 1.0/3;
         //TODO figure the zero out once encoder is on
-        public static final double ARM_ZERO_ROT = Units.degreesToRotations(70);
+        public static final double ARM_ZERO_ROT = Units.degreesToRotations(194);
         //TODO ask samo for angle to intake algae from pure vertical down
         public static final double ARM_INTAKE_ANGLE = 0;
         //TODO Figure these two out 
@@ -107,7 +107,7 @@ public final class Constants {
         public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
         public static final double UPPER_ANGLE_LIMIT = -20;
-        public static final double LOWER_ANGLE_LIMIT = -93;
+        public static final double LOWER_ANGLE_LIMIT = -90;
         public static final double ROTATION_TO_DEG = 360;
         public static final double DEGREES_TO_RADS = Math.PI/180;
         public static final double ARM_DISCONT_DEG = -35;
