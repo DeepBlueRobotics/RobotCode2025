@@ -94,6 +94,10 @@ public class AlgaeEffector extends SubsystemBase {
     private double armMaxVelocityDegreesPerSecond;
 
 
+    private static final double TEST_DURATION = 2.0; // seconds per voltage
+    double voltsApplied;
+
+
     private double upperLimitAdjustmentVoltage = -0.2;
     private double lowerLimitAdjustmentVoltage = 0.2;
     //motors
@@ -104,7 +108,8 @@ public class AlgaeEffector extends SubsystemBase {
     private SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
     
     private SparkMaxConfig  armMotorConfig = new SparkMaxConfig();
-    
+    private final Timer timer = new Timer(); // timer that runs when MonkeySysId starts
+    private final Timer timer2 = new Timer(); // lap timer
     
     
     private final RelativeEncoder pincherEncoder = (pincherMotor != null ? pincherMotor.getEncoder() : null);
@@ -129,7 +134,7 @@ public class AlgaeEffector extends SubsystemBase {
     private ArmFeedforward armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
     private void updateFeedforward() {
         armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
-        System.out.println("kG" + armkG+"*********************");
+        //System.out.println("kG" + armkG+"*********************");
     }
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
@@ -180,13 +185,15 @@ public class AlgaeEffector extends SubsystemBase {
         
         SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
         SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
-        ;
-        SmartDashboard.putData("Arm to Ramp Up Angle Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RAMP_UP_ANGLE)));
+        
+       
         SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));
         SmartDashboard.putData("Intake Algae", new GroundIntakeAlgae(this));
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
-        SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
         SmartDashboard.putData("UPDATE COMMAND",new InstantCommand(()->{updateArmPID();updateFeedforward();}));
+
+        SmartDashboard.putData("(MANUAL) Quasistatic FF test", new InstantCommand(()->{runFeedforwardTestQuasistatic(0.1,0.5, 10, 1.5);})); //adjust parameters if needed
+        SmartDashboard.putData("(MANUAL) Dynamic FF test", new InstantCommand(()->{runFeedforwardTestDynamic(0.2, 10, 1.5);})); //adjust parameters if needed
 
         SmartDashboard.putData("Quasistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -307,7 +314,7 @@ public class AlgaeEffector extends SubsystemBase {
     }
     // // use trapezoid 
     public void setArmTarget(double targetPos){
-        // 
+        
 
         armGoal = targetPos;
         getArmClampedGoal(targetPos); 
@@ -325,6 +332,79 @@ public class AlgaeEffector extends SubsystemBase {
         
         
     }
+
+    //Manual SysId---------------------------------------------------------------------------------------
+
+    //remove all other print statements to make this easy to analyze!!!!
+    // In order to get values plot the data and do linear regression to find the values
+
+    public void startManualSysID() { //initializes test by starting timers
+        
+        voltsApplied = 0;
+        
+        timer.reset();
+        timer.start();
+        timer2.reset();
+        timer2.start();
+        System.out.println("**Use these values to plot data and use linear regression to find feedforward values**");
+        System.out.println("(ManualSysID Data)------------------------------------------------------------------------------------------------");
+        
+        
+    }
+
+    public void runFeedforwardTestDynamic(double voltsIncreaseRate, double endTime, double endVolts) {
+        startManualSysID();
+        
+        //only run this if you are not going to run anything else
+        while (timer.get() < endTime && voltsApplied < endVolts && getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT) { //stops after any of these conditions are met
+        
+            // Hold each voltage for 2 seconds
+            if (timer2.get() >= TEST_DURATION) {
+            
+            timer2.reset();
+            voltsApplied += voltsIncreaseRate;
+            System.out.println("(DYNAMIC) | Voltage:" + voltsApplied + "| Arm Angle (radians):" + Units.degreesToRadians(getArmPos()) + "| Arm Velocity (rad/s):" + Units.degreesToRadians(getArmVel()));
+            
+            }
+            // Apply voltage
+            armMotor.setVoltage(voltsApplied);
+        }
+
+        armMotor.setVoltage(0);
+        timer.stop();
+        System.out.println("(End of data)---------------------------------------------------------------------------------------------------------------");
+        return; // Test complete
+
+        
+    }
+
+    public void runFeedforwardTestQuasistatic(double voltsIncreaseRate, double secondsPerIncrease, double endTime, double endVolts) {
+        startManualSysID();
+        
+        
+        //Only run this if you aren't going to run anything else
+        while (timer.get() < endTime && voltsApplied < endVolts && getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT) { //stops after any of these conditions are met
+            
+            if (timer2.get() >= secondsPerIncrease) { //after every defined period it increases the volts
+            
+                timer2.reset();
+                voltsApplied += voltsIncreaseRate;
+                System.out.println("(DYNAMIC) | Voltage:" + voltsApplied + "| Arm Angle (radians):" + Units.degreesToRadians(getArmPos()) + "| Arm Velocity (rad/s):" + Units.degreesToRadians(getArmVel()));
+                
+            }
+            // Apply voltage
+            armMotor.setVoltage(voltsApplied);
+        }
+
+        armMotor.setVoltage(0);
+        timer.stop();
+        System.out.println("(End of data)---------------------------------------------------------------------------------------------------------------");
+        return; // Test complete
+    }
+    
+    
+//------------------------------------------------------------------------------------------------------------------------------------------------------------
+       
 
 
 
@@ -400,7 +480,7 @@ public class AlgaeEffector extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        
         
         //armMotor.set(0.1);
 
@@ -418,9 +498,9 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putNumber("goal position", armGoalState.position);
         SmartDashboard.putNumber("raw arm posution", armEncoder.getPosition());
         //SmartDashboard.putNumber("Raw Arm Angle",armAbsoluteEncoder.getPosition());
-        System.out.println("_feedVolts: "+ armFeedVolts);
-        System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
-        System.out.println("goal angle:" + armGoal);
+        // System.out.println("_feedVolts: "+ armFeedVolts);
+        // System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
+        // System.out.println("goal angle:" + armGoal);
 
         
         setArmTarget(armGoal);
@@ -429,7 +509,7 @@ public class AlgaeEffector extends SubsystemBase {
         if (getArmPos() < LOWER_ANGLE_LIMIT) { //if the arm is below this angle limit it is supposed to stop applying voltage
         
             //armMotor.set(0);
-            System.out.println("arm past lower limit!");
+            //System.out.println("arm past lower limit!");
             armMotor.set(0);
             if (Math.abs(getArmPos()-LOWER_ANGLE_LIMIT) > ARM_ERROR_MARGIN){ //this is supposed to make it so that if the arm gets too far from the angle limit it applies a reverse voltage to slow it down
                 armMotor.set(0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
@@ -439,7 +519,7 @@ public class AlgaeEffector extends SubsystemBase {
         if (getArmPos() > UPPER_ANGLE_LIMIT) {
             
             armMotor.set(0);
-            System.out.println("arm past upper limit");
+            //System.out.println("arm past upper limit");
             if (Math.abs(getArmPos() - LOWER_ANGLE_LIMIT) > ARM_ERROR_MARGIN) {
                 armMotor.set(-0.02 * armAbsoluteEncoder.getVelocity() + upperLimitAdjustmentVoltage);
             }
