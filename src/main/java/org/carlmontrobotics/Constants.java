@@ -355,7 +355,7 @@ public final class Constants {
 		// TODO: CHANGE NUMBERS ON LIMELIGHT INTERFACE
 
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
-		public static final double RIGHT_CORAL_BRANCH = Units.inchesToMeters(6.593);
+		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH;
 
 		public static final double areaPercentageForL4 = 0; //TODO figure this out por favor
 

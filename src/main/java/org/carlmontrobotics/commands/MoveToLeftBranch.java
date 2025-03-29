@@ -10,19 +10,31 @@ import org.carlmontrobotics.subsystems.LimelightHelpers;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+
 import static org.carlmontrobotics.Constants.Limelightc.*;
+
+import java.text.NumberFormat.Style;
 
 public class MoveToLeftBranch extends Command {
   private final Drivetrain dt;
   private final Limelight ll;
   private boolean originalFieldOrientation;
   double strafeErr;
+  Command gocmd;
+  boolean ran = false;
 
   /** Creates a new MoveToLeftBranch. */
   public MoveToLeftBranch(Drivetrain dt, Limelight ll) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.dt=dt);
     this.ll = ll;
+    // this.gocmd.schedule();
+    // this.gocmd.end(true);
   }
 
   // Called when the command is initially scheduled.
@@ -37,12 +49,31 @@ public class MoveToLeftBranch extends Command {
   @Override
   public void execute() {
     SmartDashboard.putNumber("strafe left", strafeErr);
+    
+    // if (!ran && ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+    //   strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
+    //   this.gocmd = new SequentialCommandGroup(
+    //     new InstantCommand(()-> dt.drive(.0001,.5,0)),
+    //     new WaitCommand(strafeErr/.5),
+    //     new InstantCommand(()-> dt.drive(0,0,.00001))
+    //   ); 
+    //   gocmd.schedule();
+    //   ran=true;
+    // }
+
     if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0);
+      dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 3, 0);
     }else{
       dt.stop();
     }
+  
+    //   dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0); 
+      
+      
+    // }else{
+    //   dt.stop();
+    // }
   }
 
   // Called once the command ends or is interrupted.
