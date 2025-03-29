@@ -31,6 +31,8 @@ import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
 import org.carlmontrobotics.commands.DealgaficationIntake;
 import org.carlmontrobotics.commands.GroundIntakeAlgae;
+import org.carlmontrobotics.commands.ManualDynamic;
+import org.carlmontrobotics.commands.ManualQuasistatic;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.commands.ShootAlgae;
 
@@ -94,8 +96,10 @@ public class AlgaeEffector extends SubsystemBase {
     private double armMaxVelocityDegreesPerSecond;
 
 
-    private static final double TEST_DURATION = 2.0; // seconds per voltage
-    double voltsApplied;
+    private final Timer timer = new Timer();
+    private final Timer timer2 = new Timer();
+    private double TEST_DURATION = 2.0;
+    private double voltsApplied = 0;
 
 
     private double upperLimitAdjustmentVoltage = -0.2;
@@ -108,8 +112,7 @@ public class AlgaeEffector extends SubsystemBase {
     private SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
     
     private SparkMaxConfig  armMotorConfig = new SparkMaxConfig();
-    private final Timer timer = new Timer(); // timer that runs when MonkeySysId starts
-    private final Timer timer2 = new Timer(); // lap timer
+    
     
     
     private final RelativeEncoder pincherEncoder = (pincherMotor != null ? pincherMotor.getEncoder() : null);
@@ -180,6 +183,8 @@ public class AlgaeEffector extends SubsystemBase {
         currentPosition = getArmState();
         setArmTarget(0);
         updateArmPID(); 
+        
+        
 
         SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmTarget(0)));
         
@@ -192,8 +197,8 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
         SmartDashboard.putData("UPDATE COMMAND",new InstantCommand(()->{updateArmPID();updateFeedforward();}));
 
-        SmartDashboard.putData("(MANUAL) Quasistatic FF test", new InstantCommand(()->{runFeedforwardTestQuasistatic(0.1,0.5, 10, 1.5);})); //adjust parameters if needed
-        SmartDashboard.putData("(MANUAL) Dynamic FF test", new InstantCommand(()->{runFeedforwardTestDynamic(0.2, 10, 1.5);})); //adjust parameters if needed
+        SmartDashboard.putData("(MANUAL) Dynamic FF test", new ManualDynamic(this)); //adjust parameters if needed
+        SmartDashboard.putData("(MANUAL) Quasistatic FF test", new ManualQuasistatic(this)); //adjust parameters if needed
 
         SmartDashboard.putData("Quasistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -218,9 +223,9 @@ public class AlgaeEffector extends SubsystemBase {
 
         //todo
         armMotorConfig.closedLoop.pid(
-            armkP, //change to: Constants.kP[ARM_ARRAY_ORDER]
-            armkI, //change to:  Constants.kI[ARM_ARRAY_ORDER]
-            armkD  // Constants.kd[ARM_ARRAY_ORDER]
+            Constants.kP[ARM_ARRAY_ORDER], //change to: 
+            Constants.kI[ARM_ARRAY_ORDER], //change to:  
+            Constants.kD[ARM_ARRAY_ORDER]  // 
             ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
         armMotorConfig.absoluteEncoder.zeroCentered(true);
@@ -323,10 +328,10 @@ public class AlgaeEffector extends SubsystemBase {
 
         if (armMotor != null) {
             
-            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoal),0);//-0.00001*(armGoal- getArmPos())
+            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoal), 0.00001*(armGoal- getArmPos()));//-0.00001*(armGoal- getArmPos())
             //armFeedVolts = manualFF(Units.degreesToRadians(armGoal));
             // System.out.println("feedVolts: "+ armFeedVolts);
-            pidControllerArm.setReference(Units.degreesToRotations(armGoal), ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts);
+            pidControllerArm.setReference(armGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts);
 
         }
         
@@ -353,44 +358,58 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     public void runFeedforwardTestDynamic(double voltsIncreaseRate, double endTime, double endVolts) {
-        startManualSysID();
+        
         
         //only run this if you are not going to run anything else
-        while (timer.get() < endTime && voltsApplied < endVolts && getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT) { //stops after any of these conditions are met
-        
+        //while (timer.get() < endTime && voltsApplied < endVolts && getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT) { //stops after any of these conditions are met
+            
             // Hold each voltage for 2 seconds
             if (timer2.get() >= TEST_DURATION) {
             
             timer2.reset();
             voltsApplied += voltsIncreaseRate;
-            System.out.println("(DYNAMIC) | Voltage:" + voltsApplied + "| Arm Angle (radians):" + Units.degreesToRadians(getArmPos()) + "| Arm Velocity (rad/s):" + Units.degreesToRadians(getArmVel()));
+            System.out.println("| (DYNAMIC) Arm Velocity (rad/s):" + Units.degreesToRadians(getArmVel()) + "| Voltage:" + voltsApplied + "| Arm Angle (radians):" + Math.cos(Units.degreesToRadians(getArmPos())));
             
             }
             // Apply voltage
             armMotor.setVoltage(voltsApplied);
-        }
+        
 
+        // armMotor.setVoltage(0);
+        // timer.stop();
+        // System.out.println("(End of data)---------------------------------------------------------------------------------------------------------------");
+        // return; // Test complete
+
+        
+    }
+
+    public boolean isManualSysIDTestFinished(){
+        return timer.get() > 15 
+        || voltsApplied > 1.5 
+        || getArmPos() < LOWER_ANGLE_LIMIT 
+        || getArmPos() > UPPER_ANGLE_LIMIT;
+    }
+
+    public void endManualSysIDTest(){
         armMotor.setVoltage(0);
         timer.stop();
         System.out.println("(End of data)---------------------------------------------------------------------------------------------------------------");
         return; // Test complete
-
-        
     }
 
     public void runFeedforwardTestQuasistatic(double voltsIncreaseRate, double secondsPerIncrease, double endTime, double endVolts) {
         startManualSysID();
-        
+        //System.out.println("method enabled");
         
         //Only run this if you aren't going to run anything else
         while (timer.get() < endTime && voltsApplied < endVolts && getArmPos() > LOWER_ANGLE_LIMIT && getArmPos() < UPPER_ANGLE_LIMIT) { //stops after any of these conditions are met
-            
+            //System.out.println("while loop working");
             if (timer2.get() >= secondsPerIncrease) { //after every defined period it increases the volts
             
                 timer2.reset();
                 voltsApplied += voltsIncreaseRate;
-                System.out.println("(DYNAMIC) | Voltage:" + voltsApplied + "| Arm Angle (radians):" + Units.degreesToRadians(getArmPos()) + "| Arm Velocity (rad/s):" + Units.degreesToRadians(getArmVel()));
-                
+                //System.out.println("(DYNAMIC) | Voltage:" + voltsApplied + "| Arm Angle (radians):" + Units.degreesToRadians(getArmPos()) + "| Arm Velocity (rad/s):" + Units.degreesToRadians(getArmVel()));
+                System.out.println("| (DYNAMIC) Arm Velocity (rad/s):" + Units.degreesToRadians(getArmVel()) + "| Voltage:" + voltsApplied + "| Arm Angle (radians):" + Math.cos(Units.degreesToRadians(getArmPos())));
             }
             // Apply voltage
             armMotor.setVoltage(voltsApplied);
@@ -401,6 +420,7 @@ public class AlgaeEffector extends SubsystemBase {
         System.out.println("(End of data)---------------------------------------------------------------------------------------------------------------");
         return; // Test complete
     }
+
     
     
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -492,11 +512,14 @@ public class AlgaeEffector extends SubsystemBase {
        
         // setArmPosition();
         // System.out.println(".");
-        // System.out.println("feedVolts: "+ armFeedVolts);
+        //System.out.println("feedVolts: "+ armFeedVolts);
         
+        SmartDashboard.putNumber("feed volts", armFeedVolts);
+        SmartDashboard.putNumber("ARM ERROR:", Math.abs(armGoal-getArmPos()));
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("goal position", armGoalState.position);
         SmartDashboard.putNumber("raw arm posution", armEncoder.getPosition());
+        SmartDashboard.putNumber("Arm Velocity (radians)", Units.degreesToRadians(armAbsoluteEncoder.getVelocity()));
         //SmartDashboard.putNumber("Raw Arm Angle",armAbsoluteEncoder.getPosition());
         // System.out.println("_feedVolts: "+ armFeedVolts);
         // System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
@@ -525,7 +548,7 @@ public class AlgaeEffector extends SubsystemBase {
             }
             
             
-        }
+           }
         
         
         //System.out.println("!!!!!!!!" + getArmPos());
