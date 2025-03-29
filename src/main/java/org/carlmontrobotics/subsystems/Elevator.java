@@ -76,7 +76,7 @@ public class Elevator extends SubsystemBase {
   private DigitalInput bottomLimitSwitch;
   private double maxVelocityMetersPerSecond = 5;
   //Vars
-  private double heightGoal;
+  private double heightGoal=0;
   private int elevatorState;
   //PID
   private PIDController pidElevatorController;
@@ -96,7 +96,7 @@ public class Elevator extends SubsystemBase {
   //Meters.mutable(0);
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
   private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);//AH: ITS A HOLDER :o
-  private double goalHeight;
+  // private double goalHeight;
   //MetersPerSecond.mutable(0);
   
   //AH: need a config to run a test
@@ -118,7 +118,7 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
     
     encoderTimer = new Timer();
-    SmartDashboard.putNumber("Goal", goalHeight);
+    // SmartDashboard.putNumber("Goal", goalHeight);
     //motors
     // masterMotor = new SparkMax(masterPort, MotorType.kBrushless);
     masterMotor = MotorControllerFactory.createSparkMax(masterPort, MotorConfig.NEO);
@@ -323,6 +323,8 @@ public class Elevator extends SubsystemBase {
     // }//add one for max height
     //add one for if unsafe
     SmartDashboard.putNumber("Elevator Height", getCurrentHeight());
+    SmartDashboard.putNumber("Elevator Height goal", heightGoal);
+    // System.out.println("eheight: "+getCurrentHeight()+" goal: "+goalHeight);
    // SmartDashboard.putNumber("Since Calibrated", timer.get());
     // updateEncoders();
    goToGoal();
