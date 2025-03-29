@@ -21,7 +21,7 @@ public class OuttakeAlgae extends Command {
     timer.start();
 
     
-    algae.setPincherRPM(OUTTAKE_PINCHER_RPM);
+    algae.runBottomMotor(BOTTOM_MOTOR_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,7 +39,7 @@ public class OuttakeAlgae extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algae.stopPincherMotor();
+    algae.stopBottomMotor();
     timer.stop();
   }
 

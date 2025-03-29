@@ -106,25 +106,25 @@ public class AlgaeEffector extends SubsystemBase {
     private double lowerLimitAdjustmentVoltage = 0.2;
     //motors
      
-    private final SparkFlex pincherMotor = null; //new SparkFlex(PINCH_MOTOR_PORT, MotorType.kBrushless);
+    private final SparkFlex BottomMotor = null; //new SparkFlex(PINCH_MOTOR_PORT, MotorType.kBrushless);
     private final SparkMax armMotor = MotorControllerFactory.createSparkMax(ARM_MOTOR_PORT, MotorConfig.NEO);
-
-    private SparkFlexConfig pincherMotorConfig = new SparkFlexConfig();
+    //Pincher motor is being replaced with bottom motor since pincher motor won't be used
+    private SparkFlexConfig bottomMotorPincher = new SparkFlexConfig();
     
     private SparkMaxConfig  armMotorConfig = new SparkMaxConfig();
     
     
-    
-    private final RelativeEncoder pincherEncoder = (pincherMotor != null ? pincherMotor.getEncoder() : null);
+    //Ignore PID and FeedForward Configs for pincher encoder
+    // private final RelativeEncoder BottomEncoder = (BottomMotor != null ? BottomMotor.getEncoder() : null);
     private final RelativeEncoder armEncoder = (armMotor != null ? armMotor.getEncoder() : null);
     private final AbsoluteEncoder armAbsoluteEncoder = (armMotor != null ? armMotor.getAbsoluteEncoder() : null);
 
     
-    private final SparkClosedLoopController pidControllerPincher = (pincherMotor != null ? pincherMotor.getClosedLoopController() : null);
+    // private final SparkClosedLoopController pidControllerPincher = (BottomMotor != null ? BottomMotor.getClosedLoopController() : null);
     private final SparkClosedLoopController pidControllerArm = (armMotor != null ? armMotor.getClosedLoopController() : null);
     
     
-    private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(kS[PINCHER_ARRAY_ORDER], kV[PINCHER_ARRAY_ORDER], kA[PINCHER_ARRAY_ORDER]);
+    //private final SimpleMotorFeedforward pincherFeedforward = new SimpleMotorFeedforward(kS[PINCHER_ARRAY_ORDER], kV[PINCHER_ARRAY_ORDER], kA[PINCHER_ARRAY_ORDER]);
     AbsoluteEncoderConfig config = new AbsoluteEncoderConfig();
     //for sendable we need this stuff; TODO: remove
     private double armkS = kS[ARM_ARRAY_ORDER];
@@ -211,26 +211,28 @@ public class AlgaeEffector extends SubsystemBase {
     private void configureMotors () {
         
     
-        pincherMotorConfig.closedLoop.pid(
+        bottomMotorPincher.closedLoop.pid(
             Constants.kP[PINCHER_ARRAY_ORDER],
             Constants.kI[PINCHER_ARRAY_ORDER],
             Constants.kD[PINCHER_ARRAY_ORDER]
             ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        if (pincherMotor != null) {
-            pincherMotor.configure(pincherMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        if (BottomMotor != null) {
+            BottomMotor.configure(bottomMotorPincher, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
         
 
         //todo
         armMotorConfig.closedLoop.pid(
-            Constants.kP[ARM_ARRAY_ORDER], //change to: 
-            Constants.kI[ARM_ARRAY_ORDER], //change to:  
-            Constants.kD[ARM_ARRAY_ORDER]  // 
+            Constants.kP[ARM_ARRAY_ORDER], 
+            Constants.kI[ARM_ARRAY_ORDER],  
+            Constants.kD[ARM_ARRAY_ORDER]  
             ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
         armMotorConfig.absoluteEncoder.zeroCentered(true);
         armMotorConfig.absoluteEncoder.inverted(true);
         armMotorConfig.inverted(true);
+        armMotorConfig.softLimit.forwardSoftLimit(UPPER_ANGLE_LIMIT);
+        armMotorConfig.softLimit.reverseSoftLimit(LOWER_ANGLE_LIMIT);
         
         //armMotorConfig.inverted(true);
         // armMotor.configure(pincherMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -240,9 +242,10 @@ public class AlgaeEffector extends SubsystemBase {
         //     Constants.kI[ARM_ARRAY_ORDER],
         //     Constants.kD[ARM_ARRAY_ORDER]
         //     ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG);
-        armMotorConfig.absoluteEncoder.positionConversionFactor(ROTATION_TO_DEG);
-        armMotorConfig.absoluteEncoder.velocityConversionFactor(6); // 6 is rotations/min to degrees/second
+        armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG * ARM_CHAIN_GEARING);
+        armMotorConfig.absoluteEncoder.positionConversionFactor(ROTATION_TO_DEG * ARM_CHAIN_GEARING);
+        armMotorConfig.absoluteEncoder.velocityConversionFactor(6 * ARM_CHAIN_GEARING); // 6 is rotations/min to degrees/second
+
         if (armMotor != null) {
             armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         }
@@ -254,13 +257,13 @@ public class AlgaeEffector extends SubsystemBase {
 
     
 
-    public void setPincherRPM(double pincherrpm) {
-        if (pincherMotor != null) {
-            pidControllerPincher.setReference(pincherrpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-            pincherFeedforward.calculate(pincherrpm); 
-        }
+    // public void setPincherRPM(double pincherrpm) {
+    //     if (pincherMotor != null) {
+    //         pidControllerPincher.setReference(pincherrpm, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    //         pincherFeedforward.calculate(pincherrpm); 
+    //     }
            
-    }
+    //}
     //arm methods
 
     //drives arm from set point to goal position
@@ -470,28 +473,28 @@ public class AlgaeEffector extends SubsystemBase {
         return armAbsoluteEncoder.getVelocity();
     }
 
-    public void runRPM() {
-        //TODO: Change RPM according to design
+    public void runBottomMotor(double motorspeed) { //PUT IN A VALUE FROM -1 TO 1
+        BottomMotor.set(motorspeed);
         
-        setPincherRPM(2100);
+        
     }
 
-    public void stopPincherMotor() {
-        setPincherRPM(0);
+    public void stopBottomMotor() {
+        BottomMotor.set(0);
     }
 
     
 
-    public void setMotorSpeed(double topSpeed, double bottomSpeed, double pincherSpeed) {
+    // public void setMotorSpeed(double topSpeed, double bottomSpeed, double pincherSpeed) {
         
-        if (pincherMotor != null) {
-            pincherMotor.set(pincherSpeed);
-        }
+    //     if (pincherMotor != null) {
+    //         pincherMotor.set(pincherSpeed);
+    //     }
         
-    }
+    // }
 
     public boolean isAlgaeIntaked() {
-        return pincherMotor.getOutputCurrent() > PINCHER_CURRENT_THRESHOLD;
+        return BottomMotor.getOutputCurrent() > PINCHER_CURRENT_THRESHOLD;
     }
 
 

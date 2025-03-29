@@ -23,7 +23,7 @@ public class ShootAlgae extends Command {
     timer.start();
 
     
-    algae.setPincherRPM(Constants.AlgaeEffectorc.SHOOT_PINCHER_RPM);
+    //algae.setPincherRPM(Constants.AlgaeEffectorc.SHOOT_PINCHER_RPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,7 +34,7 @@ public class ShootAlgae extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algae.stopPincherMotor();
+    //algae.stopPincherMotor();
     timer.stop();
   }
 

@@ -57,8 +57,8 @@ public final class Constants {
         //EFFECTOR
 
         
-		// public static final int UPPER_MOTOR_PORT = 1; 
-		// public static final int LOWER_MOTOR_PORT = 2;
+		public static final int UPPER_MOTOR_PORT = 1; 
+		public static final int LOWER_MOTOR_PORT = 2;
         public static final int PINCH_MOTOR_PORT = 3;
         public static final int ARM_MOTOR_PORT = 20;
         public static final int aChannelEnc = 0;
@@ -72,9 +72,11 @@ public final class Constants {
         //TODO find these values out 
           
         public static double INTAKE_PINCHER_RPM = 1000;  
+        public static double BOTTOM_MOTOR_SPEED = 0.3;
 
         
-        public static double OUTTAKE_PINCHER_RPM = -2100;  
+        public static double OUTTAKE_PINCHER_RPM = -2100; 
+         
 
          
         public static double SHOOT_PINCHER_RPM = -2100; 
@@ -89,7 +91,7 @@ public final class Constants {
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
         public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
         
-        public static final double ARM_CHAIN_GEARING = 1;// TODO: set to 16.0/34
+        public static final double ARM_CHAIN_GEARING = 16.0/34;// TODO: set to 16.0/34
         public static final double ARM_GEAR_RATIO = 1.0/3;
         //TODO figure the zero out once encoder is on
         public static final double ARM_ZERO_ROT = Units.degreesToRotations(194);

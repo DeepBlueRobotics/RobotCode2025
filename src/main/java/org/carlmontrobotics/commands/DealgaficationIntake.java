@@ -21,19 +21,20 @@ public class DealgaficationIntake extends Command {
     timer.start();
 
     
-    algae.setPincherRPM(DEALGAFY_PINCHER_RPM);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //call command arm toposition
+    
+    algae.runBottomMotor(-1*BOTTOM_MOTOR_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algae.stopPincherMotor();
+    algae.stopBottomMotor();
     timer.stop();
   }
 

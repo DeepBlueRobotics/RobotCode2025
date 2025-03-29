@@ -23,7 +23,7 @@ public class GroundIntakeAlgae extends Command {
     //this command is strange in that it seems to handle the arm movement by itself, but I will leave it that way until someone changes it.
 
     
-    algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
+    //algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
   }
 
 
@@ -36,7 +36,7 @@ public class GroundIntakeAlgae extends Command {
   @Override
   public void end(boolean interrupted) {
     //algae.setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
-    algae.stopPincherMotor();
+    //algae.stopPincherMotor();
     timer.stop();
   }
 
