@@ -613,18 +613,19 @@ public class RobotContainer {
         //Center L3
         autoChooser.addOption("CustomL3ScoreCenterLeftBranch", 
             new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 4, 2.0),  
-            new MoveToLeftBranch(drivetrain, limelight),
-            new ElevatorToPos(elevator, l3), 
-            new CoralFastOutake(coralEffector),
-            new ElevatorToPos(elevator, Elevatorc.downPos)));     
+              new LastResortAuto(drivetrain, 1, 4, 2.0),  
+              new MoveToLeftBranch(drivetrain, limelight),
+              new ParallelCommandGroup( 
+                new SequentialCommandGroup(new WaitCommand(3), new CoralFastOutake(coralEffector)), 
+                new ElevatorToPos(elevator, l3)),
+              new ElevatorToPos(elevator, Elevatorc.downPos)));     
         autoChooser.addOption("CustomL3ScoreCenterRightBranch", 
             new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 4, 2.0),  
-            new MoveToRightBranch(drivetrain, limelight),
-            new ElevatorToPos(elevator, l3), 
-            new CoralFastOutake(coralEffector), 
-            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+              new LastResortAuto(drivetrain, 1, 4, 2.0),  
+              new MoveToRightBranch(drivetrain, limelight),
+              new ElevatorToPos(elevator, l3), 
+              new CoralFastOutake(coralEffector), 
+              new ElevatorToPos(elevator, Elevatorc.downPos)));    
             
         //Left/Right L3(Dealgify)
         autoChooser.addOption("CustomDealgifyingL3ScoreLeftBranchL/R", 
