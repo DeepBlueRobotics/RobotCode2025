@@ -83,16 +83,16 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("turnIN", rotateClockwise);
     System.out.println("fwd str rcw: "+forward+", "+strafe+", "+rotateClockwise);
     boolean slow2 = slow.getAsBoolean();
-    if (Math.abs(forward) <= Constants.OI.JOY_THRESH && !slow2)
+    if (Math.abs(forward) <= Constants.OI.JOY_THRESH)
       forward = 0;
     else
       forward *= maxForward;
-    if (Math.abs(strafe) <= Constants.OI.JOY_THRESH && !slow2)
+    if (Math.abs(strafe) <= Constants.OI.JOY_THRESH)
       strafe = 0.0;
     else
       strafe *= maxStrafe;
-    if (Math.abs(rotateClockwise) <= Constants.OI.JOY_THRESH && !slow2)
-      rotateClockwise = 0.0;
+    if (Math.abs(rotateClockwise) <= Constants.OI.JOY_THRESH)
+      rotateClockwise = 0.001;
     else
       rotateClockwise *= maxRCW;
 
