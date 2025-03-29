@@ -92,7 +92,7 @@ public class TeleopDrive extends Command {
     else
       strafe *= maxStrafe;
     if (Math.abs(rotateClockwise) <= Constants.OI.JOY_THRESH)
-      rotateClockwise = 0.001;
+      rotateClockwise = 0.000001;
     else
       rotateClockwise *= maxRCW;
 
