@@ -25,8 +25,7 @@ public class MoveToLeftBranch extends Command {
   private final Limelight ll;
   private boolean originalFieldOrientation;
   double strafeErr;
-  Command gocmd;
-  boolean ran = false;
+  double didntseetime=0;
 
   /** Creates a new MoveToLeftBranch. */
   public MoveToLeftBranch(Drivetrain dt, Limelight ll) {
@@ -50,18 +49,9 @@ public class MoveToLeftBranch extends Command {
   public void execute() {
     SmartDashboard.putNumber("strafe left", strafeErr);
     
-    // if (!ran && ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
-    //   strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-    //   this.gocmd = new SequentialCommandGroup(
-    //     new InstantCommand(()-> dt.drive(.0001,.5,0)),
-    //     new WaitCommand(strafeErr/.5),
-    //     new InstantCommand(()-> dt.drive(0,0,.00001))
-    //   ); 
-    //   gocmd.schedule();
-    //   ran=true;
-    // }
-
+    didntseetime+=1/50;
     if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+      didntseetime=0;
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
       dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 3, 0);
     }else{
@@ -86,8 +76,8 @@ public class MoveToLeftBranch extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH < .1 
-    && Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH > -.1)
-    || !ll.seesTag(REEF_LL);
+    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH < .02 
+    && Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH > -.02)
+    || didntseetime>1.5;//sec
   }
 }

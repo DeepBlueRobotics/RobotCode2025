@@ -17,6 +17,7 @@ public class MoveToRightBranch extends Command {
   private final Limelight ll;
   private boolean originalFieldOrientation;
   double strafeErr;
+  double didntseetime=0;
 
   /** Creates a new MoveToLeftBranch. */
   public MoveToRightBranch(Drivetrain dt, Limelight ll) {
@@ -36,7 +37,9 @@ public class MoveToRightBranch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    didntseetime+=1/50;
     if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+      didntseetime=0;
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
       dt.drive(0.00001, (strafeErr + RIGHT_CORAL_BRANCH) * 3, 0);
     }else{
@@ -55,8 +58,8 @@ public class MoveToRightBranch extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + RIGHT_CORAL_BRANCH < .1 && 
-    Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + RIGHT_CORAL_BRANCH > -.1)
-    || !ll.seesTag(REEF_LL);
+    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + RIGHT_CORAL_BRANCH < .02 && 
+    Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + RIGHT_CORAL_BRANCH > -.02)
+    || didntseetime>1.5;//sec
   }
 }
