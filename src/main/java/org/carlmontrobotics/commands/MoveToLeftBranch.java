@@ -10,19 +10,30 @@ import org.carlmontrobotics.subsystems.LimelightHelpers;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+
 import static org.carlmontrobotics.Constants.Limelightc.*;
+
+import java.text.NumberFormat.Style;
 
 public class MoveToLeftBranch extends Command {
   private final Drivetrain dt;
   private final Limelight ll;
   private boolean originalFieldOrientation;
   double strafeErr;
+  double didntseetime=0;
 
   /** Creates a new MoveToLeftBranch. */
   public MoveToLeftBranch(Drivetrain dt, Limelight ll) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.dt=dt);
     this.ll = ll;
+    // this.gocmd.schedule();
+    // this.gocmd.end(true);
   }
 
   // Called when the command is initially scheduled.
@@ -37,12 +48,22 @@ public class MoveToLeftBranch extends Command {
   @Override
   public void execute() {
     SmartDashboard.putNumber("strafe left", strafeErr);
+    
+    didntseetime+=1/50;
     if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+      didntseetime=0;
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0);
+      dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 3, 0);
     }else{
       dt.stop();
     }
+  
+    //   dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0); 
+      
+      
+    // }else{
+    //   dt.stop();
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -55,8 +76,8 @@ public class MoveToLeftBranch extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH < .1 
-    && Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH > -.1)
-    || !ll.seesTag(REEF_LL);
+    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH < .02 
+    && Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH > -.02)
+    || didntseetime>1.5;//sec
   }
 }
