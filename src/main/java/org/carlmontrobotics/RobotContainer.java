@@ -542,7 +542,7 @@ public class RobotContainer {
             new LastResortAuto(drivetrain, 1, 1, 2.0),  
             new MoveToLeftBranch(drivetrain, limelight),
             new ElevatorToPos(elevator, l1),
-            new CoralFastOutake(coralEffector),
+            new CoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos))); 
 
         autoChooser.addOption("CustomL1ScoreCenterRightBranch", 
@@ -550,7 +550,7 @@ public class RobotContainer {
             new LastResortAuto(drivetrain, 1, 1, 2.0),  
             new MoveToRightBranch(drivetrain, limelight),
             new ElevatorToPos(elevator, l1),
-            new CoralFastOutake(coralEffector),
+            new CoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
 
         //Left/Right L1
@@ -559,7 +559,7 @@ public class RobotContainer {
             new LastResortAuto(drivetrain, 1, 1, 2.5),  
             new MoveToLeftBranch(drivetrain, limelight),
             new ElevatorToPos(elevator, l1),
-            new CoralFastOutake(coralEffector),
+            new CoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));  
 
         autoChooser.addOption("CustomL1ScoreRightBranchL/R", 
@@ -567,7 +567,7 @@ public class RobotContainer {
             new LastResortAuto(drivetrain, 1, 1, 2.5),  
             new MoveToRightBranch(drivetrain, limelight),
             new ElevatorToPos(elevator, l1),
-            new CoralFastOutake(coralEffector),
+            new CoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos))); 
 
         //Center L2(Dealgify)
@@ -713,16 +713,16 @@ public class RobotContainer {
             new LastResortAuto(drivetrain, 1, 1, 2.5),  
             new MoveToLeftBranch(drivetrain, limelight),
                 new L4BackupUsingArea(drivetrain, limelight),
-                new ElevatorToPos(elevator, l3),
-                new CoralFastOutake(coralEffector),
+                new ElevatorToPos(elevator, l4),
+                new CoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
         autoChooser.addOption("CustomBackupL4ScoreRightBranchL/R", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 1, 2.5),  
             new MoveToRightBranch(drivetrain, limelight),
                 new L4BackupUsingArea(drivetrain, limelight),
-                new ElevatorToPos(elevator, l3),
-                new CoralFastOutake(coralEffector),
+                new ElevatorToPos(elevator, l4),
+                new CoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));
     }
 //------------------------------------------------------------------------------------------------
