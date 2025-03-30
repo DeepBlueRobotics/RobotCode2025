@@ -13,7 +13,6 @@ import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator.*;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.OuttakeAlgae;
-import org.carlmontrobotics.commands.ShootAlgae;
 import org.carlmontrobotics.subsystems.AlgaeEffector;
 import org.carlmontrobotics.commands.ArmToPosition;
 import org.carlmontrobotics.commands.DealgaficationIntake;

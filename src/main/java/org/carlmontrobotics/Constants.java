@@ -419,14 +419,12 @@ public final class Constants {
         public static final int ARM_ARRAY_ORDER = 3;
         //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
         //TODO find these values out 
-          
+        
         public static double INTAKE_PINCHER_RPM = 1000;  
         public static double BOTTOM_MOTOR_SPEED = 0.3;
 
         
         public static double OUTTAKE_PINCHER_RPM = -2100; 
-         
-
          
         public static double SHOOT_PINCHER_RPM = -2100; 
 

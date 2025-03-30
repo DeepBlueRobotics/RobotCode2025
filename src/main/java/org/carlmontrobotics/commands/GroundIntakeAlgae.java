@@ -46,6 +46,6 @@ public class GroundIntakeAlgae extends Command {
     //TODO: make distance sensor stuff
     //TODO: add smartdashboard
     //TODO: Test different times
-    return algae.isAlgaeIntaked() || timer.get()>5; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return timer.get()>5; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

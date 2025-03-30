@@ -28,20 +28,20 @@ public class DealgaficationIntake extends Command {
   @Override
   public void execute() {
     
-    algae.runBottomMotor(-1*BOTTOM_MOTOR_SPEED);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algae.stopBottomMotor();
+    
     timer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get()>5 || algae.isAlgaeIntaked();
+    return timer.get()>5;
     //return false; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }
