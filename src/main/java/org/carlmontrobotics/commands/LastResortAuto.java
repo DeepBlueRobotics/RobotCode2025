@@ -36,13 +36,14 @@ public class LastResortAuto extends Command {
     timer.start();
     prev = drivetrain.getFieldOriented();
     drivetrain.setFieldOriented(false);
-    drivetrain.drive(speed*dir, 0, 0);
+    
     time = distance/speed;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    drivetrain.drive(speed*dir, 0, 0);
   }
 
   // Called once the command ends or is interrupted.

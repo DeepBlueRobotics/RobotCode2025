@@ -65,7 +65,7 @@ public final class Constants {
 		public static final boolean followerInverted = true;
 		public static final double masterPositionConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)); // 2*(gear_ratio*(pi*sprocket_pitch_diameter)) aka 2*1/20*pi*1.76
 		public static final double masterVelocityConversionFactor = Units.inchesToMeters(2*GEAR_RATIO*(Math.PI * 1.76)*1.0/60);
-		public static final double maxElevatorHeightInches = 52.5;
+		public static final double maxElevatorHeight = 1.33; // Meters
 		public static final double minElevatorHeightInches = 0;
 		
         //PID
@@ -82,7 +82,7 @@ public final class Constants {
         public static final double l1 = 0;
         public static final double l2 = Units.inchesToMeters(6.5-1.236220+1); 
         public static final double l3 = Units.inchesToMeters(22.5-1.236220+1); 
-        public static final double l4 = Units.inchesToMeters(52.64-1.236220+3+.15);
+        public static final double l4 = 1.33;
         public static final double net = Units.inchesToMeters(53.2-1.236220);
         public static final double processor = 0;
         public static final double bottomAlgaeRemoval = Units.inchesToMeters(22.5-1.236220);
