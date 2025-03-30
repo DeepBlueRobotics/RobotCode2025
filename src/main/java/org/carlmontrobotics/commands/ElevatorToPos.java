@@ -22,7 +22,7 @@ public class ElevatorToPos extends Command {
         elevator.setGoal(pos);
     }
     public boolean isFinished() {
-        return false;
+        return elevator.atGoalHeight();
     }
 
 }
