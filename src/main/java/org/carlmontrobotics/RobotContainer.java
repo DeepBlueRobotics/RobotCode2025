@@ -27,6 +27,7 @@ import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -825,14 +826,15 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
   }
 
   /**
-   * Flips an axis' Y coordinates upside down, but only if the select axis is a joystick axis
+   * Flips an axis' Y coordinates upside down, but only if the select axis is a joystick axis and applies the deadband value to the joystick axis
    * 
    * @param hid The controller/plane joystick the axis is on
    * @param axis The processed axis
    * @return The processed value.
    */
   private double getStickValue(GenericHID hid, Axis axis) {
-    return hid.getRawAxis(axis.value) * (axis == Axis.kLeftY || axis == Axis.kRightY ? -1 : 1);
+    double deadbandVal = MathUtil.applyDeadband(hid.getRawAxis(axis.value), Constants.OI.JOY_THRESH);
+    return deadbandVal * (axis == Axis.kLeftY || axis == Axis.kRightY ? -1 : 1);
   }
   /**
    * Processes an input from the joystick into a value between -1 and 1, sinusoidally instead of linearly
