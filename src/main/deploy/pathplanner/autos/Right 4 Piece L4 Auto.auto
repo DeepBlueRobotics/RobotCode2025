@@ -1,0 +1,97 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(1)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4NoLL&NoAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(2)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(3)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4NoLL&NoAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(4)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(5)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4NoLL&NoAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(6)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralNoLL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Piece(7)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4NoLL&NoAlgae"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "4 Piece L4",
+  "choreoAuto": false
+}
