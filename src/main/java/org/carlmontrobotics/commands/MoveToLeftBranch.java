@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.math.MathUtil;
 
 import static org.carlmontrobotics.Constants.Limelightc.*;
 
@@ -25,13 +26,17 @@ public class MoveToLeftBranch extends Command {
   private final Limelight ll;
   private boolean originalFieldOrientation;
   double strafeErr;
+  double speedOfAutoAlign;
+  //int kP;
   double didntseetime=0;
+  double clampNumberLeft;
 
   /** Creates a new MoveToLeftBranch. */
   public MoveToLeftBranch(Drivetrain dt, Limelight ll) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.dt=dt);
     this.ll = ll;
+    SmartDashboard.putNumber("clamp for left", 0.5);
     // this.gocmd.schedule();
     // this.gocmd.end(true);
   }
@@ -42,22 +47,34 @@ public class MoveToLeftBranch extends Command {
     originalFieldOrientation = dt.getFieldOriented();
     dt.setFieldOriented(false);
     SmartDashboard.putNumber("strafe left", strafeErr);
+    clampNumberLeft = SmartDashboard.getNumber("clamp for left", 0.5);
+    //kP = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("strafe left", strafeErr);
+    //SmartDashboard.putNumber("strafe left", strafeErr);
     
-    didntseetime += 1.0/50.0;
-    if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
-      didntseetime=0;
-      strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 3, 0);
-    }else{
-      dt.stop();
+    //SmartDashboard.putNumber("kP", kP);
+    //SmartDashboard.getNumber("kP", kP);
+    
+    didntseetime += 1.0 / 50.0;
+    if (ll.seesTag(REEF_LL)) { // TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+      didntseetime = 0;
+      strafeErr = getStrafeErrorMeters();
+      speedOfAutoAlign = strafeErr * 2.5 * 3;
+      SmartDashboard.putNumber("strafe left", strafeErr);
+
+      dt.drive(0.00001, MathUtil.clamp(speedOfAutoAlign, -clampNumberLeft, clampNumberLeft), 0);
     }
-  
+
+    else {
+      dt.drive(0.00001, 0.25, 0);
+    }
+    
+    
+
     //   dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0); 
       
       
@@ -76,8 +93,12 @@ public class MoveToLeftBranch extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH < .02 
-    && Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + LEFT_CORAL_BRANCH > -.02)
-    || didntseetime>1.5;//sec
+    return (Math.abs(getStrafeErrorMeters()) < .01) || didntseetime > 1.5;//sec
+  }
+
+
+  public double getStrafeErrorMeters(){
+    return Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
+    * ll.getDistanceToApriltagMT2(REEF_LL)+LEFT_CORAL_BRANCH;
   }
 }

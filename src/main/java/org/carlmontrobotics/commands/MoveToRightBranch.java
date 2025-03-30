@@ -41,9 +41,9 @@ public class MoveToRightBranch extends Command {
     if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
       didntseetime=0;
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0.00001, (strafeErr + RIGHT_CORAL_BRANCH) * 3, 0);
+      dt.drive(0.00001, (strafeErr + RIGHT_CORAL_BRANCH) * 2.5, 0);
     }else{
-      dt.stop();
+      dt.drive(0.00001, -0.25, 0);
     }
 
   }
@@ -58,8 +58,8 @@ public class MoveToRightBranch extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + RIGHT_CORAL_BRANCH < .02 && 
-    Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + RIGHT_CORAL_BRANCH > -.02)
+    return (Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + RIGHT_CORAL_BRANCH < .01 && 
+    Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL) + RIGHT_CORAL_BRANCH > -.01)
     || didntseetime>1.5;//sec
   }
 }
