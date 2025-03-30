@@ -273,7 +273,7 @@ public class Elevator extends SubsystemBase {
     masterEncoder.setPosition(0);
   }
   public boolean isSafe() {
-    if((getCurrentHeight()>1.33 && masterEncoder.getVelocity() > 0) || (getCurrentHeight() < 0 && masterEncoder.getVelocity() < 0)) {
+    if((getCurrentHeight()>maxElevatorHeight && masterEncoder.getVelocity() > 0) || (getCurrentHeight() < 0 && masterEncoder.getVelocity() < 0)) {
       return false;
       
     }
