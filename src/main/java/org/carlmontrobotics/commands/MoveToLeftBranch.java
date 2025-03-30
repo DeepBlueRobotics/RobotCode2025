@@ -49,7 +49,7 @@ public class MoveToLeftBranch extends Command {
   public void execute() {
     SmartDashboard.putNumber("strafe left", strafeErr);
     
-    didntseetime+=1/50;
+    didntseetime += 1.0/50.0;
     if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
       didntseetime=0;
       strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
