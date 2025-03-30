@@ -819,7 +819,7 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
   }
 
   /**
-   * Flips an axis' Y coordinates upside down, but only if the select axis is a joystick axis and applies the deadband value to the joystick axis
+   * Flips an axis' Y coordinates upside down if the select axis is a joystick axis and applies the deadband value to the joystick axis
    * 
    * @param hid The controller/plane joystick the axis is on
    * @param axis The processed axis
@@ -829,6 +829,7 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
     double deadbandVal = MathUtil.applyDeadband(hid.getRawAxis(axis.value), Constants.OI.JOY_THRESH);
     return deadbandVal * (axis == Axis.kLeftY || axis == Axis.kRightY ? -1 : 1);
   }
+
   /**
    * Processes an input from the joystick into a value between -1 and 1, sinusoidally instead of linearly
    * 
@@ -853,17 +854,6 @@ new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorT
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
   }
-
-   /**
-     * Returns zero if a axis input is inside the deadzone
-     *
-     * @param hid  The controller/plane joystick the axis is on
-     * @param axis The processed axis
-     * @return The processed value.
-     */
-    private double DeadzonedAxis(double axOut) {
-        return (Math.abs(axOut) <= OI.JOY_THRESH) ? 0.0 : axOut;
-    }
 
   private Trigger axisTrigger(GenericHID controller, Axis axis) {
     return new Trigger( (BooleanSupplier)(() -> Math.abs(getStickValue(controller, axis)) > 0.2) );
