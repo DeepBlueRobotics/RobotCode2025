@@ -10,6 +10,7 @@ import org.carlmontrobotics.Robot;
 import org.carlmontrobotics.subsystems.Drivetrain;
 import static org.carlmontrobotics.RobotContainer.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -131,9 +132,9 @@ public class TeleopDrive extends Command {
   }
 
   public boolean hasDriverInput() {
-    return Math.abs(fwd.getAsDouble()) > Constants.OI.JOY_THRESH
-        || Math.abs(str.getAsDouble()) > Constants.OI.JOY_THRESH
-        || Math.abs(rcw.getAsDouble()) > Constants.OI.JOY_THRESH;
+    return MathUtil.applyDeadband(fwd.getAsDouble(), Constants.OI.JOY_THRESH)!=0
+        || MathUtil.applyDeadband(str.getAsDouble(), Constants.OI.JOY_THRESH)!=0
+        || MathUtil.applyDeadband(rcw.getAsDouble(), Constants.OI.JOY_THRESH)!=0;
   }
 
   // Called once the command ends or is interrupted.
