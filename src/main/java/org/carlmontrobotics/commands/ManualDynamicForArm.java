@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class ManualDynamic extends Command{
+public class ManualDynamicForArm extends Command{
 
     private static final double TEST_DURATION = 2.0; // seconds per voltage
     double voltsApplied;
@@ -22,7 +22,7 @@ public class ManualDynamic extends Command{
     private double goalPosition; //degrees - need angle for dealgfication and ground pickup
    
 
-    public ManualDynamic(AlgaeEffector algaeArm){
+    public ManualDynamicForArm(AlgaeEffector algaeArm){
         addRequirements(this.algaeArm = algaeArm);
        
        

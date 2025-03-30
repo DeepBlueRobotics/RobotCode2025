@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class ManualQuasistatic extends Command{
+public class ManualQuasistaticForArm extends Command{
 
     private static final double TEST_DURATION = 2.0; // seconds per voltage
     double voltsApplied;
@@ -22,7 +22,7 @@ public class ManualQuasistatic extends Command{
     private double goalPosition; //degrees - need angle for dealgfication and ground pickup
    
 
-    public ManualQuasistatic(AlgaeEffector algaeArm){
+    public ManualQuasistaticForArm(AlgaeEffector algaeArm){
         addRequirements(this.algaeArm = algaeArm);
        
        

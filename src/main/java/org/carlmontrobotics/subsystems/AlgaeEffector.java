@@ -31,8 +31,8 @@ import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
 import org.carlmontrobotics.commands.DealgaficationIntake;
 import org.carlmontrobotics.commands.GroundIntakeAlgae;
-import org.carlmontrobotics.commands.ManualDynamic;
-import org.carlmontrobotics.commands.ManualQuasistatic;
+import org.carlmontrobotics.commands.ManualDynamicForArm;
+import org.carlmontrobotics.commands.ManualQuasistaticForArm;
 import org.carlmontrobotics.commands.OuttakeAlgae;
 import org.carlmontrobotics.commands.ShootAlgae;
 
@@ -197,8 +197,8 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
         SmartDashboard.putData("UPDATE COMMAND",new InstantCommand(()->{updateArmPID();updateFeedforward();}));
 
-        SmartDashboard.putData("(MANUAL) Dynamic FF test", new ManualDynamic(this)); //adjust parameters if needed
-        SmartDashboard.putData("(MANUAL) Quasistatic FF test", new ManualQuasistatic(this)); //adjust parameters if needed
+        SmartDashboard.putData("(MANUAL) Dynamic FF test", new ManualDynamicForArm(this)); //adjust parameters if needed
+        SmartDashboard.putData("(MANUAL) Quasistatic FF test", new ManualQuasistaticForArm(this)); //adjust parameters if needed
 
         SmartDashboard.putData("Quasistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -232,7 +232,9 @@ public class AlgaeEffector extends SubsystemBase {
         armMotorConfig.absoluteEncoder.inverted(true);
         armMotorConfig.inverted(true);
         armMotorConfig.softLimit.forwardSoftLimit(UPPER_ANGLE_LIMIT);
+        armMotorConfig.softLimit.forwardSoftLimitEnabled(true);
         armMotorConfig.softLimit.reverseSoftLimit(LOWER_ANGLE_LIMIT);
+        armMotorConfig.softLimit.reverseSoftLimitEnabled(true);
         
         //armMotorConfig.inverted(true);
         // armMotor.configure(pincherMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -325,16 +327,17 @@ public class AlgaeEffector extends SubsystemBase {
         
 
         armGoal = targetPos;
-        getArmClampedGoal(targetPos); 
+        double clampedArmGoal = getArmClampedGoal(armGoal); //This takes in the inputted armgoal that was set to targetPos and clamps it so that it can't be outside the safe range
+         
         //armGoalState.velocity = 0;
 
 
         if (armMotor != null) {
             
-            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armGoal), 0.00001*(armGoal- getArmPos()));//-0.00001*(armGoal- getArmPos())
+            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(clampedArmGoal), 0.00001*(armGoal- getArmPos()));//-0.00001*(armGoal- getArmPos())
             //armFeedVolts = manualFF(Units.degreesToRadians(armGoal));
             // System.out.println("feedVolts: "+ armFeedVolts);
-            pidControllerArm.setReference(armGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts);
+            pidControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts);
 
         }
         
@@ -529,7 +532,7 @@ public class AlgaeEffector extends SubsystemBase {
         // System.out.println("goal angle:" + armGoal);
 
         
-        setArmTarget(armGoal);
+        //setArmTarget(armGoal);
          
         
         if (getArmPos() < LOWER_ANGLE_LIMIT) { //if the arm is below this angle limit it is supposed to stop applying voltage
