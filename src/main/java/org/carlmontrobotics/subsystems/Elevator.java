@@ -177,7 +177,7 @@ public class Elevator extends SubsystemBase {
     masterConfig.closedLoop
         .pid(kP, kI, kD)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    masterConfig.openLoopRampRate(.05);
+    masterConfig.openLoopRampRate(.1);
     masterMotor.configure(masterConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     //I don't know if this is needed. Response: Not rly. Only the follow.
     //Follower Config
@@ -273,7 +273,7 @@ public class Elevator extends SubsystemBase {
     masterEncoder.setPosition(0);
   }
   public boolean isSafe() {
-    if((getCurrentHeight()>maxElevatorHeight && masterEncoder.getVelocity() > 0) || (getCurrentHeight() < 0 && masterEncoder.getVelocity() < 0)) {
+    if((getCurrentHeight()>1.33 && masterEncoder.getVelocity() > 0) || (getCurrentHeight() < 0 && masterEncoder.getVelocity() < 0)) {
       return false;
       
     }

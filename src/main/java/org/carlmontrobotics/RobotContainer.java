@@ -183,7 +183,10 @@ public class RobotContainer {
         // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
         //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
         new JoystickButton(driverController, Driver.a)
-        .onTrue(new L4Backup(drivetrain));
+            .onTrue(new SequentialCommandGroup(
+                new WaitUntilAtAngle(drivetrain),
+                new L4Backup(drivetrain)
+            ));
       /*new JoystickButton(driverController, Driver.a)
         .onTrue(new L4Backup(drivetrain));
     }*/

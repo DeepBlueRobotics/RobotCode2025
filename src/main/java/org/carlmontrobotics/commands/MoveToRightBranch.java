@@ -37,15 +37,17 @@ public class MoveToRightBranch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    didntseetime+=1/50;
-    if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
-      didntseetime=0;
-      strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-      dt.drive(0.00001, (strafeErr + RIGHT_CORAL_BRANCH) * 2.5, 0);
-    }else{
-      dt.drive(0.00001, -0.25, 0);
-    }
+    if (dt.isAtAngle(90, 10)){
+      didntseetime+=1/50;
+      if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+        didntseetime=0;
+        strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
+        dt.drive(0.00001, (strafeErr + RIGHT_CORAL_BRANCH) * 2.5, 0);
+      }else{
+        dt.drive(0.00001, -0.25, 0);
+      }
 
+    }else dt.drive(0, 0.001, 0);
   }
 
   // Called once the command ends or is interrupted.

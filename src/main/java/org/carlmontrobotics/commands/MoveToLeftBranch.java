@@ -54,6 +54,18 @@ public class MoveToLeftBranch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (dt.isAtAngle(90, 10)){
+      SmartDashboard.putNumber("strafe left", strafeErr);
+      
+      didntseetime += 1.0/50.0;
+      if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+        didntseetime=0;
+        strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
+        dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 3, 0);
+      }else{
+        dt.stop();
+      }
+    }else dt.drive(0, -0.001, 0);
     //SmartDashboard.putNumber("strafe left", strafeErr);
     
     //SmartDashboard.putNumber("kP", kP);
