@@ -132,8 +132,6 @@ public class AlgaeEffector extends SubsystemBase {
 
     //--------------------------------------------------------------------------------------------
     public AlgaeEffector() {
-        TRAP_CONSTRAINTS = new TrapezoidProfile.Constraints(
-                (MAX_FF_VEL_RAD_P_S), (MAX_FF_ACCEL_RAD_P_S));
         
         configureMotors();
         
