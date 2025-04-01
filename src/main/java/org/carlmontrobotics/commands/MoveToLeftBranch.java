@@ -37,8 +37,6 @@ public class MoveToLeftBranch extends Command {
     addRequirements(this.dt=dt);
     this.ll = ll;
     SmartDashboard.putNumber("clamp for left", 0.5);
-    // this.gocmd.schedule();
-    // this.gocmd.end(true);
   }
 
   // Called when the command is initially scheduled.
@@ -55,51 +53,23 @@ public class MoveToLeftBranch extends Command {
   @Override
   public void execute() {
     if (dt.isAtAngle(90, 10)){
-      SmartDashboard.putNumber("strafe left", strafeErr);
-      
       didntseetime += 1.0/50.0;
       if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
         didntseetime=0;
-        strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL))) * ll.getDistanceToApriltagMT2(REEF_LL);
-        dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 3, 0);
+        strafeErr = getStrafeErrorMeters();
+        double speed = MathUtil.clamp((strafeErr + LEFT_CORAL_BRANCH)*6, -clampNumberLeft, clampNumberLeft);
+        dt.drive(0.00001, speed, 0);
       }else{
         dt.stop();
       }
-    }else dt.drive(0, -0.001, 0);
-    //SmartDashboard.putNumber("strafe left", strafeErr);
-    
-    //SmartDashboard.putNumber("kP", kP);
-    //SmartDashboard.getNumber("kP", kP);
-    
-    didntseetime += 1.0 / 50.0;
-    if (ll.seesTag(REEF_LL)) { // TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
-      didntseetime = 0;
-      strafeErr = getStrafeErrorMeters();
-      speedOfAutoAlign = strafeErr * 2.5 * 3;
-      SmartDashboard.putNumber("strafe left", strafeErr);
-
-      dt.drive(0.00001, MathUtil.clamp(speedOfAutoAlign, -clampNumberLeft, clampNumberLeft), 0);
-    }
-
-    else {
-      dt.drive(0.00001, 0.25, 0);
-    }
-    
-    
-
-    //   dt.drive(0.00001, (strafeErr + LEFT_CORAL_BRANCH) * 6, 0); 
-      
-      
-    // }else{
-    //   dt.stop();
-    // }
+    }else dt.drive(0.00001, 0.1, 0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     dt.setFieldOriented(originalFieldOrientation);
-    dt.drive(0,0,0);
+    dt.drive(0.0001,0,0);
   }
 
   // Returns true when the command should end.
