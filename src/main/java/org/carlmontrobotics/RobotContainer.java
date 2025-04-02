@@ -154,42 +154,45 @@ public class RobotContainer {
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
+
+        // SmartDashboard.putData("align right", new MoveToRightBranch(drivetrain, limelight));
+        // SmartDashboard.putData("align left", new MoveToLeftBranch(drivetrain, limelight));
     }
    
    
 
     private void setBindingsDriver() {
-      new JoystickButton(driverController, Driver.resetFieldOrientationButton)
-                .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
-       axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
-                .onTrue(new InstantCommand(()->drivetrain.setFieldOriented(false)))
-                .onFalse(new InstantCommand(()->drivetrain.setFieldOriented(true)));
+        new JoystickButton(driverController, Driver.resetFieldOrientationButton)
+            .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
+        axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
+            .onTrue(new InstantCommand(()->drivetrain.setFieldOriented(false)))
+            .onFalse(new InstantCommand(()->drivetrain.setFieldOriented(true)));
 
 
         new JoystickButton(driverController, Driver.x)
-          .whileTrue(new MoveToLeftBranch(drivetrain, limelight));
-
+            .onTrue(new MoveToLeftBranch(drivetrain, limelight));
         new JoystickButton(driverController, Driver.b)
-          .whileTrue(new MoveToRightBranch(drivetrain, limelight));
+            .onTrue(new MoveToRightBranch(drivetrain, limelight));
+
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
-          .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
-          .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
+            .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
+            .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
         new POVButton(driverController, 180)
-          .whileTrue(new ParallelCommandGroup(
-            new InstantCommand(() -> drivetrain.stop()),
-            new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
+            .whileTrue(new ParallelCommandGroup(
+        new InstantCommand(() -> drivetrain.stop()),
+        new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
         new POVButton(driverController, 0)
-          .onTrue(new RotateToNearest60(drivetrain));
+            .onTrue(new RotateToNearest60(drivetrain));
         // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
         //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
         new JoystickButton(driverController, Driver.a)
             .onTrue(new SequentialCommandGroup(
                 new WaitUntilAtAngle(drivetrain),
                 new L4Backup(drivetrain)
-            ));
-      /*new JoystickButton(driverController, Driver.a)
+        ));
+        /*new JoystickButton(driverController, Driver.a)
         .onTrue(new L4Backup(drivetrain));
-    }*/
+        }*/
     }
 
    
