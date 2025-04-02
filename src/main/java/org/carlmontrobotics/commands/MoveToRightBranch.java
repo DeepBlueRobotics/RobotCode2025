@@ -29,14 +29,18 @@ public class MoveToRightBranch extends Command {
   double speedOfAutoAlign;
   //int kP;
   double didntseetime=0;
-  double clampNumberRight;
+  double clampNumber;
+  double speedMultiplier;
 
   /** Creates a new MoveToLeftBranch. */
   public MoveToRightBranch(Drivetrain dt, Limelight ll) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.dt=dt);
     this.ll = ll;
-    SmartDashboard.putNumber("clamp for right", 0.5);
+    clampNumber = .35;
+    speedMultiplier = 6;
+    // SmartDashboard.putNumber("clamp for autoalign", 0.35);
+    // SmartDashboard.putNumber("speed multiplier", 3);
   }
 
   // Called when the command is initially scheduled.
@@ -44,8 +48,10 @@ public class MoveToRightBranch extends Command {
   public void initialize() {
     originalFieldOrientation = dt.getFieldOriented();
     dt.setFieldOriented(false);
-    SmartDashboard.putNumber("strafe right", strafeErr);
-    clampNumberRight = SmartDashboard.getNumber("clamp for right", 0.5);
+    SmartDashboard.putNumber("strafe err", strafeErr);
+    // clampNumberLeft = SmartDashboard.getNumber("clamp for autoalign", 0.35);
+    //kP = 0;
+    // speedMultiplier = SmartDashboard.getNumber("speed multiplier", 6);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -56,25 +62,28 @@ public class MoveToRightBranch extends Command {
       if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
         didntseetime=0;
         strafeErr = getStrafeErrorMeters();
-        double speed = MathUtil.clamp((strafeErr + RIGHT_CORAL_BRANCH)*6, -clampNumberRight, clampNumberRight);
+        double speed = MathUtil.clamp(strafeErr*speedMultiplier, -clampNumber, clampNumber);
         dt.drive(0, speed, 0);
       }else{
-        dt.stop();
+        dt.drive(0, -0.14, 0);
       }
-    }else dt.drive(0, -0.1, 0);
+    }else dt.drive(0, 0.00001, 0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     dt.setFieldOriented(originalFieldOrientation);
-    dt.drive(0.0001,0,0);
+    // dt.drive(0.0001,0,0);
+    
+    SmartDashboard.putNumber("I CANT BREATHE (didnt'see?)",didntseetime);
+  SmartDashboard.putNumber("THEY SHOT 'IM (strafe error good)",Math.abs(getStrafeErrorMeters()));
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(getStrafeErrorMeters()) < .01) || didntseetime > 1.5;//sec
+    return (Math.abs(getStrafeErrorMeters()) < .02) || didntseetime > 1.5;//sec
   }
 
 
