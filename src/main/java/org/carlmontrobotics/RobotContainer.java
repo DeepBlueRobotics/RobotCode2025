@@ -700,18 +700,18 @@ public class RobotContainer {
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 1, 2.0),  
             new MoveToLeftBranch(drivetrain, limelight),
-                new L4BackupUsingArea(drivetrain, limelight),
-                new ElevatorToPos(elevator, l3),
-                new AutonCoralFastOutake(coralEffector),
+                new L4Backup(drivetrain),
+                new ElevatorToPos(elevator, l4),
+                new AutonCoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos))); 
 
         autoChooser.addOption("CustomBackupL4ScoreCenterRightBranch", 
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 1, 2.0),  
             new MoveToRightBranch(drivetrain, limelight),
-                new L4BackupUsingArea(drivetrain, limelight),
-                new ElevatorToPos(elevator, l3),
-                new AutonCoralFastOutake(coralEffector),
+                new L4Backup(drivetrain),
+                new ElevatorToPos(elevator, l4),
+                new AutonCoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
 
         //Left/Right L4(Backup)
@@ -719,7 +719,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 1, 2.5),  
             new MoveToLeftBranch(drivetrain, limelight),
-                new L4BackupUsingArea(drivetrain, limelight),
+                new L4Backup(drivetrain),
                 new ElevatorToPos(elevator, l4),
                 new AutonCoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
@@ -727,7 +727,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
             new LastResortAuto(drivetrain, 1, 1, 2.5),  
             new MoveToRightBranch(drivetrain, limelight),
-                new L4BackupUsingArea(drivetrain, limelight),
+                new L4Backup(drivetrain),
                 new ElevatorToPos(elevator, l4),
                 new AutonCoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));

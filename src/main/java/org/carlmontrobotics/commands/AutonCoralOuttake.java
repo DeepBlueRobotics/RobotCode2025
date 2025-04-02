@@ -25,7 +25,7 @@ public class AutonCoralOuttake extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-coralEffector.setMotorSpeed(OUTPUT_SPEED);
+coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,6 +49,6 @@ coralEffector.setMotorSpeed(OUTPUT_SPEED);
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !coralEffector.distanceSensorSeesCoral() || timer.hasElapsed(4);
+    return timer.hasElapsed(4);
   }
 }
