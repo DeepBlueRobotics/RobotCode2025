@@ -177,7 +177,7 @@ public class Elevator extends SubsystemBase {
     masterConfig.closedLoop
         .pid(kP, kI, kD)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    masterConfig.openLoopRampRate(.1);
+    masterConfig.openLoopRampRate(.375);
     masterMotor.configure(masterConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     //I don't know if this is needed. Response: Not rly. Only the follow.
     //Follower Config
