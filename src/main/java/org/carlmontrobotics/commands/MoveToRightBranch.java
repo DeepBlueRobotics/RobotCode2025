@@ -57,11 +57,11 @@ public class MoveToRightBranch extends Command {
         didntseetime=0;
         strafeErr = getStrafeErrorMeters();
         double speed = MathUtil.clamp((strafeErr + RIGHT_CORAL_BRANCH)*6, -clampNumberRight, clampNumberRight);
-        dt.drive(0.00001, speed, 0);
+        dt.drive(0, speed, 0);
       }else{
         dt.stop();
       }
-    }else dt.drive(0.00001, -0.1, 0);
+    }else dt.drive(0, -0.1, 0);
   }
 
   // Called once the command ends or is interrupted.

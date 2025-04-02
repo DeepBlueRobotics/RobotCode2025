@@ -36,7 +36,7 @@ public class MoveToLeftBranch extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.dt=dt);
     this.ll = ll;
-    SmartDashboard.putNumber("clamp for left", 0.5);
+    SmartDashboard.putNumber("clamp for left", 0.35);
   }
 
   // Called when the command is initially scheduled.
@@ -45,7 +45,7 @@ public class MoveToLeftBranch extends Command {
     originalFieldOrientation = dt.getFieldOriented();
     dt.setFieldOriented(false);
     SmartDashboard.putNumber("strafe left", strafeErr);
-    clampNumberLeft = SmartDashboard.getNumber("clamp for left", 0.5);
+    clampNumberLeft = SmartDashboard.getNumber("clamp for left", 0.35);
     //kP = 0;
   }
 
@@ -57,12 +57,12 @@ public class MoveToLeftBranch extends Command {
       if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
         didntseetime=0;
         strafeErr = getStrafeErrorMeters();
-        double speed = MathUtil.clamp((strafeErr + LEFT_CORAL_BRANCH)*6, -clampNumberLeft, clampNumberLeft);
-        dt.drive(0.00001, speed, 0);
+        double speed = MathUtil.clamp((strafeErr + LEFT_CORAL_BRANCH)*3, -clampNumberLeft, clampNumberLeft);
+        dt.drive(0, speed, 0);
       }else{
-        dt.stop();
+        dt.drive(0, 0.1, 0);
       }
-    }else dt.drive(0.00001, 0.1, 0);
+    }else dt.drive(0, 0.00001, 0);
   }
 
   // Called once the command ends or is interrupted.
@@ -70,6 +70,9 @@ public class MoveToLeftBranch extends Command {
   public void end(boolean interrupted) {
     dt.setFieldOriented(originalFieldOrientation);
     dt.drive(0.0001,0,0);
+    
+    SmartDashboard.putBoolean("I CANT BREATHE (didnt'see?)",didntseetime>1.5);
+  SmartDashboard.putBoolean("THEY SHOT 'IM (strafe error good)",(Math.abs(getStrafeErrorMeters()) < .01));
   }
 
   // Returns true when the command should end.

@@ -465,8 +465,8 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putNumber("Arm Angle", getArmPos());
         SmartDashboard.putNumber("goal position", armGoalState.position);
         SmartDashboard.putNumber("Raw Arm Angle",armAbsoluteEncoder.getPosition());
-        System.out.println("_feedVolts: "+ armFeedVolts);
-        System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
+        // System.out.println("_feedVolts: "+ armFeedVolts);
+        // System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
 
         if(getArmPos() < LOWER_ANGLE_LIMIT){
             armMotor.set(-0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
