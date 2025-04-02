@@ -106,14 +106,14 @@ public class Elevator extends SubsystemBase {
     Seconds.of(5)//AH: maximum sysID test time
   );
 
-  private ShuffleboardTab sysIdTab = Shuffleboard.getTab("Elevator SysID");
+  //private ShuffleboardTab sysIdTab = Shuffleboard.getTab("Elevator SysID");
 
-  private void sysIdSetup() {
-    sysIdTab.add("Quasistatic backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
-    sysIdTab.add("Quasistatic forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
-    sysIdTab.add("Dynamic forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
-    sysIdTab.add("Dynamic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
-  }
+  // private void sysIdSetup() {
+  //   sysIdTab.add("Quasistatic backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
+  //   sysIdTab.add("Quasistatic forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
+  //   sysIdTab.add("Dynamic forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
+  //   sysIdTab.add("Dynamic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
+  // }
 
   public Elevator() {
     
@@ -160,7 +160,7 @@ public class Elevator extends SubsystemBase {
       );
     
   if (CONFIG.isSysIdTesting()) {
-    sysIdSetup();
+    //sysIdSetup();
   }
 
   }
@@ -284,21 +284,21 @@ public class Elevator extends SubsystemBase {
    *
    * @param direction The direction (forward or reverse) to run the test in
    */
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    // BooleanSupplier bruh = Elevator::safetyMethod();
-    return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isSafe());
-    //use onlyWhile to decorate the command and therefore add safety limits (for height and voltage)
-    //TO-DO: fix safety method (add velocity) and also other bugs
-  }
+  // public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+  //   // BooleanSupplier bruh = Elevator::safetyMethod();
+  //   return sysIdRoutine.quasistatic(direction).onlyWhile((BooleanSupplier)()->isSafe());
+  //   //use onlyWhile to decorate the command and therefore add safety limits (for height and voltage)
+  //   //TO-DO: fix safety method (add velocity) and also other bugs
+  // }
 
   /**
    * Returns a command that will execute a dynamic test in the given direction.
    *
    * @param direction The direction (forward or reverse) to run the test in
    */
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isSafe());
-  } 
+  // public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+  //   return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isSafe());
+  // } 
   public double getEleVel() {
     return masterEncoder.getVelocity();
   }

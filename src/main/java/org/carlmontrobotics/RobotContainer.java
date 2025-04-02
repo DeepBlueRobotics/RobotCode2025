@@ -183,6 +183,7 @@ public class RobotContainer {
         new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
         new POVButton(driverController, 0)
             .onTrue(new RotateToNearest60(drivetrain));
+        new POVButton(driverController, 90).onTrue(new RotateToFieldRelativeAngle(Rotation2d.fromDegrees(90), drivetrain));
         // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
         //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
         new JoystickButton(driverController, Driver.a)

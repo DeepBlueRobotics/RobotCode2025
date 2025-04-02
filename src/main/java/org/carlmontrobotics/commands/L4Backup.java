@@ -42,7 +42,7 @@ public class L4Backup extends Command {
     if (dt.isAtAngle(0, 10)){
       dt.drive(-Units.inchesToMeters(vel), 0, 0);
     }else dt.drive(0.001,0,0);
-    distance = SmartDashboard.getNumber("dist", distance);
+    distance = 6.5;//SmartDashboard.getNumber("dist", 6.5);
   }
 
   // Called once the command ends or is interrupted.
