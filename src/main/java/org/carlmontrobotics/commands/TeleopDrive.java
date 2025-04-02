@@ -82,13 +82,13 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("fwdIN", forward);
     // SmartDashboard.putNumber("strafeIN", strafe);
     // SmartDashboard.putNumber("turnIN", rotateClockwise);
-    System.out.println("fwd str rcw: "+forward+", "+strafe+", "+rotateClockwise);
+    // System.out.println("fwd str rcw: "+forward+", "+strafe+", "+rotateClockwise);
     boolean slow2 = slow.getAsBoolean();
     forward *= maxForward;
     strafe *= maxStrafe;
     rotateClockwise *= maxRCW;
 
-    System.out.println("teleopDrive ExtraSpeedMult%: "+drivetrain.extraSpeedMult);
+    // System.out.println("teleopDrive ExtraSpeedMult%: "+drivetrain.extraSpeedMult);
     double driveMultiplier = (slow.getAsBoolean() ? kSlowDriveSpeed : kNormalDriveSpeed);
     double rotationMultiplier = drivetrain.extraSpeedMult + (slow.getAsBoolean() ? kSlowDriveRotation : kNormalDriveRotation);
     // double driveMultiplier = (slow.getAsBoolean() ? kSlowDriveSpeed : kNormalDriveSpeed);
