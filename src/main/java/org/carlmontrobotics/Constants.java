@@ -71,7 +71,7 @@ public final class Constants {
         //PID
         public static final double kP = 30;//45.476;
         public static final double kI = 0.0003;
-        public static final double kD = 5.305;
+        public static final double kD = 0;//5.305-3;
 		//Feedforward
         public static final double kS = 0; //.12666
 		public static final double kG = 0.177;
