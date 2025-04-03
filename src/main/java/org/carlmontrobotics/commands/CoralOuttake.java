@@ -13,10 +13,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class CoralOuttake extends Command {
   /** Creates a new SetCoralOut. */
   private CoralEffector coralEffector;
+  private double timeOutTime;
+  private double speed;
   Timer timer;
-  public CoralOuttake(CoralEffector coralEffector) {
+  public CoralOuttake(CoralEffector coralEffector, double speed, double time) {
     addRequirements(this.coralEffector = coralEffector);
     // Use addRequirements() here to declare subsystem dependencies.
+    this.speed = speed;
+    this.timeOutTime = time;
     timer = new Timer();
   }
 
@@ -25,7 +29,7 @@ public class CoralOuttake extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-coralEffector.setMotorSpeed(OUTPUT_SPEED);
+    coralEffector.setMotorSpeed(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,12 +47,11 @@ coralEffector.setMotorSpeed(OUTPUT_SPEED);
   @Override
   public void end(boolean interrupted) {
     coralEffector.setMotorSpeed(0);
-    coralEffector.coralIn = false;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return timer.get() > timeOutTime;
   }
 }

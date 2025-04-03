@@ -31,6 +31,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import java.util.function.BooleanSupplier;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -67,6 +68,8 @@ import static org.carlmontrobotics.Constants.Elevatorc.l1;
 import static org.carlmontrobotics.Constants.Elevatorc.l2;
 import static org.carlmontrobotics.Constants.Elevatorc.l3;
 import static org.carlmontrobotics.Constants.Elevatorc.l4;
+import static org.carlmontrobotics.Constants.Elevatorc.testl4;
+import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
 //constats
 //import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import static org.carlmontrobotics.Constants.OI.Driver.*;
@@ -150,7 +153,7 @@ public class RobotContainer {
         autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, -1, 4, 8));
         RegisterCustomAutos();
         SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
-        SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
+        SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
@@ -264,7 +267,7 @@ public class RobotContainer {
 
       //CoralEffector
       NamedCommands.registerCommand("CoralIntake", new CoralIntake(coralEffector));
-      NamedCommands.registerCommand("CoralOutake", new CoralOuttake(coralEffector));
+      NamedCommands.registerCommand("CoralOutake", new AutonCoralOuttake(coralEffector));
       
       //AlgaeArm
       // NamedCommands.registerCommand("ArmToDeAlgafy", new ArmToPosition(AlgaeEffector, Armc.DeAlgafy_Angle));
@@ -801,16 +804,21 @@ SHARK IN THE TANK
     axisTrigger(manipulatorController, Axis.kRightTrigger)
     .whileTrue(new CoralFastOutake(coralEffector));
     //.whileFalse(new CoralIntake(coralEffector));
-    axisTrigger(manipulatorController, Axis.kLeftTrigger)
-    .whileTrue(new CoralOuttake(coralEffector));
+    // axisTrigger(manipulatorController, Axis.kLeftTrigger)
+    // .whileTrue(new CoralOuttake(coralEffector));
     new JoystickButton(manipulatorController, Button.kRightBumper.value)
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
     .whileTrue(new CoralIntakeBackwards(coralEffector));
-new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
-        new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
-        new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
-        new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
+    new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
+    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
+    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
+    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
+    new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
+    new POVButton(manipulatorController, 0).onTrue(new ParallelCommandGroup(
+        new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
+        new CoralOuttake(coralEffector, .05, .5)
+    ));
   }
   
   
