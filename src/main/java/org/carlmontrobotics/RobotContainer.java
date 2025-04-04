@@ -798,7 +798,7 @@ SHARK IN THE TANK
   private void setBindingsManipulator() {
     // new JoystickButton(manipulatorController, OI.Manipulator.OUTAKE_BUTTON)
     //   .whileTrue(new CoralOutake(coralEffector))
-    //   .whileFalse(new CoralIntake(coralEffector));
+    //   .whileFalse(new CoralIntake(coralEffector));P
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
     axisTrigger(manipulatorController, Axis.kRightTrigger)
@@ -815,9 +815,9 @@ SHARK IN THE TANK
     new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
     new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
     new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
-    new POVButton(manipulatorController, 0).onTrue(new ParallelCommandGroup(
+    new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-        new CoralOuttake(coralEffector, .05, .5)
+        new CoralOuttake(coralEffector, .05)
     ));
   }
   
