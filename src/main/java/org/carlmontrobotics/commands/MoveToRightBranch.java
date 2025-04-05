@@ -33,6 +33,7 @@ public class MoveToRightBranch extends Command {
   double clampNumber;
   double speedMultiplier;
   Timer alignedtime;
+  Timer timeouttimer;
 
   /** Creates a new MoveToLeftBranch. */
   public MoveToRightBranch(Drivetrain dt, Limelight ll) {
@@ -43,6 +44,7 @@ public class MoveToRightBranch extends Command {
     speedMultiplier = 6;
     didntseetime=new Timer();
     alignedtime=new Timer();
+    timeouttimer = new Timer();
     // SmartDashboard.putNumber("clamp for autoalign", 0.35);
     // SmartDashboard.putNumber("speed multiplier", 3);
   }
@@ -58,6 +60,8 @@ public class MoveToRightBranch extends Command {
     // speedMultiplier = SmartDashboard.getNumber("speed multiplier", 6);
     didntseetime.reset();didntseetime.start();
     alignedtime.reset();
+    timeouttimer.reset();
+    timeouttimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -85,7 +89,7 @@ public class MoveToRightBranch extends Command {
   @Override
   public void end(boolean interrupted) {
     dt.setFieldOriented(originalFieldOrientation);
-    // dt.drive(0.0001,0,0);
+    dt.drive(0.0001,0,0);
     
     SmartDashboard.putString("I CANT BREATHE","I CANT BREATHE");
   }
@@ -93,7 +97,7 @@ public class MoveToRightBranch extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ( alignedtime.get()>.3 ) || didntseetime.get() > 1.5;//sec
+    return ( alignedtime.get()>.3 ) || didntseetime.get() > 1.5 || timeouttimer.get() >= 2.0;//sec
   }
 
 
