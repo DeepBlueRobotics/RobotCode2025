@@ -84,7 +84,7 @@ public class RobotContainer {
     public final GenericHID driverController = new GenericHID(Driver.port);
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
     public final Drivetrain drivetrain =  new Drivetrain();
-    public final AlgaeEffector algaeEffector = new AlgaeEffector();
+    //public final AlgaeEffector algaeEffector = new AlgaeEffector();
     private final Limelight limelight = new Limelight(drivetrain);
 
 
@@ -311,28 +311,28 @@ public class RobotContainer {
                   new AutonCoralOuttake(coralEffector), 
                   new ElevatorToPos(elevator, Elevatorc.downPos)));
 
-      //L2 Dealgify CMDs 
-      NamedCommands.registerCommand("L2 Dealgify Left",
-              new SequentialCommandGroup(
-                  new MoveToLeftBranch(drivetrain, limelight),
-                  new ParallelCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l2), 
-                        new SequentialCommandGroup(
-                            new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                            new DealgaficationIntake(algaeEffector))),
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+      // //L2 Dealgify CMDs 
+      // NamedCommands.registerCommand("L2 Dealgify Left",
+      //         new SequentialCommandGroup(
+      //             new MoveToLeftBranch(drivetrain, limelight),
+      //             new ParallelCommandGroup(
+      //                   new ElevatorToPos(elevator, Elevatorc.l2), 
+      //                   new SequentialCommandGroup(
+      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+      //                       new DealgaficationIntake(algaeEffector))),
+      //             new AutonCoralOuttake(coralEffector), 
+      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
       
-      NamedCommands.registerCommand("L2 Dealgify Right",
-              new SequentialCommandGroup(
-                  new MoveToRightBranch(drivetrain, limelight),
-                  new ParallelCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l2), 
-                        new SequentialCommandGroup(
-                            new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                            new DealgaficationIntake(algaeEffector))),
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+      // NamedCommands.registerCommand("L2 Dealgify Right",
+      //         new SequentialCommandGroup(
+      //             new MoveToRightBranch(drivetrain, limelight),
+      //             new ParallelCommandGroup(
+      //                   new ElevatorToPos(elevator, Elevatorc.l2), 
+      //                   new SequentialCommandGroup(
+      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+      //                       new DealgaficationIntake(algaeEffector))),
+      //             new AutonCoralOuttake(coralEffector), 
+      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
 
       //L2 No-Dealify CMDS
       NamedCommands.registerCommand("L2 No-Dealgify Left", 
@@ -350,27 +350,27 @@ public class RobotContainer {
                   new ElevatorToPos(elevator, Elevatorc.downPos)));    
 
       //L3 Dealgify CMDs 
-      NamedCommands.registerCommand("L3 Dealgify Left", 
-              new SequentialCommandGroup(
-                  new MoveToLeftBranch(drivetrain, limelight),
-                  new ParallelCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l3), 
-                        new SequentialCommandGroup(
-                            new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                            new DealgaficationIntake(algaeEffector))),
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+      // NamedCommands.registerCommand("L3 Dealgify Left", 
+      //         new SequentialCommandGroup(
+      //             new MoveToLeftBranch(drivetrain, limelight),
+      //             new ParallelCommandGroup(
+      //                   new ElevatorToPos(elevator, Elevatorc.l3), 
+      //                   new SequentialCommandGroup(
+      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+      //                       new DealgaficationIntake(algaeEffector))),
+      //             new AutonCoralOuttake(coralEffector), 
+      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
       
-      NamedCommands.registerCommand("L3 Dealgify Right", 
-              new SequentialCommandGroup(
-                  new MoveToRightBranch(drivetrain, limelight),
-                  new ParallelCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l3), 
-                        new SequentialCommandGroup(
-                            new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                            new DealgaficationIntake(algaeEffector))),
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+      // NamedCommands.registerCommand("L3 Dealgify Right", 
+      //         new SequentialCommandGroup(
+      //             new MoveToRightBranch(drivetrain, limelight),
+      //             new ParallelCommandGroup(
+      //                   new ElevatorToPos(elevator, Elevatorc.l3), 
+      //                   new SequentialCommandGroup(
+      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+      //                       new DealgaficationIntake(algaeEffector))),
+      //             new AutonCoralOuttake(coralEffector), 
+      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
 
       //L3 No-Dealify CMDS
       NamedCommands.registerCommand("L3 No-Dealgify Left", 
@@ -387,30 +387,30 @@ public class RobotContainer {
                   new AutonCoralOuttake(coralEffector), 
                   new ElevatorToPos(elevator, Elevatorc.downPos)));    
 
-     //L4 Backup CMDS
-      NamedCommands.registerCommand("L4 Backup Left", 
-              new SequentialCommandGroup(
-                  new MoveToLeftBranch(drivetrain, limelight),
-                  new L4BackupUsingArea(drivetrain, limelight),
-                  new ParallelCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l4), 
-                        new SequentialCommandGroup(
-                            new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                            new DealgaficationIntake(algaeEffector))),
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+    //  //L4 Backup CMDS
+    //   NamedCommands.registerCommand("L4 Backup Left", 
+    //           new SequentialCommandGroup(
+    //               new MoveToLeftBranch(drivetrain, limelight),
+    //               new L4BackupUsingArea(drivetrain, limelight),
+    //               new ParallelCommandGroup(
+    //                     new ElevatorToPos(elevator, Elevatorc.l4), 
+    //                     new SequentialCommandGroup(
+    //                         new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+    //                         new DealgaficationIntake(algaeEffector))),
+    //               new AutonCoralOuttake(coralEffector), 
+    //               new ElevatorToPos(elevator, Elevatorc.downPos)));
       
-      NamedCommands.registerCommand("L4 Backup Right", 
-              new SequentialCommandGroup(
-                  new MoveToRightBranch(drivetrain, limelight),
-                  new L4BackupUsingArea(drivetrain, limelight),
-                  new ParallelCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l4), 
-                        new SequentialCommandGroup(
-                            new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                            new DealgaficationIntake(algaeEffector))),
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+      // NamedCommands.registerCommand("L4 Backup Right", 
+      //         new SequentialCommandGroup(
+      //             new MoveToRightBranch(drivetrain, limelight),
+      //             new L4BackupUsingArea(drivetrain, limelight),
+      //             new ParallelCommandGroup(
+      //                   new ElevatorToPos(elevator, Elevatorc.l4), 
+      //                   new SequentialCommandGroup(
+      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+      //                       new DealgaficationIntake(algaeEffector))),
+      //             new AutonCoralOuttake(coralEffector), 
+      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
 
       //L4 No-Backup CMDS
       NamedCommands.registerCommand("L4 No-Backup Left", 
@@ -580,30 +580,30 @@ public class RobotContainer {
             new AutonCoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos))); 
 
-        //Center L2(Dealgify)
-        autoChooser.addOption("CustomDealgifyingL2ScoreCenterLeftBranch", 
-            new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 1, 2.0),  
-            new MoveToLeftBranch(drivetrain, limelight),
-                new ParallelCommandGroup(
-                    new ElevatorToPos(elevator, l2),
-                    new SequentialCommandGroup(
-                        new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                        new DealgaficationIntake(algaeEffector))),
-                new AutonCoralFastOutake(coralEffector),
-            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+        // //Center L2(Dealgify)
+        // autoChooser.addOption("CustomDealgifyingL2ScoreCenterLeftBranch", 
+        //     new SequentialCommandGroup(
+        //     new LastResortAuto(drivetrain, 1, 1, 2.0),  
+        //     new MoveToLeftBranch(drivetrain, limelight),
+        //         new ParallelCommandGroup(
+        //             new ElevatorToPos(elevator, l2),
+        //             new SequentialCommandGroup(
+        //                 new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+        //                 new DealgaficationIntake(algaeEffector))),
+        //         new AutonCoralFastOutake(coralEffector),
+        //     new ElevatorToPos(elevator, Elevatorc.downPos)));    
 
-        autoChooser.addOption("CustomDealgifyingL2ScoreCenterRightBranch", 
-            new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 1, 2.5),  
-            new MoveToRightBranch(drivetrain, limelight),
-                new ParallelCommandGroup(
-                    new ElevatorToPos(elevator, l2),
-                    new SequentialCommandGroup(
-                        new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                        new DealgaficationIntake(algaeEffector))),
-                new AutonCoralFastOutake(coralEffector),
-            new ElevatorToPos(elevator, Elevatorc.downPos)));  
+        // autoChooser.addOption("CustomDealgifyingL2ScoreCenterRightBranch", 
+        //     new SequentialCommandGroup(
+        //     new LastResortAuto(drivetrain, 1, 1, 2.5),  
+        //     new MoveToRightBranch(drivetrain, limelight),
+        //         new ParallelCommandGroup(
+        //             new ElevatorToPos(elevator, l2),
+        //             new SequentialCommandGroup(
+        //                 new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+        //                 new DealgaficationIntake(algaeEffector))),
+        //         new AutonCoralFastOutake(coralEffector),
+        //     new ElevatorToPos(elevator, Elevatorc.downPos)));  
             
         //Left/Right L2
         autoChooser.addOption("CustomL2ScoreLeftBranchL/R", 
@@ -640,29 +640,29 @@ public class RobotContainer {
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
             
         //Left/Right L3(Dealgify)
-        autoChooser.addOption("CustomDealgifyingL3ScoreLeftBranchL/R", 
-            new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 1, 2.5),  
-            new MoveToLeftBranch(drivetrain, limelight),
-                new ParallelCommandGroup(
-                    new ElevatorToPos(elevator, l3),
-                    new SequentialCommandGroup(
-                        new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                        new DealgaficationIntake(algaeEffector))),
-                new AutonCoralFastOutake(coralEffector),
-            new ElevatorToPos(elevator, Elevatorc.downPos)));    
+        // autoChooser.addOption("CustomDealgifyingL3ScoreLeftBranchL/R", 
+        //     new SequentialCommandGroup(
+        //     new LastResortAuto(drivetrain, 1, 1, 2.5),  
+        //     new MoveToLeftBranch(drivetrain, limelight),
+        //         new ParallelCommandGroup(
+        //             new ElevatorToPos(elevator, l3),
+        //             new SequentialCommandGroup(
+        //                 new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+        //                 new DealgaficationIntake(algaeEffector))),
+        //         new AutonCoralFastOutake(coralEffector),
+        //     new ElevatorToPos(elevator, Elevatorc.downPos)));    
 
-        autoChooser.addOption("CustomDealgifyingL3ScoreRightBranchL/R", 
-            new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 1, 2.5),  
-            new MoveToRightBranch(drivetrain, limelight),
-                new ParallelCommandGroup(
-                    new ElevatorToPos(elevator, l2),
-                    new SequentialCommandGroup(
-                        new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-                        new DealgaficationIntake(algaeEffector))),
-                new AutonCoralFastOutake(coralEffector),
-            new ElevatorToPos(elevator, Elevatorc.downPos)));
+        // autoChooser.addOption("CustomDealgifyingL3ScoreRightBranchL/R", 
+        //     new SequentialCommandGroup(
+        //     new LastResortAuto(drivetrain, 1, 1, 2.5),  
+        //     new MoveToRightBranch(drivetrain, limelight),
+        //         new ParallelCommandGroup(
+        //             new ElevatorToPos(elevator, l2),
+        //             new SequentialCommandGroup(
+        //                 new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
+        //                 new DealgaficationIntake(algaeEffector))),
+        //         new AutonCoralFastOutake(coralEffector),
+        //     new ElevatorToPos(elevator, Elevatorc.downPos)));
 
         //Center L4
         autoChooser.addOption("CustomL4ScoreCenterLeftBranch", 
