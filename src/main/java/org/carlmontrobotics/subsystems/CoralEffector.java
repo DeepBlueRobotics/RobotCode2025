@@ -97,13 +97,13 @@ public class CoralEffector extends SubsystemBase {
     // CoralGoalRPM = coralEncoder.getVelocity();
     coralOutput = coralMotor.getAppliedOutput();
 
-    SmartDashboard.putBoolean("Distance sensor", distanceSensorSeesCoral());
-    SmartDashboard.putNumber("distance", distanceSensor.getRange());
-    SmartDashboard.putBoolean("coral in", coralIn);
-    // SmartDashboard.putBoolean("limit switch", limitSwitchSees);
-    // SmartDashboard.putNumber("Coral goal RPM", CoralGoalRPM);
-    SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());
-    SmartDashboard.putNumber("coral output", coralOutput);
-    SmartDashboard.getNumber("P", KP);
+    // SmartDashboard.putBoolean("Distance sensor", distanceSensorSeesCoral());
+    // SmartDashboard.putNumber("distance", distanceSensor.getRange());
+    // SmartDashboard.putBoolean("coral in", coralIn);
+    // // SmartDashboard.putBoolean("limit switch", limitSwitchSees);
+    // // SmartDashboard.putNumber("Coral goal RPM", CoralGoalRPM);
+    // SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());
+    // SmartDashboard.putNumber("coral output", coralOutput);
+    // SmartDashboard.getNumber("P", KP);
   }
 }

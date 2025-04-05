@@ -150,10 +150,10 @@ public class Drivetrain extends SubsystemBase {
     double kD = 0;
     public Drivetrain() {
         AutoBuilder();
-        SmartDashboard.putNumber("Goal Velocity", 0);
-        SmartDashboard.putNumber("kP", 0);
-        SmartDashboard.putNumber("kI", 0);
-        SmartDashboard.putNumber("kD", 0);
+        //SmartDashboard.putNumber("Goal Velocity", 0);
+        //SmartDashboard.putNumber("kP", 0);
+        //SmartDashboard.putNumber("kI", 0);
+        //SmartDashboard.putNumber("kD", 0);
 
         // SmartDashboard.putNumber("Pose Estimator t x (m)", lastSetX);
         // SmartDashboard.putNumber("Pose Estimator set y (m)", lastSetY);
@@ -162,7 +162,7 @@ public class Drivetrain extends SubsystemBase {
 
         // SmartDashboard.putNumber("pose estimator std dev x", STD_DEV_X_METERS);
         // SmartDashboard.putNumber("pose estimator std dev y", STD_DEV_Y_METERS);
-        SmartDashboard.putNumber("GoalPos", 0);
+        //SmartDashboard.putNumber("GoalPos", 0);
         // Calibrate Gyro
         {
 
@@ -214,7 +214,7 @@ public class Drivetrain extends SubsystemBase {
                 driveMotors[0] = MotorControllerFactory.createSparkMax(driveFrontLeftPort, MotorConfig.NEO), 
                 turnMotors[0] = MotorControllerFactory.createSparkMax(turnFrontLeftPort, MotorConfig.NEO), 
                 turnEncoders[0] = SensorFactory.createCANCoder(Constants.Drivetrainc.canCoderPortFL), 0, pitchSupplier, rollSupplier);
-            SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
+            //SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
             moduleFR = new SwerveModule(Constants.Drivetrainc.swerveConfig, SwerveModule.ModuleType.FR, 
                 driveMotors[1] = MotorControllerFactory.createSparkMax(driveFrontRightPort, MotorConfig.NEO), 
                 turnMotors[1] = MotorControllerFactory.createSparkMax(turnFrontRightPort, MotorConfig.NEO), 
@@ -240,10 +240,10 @@ public class Drivetrain extends SubsystemBase {
                 };
                 gyroYawSim = new SimDeviceSim("navX-Sensor[0]").getDouble("Yaw");
             }
-            SmartDashboard.putData("Module FL",moduleFL);
-            SmartDashboard.putData("Module FR",moduleFR);
-            SmartDashboard.putData("Module BL",moduleBL);
-            SmartDashboard.putData("Module BR",moduleBR);
+            //SmartDashboard.putData("Module FL",moduleFL);
+            //SmartDashboard.putData("Module FR",moduleFR);
+            //SmartDashboard.putData("Module BL",moduleBL);
+            //SmartDashboard.putData("Module BR",moduleBR);
             SparkMaxConfig driveConfig = new SparkMaxConfig();
             driveConfig.openLoopRampRate(secsPer12Volts);
             driveConfig.encoder.positionConversionFactor(wheelDiameterMeters * Math.PI / driveGearing);
@@ -273,7 +273,7 @@ public class Drivetrain extends SubsystemBase {
 
             }
            
-            SmartDashboard.putData("Field", field);
+            //SmartDashboard.putData("Field", field);
 
             // for(SparkMax driveMotor : driveMotors)
             // driveMotor.setSmartCurrentLimit(80);
@@ -990,11 +990,11 @@ public class Drivetrain extends SubsystemBase {
                     .withSize(2, 1);
             // sysIdTab.add("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse)).withSize(2, 1);
             // sysIdTab.add("Dynamic Forward", sysIdDynamic(SysIdRoutine.Direction.kForward)).withSize(2, 1);
-            SmartDashboard.putData("Quackson Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));//.withSize(2, 1);
-            SmartDashboard.putData("Quackson Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));//.withSize(2, 1);
+            // SmartDashboard.putData("Quackson Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));//.withSize(2, 1);
+            // SmartDashboard.putData("Quackson Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));//.withSize(2, 1);
 
-            SmartDashboard.putData("Dyanmic forward", sysIdDynamic(SysIdRoutine.Direction.kForward));//.withSize(2, 1);
-            SmartDashboard.putData("Dyanmic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));//.withSize(2, 1);
+            // SmartDashboard.putData("Dyanmic forward", sysIdDynamic(SysIdRoutine.Direction.kForward));//.withSize(2, 1);
+            // SmartDashboard.putData("Dyanmic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));//.withSize(2, 1);
             //sysIdTab.add(this);
 
             for (int i = 0; i < 8; i++) {// first four are drive, next 4 are turn motors

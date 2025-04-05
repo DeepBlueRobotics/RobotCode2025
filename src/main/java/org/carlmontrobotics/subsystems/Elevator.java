@@ -134,7 +134,7 @@ public class Elevator extends SubsystemBase {
    bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
     // timer = new Timer();
     // timer.start();
-    SmartDashboard.putBoolean("Is Unsafe", false);
+    //SmartDashboard.putBoolean("Is Unsafe", false);
 
     //PID
     pidElevatorController = new PIDController(kP, kI, kD);
@@ -314,7 +314,7 @@ public class Elevator extends SubsystemBase {
     // goalHeight = SmartDashboard.getNumber("Goal", 0);
     // System.out.println(goalHeight);
     //setGoal(.75);
-    SmartDashboard.putBoolean("SAFE?", isSafe());
+    //SmartDashboard.putBoolean("SAFE?", isSafe());
 
     // if (elevatorAtMin()) {
     //   SmartDashboard.putString("ElevatorState", "🟢GO🟢");

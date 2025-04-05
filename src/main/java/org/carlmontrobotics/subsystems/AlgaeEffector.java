@@ -181,22 +181,22 @@ public class AlgaeEffector extends SubsystemBase {
         setArmTarget(0);
         
 
-        SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmTarget(0)));
-        SmartDashboard.putData("Arm to Shooting Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE)));
-        SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
-        SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
-        SmartDashboard.putData("Arm to Resting While Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE)));
-        SmartDashboard.putData("Arm to Ramp Up Angle Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RAMP_UP_ANGLE)));
-        SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));
-        SmartDashboard.putData("Intake Algae", new GroundIntakeAlgae(this));
-        SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
-        SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
-        SmartDashboard.putData("UPDATE COMMAND",new InstantCommand(()->{updateArmPID();updateFeedforward();}));
+        // SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmTarget(0)));
+        // SmartDashboard.putData("Arm to Shooting Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_SHOOT_ANGLE)));
+        // SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
+        // SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
+        // SmartDashboard.putData("Arm to Resting While Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE)));
+        // SmartDashboard.putData("Arm to Ramp Up Angle Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_RAMP_UP_ANGLE)));
+        // SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));
+        // SmartDashboard.putData("Intake Algae", new GroundIntakeAlgae(this));
+        // SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
+        // SmartDashboard.putData("Shoot Algae", new ShootAlgae(this));
+        // SmartDashboard.putData("UPDATE COMMAND",new InstantCommand(()->{updateArmPID();updateFeedforward();}));
 
-        SmartDashboard.putData("Quasistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
-        SmartDashboard.putData("Quasistatic Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        SmartDashboard.putData("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        // SmartDashboard.putData("Quasistatic Forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        // SmartDashboard.putData("Dynamic Forwards", sysIdDynamic(SysIdRoutine.Direction.kForward));
+        // SmartDashboard.putData("Quasistatic Backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        // SmartDashboard.putData("Dynamic Backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     }
     //----------------------------------------------------------------------------------------
