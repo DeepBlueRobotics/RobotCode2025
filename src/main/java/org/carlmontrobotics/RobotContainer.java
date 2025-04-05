@@ -817,7 +817,7 @@ SHARK IN THE TANK
     new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
     new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-        new CoralOuttake(coralEffector, .05)
+        new CoralOuttake(coralEffector, .2)
     ));
   }
   
