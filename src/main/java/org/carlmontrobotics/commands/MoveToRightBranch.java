@@ -63,6 +63,7 @@ public class MoveToRightBranch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     if (dt.isAtAngle(90, 10)){
       // didntseetime += 1.0/50.0;
       if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2

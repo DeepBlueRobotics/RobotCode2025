@@ -665,20 +665,28 @@ public class RobotContainer {
         //     new ElevatorToPos(elevator, Elevatorc.downPos)));
 
         //Center L4
-        autoChooser.addOption("CustomL4ScoreCenterLeftBranch", 
+        autoChooser.addOption("SamoL4AutonLeft", 
             new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 1, 2.0),  
+            new LastResortAuto(drivetrain, 1, 1, 2.5),  
             new MoveToLeftBranch(drivetrain, limelight),
-                new ElevatorToPos(elevator, l4),
-                new AutonCoralFastOutake(coralEffector),
+                new ElevatorToPos(elevator, testl4),
+                new AutonCoralOuttake(coralEffector),
+                new ParallelCommandGroup(
+                    new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
+                    new AutonCoralFastOutake(coralEffector)
+                ),
             new ElevatorToPos(elevator, Elevatorc.downPos))); 
             
-        autoChooser.addOption("CustomL4ScoreCenterRightBranch", 
+        autoChooser.addOption("SamoL4AutonRight", 
             new SequentialCommandGroup(
-            new LastResortAuto(drivetrain, 1, 1, 2.0),  
+            new LastResortAuto(drivetrain, 1, 1, 2.5),  
             new MoveToRightBranch(drivetrain, limelight),
-                new ElevatorToPos(elevator, l4),
-                new AutonCoralFastOutake(coralEffector),
+                new ElevatorToPos(elevator, testl4),
+                new AutonCoralOuttake(coralEffector),
+                new ParallelCommandGroup(
+                    new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
+                    new AutonCoralFastOutake(coralEffector)
+                ),
             new ElevatorToPos(elevator, Elevatorc.downPos)));    
 
         //Left/Right L4
@@ -827,10 +835,21 @@ SHARK IN THE TANK
     // return Commands.print("No autonomous command configured");
     // Command cmd = autoChooser.getSelected();
     // System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
-    Command cmd = new LastResortAuto(drivetrain, -1, 4, 8);
-    System.out.println("running getAutounmousCommand");
-    //return cmd;
-    return autoChooser.getSelected();
+    // Command cmd = new LastResortAuto(drivetrain, -1, 4, 8);
+    // System.out.println("running getAutounmousCommand");
+    // //return cmd;
+    // return autoChooser.getSelected();
+    return  new SequentialCommandGroup(
+        new LastResortAuto(drivetrain, 1, 1, 4),  
+        new MoveToRightBranch(drivetrain, limelight),
+            new ElevatorToPos(elevator, testl4),
+            new AutonCoralOuttake(coralEffector),
+            new ParallelCommandGroup(
+                new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
+                new AutonCoralFastOutake(coralEffector)
+            ),
+        new ElevatorToPos(elevator, Elevatorc.downPos));    
+
   }
 
   /**
