@@ -5,6 +5,7 @@
 package org.carlmontrobotics.commands;
 
 import org.carlmontrobotics.subsystems.Drivetrain;
+import org.carlmontrobotics.subsystems.Elevator;
 import org.carlmontrobotics.subsystems.Limelight;
 import org.carlmontrobotics.subsystems.LimelightHelpers;
 import edu.wpi.first.math.util.Units;
@@ -34,11 +35,12 @@ public class MoveToRightBranch extends Command {
   double speedMultiplier;
   Timer alignedtime;
   Timer timeouttimer;
+  Elevator elevator;
 
   /** Creates a new MoveToLeftBranch. */
-  public MoveToRightBranch(Drivetrain dt, Limelight ll) {
+  public MoveToRightBranch(Drivetrain dt, Limelight ll, Elevator elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(this.dt=dt);
+    addRequirements(this.dt=dt, this.elevator = elevator);
     this.ll = ll;
     clampNumber = .35;
     speedMultiplier = 6;
@@ -68,6 +70,7 @@ public class MoveToRightBranch extends Command {
   @Override
   public void execute() {
     //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    if (elevator.getCurrentHeight() <= 0.2) {
     if (dt.isAtAngle(90, 10)){
       // didntseetime += 1.0/50.0;
       if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
@@ -84,6 +87,10 @@ public class MoveToRightBranch extends Command {
       // alignedtime+=1.0/50.0;
     } else alignedtime.restart();
   }
+else {
+  dt.drive(0.0000001, 0,0);
+}
+}
 
   // Called once the command ends or is interrupted.
   @Override

@@ -69,7 +69,7 @@ public final class Constants {
 		public static final double minElevatorHeightInches = 0;
 		
         //PID
-        public static final double kP = 28;//45.476;
+        public static final double kP = 32;//45.476;
         public static final double kI = 0.0003;
         public static final double kD = 0;//5.305-3;
 		//Feedforward
@@ -83,7 +83,7 @@ public final class Constants {
         public static final double l2 = Units.inchesToMeters(6.5-1.236220+1); 
         public static final double l3 = Units.inchesToMeters(22.5-1.236220+1); 
         public static final double l4 = 1.32;
-		public static final double testl4 = Units.inchesToMeters(45.25);
+		public static final double testl4 = Units.inchesToMeters(46);
 		public static final double testl4RaiseHeight = Units.inchesToMeters(3.75 + 1);
         public static final double net = Units.inchesToMeters(53.2-1.236220);
         public static final double processor = 0;
