@@ -169,23 +169,18 @@ public final class Constants {
 		// kP, kI, and kD constants for turn motor controllers in the order of
 		// front-left, front-right, back-left, back-right.
 		// Determine correct turn PID constants
-		public static final double[] turnkP = CONFIG.isHammerHead() ? new double[] {4.0087, 60.885, 60.946, 60.986/2 } : 
-			new double[]{50,50,50,50};//{1.9085, /*0.21577*/0.1, /*0.12356*/0.05, 0.36431};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
+		public static final double[] turnkP = new double[]{50,50,50,50};//{1.9085, /*0.21577*/0.1, /*0.12356*/0.05, 0.36431};//sysid for fr that didnt't work{0.099412, 0.13414, 3.6809, 3.6809} //{49, 23,33, 28};//{51.078, 25, 35.946, 30.986}; // {0.00374, 0.00374, 0.00374,
 																		// 0.00374};
 		public static final double[] turnkI = {0, 0, 0, 0};//{ 0, 0.1, 0, 0 };
-		public static final double[] turnkD = CONFIG.isHammerHead() ? new double[] { 0/* dont edit */, 0.5, 0.42, 1 } :
-			new double[]{0, 0, 0, 0};//{ 0.2/* dont edit */, 0.3, 0.5, 0.4}; // todo: use d
+		public static final double[] turnkD = new double[]{0, 0, 0, 0};//{ 0.2/* dont edit */, 0.3, 0.5, 0.4}; // todo: use d
 		// public static final double[] turnkS = {0.2, 0.2, 0.2, 0.2};
-		public static final double[] turnkS = CONFIG.isHammerHead() ? new double[]{ 0.12507, 0.17026, 0.2, 0.23262 }:
-			new double[]{0.21969, 0.11487, 0.18525, 0.24865};//sysid for fr that didnt't work{0.041796, 0.09111, 0.64804, 1.0873}//{ 0.13027, 0.17026, 0.2, 0.23262 };
+		public static final double[] turnkS = new double[]{0.21969, 0.11487, 0.18525, 0.24865};//sysid for fr that didnt't work{0.041796, 0.09111, 0.64804, 1.0873}//{ 0.13027, 0.17026, 0.2, 0.23262 };
 
 		// V = kS + kV * v + kA * a
 		// 12 = 0.2 + 0.00463 * v
 		// v = (12 - 0.2) / 0.00463 = 2548.596 degrees/s
-		public static final double[] turnkV = CONFIG.isHammerHead()? new double[] { 2.6172, 2.7597, 2.7445, 2.7698 }:
-			new double[] {2.7073, 2.6208, 2.7026, 2.7639};//sysid for fr that didnt't work{2.6403, 2.6603, 2.6168, 2.5002} //{2.6532, 2.7597, 2.7445, 2.7698};
-		public static final double[] turnkA = CONFIG.isHammerHead()? new double[] { 1.2097, 0.17924, 0.17924, 0.17924 }:
-			new double[]{0.18069, 0.06593, 0.17439, 0.2571};//sysid for fr that didnt't work{0.33266, 0.25535, 0.17924, 0.17924} //{ 0.17924, 0.17924, 0.17924, 0.17924 };
+		public static final double[] turnkV = new double[] {2.7073, 2.6208, 2.7026, 2.7639};//sysid for fr that didnt't work{2.6403, 2.6603, 2.6168, 2.5002} //{2.6532, 2.7597, 2.7445, 2.7698};
+		public static final double[] turnkA = new double[]{0.18069, 0.06593, 0.17439, 0.2571};//sysid for fr that didnt't work{0.33266, 0.25535, 0.17924, 0.17924} //{ 0.17924, 0.17924, 0.17924, 0.17924 };
 
 		// kP is an average of the forward and backward kP values
 		// Forward: 1.72, 1.71, 1.92, 1.94

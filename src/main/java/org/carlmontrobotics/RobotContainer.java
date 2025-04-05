@@ -150,7 +150,16 @@ public class RobotContainer {
      
         RegisterAutoCommands();
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, -1, 4, 8));
+        //autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, -1, 4, 8));
+        autoChooser.setDefaultOption("CustomBackupL4ScoreCenterRightBranch", 
+        new SequentialCommandGroup(
+            new LastResortAuto(drivetrain, 1, 1, 2.0),  
+            new MoveToRightBranch(drivetrain, limelight),
+            new L4Backup(drivetrain),
+            new ElevatorToPos(elevator, l4),
+            new AutonCoralOuttake(coralEffector), 
+            new ElevatorToPos(elevator, Elevatorc.downPos)));   
+
         RegisterCustomAutos();
         SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
         SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
@@ -734,6 +743,17 @@ public class RobotContainer {
                 new ElevatorToPos(elevator, l4),
                 new AutonCoralOuttake(coralEffector),
             new ElevatorToPos(elevator, Elevatorc.downPos)));
+            
+        //Samuel's skibidi l4 auto
+        // autoChooser.addOption("SamuelSigmaL4AutoCenterRightBranch", 
+        //     new SequentialCommandGroup(
+        //     new LastResortAuto(drivetrain, 1, 1, 2.0),  
+        //     new MoveToRightBranch(drivetrain, limelight),
+        //         new ElevatorToPos(elevator, testl4),
+        //         new ParallelCommandGroup(
+        //             new CoralOuttake(coralEffector, .05),
+        //             new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)),
+        //     new ElevatorToPos(elevator, Elevatorc.downPos)));  
     }
 //------------------------------------------------------------------------------------------------
 /*deep blue is what DYNAMITE 

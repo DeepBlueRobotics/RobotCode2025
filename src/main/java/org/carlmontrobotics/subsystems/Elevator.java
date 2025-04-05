@@ -116,6 +116,8 @@ public class Elevator extends SubsystemBase {
   // }
 
   public Elevator() {
+    SmartDashboard.putData(this);
+
     
     encoderTimer = new Timer();
     // SmartDashboard.putNumber("Goal", goalHeight);
