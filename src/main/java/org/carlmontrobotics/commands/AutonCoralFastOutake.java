@@ -25,7 +25,7 @@ public class AutonCoralFastOutake extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    coralEffector.setMotorSpeed(0.2);
+    coralEffector.setMotorSpeed(0.07);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

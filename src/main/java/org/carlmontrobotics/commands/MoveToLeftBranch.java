@@ -69,7 +69,7 @@ public class MoveToLeftBranch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevator.getCurrentHeight() <= 0.2) {
+    if (elevator.getCurrentHeight() <= 0.05) {
       if (dt.isAtAngle(90, 10)){
       // didntseetime += 1.0/50.0;
       if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2

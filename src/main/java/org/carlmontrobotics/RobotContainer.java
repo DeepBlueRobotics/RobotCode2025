@@ -845,8 +845,8 @@ SHARK IN THE TANK
             new ElevatorToPos(elevator, testl4),
             new AutonCoralOuttake(coralEffector),
             new ParallelCommandGroup(
-                new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-                new AutonCoralFastOutake(coralEffector)
+                new AutonCoralFastOutake(coralEffector),
+                new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
             ),
         new ElevatorToPos(elevator, Elevatorc.downPos));    
 

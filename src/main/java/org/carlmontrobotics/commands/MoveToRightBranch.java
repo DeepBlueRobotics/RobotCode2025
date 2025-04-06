@@ -70,7 +70,7 @@ public class MoveToRightBranch extends Command {
   @Override
   public void execute() {
     //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    if (elevator.getCurrentHeight() <= 0.2) {
+    if (elevator.getCurrentHeight() <= 0.05) {
     if (dt.isAtAngle(90, 10)){
       // didntseetime += 1.0/50.0;
       if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2

@@ -69,11 +69,11 @@ public final class Constants {
 		public static final double minElevatorHeightInches = 0;
 		
         //PID
-        public static final double kP = 32;//45.476;
-        public static final double kI = 0.0003;
+        public static final double kP = 34;//45.476;
+        public static final double kI = 0.003;
         public static final double kD = 0;//5.305-3;
 		//Feedforward
-        public static final double kS = 0; //.12666
+        public static final double kS = 0.0; //.12666
 		public static final double kG = 0.177;
 		public static final double kV = 8.9921;
 		public static final double kA = 1.4586;

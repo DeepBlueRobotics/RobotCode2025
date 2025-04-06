@@ -25,7 +25,7 @@ public class AutonCoralOuttake extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+coralEffector.setMotorSpeed(.07);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
