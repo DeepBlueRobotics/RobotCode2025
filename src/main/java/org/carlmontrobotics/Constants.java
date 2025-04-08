@@ -359,7 +359,9 @@ public final class Constants {
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH+Units.inchesToMeters(1);
 
-		public static final double areaPercentageForL4 = 0; //TODO figure this out por favor
+		public static final double areaPercentageGoal = 0; //TODO figure this out por favor
+		public static final double areaTolerance = 0.1; //TODO needs to get tuned
+		public static final double strafeTolerance = 0.02;
 
 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
@@ -402,13 +404,13 @@ public final class Constants {
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
         public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
-        public final static double INPUT_FAST_SPEED = 0.07; //TODO: tune this
-		public final static double INTAKE_BACKWARDS_SPEED = -0.06; //TODO tune this
-        public final static double INPUT_SLOW_SPEED = 0.02; //TODO: tune this
-        public final static double OUTPUT_SPEED = 0.4; //TODO: tune this
+        public final static double INPUT_FAST_SPEED = 0.07; 
+		public final static double INTAKE_BACKWARDS_SPEED = -0.06; 
+        public final static double INPUT_SLOW_SPEED = 0.02; 
+        public final static double OUTPUT_SPEED = 0.4; 
 		public final static double FAST_OUTPUT_SPEED = 0.6;
-        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0; //TOD: tune this?
-        public final static double KP = 2; //TODO: tune this
+        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0; 
+        public final static double KP = 2; 
         public final static double KI = 0;
         public final static double KD = 0;
         public final static double INTAKE_TIME_OUT = 0.5;
