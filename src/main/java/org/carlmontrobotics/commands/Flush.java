@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class Flush extends Command {
   private Drivetrain dt;
   private Limelight ll;
+  private boolean originalOrientation;
 
   private Timer timer = new Timer();
 
@@ -37,7 +38,8 @@ public class Flush extends Command {
   public void initialize() {
     timer.reset();
     timer.stop();
-
+    originalOrientation = dt.getFieldOriented();
+    dt.setFieldOriented(false);
     currentWidth = ll.getAprilWidth(REEF_LL) / ll.getAprilHeight(REEF_LL);
     degreesOff = Math.acos(currentWidth/desiredWidth);
     initialHeading = dt.getRawHeading();
@@ -72,6 +74,7 @@ public class Flush extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    dt.setFieldOriented(originalOrientation);
     dt.stop();
   }
 
