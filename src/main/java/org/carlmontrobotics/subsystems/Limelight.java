@@ -59,9 +59,20 @@ public class Limelight extends SubsystemBase {
     }
   }
 
+  public double getTx (String name) {
+    return LimelightHelpers.getTX(name);
+  }
+
+  public double getAprilWidth (String name) {
+    return LimelightHelpers.getThor(name);
+  }
+
+  public double getAprilHeight (String name) {
+    return LimelightHelpers.getTvert(name);
+  }
+
   public double getDistanceToApriltagMT2(String limelightName) { 
     Pose3d targetPoseRobotSpace = LimelightHelpers.getTargetPose3d_RobotSpace(limelightName);
-
     double x = targetPoseRobotSpace.getX();
     double z = targetPoseRobotSpace.getZ();
 

@@ -675,6 +675,10 @@ public class Drivetrain extends SubsystemBase {
         return Math.IEEEremainder(x * (isGyroReversed ? -1.0 : 1.0), 360);
     }
 
+    public double getRawHeading() {
+        return gyro.getAngle();
+    }
+
     public double getHeadingDeg() {
         return getHeading();//...wait.
     }
