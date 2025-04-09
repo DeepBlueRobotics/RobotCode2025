@@ -61,20 +61,42 @@ public class CoralEffector extends SubsystemBase {
     coralMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
    }
 
+  /**
+   * Gets encoder position of the motor
+   * @return encoder position
+   */
   public double getEncoderPos() {
     return coralEncoder.getPosition();
   }
+
+  /**
+   * Sets motor speed using voltage percentage
+   * @param speed voltage from 0.0 - 1.0
+   */
   public void setMotorSpeed(double speed) {
     coralMotor.set(speed);
   }
+
+  /**
+   * Sets reference to where the motor will stay at
+   * @param reference the position of the motor the motor will stay at
+   */
   public void setReferencePosition(double reference) {
     targetPos = reference;
     coralMotor.getClosedLoopController().setReference(reference, SparkBase.ControlType.kPosition);
   }
+
+  /**
+   * Checks if the motor has reached its goal
+   * @return if the coral motor is at the targetpos 
+   */
   public boolean motorAtGoal(){
     return Math.abs(coralEncoder.getPosition()-targetPos) <= CORAL_INTAKE_ERR;
   }
-
+  /** 
+   * Checks if sees coral, generally meaning that don't lift elevator as the coral is to deep inside the elevator
+   * @return if coral is seen by distance sensor
+   */
   public boolean distanceSensorSeesCoral(){
     return distanceSensor.getRange() < CORAL_DISTANCE_SENSOR_DISTANCE;
   }

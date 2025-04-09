@@ -165,6 +165,10 @@ public class Elevator extends SubsystemBase {
 
   }
 
+  /**
+   * Configure motors for elevator configuration. 
+   * Use stall limit of 25 amps to avoid chain skipping.
+   */
   private void configureMotors () {
     //Master Config
     masterConfig
@@ -179,39 +183,55 @@ public class Elevator extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     masterConfig.openLoopRampRate(.375);
     masterMotor.configure(masterConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    //I don't know if this is needed. Response: Not rly. Only the follow.
     //Follower Config
     followerConfig.apply(masterConfig);
     followerConfig.follow(masterPort, followerInverted);
     followerMotor.configure(followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 
+  /**
+   * Sets a goal in meters
+   * @param goal Goal in meters
+   */
   public void setGoal(double goal) {
     heightGoal = goal;
   }
 
+  /**
+   * Sets a goal in meters using ElevatorPos enums
+   * @param goal ElevatorPos enum
+   */
   public void setGoal(ElevatorPos goal) {
     heightGoal = goal.getPositioninMeters();
   }
   
+  /**
+   * Gets the height goal of the elevator by using the local variable heightGoal
+   * @return The current goal of where the elevator wants to be at
+   */
   public double getGoal() {
     return heightGoal;
   }
   
+  /**
+   * Calculates the current height of the elevator
+   * @return the height of the elevator in meters from its starting point
+   */
   public double getCurrentHeight() {
     return masterEncoder.getPosition();//conversion done in config/constants
   }
 
-  // public boolean elevatorAtMax() {
-  //   return !topLimitSwitch.get();
+ 
+  //Magnetic encoder not usable
+  // public boolean elevatorAtMin() {
+  //   return !bottomLimitSwitch.get();//limit switches are opposite
   // }
 
-  public boolean elevatorAtMin() {
-    return !bottomLimitSwitch.get();//limit switches are opposite
-  }
 
-
-
+/**
+ * Calculates the needed voltage to power the motors to get to goal.
+ * Uses feedforward and feedback controllers to do so.
+ */
   public void goToGoal() {
     //System.out.println("GOing to GOAL");
     //System.out.println(heightGoal);
@@ -222,31 +242,30 @@ public class Elevator extends SubsystemBase {
 
   }
 
+  /**
+   * Manually sets speed to the elevator motors
+   * @param speed voltage percentage between 0.0 to 1.0
+   */
   public void setSpeed(double speed){
     masterMotor.set(speed);
   }
 
+  /**
+   * Stops the elevator motors, stays on break mode
+   */
   public void stopElevator(){
     masterMotor.set(0);
   }
 
-  // public double getPos() {
-  //   return masterEncoder.getPosition();
-  // }
-
+  /**
+   * Checks if elevator reached the right height
+   * @return if at goal height with 2 cm of tolerance
+   */
   public boolean atGoalHeight() {
-    // if (heightGoal == maxElevatorHeightInches) {
-    //   return elevatorAtMax();
-    // }
-    // if (heightGoal == minElevatorHeightInches) {
-    //   return elevatorAtMin();
-    // }
-    
-    // else {
-      return (Math.abs(getCurrentHeight() - heightGoal) <= elevatorTolerance);
-    //}
+    return (Math.abs(getCurrentHeight() - heightGoal) <= elevatorTolerance);
 
   }
+
   // private boolean isEncoderDisconnected() {
   //   double currentElevPos = getCurrentHeight();
   //   double currentRelativeElevVel = masterEncoder.getVelocity();
@@ -268,10 +287,17 @@ public class Elevator extends SubsystemBase {
   // }
 
 //safetyMethod is used to check during sysid if the elevator height and voltage are at the safe threshold
-  
+
+  /**
+   * Zeros out the position of the motor
+   */
   public void zeroPosition() {
     masterEncoder.setPosition(0);
   }
+  /**
+   * Safety method make sure the elevator did not go crazy
+   * @return if the elevator is safe
+   */
   public boolean isSafe() {
     if((getCurrentHeight()>1.33 && masterEncoder.getVelocity() > 0) || (getCurrentHeight() < 0 && masterEncoder.getVelocity() < 0)) {
       return false;
@@ -299,6 +325,10 @@ public class Elevator extends SubsystemBase {
   // public Command sysIdDynamic(SysIdRoutine.Direction direction) {
   //   return sysIdRoutine.dynamic(direction).onlyWhile((BooleanSupplier)()->isSafe());
   // } 
+  /**
+   * Gets the velocity of the elevator
+   * @return velocity of the elevator in meters per second
+   */
   public double getEleVel() {
     return masterEncoder.getVelocity();
   }
