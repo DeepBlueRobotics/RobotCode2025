@@ -82,7 +82,11 @@ public class RobotContainer {
     // 1. using GenericHID allows us to use different kinds of controllers
     // 2. Use absolute paths from constants to reduce confusion
     public final GenericHID driverController = new GenericHID(Driver.port);
+    
+    public final XboxController driverRumble = new XboxController(Driver.port); //For rumbling the controller
+
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
+
     public final Drivetrain drivetrain =  new Drivetrain();
     //public final AlgaeEffector algaeEffector = new AlgaeEffector();
     private final Limelight limelight = new Limelight(drivetrain);
@@ -184,16 +188,27 @@ public class RobotContainer {
             .whileTrue(new ParallelCommandGroup(
         new InstantCommand(() -> drivetrain.stop()),
         new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
-        new POVButton(driverController, 0)
-            .onTrue(new RotateToNearest60(drivetrain));
-        new POVButton(driverController, 90).onTrue(new RotateToFieldRelativeAngle(Rotation2d.fromDegrees(90), drivetrain));
+
+
+        //TODO test new align code!
+        new POVButton(driverController, 90).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
+        driverRumble));
+        new POVButton(driverController, 270).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with left branch
+        driverRumble));
+        
+        //TODO test rotation, need to tune pid for that
+        // new POVButton(driverController, 0)
+        //     .onTrue(new RotateToNearest60(drivetrain));
+        // new POVButton(driverController, 180).onTrue(new RotateToFieldRelativeAngle(Rotation2d.fromDegrees(90), drivetrain));
         // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
         //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
-        new JoystickButton(driverController, Driver.a)
-            .onTrue(new SequentialCommandGroup(
-                new WaitUntilAtAngle(drivetrain),
-                new L4Backup(drivetrain)
-        ));
+
+        //Dont need that
+        // new JoystickButton(driverController, Driver.a)
+        //     .onTrue(new SequentialCommandGroup(
+        //         new WaitUntilAtAngle(drivetrain),
+        //         new L4Backup(drivetrain)
+        // ));
         /*new JoystickButton(driverController, Driver.a)
         .onTrue(new L4Backup(drivetrain));
         }*/

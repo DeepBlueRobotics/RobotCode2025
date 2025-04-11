@@ -15,6 +15,8 @@ import org.carlmontrobotics.subsystems.LimelightHelpers;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -22,6 +24,7 @@ public class MoveToAlignReef extends Command {
   private final Drivetrain dt;
   private final Limelight ll;
   private final Elevator elevator;
+  private final XboxController rumbleController;
   private boolean originalFieldOrientation;
   double strafeErr;
   double forwardErr;
@@ -34,6 +37,7 @@ public class MoveToAlignReef extends Command {
   private final boolean rightBranch;
 
 
+
   /** 
    * Aligns with one of the branches both with forward and strafe
    * 
@@ -41,10 +45,12 @@ public class MoveToAlignReef extends Command {
    * @param ll Limelight
    * @param elevator Elevator
    * @param rightBranch Branch being aligned with
+   * @param rumbleController for rumbling controller when tag not seen
   */
-  public MoveToAlignReef(Drivetrain dt, Limelight ll, Elevator elevator, boolean rightBranch) {
+  public MoveToAlignReef(Drivetrain dt, Limelight ll, Elevator elevator, boolean rightBranch, XboxController rumbleController) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.dt = dt, this.elevator = elevator);
+    this.rumbleController = rumbleController;
     this.ll = ll;
     this.rightBranch = rightBranch;
     strafeClamp = .35;
@@ -82,6 +88,7 @@ public class MoveToAlignReef extends Command {
         dt.drive(forwardSpeed, strafeSpeed, 0);
       }
       else {
+        rumbleController.setRumble(RumbleType.kBothRumble, 1.0);
         SmartDashboard.putBoolean("SeeTag", false);
         dt.drive(0, 0.14 * (rightBranch ? 0 : 1), 0);
       }
