@@ -75,10 +75,12 @@ import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
 import static org.carlmontrobotics.Constants.OI.Driver.*;
 import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.carlmontrobotics.commands.TeleopDrive;
+
 
 public class RobotContainer {
-    private static boolean babyMode = false;
-
+    private static boolean babyMode = true;
+    
     // 1. using GenericHID allows us to use different kinds of controllers
     // 2. Use absolute paths from constants to reduce confusion
     public final GenericHID driverController = new GenericHID(Driver.port);
@@ -833,15 +835,17 @@ SHARK IN THE TANK
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
     .whileTrue(new CoralIntakeBackwards(coralEffector));
-    new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
-    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
-    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
-    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
-    new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
-    new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
+    if (!babyMode){
+      new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
+      new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
+      new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
+      new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
         new CoralOuttake(coralEffector, .15)
     ));
+    }
+    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
+    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
   }
   
   
