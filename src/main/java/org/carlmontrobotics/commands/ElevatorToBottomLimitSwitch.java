@@ -26,6 +26,11 @@ public class ElevatorToBottomLimitSwitch extends Command {
             elevator.setMasterEncoder(elevatorOffset);
         }
         }
+
+    @Override
+    public void end(boolean interrupted) {
+        elevator.zeroPosition();
+    }
     public boolean isFinished() {
         return elevator.getBottomLimitSwitch();
     }
