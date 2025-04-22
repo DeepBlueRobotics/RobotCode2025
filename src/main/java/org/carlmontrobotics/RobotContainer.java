@@ -77,9 +77,11 @@ import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.carlmontrobotics.commands.TeleopDrive;
 
+import static org.carlmontrobotics.commands.TeleopDrive.babyMode;
+
 
 public class RobotContainer {
-    private static boolean babyMode = true;
+    //private static boolean babyMode = true;
     
     // 1. using GenericHID allows us to use different kinds of controllers
     // 2. Use absolute paths from constants to reduce confusion
