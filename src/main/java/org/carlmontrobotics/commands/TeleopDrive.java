@@ -59,7 +59,7 @@ public class TeleopDrive extends Command {
     double[] speeds = getRequestedSpeeds();
     // SmartDashboard.putNumber("Elapsed time", currentTime - prevTimestamp);
     prevTimestamp = currentTime;
-    babyMode = SmartDashboard.getBoolean("babymode", false);
+    babyMode = SmartDashboard.getBoolean("babymode", true);
     // kSlowDriveRotation = SmartDashboard.getNumber("slow turn const", kSlowDriveRotation);
     // kSlowDriveSpeed = SmartDashboard.getNumber("slow speed const", kSlowDriveSpeed);
     // kNormalDriveRotation = SmartDashboard.getNumber("normal turn const", kNormalDriveRotation);
