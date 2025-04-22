@@ -113,7 +113,7 @@ public final class Constants {
 		}
 
 		public static final double elevatorTolerance = 0.02;
-
+		public static final double elevatorOffset = 0.05; 
 
 	}// Tolerance
 	

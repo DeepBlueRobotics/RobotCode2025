@@ -73,7 +73,7 @@ public class Elevator extends SubsystemBase {
   private RelativeEncoder followerEncoder;
   // Limit Switches
   // private DigitalInput topLimitSwitch; no upper limit switch
-  private DigitalInput bottomLimitSwitch;
+  private DigitalInput bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
   private double maxVelocityMetersPerSecond = 5;
   //Vars
   private double heightGoal=0;
@@ -293,6 +293,13 @@ public class Elevator extends SubsystemBase {
    */
   public void zeroPosition() {
     masterEncoder.setPosition(0);
+  }
+
+  public boolean getBottomLimitSwitch(){
+    return bottomLimitSwitch.get();
+  }
+  public void setMasterEncoder(double pos) {
+    masterEncoder.setPosition(pos);
   }
   /**
    * Safety method make sure the elevator did not go crazy

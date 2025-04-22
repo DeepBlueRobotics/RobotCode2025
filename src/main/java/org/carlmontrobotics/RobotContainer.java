@@ -75,7 +75,6 @@ import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
 import static org.carlmontrobotics.Constants.OI.Driver.*;
 import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import org.carlmontrobotics.commands.TeleopDrive;
 
 import static org.carlmontrobotics.commands.TeleopDrive.babyMode;
 
@@ -780,6 +779,12 @@ SHARK IN THE TANK
 SHARK IN THE TANK
  */
 
+/* deep blue is sus? Sabotage
+   deep blue is sus? Sabotage
+   deep blue is... do do do do do do do, do-do-do, Sabotage!
+   (apperently actual official cheer? ¯\_( ͡°_ʖ ͡°)_/¯)
+*/
+
        /* autoChooser.addOption("forward4sec+autoalign+l4+Left", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4,3),
           new MoveToLeftBranch(drivetrain, limelight),
@@ -846,7 +851,7 @@ SHARK IN THE TANK
         new CoralOuttake(coralEffector, .15)
     ));
     }
-    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
+    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
     new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
   }
   
