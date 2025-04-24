@@ -54,6 +54,7 @@ public final class Constants {
 		public static final int followerPort = 21; // inverted
 		//public static final int elevatorTopLimitSwitchPort = 1;
 		public static final int elevatorBottomLimitSwitchPort = 9;
+		public static final int bottomLimitSwitchTriggerPoint = 0; // TODO: figure out the value
 		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
 
 		// Config

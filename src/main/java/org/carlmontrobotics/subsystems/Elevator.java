@@ -50,6 +50,7 @@ import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -73,7 +74,7 @@ public class Elevator extends SubsystemBase {
   private RelativeEncoder followerEncoder;
   // Limit Switches
   // private DigitalInput topLimitSwitch; no upper limit switch
-  private DigitalInput bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
+  private AnalogInput bottomLimitSwitch = new AnalogInput(elevatorBottomLimitSwitchPort);
   private double maxVelocityMetersPerSecond = 5;
   //Vars
   private double heightGoal=0;
@@ -131,7 +132,7 @@ public class Elevator extends SubsystemBase {
     configureMotors();
     //Calibration
     // topLimitSwitch = new DigitalInput(elevatorTopLimitSwitchPort);
-   bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
+   //bottomLimitSwitch = new DigitalInput(elevatorBottomLimitSwitchPort);
     // timer = new Timer();
     // timer.start();
     //SmartDashboard.putBoolean("Is Unsafe", false);
@@ -296,7 +297,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean getBottomLimitSwitch(){
-    return bottomLimitSwitch.get();
+    return bottomLimitSwitch.getVoltage() > bottomLimitSwitchTriggerPoint;
   }
   public void setMasterEncoder(double pos) {
     masterEncoder.setPosition(pos);
