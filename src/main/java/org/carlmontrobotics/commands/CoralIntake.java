@@ -15,11 +15,13 @@ public class CoralIntake extends Command {
     // Timer coralInTimer = new Timer();
     public static double coralMotorPosition;
     private CoralEffector coralEffector;
+    private boolean enableAutoIntake = true;
 
     public CoralIntake(CoralEffector coralEffector) {
         // Use addRequirements() here to declare subsystem dependencies.
         // addRequirements(this.CoralEffector = CoralEffector);
         addRequirements(this.coralEffector = coralEffector);
+
     }
 
     // Called when the command is initially scheduled.
@@ -56,29 +58,39 @@ public class CoralIntake extends Command {
         //SmartDashboard.putNumber("timer", timer.get());
         // SmartDashboard.getBoolean("outtakeGet", coralIn);
 
-        if (!coralEffector.distanceSensorSeesCoral() && coralEffector.coralIn){
-            coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
-        }
-        else if (coralEffector.distanceSensorSeesCoral()){
-            coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
-            coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
-            coralEffector.coralIn = true;
-        }
+        // if (!coralEffector.distanceSensorSeesCoral() && coralEffector.coralIn){
+        //     coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
+        // }
+        // else if (coralEffector.distanceSensorSeesCoral()){
+        //     coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+        //     coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
+        //     coralEffector.coralIn = true;
+        // }
         // else if (coralEffector.limitSwitchSeesCoral()){
         //     coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
         // }
+        if (coralEffector.distanceSensorSeesCoral() /*&& !coralEffector.limitSwitchSeesCoral()*/) {
+            coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+            coralMotorPosition = coralEffector.getEncoderPos(); // mark the position in rotations
+            coralEffector.coralIn = true;}
+        // } else if (!coralEffector.distanceSensorSeesCoral() && coralEffector.coralIn == false   /*&& coralEffector.limitSwitchSeesCoral()*/) {
+        //     coralEffector.setMotorSpeed(0);
+        // }
+         else {
+            coralEffector.setMotorSpeed(0);
+        }
+        enableAutoIntake = SmartDashboard.getBoolean("Enable Auto Coral Intake?", true);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        // coralEffector.setMotorSpeed(0);
+        coralEffector.setMotorSpeed(0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        // return coralEffector.motorAtGoal() || timer.get() > INTAKE_TIME_OUT;
-        return false;
+    return !enableAutoIntake;//return !coralEffector.distanceSensorSeesCoral() /*&& coralEffector.limitSwitchSeesCoral()*/;
     }
 }

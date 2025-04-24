@@ -823,8 +823,8 @@ SHARK IN THE TANK
       () -> ProcessedAxisValue(driverController, Axis.kLeftX),
       () -> ProcessedAxisValue(driverController, Axis.kRightX),
       () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
-      SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
-    SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
+    //   SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
+    // SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
   }
 
   private void setBindingsManipulator() {
@@ -834,15 +834,17 @@ SHARK IN THE TANK
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
     axisTrigger(manipulatorController, Axis.kRightTrigger)
-    .whileTrue(new CoralFastOutake(coralEffector));
-    //.whileFalse(new CoralIntake(coralEffector));
+    .whileTrue(new CoralFastOutake(coralEffector))
+    .whileFalse(new CoralIntake(coralEffector));
     // axisTrigger(manipulatorController, Axis.kLeftTrigger)
     // .whileTrue(new CoralOuttake(coralEffector));
     new JoystickButton(manipulatorController, Button.kRightBumper.value)
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
     .whileTrue(new CoralIntakeBackwards(coralEffector));
-    if (!babyMode){
+    //NOTE: only works if baby mode is on at code startup and is not renabled without power cycle/redoployment
+    //TODO: fix it
+    if (!babyMode){ 
       new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
       new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
       new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
