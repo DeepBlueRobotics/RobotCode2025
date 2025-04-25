@@ -65,6 +65,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
 import static org.carlmontrobotics.Constants.Elevatorc.l1;
 import static org.carlmontrobotics.Constants.Elevatorc.l2;
 import static org.carlmontrobotics.Constants.Elevatorc.l3;
@@ -167,7 +168,6 @@ public class RobotContainer {
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
-
         // SmartDashboard.putData("align right", new MoveToRightBranch(drivetrain, limelight));
         // SmartDashboard.putData("align left", new MoveToLeftBranch(drivetrain, limelight));
     }
@@ -197,10 +197,10 @@ public class RobotContainer {
 
 
         //TODO test new align code!
-        new POVButton(driverController, 90).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
-        driverRumble));
-        new POVButton(driverController, 270).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with left branch
-        driverRumble));
+        // new POVButton(driverController, 90).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
+        // driverRumble));
+        // new POVButton(driverController, 270).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with left branch
+        // driverRumble));
         
         //TODO test rotation, need to tune pid for that
         // new POVButton(driverController, 0)
@@ -836,24 +836,24 @@ SHARK IN THE TANK
     //   .whileFalse(new CoralIntake(coralEffector));P
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
-    axisTrigger(manipulatorController, Axis.kRightTrigger)
-    .whileTrue(new CoralFastOutake(coralEffector))
-    .whileFalse(new CoralIntake(coralEffector));
-    // axisTrigger(manipulatorController, Axis.kLeftTrigger)
+    
+    // axisTrigger(manipulatorController, Axis.kLeftTigger)
     // .whileTrue(new CoralOuttake(coralEffector));
     new JoystickButton(manipulatorController, Button.kRightBumper.value)
+    .whileFalse(new CoralIntake(coralEffector))
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
     .whileTrue(new CoralIntakeBackwards(coralEffector));
-    //if (!babyMode){ 
-      new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ConditionalCommand(null , new ElevatorToPos(elevator, l3), babyModeSupplier));
-      new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ConditionalCommand(null, new ElevatorToPos(elevator, l4), babyModeSupplier));
-      new POVButton(manipulatorController, 180).onTrue(new ConditionalCommand(null, new ElevatorToPos(elevator, testl4), babyModeSupplier));
-      new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(null, new ParallelCommandGroup(
+    if (!babyMode){ 
+      new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
+      new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
+      new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-        new CoralOuttake(coralEffector, .15)), babyModeSupplier
-    ));
-    //}
+        new CoralOuttake(coralEffector, .15)));
+    axisTrigger(manipulatorController, Axis.kRightTrigger)
+    .whileTrue(new CoralFastOutake(coralEffector));
+    }
+    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
     new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
   }

@@ -75,7 +75,7 @@ public class Elevator extends SubsystemBase {
   // Limit Switches
   // private DigitalInput topLimitSwitch; no upper limit switch
   private AnalogInput bottomLimitSwitch = new AnalogInput(elevatorBottomLimitSwitchPort);
-  private double maxVelocityMetersPerSecond = 5;
+  private double maxVelocityMetersPerSecond = 5;            
   //Vars
   private double heightGoal=0;
   private int elevatorState;
@@ -89,6 +89,7 @@ public class Elevator extends SubsystemBase {
   private double currTime;
   private double lastElevPos;
   private double lastElevVel;
+
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
   private final MutVoltage m_appliedVoltage = Volts.mutable(0);//AH: its a holder, not a number.
   //Volts.mutable(0);
@@ -297,7 +298,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean getBottomLimitSwitch(){
-    return bottomLimitSwitch.getVoltage() > bottomLimitSwitchTriggerPoint;
+    return bottomLimitSwitch.getValue() < bottomLimitSwitchTriggerPoint;
   }
   public void setMasterEncoder(double pos) {
     masterEncoder.setPosition(pos);
@@ -344,7 +345,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+    SmartDashboard.putNumber("bottom switch", bottomLimitSwitch.getValue());
     // if (elevatorAtMax()){
     //   SmartDashboard.putString("ElevatorState", "🔴STOP🔴");
     // }
@@ -373,5 +374,9 @@ public class Elevator extends SubsystemBase {
       masterMotor.set(0); 
      // System.err.println("Bad Bad nightmare bad. Elevator unsafe");
     }
+    if (getBottomLimitSwitch()) {
+      zeroPosition();
+    }
+  
   }
 }

@@ -27,7 +27,7 @@ public class CoralIntakeManual extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+    coralEffector.setMotorSpeed(0.07);
     coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
   } 
 

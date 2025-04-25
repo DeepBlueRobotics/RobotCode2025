@@ -53,8 +53,8 @@ public final class Constants {
 		public static final int masterPort = 20;
 		public static final int followerPort = 21; // inverted
 		//public static final int elevatorTopLimitSwitchPort = 1;
-		public static final int elevatorBottomLimitSwitchPort = 9;
-		public static final int bottomLimitSwitchTriggerPoint = 0; // TODO: figure out the value
+		public static final int elevatorBottomLimitSwitchPort = 0;
+		public static final int bottomLimitSwitchTriggerPoint = 10;// TODO: figure out the value
 		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
 
 		// Config
@@ -405,7 +405,7 @@ public final class Constants {
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
         public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
-        public final static double INPUT_FAST_SPEED = 0.07; 
+        public final static double INPUT_FAST_SPEED =0.045; 
 		public final static double INTAKE_BACKWARDS_SPEED = -0.06; 
         public final static double INPUT_SLOW_SPEED = 0.02; 
         public final static double OUTPUT_SPEED = 0.4; 
