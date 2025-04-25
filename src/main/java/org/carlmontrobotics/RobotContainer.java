@@ -53,6 +53,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -77,6 +78,8 @@ import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import static org.carlmontrobotics.commands.TeleopDrive.babyMode;
+import static org.carlmontrobotics.commands.TeleopDrive.babyModeSupplier;
+
 
 
 public class RobotContainer {
@@ -842,17 +845,15 @@ SHARK IN THE TANK
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
     .whileTrue(new CoralIntakeBackwards(coralEffector));
-    //NOTE: only works if baby mode is on at code startup and is not renabled without power cycle/redoployment
-    //TODO: fix it
-    if (!babyMode){ 
-      new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
-      new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
-      new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
-      new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
+    //if (!babyMode){ 
+      new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ConditionalCommand(null , new ElevatorToPos(elevator, l3), babyModeSupplier));
+      new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ConditionalCommand(null, new ElevatorToPos(elevator, l4), babyModeSupplier));
+      new POVButton(manipulatorController, 180).onTrue(new ConditionalCommand(null, new ElevatorToPos(elevator, testl4), babyModeSupplier));
+      new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(null, new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-        new CoralOuttake(coralEffector, .15)
+        new CoralOuttake(coralEffector, .15)), babyModeSupplier
     ));
-    }
+    //}
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
     new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
   }

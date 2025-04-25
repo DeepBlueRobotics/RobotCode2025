@@ -29,6 +29,8 @@ public class TeleopDrive extends Command {
   private double currentStrafeVel = 0;
   private double prevTimestamp;
   public static boolean babyMode;
+  public static BooleanSupplier babyModeSupplier;
+
   /**
    * Creates a new TeleopDrive.
    */
@@ -69,6 +71,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("strafe", speeds[1]);
     // SmartDashboard.putNumber("turn", speeds[2]);
     drivetrain.drive(speeds[0], speeds[1], speeds[2]);
+    babyModeSupplier = () -> babyMode;
   }
 
   public double[] getRequestedSpeeds() {
