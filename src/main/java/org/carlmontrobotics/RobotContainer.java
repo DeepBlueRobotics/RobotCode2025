@@ -845,17 +845,18 @@ SHARK IN THE TANK
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
     .whileTrue(new CoralIntakeBackwards(coralEffector));
     if (!babyMode){ 
-      new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
-      new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
-      new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
-        new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-        new CoralOuttake(coralEffector, .15)));
+
     axisTrigger(manipulatorController, Axis.kRightTrigger)
     .whileTrue(new CoralFastOutake(coralEffector));
     }
     new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
-    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));     
+    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2)); 
+    new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
+    new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
+    new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
+      new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
+      new CoralOuttake(coralEffector, .15)));    
   }
   
   

@@ -88,7 +88,7 @@ public class MoveToLeftBranch extends Command {
     }
   
   else {
-    dt.drive(0.0000001, 0, 0);
+    dt.drive(0, 0, 0);
     }
   }
 
@@ -96,7 +96,7 @@ public class MoveToLeftBranch extends Command {
   @Override
   public void end(boolean interrupted) {
     dt.setFieldOriented(originalFieldOrientation);
-     dt.drive(0.0001,0,0);
+     dt.drive(0,0,0);
     
     SmartDashboard.putString("I CANT BREATHE","I CANT BREATHE");
   }

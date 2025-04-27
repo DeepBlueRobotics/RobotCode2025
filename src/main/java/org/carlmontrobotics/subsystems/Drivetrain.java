@@ -627,7 +627,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void stop() {
         for (SwerveModule module : modules)
-            module.move(0.000000000000000000000000000000000000000000001, 0);
+            module.move(0, 0);
     }
 
     public boolean isStopped() {
@@ -1181,7 +1181,7 @@ public class Drivetrain extends SubsystemBase {
     public void keepRotateMotorsAtDegrees(int angle) {
         for (SwerveModule module : modules) {
             module.turnPeriodic();
-            module.move(0.0000000000001, angle);
+            module.move(0, angle);
         }
     }
 

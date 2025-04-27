@@ -30,7 +30,7 @@ public class WaitUntilAtAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    dt.drive(0.001, 0, 0);
+    dt.drive(0, 0, 0);
   }
 
   // Called once the command ends or is interrupted.
