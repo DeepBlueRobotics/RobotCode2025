@@ -29,7 +29,7 @@ public class TeleopDrive extends Command {
   private double currentStrafeVel = 0;
   private double prevTimestamp;
   public static boolean babyMode = false;
-  public static BooleanSupplier babyModeSupplier;
+  public static BooleanSupplier babyModeSupplier = () -> false;
 
   /**
    * Creates a new TeleopDrive.
