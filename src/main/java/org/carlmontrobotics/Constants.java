@@ -360,7 +360,7 @@ public final class Constants {
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH+Units.inchesToMeters(1);
 
-		public static final double areaPercentageGoal = 0; //TODO figure this out por favor
+		public static final double areaPercentageGoal = 8.4; //TODO figure this out por favor
 		public static final double areaTolerance = 0.1; //TODO needs to get tuned
 		public static final double strafeTolerance = 0.02;
 

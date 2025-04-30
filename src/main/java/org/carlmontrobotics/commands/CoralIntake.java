@@ -69,19 +69,19 @@ public class CoralIntake extends Command {
         // else if (coralEffector.limitSwitchSeesCoral()){
         //     coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
         // }
-        if (coralEffector.distanceSensorSeesCoral() /*&& !coralEffector.limitSwitchSeesCoral()*/) {
+        if (coralEffector.distanceSensorSeesCoral() && !coralEffector.limitSwitchSeesCoral()) {
             coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); // mark the position in rotations
-            coralEffector.coralIn = true;}
-        // } else if (!coralEffector.distanceSensorSeesCoral() && coralEffector.coralIn == false   /*&& coralEffector.limitSwitchSeesCoral()*/) {
-        //     coralEffector.setMotorSpeed(0);
-        // }
-         else {
+            coralEffector.coralIn = true;
+        }
+        else if (coralEffector.distanceSensorSeesCoral() /*&& coralEffector.coralIn == false&*/ && coralEffector.limitSwitchSeesCoral()) {
+            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
+        }
+        else {
             coralEffector.setMotorSpeed(0);
         }
         enableAutoIntake = SmartDashboard.getBoolean("Enable Auto Coral Intake?", true);
     }
-
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
@@ -91,6 +91,6 @@ public class CoralIntake extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-    return !enableAutoIntake;//return !coralEffector.distanceSensorSeesCoral() /*&& coralEffector.limitSwitchSeesCoral()*/;
+    return !enableAutoIntake || !coralEffector.distanceSensorSeesCoral() && coralEffector.limitSwitchSeesCoral();
     }
 }

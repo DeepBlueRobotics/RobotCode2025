@@ -197,10 +197,10 @@ public class RobotContainer {
 
 
         //TODO test new align code!
-        // new POVButton(driverController, 90).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
-        // driverRumble));
-        // new POVButton(driverController, 270).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with left branch
-        // driverRumble));
+        new POVButton(driverController, 90).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
+        driverRumble));
+        new POVButton(driverController, 270).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with left branch
+        driverRumble));
         
         //TODO test rotation, need to tune pid for that
         // new POVButton(driverController, 0)

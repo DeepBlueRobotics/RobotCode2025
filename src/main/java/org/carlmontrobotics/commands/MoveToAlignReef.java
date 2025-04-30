@@ -57,6 +57,8 @@ public class MoveToAlignReef extends Command {
     forwardClamp = .35; //TODO figure this one out
     strafeSpeedMultiplier = 6;//TODO tune it better
     forwardSpeedMultiplier = 6;//TODO figure this out
+    didntseetime = new Timer();
+    timeoutTimer = new Timer();
   }
 
   // Called when the command is initially scheduled.
@@ -80,15 +82,15 @@ public class MoveToAlignReef extends Command {
         SmartDashboard.putNumber("CurrentPercentage", LimelightHelpers.getTA(REEF_LL)); //To figure out goal
         didntseetime.reset();
         //figure out errors
-        forwardErr = LimelightHelpers.getTA(REEF_LL) - areaPercentageGoal;
+        forwardErr = - LimelightHelpers.getTA(REEF_LL) + areaPercentageGoal;
         strafeErr = getStrafeErrorMeters();
         //find speeds
         double strafeSpeed = MathUtil.clamp(strafeErr*strafeSpeedMultiplier, -strafeClamp, strafeClamp);
-        double forwardSpeed = MathUtil.clamp(forwardErr*forwardSpeedMultiplier, -forwardClamp, forwardClamp);
+        double forwardSpeed = MathUtil.clamp(forwardErr*forwardSpeedMultiplier, 0, forwardClamp);
         dt.drive(forwardSpeed, strafeSpeed, 0);
       }
       else {
-        rumbleController.setRumble(RumbleType.kBothRumble, 1.0);
+        rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
         SmartDashboard.putBoolean("SeeTag", false);
         dt.drive(0, 0.14 * (rightBranch ? 0 : 1), 0);
       }
@@ -104,6 +106,7 @@ public class MoveToAlignReef extends Command {
   public void end(boolean interrupted) {
     dt.setFieldOriented(originalFieldOrientation);
     dt.drive(0,0,0);
+    rumbleController.setRumble(RumbleType.kBothRumble, 0);
   }
 
   // Returns true when the command should end.
