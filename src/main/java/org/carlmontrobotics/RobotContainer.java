@@ -170,6 +170,50 @@ public class RobotContainer {
         setBindingsManipulator();
         // SmartDashboard.putData("align right", new MoveToRightBranch(drivetrain, limelight));
         // SmartDashboard.putData("align left", new MoveToLeftBranch(drivetrain, limelight));
+        SmartDashboard.putData("Battery testing go vroooom", new SequentialCommandGroup(
+            // Right L2 then reset
+            new LastResortAuto(drivetrain, 0, 1, 2.5),
+            new MoveToRightBranch(drivetrain, limelight, elevator),
+            new ElevatorToPos(elevator, l2),
+            new ElevatorToPos(elevator, l1),
+            new LastResortAuto(drivetrain, 0, 1, -2.5),
+            new WaitCommand(1),
+            // Right L3 then reset
+            new LastResortAuto(drivetrain, 0, 1, 2.5),
+            new MoveToRightBranch(drivetrain, limelight, elevator),
+            new ElevatorToPos(elevator, l3),
+            new ElevatorToPos(elevator, l1),
+            new LastResortAuto(drivetrain, 0, 1, -2.5),
+            new WaitCommand(1),
+            // Right L4 then reset
+            new LastResortAuto(drivetrain, 0, 1, 2.5),
+            new MoveToRightBranch(drivetrain, limelight, elevator),
+            new ElevatorToPos(elevator, l4),
+            new ElevatorToPos(elevator, l1),
+            new LastResortAuto(drivetrain, 0, 1, -2.5),
+            new WaitCommand(1),
+            // Left L2 then reset
+            new LastResortAuto(drivetrain, 0, 1, 2.5),
+            new MoveToLeftBranch(drivetrain, limelight, elevator),
+            new ElevatorToPos(elevator, l2),
+            new ElevatorToPos(elevator, l1),
+            new LastResortAuto(drivetrain, 0, 1, -2.5),
+            new WaitCommand(1),
+            // Left L3 then reset
+            new LastResortAuto(drivetrain, 0, 1, 2.5),
+            new MoveToLeftBranch(drivetrain, limelight, elevator),
+            new ElevatorToPos(elevator, l3),
+            new ElevatorToPos(elevator, l1),
+            new LastResortAuto(drivetrain, 0, 1, -2.5),
+            new WaitCommand(1),
+            // Left L4 then final back
+            new LastResortAuto(drivetrain, 0, 1, 2.5),
+            new MoveToLeftBranch(drivetrain, limelight, elevator),
+            new ElevatorToPos(elevator, l4),
+            new ElevatorToPos(elevator, l1),
+            new LastResortAuto(drivetrain, 0, 1, -2.5),
+            new WaitCommand(1)
+        ));
     }
    
    
