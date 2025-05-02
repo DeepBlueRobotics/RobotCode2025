@@ -22,7 +22,7 @@ public class Flush extends Command {
 
   private Timer timer = new Timer();
 
-  double currentWidth;
+  double intialWidth;
   int direction;
   double initialHeading;
   double degreesOff;
@@ -40,13 +40,13 @@ public class Flush extends Command {
     timer.stop();
     originalOrientation = dt.getFieldOriented();
     dt.setFieldOriented(false);
-    currentWidth = ll.getAprilWidth(REEF_LL) / ll.getAprilHeight(REEF_LL);
-    degreesOff = Math.acos(currentWidth/desiredWidth);
+    intialWidth = ll.getAprilWidth(REEF_LL) / ll.getAprilHeight(REEF_LL);
+    degreesOff = Math.acos(intialWidth/desiredWidth);
     initialHeading = dt.getRawHeading();
     distanceToTag = LimelightHelpers.getBotPose3d(REEF_LL).getZ();
     direction = 1;
-
     dt.drive(0.00000001, 0, 2*direction);
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -57,15 +57,15 @@ public class Flush extends Command {
     double counterClockwiseGoal = initialHeading - degreesOff;
     double clockwiseGoal = initialHeading + degreesOff;
 
-    if (direction < 0 && Math.abs(currentHeading - counterClockwiseGoal) < .1) {
-      timer.start();
-      dt.drive(Math.cos(degreesOff)*distanceToTag, Math.sin(degreesOff) * distanceToTag, 0);
-    } 
-    else if (direction > 0 && Math.abs(currentHeading - clockwiseGoal) < .1) {
-      timer.start();
-      dt.drive(Math.cos(degreesOff)*distanceToTag, -Math.sin(degreesOff) * distanceToTag, 0);
-    } 
-    else if ((ll.getAprilWidth(REEF_LL) / ll.getAprilHeight(REEF_LL)) < currentWidth) {
+    // if (direction < 0 && Math.abs(currentHeading - counterClockwiseGoal) < .1) {
+    //   timer.start();
+    //   dt.drive(Math.cos(degreesOff)*distanceToTag, Math.sin(degreesOff) * distanceToTag, 0);
+    // } 
+    // else if (direction > 0 && Math.abs(currentHeading - clockwiseGoal) < .1) {
+    //   timer.start();
+    //   dt.drive(Math.cos(degreesOff)*distanceToTag, -Math.sin(degreesOff) * distanceToTag, 0);
+    // } 
+    if ((ll.getAprilWidth(REEF_LL) / ll.getAprilHeight(REEF_LL)) < intialWidth) {
       direction = -1;
       dt.drive(0.0000001,0,2*direction);
     }
@@ -81,6 +81,10 @@ public class Flush extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > 1;
+    return timer.get() > 2 || 
+    Math.abs(
+      desiredWidth-(ll.getAprilWidth(REEF_LL) / ll.getAprilHeight(REEF_LL))
+    )
+       < 0.1;
   }
 }
