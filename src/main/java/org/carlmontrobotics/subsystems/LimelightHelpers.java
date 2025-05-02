@@ -988,7 +988,14 @@ public class LimelightHelpers {
     public static double[] getT2DArray(String limelightName) {
         return getLimelightNTDoubleArray(limelightName, "t2d");
     }
+
+    public static double getThor(String limelightName) {
+        return getT2DArray(limelightName)[15];
+    }
     
+    public static double getTvert(String limelightName) {
+        return getT2DArray(limelightName)[16];
+    }
     /**
      * Gets the number of targets currently detected.
      * @param limelightName Name of the Limelight camera

@@ -68,6 +68,14 @@ public class Limelight extends SubsystemBase {
     return Math.hypot(x, z);
   }
 
+  public double getAprilWidth (String name) {
+    return LimelightHelpers.getThor(name);
+  }
+
+  public double getAprilHeight (String name) {
+    return LimelightHelpers.getTvert(name);
+  }
+
   //TODO: TEST WHICH ONE IS MORE ACCURATE
 
   public double getRotateAngleRadMT2(String limelightName) {
