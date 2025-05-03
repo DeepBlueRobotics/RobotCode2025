@@ -54,9 +54,9 @@ public class MoveToAlignReef extends Command {
     this.ll = ll;
     this.rightBranch = rightBranch;
     strafeClamp = .35;
-    forwardClamp = .35; //TODO figure this one out
-    strafeSpeedMultiplier = 6;//TODO tune it better
-    forwardSpeedMultiplier = 6;//TODO figure this out
+    forwardClamp = 1.5; //TODO figure this one out
+    strafeSpeedMultiplier = 5;//TODO tune it better
+    forwardSpeedMultiplier = 0.3;//TODO figure this out
     didntseetime = new Timer();
     timeoutTimer = new Timer();
   }

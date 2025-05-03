@@ -915,6 +915,8 @@ SHARK IN THE TANK
     // System.out.println("running getAutounmousCommand");
     // //return cmd;
     // return autoChooser.getSelected();
+    return new LastResortAuto(drivetrain, 1, 1, 4);
+    /*
     return  new SequentialCommandGroup(
         new LastResortAuto(drivetrain, 1, 1, 4),  
         new MoveToRightBranch(drivetrain, limelight, elevator),
@@ -925,6 +927,7 @@ SHARK IN THE TANK
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
             ),
         new ElevatorToPos(elevator, Elevatorc.downPos));    
+        */
 
   }
 
