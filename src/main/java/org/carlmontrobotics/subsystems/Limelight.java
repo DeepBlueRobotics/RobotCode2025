@@ -76,6 +76,10 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getTvert(name);
   }
 
+  public double getTX(String name) {
+    return LimelightHelpers.getTX(name);
+  }
+
   //TODO: TEST WHICH ONE IS MORE ACCURATE
 
   public double getRotateAngleRadMT2(String limelightName) {
