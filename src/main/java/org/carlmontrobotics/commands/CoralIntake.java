@@ -75,7 +75,7 @@ public class CoralIntake extends Command {
             coralEffector.coralIn = true;
         }
         else if (coralEffector.distanceSensorSeesCoral() /*&& coralEffector.coralIn == false&*/ && coralEffector.limitSwitchSeesCoral()) {
-            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
+            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED); 
         }
         else {
             coralEffector.setMotorSpeed(0);
@@ -88,9 +88,9 @@ public class CoralIntake extends Command {
         coralEffector.setMotorSpeed(0);
     }
 
-    // Returns true when the command should end.
+    // Returns true when the command should end.a
     @Override
     public boolean isFinished() {
-    return !enableAutoIntake || !coralEffector.distanceSensorSeesCoral() && coralEffector.limitSwitchSeesCoral();
+    return !enableAutoIntake; //|| !coralEffector.distanceSensorSeesCoral() && coralEffector.limitSwitchSeesCoral();
     }
 }

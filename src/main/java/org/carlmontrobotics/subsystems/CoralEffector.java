@@ -27,6 +27,8 @@ import static org.carlmontrobotics.Constants.*;
 
 import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -96,8 +98,12 @@ public class CoralEffector extends SubsystemBase {
    * Checks if sees coral, generally meaning that don't lift elevator as the coral is to deep inside the elevator
    * @return if coral is seen by distance sensor
    */
-  public  boolean distanceSensorSeesCoral(){
+  public boolean distanceSensorSeesCoral(){
     return distanceSensor.getRange() < CORAL_DISTANCE_SENSOR_DISTANCE;
+  }
+
+  public BooleanSupplier distanceSensorSeesCoralSupplier(){
+    return () -> distanceSensorSeesCoral();
   }
 
   // public boolean coralIsIn() {
@@ -108,8 +114,9 @@ public class CoralEffector extends SubsystemBase {
   // }
 
   public boolean limitSwitchSeesCoral() {
-    return !coralLimitSwitch.get();
+    return coralLimitSwitch.get();
   }
+
 
   @Override
   public void periodic() {

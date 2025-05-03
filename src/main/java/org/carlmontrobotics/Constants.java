@@ -405,9 +405,9 @@ public final class Constants {
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
         public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
-        public final static double INPUT_FAST_SPEED =0.045; 
+        public final static double INPUT_FAST_SPEED =0.07; 
 		public final static double INTAKE_BACKWARDS_SPEED = -0.06; 
-        public final static double INPUT_SLOW_SPEED = 0.02; 
+        public final static double INPUT_SLOW_SPEED = 0.04; 
         public final static double OUTPUT_SPEED = 0.4; 
 		public final static double FAST_OUTPUT_SPEED = 0.6;
         public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0; 

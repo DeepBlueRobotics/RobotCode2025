@@ -72,6 +72,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("turn", speeds[2]);
     drivetrain.drive(speeds[0], speeds[1], speeds[2]);
     babyModeSupplier = () -> babyMode;
+    SmartDashboard.putBoolean("babysupplier", babyModeSupplier.getAsBoolean());
   }
 
   public double[] getRequestedSpeeds() {

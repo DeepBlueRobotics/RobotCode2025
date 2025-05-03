@@ -130,6 +130,7 @@ public class RobotContainer {
      
          public RobotContainer() {
              {
+                SmartDashboard.putData("intake", new CoralIntake(coralEffector));
                  // Put any configuration overrides to the dashboard and the terminal
                  // SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
                  // SmartDashboard.putData(drivetrain);
@@ -885,6 +886,7 @@ SHARK IN THE TANK
     // .whileTrue(new CoralOuttake(coralEffector));
     new JoystickButton(manipulatorController, Button.kRightBumper.value)
     .whileFalse(new CoralIntake(coralEffector))
+    //.whileFalse(new ConditionalCommand(coralEffector.setMotorSpeed(0.1), new InstantCommand(), coralEffector.distanceSensorSeesCoralSupplier()))
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
     .whileTrue(new CoralIntakeBackwards(coralEffector));
