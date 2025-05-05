@@ -123,10 +123,19 @@ public class AlgaeEffector extends SubsystemBase {
     }
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
-        armMotorConfig.closedLoop.pid(armkP, armkI , armkD).maxMotion.maxVelocity(armMaxVelocityDegreesPerSecond).maxAcceleration(1000);
+        armMotorConfig.closedLoop.pid(armkP, armkI , armkD).maxMotion.maxVelocity(armMaxVelocityDegreesPerSecond).maxAcceleration(100);
         armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
        
     }
+    //TrapezoidProfile components
+    private double armGoalVelocity = 0;
+    private final double dT = 0.02; // 20ms
+    private TrapezoidProfile.Constraints armTrapConstraints = new TrapezoidProfile.Constraints(armMaxVelocityDegreesPerSecond, 100); 
+    private TrapezoidProfile.State currentArmTrapState = new TrapezoidProfile.State(getArmPos(), getArmVel());
+    
+    private TrapezoidProfile.State goalArmTrapState = new TrapezoidProfile.State(armGoal, armGoalVelocity);
+    private TrapezoidProfile armTrapProfile = new TrapezoidProfile(armTrapConstraints);
+    private TrapezoidProfile.State nextPoint;
     
     
 
@@ -199,6 +208,21 @@ public class AlgaeEffector extends SubsystemBase {
 
         }
         
+    }
+    //move arm to position using TrapezoidProfile
+    public void setArmTrapPosition(double targetPos){ //run this method in periodic()
+        armGoal = targetPos;
+        double clampedArmGoal = getArmClampedGoal(armGoal); //This takes in the inputted armgoal that was set to targetPos and clamps it so that it can't be outside the safe range
+
+        if (armMotor != null) {
+            currentArmTrapState = new TrapezoidProfile.State(getArmPos(), getArmVel()); //sets the current state of the arm to its current position and velocity
+            goalArmTrapState = new TrapezoidProfile.State(clampedArmGoal, armGoalVelocity); //sets the goal state of the arm to its goal angle and velocity
+            nextPoint = armTrapProfile.calculate(dT, currentArmTrapState, goalArmTrapState); //calculates the state of the arm after dT seconds when using TrapezoidProfile motion
+
+            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(nextPoint.position), Units.degreesToRadians(nextPoint.velocity));//this calculates the amount of voltage needed to move the arm
+            pidControllerArm.setReference(nextPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+
+        }
     }
     
     public boolean armAtGoal(){ //This method returns if the arm is at its goal position with the error margin as the tolerance range
