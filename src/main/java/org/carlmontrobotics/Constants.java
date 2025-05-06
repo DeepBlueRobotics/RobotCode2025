@@ -60,7 +60,7 @@ public final class Constants {
 		// Config
 		// TODO figure these parts out
 		public static final double MAX_ACCEL_RAD_P_S = 1;
-		public static final IdleMode masterIdleMode = IdleMode.kBrake; //TODO: Change back to break
+		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
 		public static final boolean masterInverted = false; 
 		public static final boolean followerInverted = true;
@@ -417,8 +417,6 @@ public final class Constants {
         public final static double INTAKE_TIME_OUT = 0.5;
         public final static double OUTTAKE_TIME_OUT = 10;
         public final static double MANUAL_INTAKE_TIME_OUT = 1;
-
-        // public final static int LIMIT_SWITCH_PORT = 7; //TODO: Change
     }
 	public static final class AlgaeEffectorc {
 
