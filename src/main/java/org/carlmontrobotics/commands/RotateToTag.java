@@ -30,7 +30,7 @@ public class RotateToTag extends Command {
   @Override
   public void execute() {
     if (limelight.seesTag(REEF_LL)) {
-      drivetrain.drive(0, 0, Units.degreesToRadians(limelight.getTX(REEF_LL)));
+      drivetrain.drive(0, 0, Units.degreesToRadians(limelight.getTX(REEF_LL))/100);
     }
   }
 
