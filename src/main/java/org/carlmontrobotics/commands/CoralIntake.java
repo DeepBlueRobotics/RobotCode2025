@@ -1,6 +1,8 @@
 package org.carlmontrobotics.commands;
 
 import static org.carlmontrobotics.Constants.CoralEffectorc.*;
+
+import org.carlmontrobotics.Constants.CoralEffectorc;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -73,15 +75,20 @@ public class CoralIntake extends Command {
             coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); // mark the position in rotations
             coralEffector.coralIn = true;
+            coralMotorPosition = coralEffector.getEncoderPos() + CoralEffectorc.CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET;
         }
         else if (coralEffector.distanceSensorSeesCoral() /*&& coralEffector.coralIn == false&*/ && coralEffector.limitSwitchSeesCoral()) {
             coralEffector.setMotorSpeed(INPUT_SLOW_SPEED); 
         }
         else {
             coralEffector.setMotorSpeed(0);
+            coralEffector.setReferencePosition(coralMotorPosition);
+
         }
         enableAutoIntake = SmartDashboard.getBoolean("Enable Auto Coral Intake?", true);
+
     }
+
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {

@@ -56,7 +56,7 @@ public class MoveToAlignReef extends Command {
     strafeClamp = .35;
     forwardClamp = 1.5; //TODO figure this one out
     strafeSpeedMultiplier = 5;//TODO tune it better
-    forwardSpeedMultiplier = 0.3;//TODO figure this out
+    forwardSpeedMultiplier = 0.2;//TODO figure this out
     didntseetime = new Timer();
     timeoutTimer = new Timer();
   }

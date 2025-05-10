@@ -120,11 +120,12 @@ public class BatteryTesting3 extends Command {
         new WaitCommand(waitTime),
         new InstantCommand(() -> drivetrain.stop()),
         new MoveToRightBranch(drivetrain, limelight, elevator),
-        new InstantCommand(() -> drivetrain.keepRotateMotorsAtDegrees(0)),
         new ElevatorToPos(elevator, level),
         new WaitCommand(waitTime),
         new ElevatorToPos(elevator, l1),
-        new InstantCommand(() -> drivetrain.drive(-speed, 0, 0)),
+        new InstantCommand(() -> {while(drivetrain.isAtAngle(0, 2)){drivetrain.drive(0,0.00001,0);}}),
+        new WaitCommand(3),
+        new InstantCommand(() -> {drivetrain.drive(-speed, 0, 0);}),
         new WaitCommand(waitTime),
         new InstantCommand(() -> drivetrain.stop()));
     new SequentialCommandGroup(
