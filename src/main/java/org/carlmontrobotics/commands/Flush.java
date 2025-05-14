@@ -44,8 +44,8 @@ public class Flush extends Command {
     //degreesOff = Math.acos(intialWidth/desiredWidth);
     //initialHeading = dt.getRawHeading();
     //distanceToTag = LimelightHelpers.getBotPose3d(REEF_LL).getZ();
-    direction = 1;
-    dt.drive(0.00000001, 0, 2*direction);
+    //direction = 1;
+    //dt.drive(0,0, 0.01);
     timer.start();
   }
 
@@ -65,9 +65,14 @@ public class Flush extends Command {
     //   timer.start();
     //   dt.drive(Math.cos(degreesOff)*distanceToTag, -Math.sin(degreesOff) * distanceToTag, 0);
     // } 
-    if ((ll.getAprilWidth(REEF_LL) / ll.getAprilHeight(REEF_LL)) < intialWidth) {
-      direction = -1;
-      dt.drive(0.0000001,0,2*direction);
+    if (ll.seesTag(REEF_LL)){
+      if ((ll.getAprilWidth(REEF_LL) / ll.getAprilHeight(REEF_LL)) < intialWidth) {
+        direction = -1;
+        dt.drive(0,0,0.02);
+      }
+      else {
+        dt.drive(0,0,-0.02);
+      }
     }
   }
 

@@ -25,6 +25,7 @@ public class CoralIntakeBackwards extends Command{
   @Override
   public void end(boolean interrupted) {
     coralEffector.setMotorSpeed(0);
+    coralEffector.setReferencePosition(coralEffector.getEncoderPos());
   }
 
   // Returns true when the command should end.

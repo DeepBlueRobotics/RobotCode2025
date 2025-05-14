@@ -84,7 +84,7 @@ import static org.carlmontrobotics.commands.TeleopDrive.babyModeSupplier;
 
 
 public class RobotContainer {
-    //private static boolean babyMode = true;
+    //private static boolean babyModeg = true;
     
     // 1. using GenericHID allows us to use different kinds of controllers
     // 2. Use absolute paths from constants to reduce confusion
@@ -192,9 +192,9 @@ public class RobotContainer {
             .onFalse(new InstantCommand(()->drivetrain.setFieldOriented(true)));
 
 
-        new JoystickButton(driverController, Driver.x)
+        new JoystickButton(driverController, 7)
             .onTrue(new MoveToLeftBranch(drivetrain, limelight, elevator));
-        new JoystickButton(driverController, Driver.b)
+        new JoystickButton(driverController, 8)
             .onTrue(new MoveToRightBranch(drivetrain, limelight, elevator));
 
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
@@ -204,17 +204,16 @@ public class RobotContainer {
             .whileTrue(new ParallelCommandGroup(
         new InstantCommand(() -> drivetrain.stop()),
         new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
+        new POVButton(driverController, 0).onTrue(new Flush(limelight, drivetrain));
 
 
-        //TODO test new align code!
-        new JoystickButton(driverController, 8).onTrue(new SequentialCommandGroup(
-            new RotateToTag(drivetrain, limelight),
+        
+        new JoystickButton(driverController, Driver.b).onTrue(
             new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
-                driverRumble)));
-        new JoystickButton(driverController, 7).onTrue(new SequentialCommandGroup(
-            new RotateToTag(drivetrain, limelight),
+                driverRumble));
+        new JoystickButton(driverController, Driver.x).onTrue(
             new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with right branch
-                driverRumble)));
+                driverRumble));
         
         //TODO test rotation, need to tune pid for that
         // new POVButton(driverController, 0)
@@ -884,11 +883,21 @@ SHARK IN THE TANK
     // System.out.println("running getAutounmousCommand");
     // //return cmd;
     // return autoChooser.getSelected();
-    return new LastResortAuto(drivetrain, 1, 1, 4);
-    /*
+    // try{
+    //     // Load the path you want to follow using its name in the GUI
+    //     PathPlannerPath path = PathPlannerPath.fromPathFile("Center Piece(1)");
+    //     System.out.println("COOL");
+    //     // Create a path following command using AutoBuilder. This will also trigger event markers.
+    //     return AutoBuilder.followPath(path);
+    // } catch (Exception e) {
+    //     DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+    //     return Commands.none();
+    // }
+    //return new LastResortAuto(drivetrain, 1, 1, 4);
+    
     return  new SequentialCommandGroup(
         new LastResortAuto(drivetrain, 1, 1, 4),  
-        new MoveToRightBranch(drivetrain, limelight, elevator),
+        new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
             new ElevatorToPos(elevator, testl4),
             new AutonCoralOuttake(coralEffector),
             new ParallelCommandGroup(
@@ -896,7 +905,7 @@ SHARK IN THE TANK
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
             ),
         new ElevatorToPos(elevator, Elevatorc.downPos));    
-        */
+        
 
   }
 

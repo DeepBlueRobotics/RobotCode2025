@@ -410,7 +410,7 @@ public final class Constants {
         public final static double INPUT_SLOW_SPEED = 0.04; 
         public final static double OUTPUT_SPEED = 0.4; 
 		public final static double FAST_OUTPUT_SPEED = 0.6;
-        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = ; 
+        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0.2 ; 
         public final static double KP = 0.1; 
         public final static double KI = 0;
         public final static double KD = 0;

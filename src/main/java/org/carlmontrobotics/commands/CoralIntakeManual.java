@@ -34,7 +34,8 @@ public class CoralIntakeManual extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
+    coralEffector.setMotorSpeed(0);
+    coralEffector.setReferencePosition(coralEffector.getEncoderPos());
   }
 
   // Returns true when the command should end.

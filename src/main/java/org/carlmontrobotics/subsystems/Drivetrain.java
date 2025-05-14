@@ -3,6 +3,7 @@
 package org.carlmontrobotics.subsystems;
 
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
+import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -353,6 +354,8 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
+        SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);

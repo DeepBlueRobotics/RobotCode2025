@@ -51,6 +51,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("normal turn const", kNormalDriveRotation);
     // SmartDashboard.putNumber("normal speed const", kNormalDriveSpeed);
     prevTimestamp = Timer.getFPGATimestamp();
+    SmartDashboard.putBoolean("babymode", false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
