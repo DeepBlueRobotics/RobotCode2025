@@ -175,9 +175,9 @@ public class RobotContainer {
         final int speed = 2;
         SmartDashboard.putData("Battery testing go vroooom", new SequentialCommandGroup(
             // Right L2 then reset
-             new BatteryTesting3(drivetrain, elevator, limelight, l2),
-             new BatteryTesting3(drivetrain, elevator, limelight, l3),
-             new BatteryTesting3(drivetrain, elevator, limelight, l4)
+             new BatteryTesting(drivetrain, elevator, limelight, l2),
+             new BatteryTesting(drivetrain, elevator, limelight, l3),
+             new BatteryTesting(drivetrain, elevator, limelight, l4)
         ));
         SmartDashboard.putData("Rotate Command",new RotateToTag(drivetrain, limelight));
     }

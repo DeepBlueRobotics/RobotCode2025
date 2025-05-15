@@ -92,7 +92,7 @@ import static org.carlmontrobotics.commands.TeleopDrive.babyModeSupplier;
 import org.carlmontrobotics.commands.MoveToRightBranch;;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class BatteryTesting3 extends Command {
+public class BatteryTesting extends Command {
   /** Creates a new BatteryTesting3. */
   private double level;
   Drivetrain drivetrain;
@@ -100,7 +100,7 @@ public class BatteryTesting3 extends Command {
   Limelight limelight;
   boolean finish = false;
 
-  public BatteryTesting3(Drivetrain drivetrain, Elevator elevator, Limelight limelight, double level) {
+  public BatteryTesting(Drivetrain drivetrain, Elevator elevator, Limelight limelight, double level) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.level = level;
     addRequirements(this.drivetrain = drivetrain, this.elevator = elevator, this.limelight = limelight);
