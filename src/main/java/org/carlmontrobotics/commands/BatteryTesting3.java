@@ -115,30 +115,36 @@ public class BatteryTesting3 extends Command {
     final int speed = 1;
 
     new SequentialCommandGroup(
-        new InstantCommand(() -> drivetrain.keepRotateMotorsAtDegrees(0)),
+        //drives up to the reef
         new InstantCommand(() -> drivetrain.drive(speed, 0, 0)),
         new WaitCommand(waitTime),
         new InstantCommand(() -> drivetrain.stop()),
+        //goes to the right branch goes to the specified level and goes back down
         new MoveToRightBranch(drivetrain, limelight, elevator),
+        new InstantCommand(() -> {
+          while (!drivetrain.isAtAngle(0, 10)) {
+            drivetrain.drive(0.0000000000001, 0, 0);
+          }},drivetrain),
         new ElevatorToPos(elevator, level),
-        new WaitCommand(waitTime),
         new ElevatorToPos(elevator, l1),
-        new InstantCommand(() -> {while(drivetrain.isAtAngle(0, 2)){drivetrain.drive(0,0.00001,0);}}),
-        new WaitCommand(3),
+        //drives back to human player station
         new InstantCommand(() -> {drivetrain.drive(-speed, 0, 0);}),
         new WaitCommand(waitTime),
         new InstantCommand(() -> drivetrain.stop()));
     new SequentialCommandGroup(
-        new InstantCommand(() -> drivetrain.keepRotateMotorsAtDegrees(0)),
+        //drives up to the reef
         new InstantCommand(() -> drivetrain.drive(speed, 0, 0)),
         new WaitCommand(waitTime),
         new InstantCommand(() -> drivetrain.stop()),
+        //goes to the left branch goes to the specified level and goes back down
         new MoveToLeftBranch(drivetrain, limelight, elevator),
+        new InstantCommand(() -> {
+          while (!drivetrain.isAtAngle(0, 10)) {
+            drivetrain.drive(0.0000000000001, 0, 0);
+          }},drivetrain),
         new ElevatorToPos(elevator, level),
-        new InstantCommand(() -> drivetrain.keepRotateMotorsAtDegrees(0)),
-        new WaitCommand(waitTime),
         new ElevatorToPos(elevator, l1),
-        new InstantCommand(() -> drivetrain.keepRotateMotorsAtDegrees(0)),
+        //drives back to human player station
         new InstantCommand(() -> drivetrain.drive(-speed, 0, 0)),
         new WaitCommand(waitTime),
         new InstantCommand(() -> drivetrain.stop()),
