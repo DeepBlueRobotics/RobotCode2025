@@ -447,7 +447,6 @@ public final class Constants {
 		public static final int LOWER_MOTOR_PORT = 33;
         public static final int PINCH_MOTOR_PORT = 3;
         public static final int ARM_MOTOR_PORT = 34;
-        public static final int ARM_MOTOR_PORT = 34;
         public static final int aChannelEnc = 0;
         public static final int bChannelEnc = 1;
 

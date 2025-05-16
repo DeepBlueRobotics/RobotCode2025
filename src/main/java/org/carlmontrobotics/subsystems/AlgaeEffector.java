@@ -109,13 +109,13 @@ public class AlgaeEffector extends SubsystemBase {
     AbsoluteEncoderConfig config = new AbsoluteEncoderConfig();
 
     //for sendable we need this stuff
-    private double armkS = kS[ARM_ARRAY_ORDER];
-    private double armkV = kV[ARM_ARRAY_ORDER];
-    private double armkA = kA[ARM_ARRAY_ORDER];
-    private double armkG = kG[ARM_ARRAY_ORDER];
-    private double armkP = Constants.kP[ARM_ARRAY_ORDER];
-    private double armkI = Constants.kI[ARM_ARRAY_ORDER];
-    private double armkD = Constants.kD[ARM_ARRAY_ORDER];
+    private double armkS = Constants.AlgaeEffectorc.armKS[ARM_ARRAY_ORDER];
+    private double armkV = Constants.AlgaeEffectorc.armKV[ARM_ARRAY_ORDER];
+    private double armkA = AlgaeEffectorc.armKA[ARM_ARRAY_ORDER];
+    private double armkG = AlgaeEffectorc.armKG[ARM_ARRAY_ORDER];
+    private double armkP = Constants.AlgaeEffectorc.armKP[ARM_ARRAY_ORDER];
+    private double armkI = Constants.AlgaeEffectorc.armKI[ARM_ARRAY_ORDER];
+    private double armkD = Constants.AlgaeEffectorc.armKD[ARM_ARRAY_ORDER];
     private ArmFeedforward armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
     private void updateFeedforward() {
         armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
@@ -158,9 +158,9 @@ public class AlgaeEffector extends SubsystemBase {
     private void configureMotors () { //This sets the settings for the motors and encoders by setting the PID values and other settings
     
         armMotorConfig.closedLoop.pid(
-            Constants.kP[ARM_ARRAY_ORDER], 
-            Constants.kI[ARM_ARRAY_ORDER],  
-            Constants.kD[ARM_ARRAY_ORDER]  
+            Constants.AlgaeEffectorc.armKP[ARM_ARRAY_ORDER], 
+            Constants.AlgaeEffectorc.armKI[ARM_ARRAY_ORDER],  
+            Constants.AlgaeEffectorc.armKD[ARM_ARRAY_ORDER]  
             ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
         
         // armMotorConfig.closedLoop.pid( //TODO: revert to this when you get PID values
