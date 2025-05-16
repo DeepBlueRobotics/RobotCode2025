@@ -22,9 +22,8 @@ public class GroundIntakeAlgae extends Command {
     //algae.setArmTarget(ARM_INTAKE_ANGLE);
     //this command is strange in that it seems to handle the arm movement by itself, but I will leave it that way until someone changes it.
 
-    algae.setTopRPM(Constants.AlgaeEffectorc.INTAKE_TOP_RPM);
-    algae.setBottomRPM(Constants.AlgaeEffectorc.INTAKE_BOTTOM_RPM);
-    algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
+    
+    //algae.setPincherRPM(Constants.AlgaeEffectorc.INTAKE_PINCHER_RPM);
   }
 
 
@@ -37,7 +36,7 @@ public class GroundIntakeAlgae extends Command {
   @Override
   public void end(boolean interrupted) {
     //algae.setArmTarget(Constants.AlgaeEffectorc.ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE);
-    algae.stopMotors();
+    //algae.stopPincherMotor();
     timer.stop();
   }
 
@@ -47,6 +46,6 @@ public class GroundIntakeAlgae extends Command {
     //TODO: make distance sensor stuff
     //TODO: add smartdashboard
     //TODO: Test different times
-    return algae.isAlgaeIntaked() || timer.get()>5; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
+    return timer.get()>5; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

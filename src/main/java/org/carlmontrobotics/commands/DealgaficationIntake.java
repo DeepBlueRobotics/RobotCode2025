@@ -20,28 +20,28 @@ public class DealgaficationIntake extends Command {
     timer.reset();
     timer.start();
 
-    algae.setTopRPM(DEALGAFY_TOP_RPM); 
-    algae.setBottomRPM(DEALGAFY_BOTTOM_RPM);
-    algae.setPincherRPM(DEALGAFY_PINCHER_RPM);
+    
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //call command arm toposition
+    
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algae.stopMotors();
+    
     timer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get()>5 || algae.isAlgaeIntaked();
+    return timer.get()>5;
     //return false; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }

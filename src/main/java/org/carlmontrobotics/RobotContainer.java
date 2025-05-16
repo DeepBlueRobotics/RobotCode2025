@@ -39,7 +39,51 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Manipulator;
+<<<<<<< HEAD
 
+=======
+import org.carlmontrobotics.commands.OuttakeAlgae;
+import org.carlmontrobotics.subsystems.AlgaeEffector;
+import org.carlmontrobotics.commands.ArmToPosition;
+import org.carlmontrobotics.commands.DealgaficationIntake;
+import org.carlmontrobotics.commands.GroundIntakeAlgae;
+
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
+
+
+import org.carlmontrobotics.subsystems.*;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+
+import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
+import org.carlmontrobotics.Constants.Elevatorc;
+import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.Constants.OI.Driver;
+import org.carlmontrobotics.Constants.OI.Manipulator;
+import org.carlmontrobotics.commands.*;
+import static org.carlmontrobotics.Constants.OI.Manipulator.*;
+
+//import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import java.util.function.BooleanSupplier;
+import com.pathplanner.lib.auto.NamedCommands;
+
+
+import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.Constants.OI.Manipulator;
+
+>>>>>>> AlgaeBranch
 //limit switch
 import edu.wpi.first.wpilibj.DigitalInput;
 //controllers
@@ -47,6 +91,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
+<<<<<<< HEAD
+=======
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.XboxController.Axis;
+>>>>>>> AlgaeBranch
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,22 +112,28 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 //control bindings
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+<<<<<<< HEAD
 import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
+=======
+>>>>>>> AlgaeBranch
 import static org.carlmontrobotics.Constants.Elevatorc.l1;
 import static org.carlmontrobotics.Constants.Elevatorc.l2;
 import static org.carlmontrobotics.Constants.Elevatorc.l3;
 import static org.carlmontrobotics.Constants.Elevatorc.l4;
+<<<<<<< HEAD
 import static org.carlmontrobotics.Constants.Elevatorc.testl4;
 import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
+=======
+>>>>>>> AlgaeBranch
 //constats
 //import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import static org.carlmontrobotics.Constants.OI.Driver.*;
 import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+<<<<<<< HEAD
 import static org.carlmontrobotics.commands.TeleopDrive.babyMode;
 import static org.carlmontrobotics.commands.TeleopDrive.babyModeSupplier;
 
@@ -112,10 +168,39 @@ public class RobotContainer {
     // private List<Command> autoCommands;
     // private SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
 
+=======
+public class RobotContainer {
+    private static boolean babyMode = false;
+
+    // 1. using GenericHID allows us to use different kinds of controllers
+    // 2. Use absolute paths from constants to reduce confusion
+    public final GenericHID driverController = new GenericHID(Driver.port);
+    public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
+    private final Drivetrain drivetrain =  new Drivetrain();
+
+
+    //private final Drivetrain drivetrain = new Drivetrain();
+
+    /* These are assumed to be equal to the AUTO ames in pathplanner */
+    /* These must be equal to the pathPlanner path names from the GUI! */
+    // Order matters - but the first one is index 1 on the physical selector - index
+    // 0 is reserved for
+    // null command.
+    // the last auto is hard-coded to go straight. since we have __3__ Autos, port 4
+    // is simplePz
+    // straight
+    // private List<Command> autoCommands;
+    // private SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
+
+>>>>>>> AlgaeBranch
     // private boolean hasSetupAutos = false;
     // private final String[] autoNames = new String[] {};
     // private final AlgaeEffector algaeEffector = new AlgaeEffector();
      private final Elevator elevator = new Elevator();
+<<<<<<< HEAD
+=======
+     private final AlgaeEffector algaeEffector = new AlgaeEffector();
+>>>>>>> AlgaeBranch
      private SendableChooser<Command> autoChooser = new SendableChooser<>();
      
      
@@ -123,14 +208,22 @@ public class RobotContainer {
        //2. Use absolute paths from constants to reduce confusion
        
        public final CoralEffector coralEffector = new CoralEffector();
+<<<<<<< HEAD
       //TODO activate arm
        //public final AlgaeEffector algaeEffector = new AlgaeEffector();
+=======
+>>>>>>> AlgaeBranch
      
        // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
      
          public RobotContainer() {
+<<<<<<< HEAD
              {
                 SmartDashboard.putData("intake", new CoralIntake(coralEffector));
+=======
+            SmartDashboard.putData(algaeEffector);
+             {
+>>>>>>> AlgaeBranch
                  // Put any configuration overrides to the dashboard and the terminal
                  // SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
                  // SmartDashboard.putData(drivetrain);
@@ -160,6 +253,7 @@ public class RobotContainer {
                  // autoSelectorTab.add(autoSelector).withSize(2, 1);
              }
      
+<<<<<<< HEAD
         RegisterAutoCommands();
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, -1, 4, 8));
@@ -234,6 +328,30 @@ public class RobotContainer {
     }
 
    
+=======
+             RegisterAutoCommands();
+             autoChooser = AutoBuilder.buildAutoChooser();
+        RegisterCustomAutos();
+         SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
+          SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
+        setDefaultCommands();
+        setBindingsDriver();
+        setBindingsManipulator();
+    }
+
+   
+
+    private void setBindingsDriver() {
+       
+      new JoystickButton(driverController, Driver.resetFieldOrientationButton)
+                .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
+    }
+
+   
+        
+    
+
+>>>>>>> AlgaeBranch
     /**
      * Flips an axis' Y coordinates upside down, but only if the select axis is a
      * joystick axis
@@ -265,6 +383,7 @@ public class RobotContainer {
      */
     
 
+<<<<<<< HEAD
     // /**
     //  * Returns zero if a axis input is inside the deadzone
     //  *
@@ -275,6 +394,18 @@ public class RobotContainer {
     // private double DeadzonedAxis(double axOut) {
     //     return (Math.abs(axOut) <= OI.JOY_THRESH) ? 0.0 : axOut;
     // }
+=======
+    /**
+     * Returns zero if a axis input is inside the deadzone
+     *
+     * @param hid  The controller/plane joystick the axis is on
+     * @param axis The processed axis
+     * @return The processed value.
+     */
+    private double DeadzonedAxis(double axOut) {
+        return (Math.abs(axOut) <= OI.JOY_THRESH) ? 0.0 : axOut;
+    }
+>>>>>>> AlgaeBranch
 
     /**
      * Returns a new instance of Trigger based on the given Joystick and Axis
@@ -301,7 +432,11 @@ public class RobotContainer {
 
       //CoralEffector
       NamedCommands.registerCommand("CoralIntake", new CoralIntake(coralEffector));
+<<<<<<< HEAD
       NamedCommands.registerCommand("CoralOutake", new AutonCoralOuttake(coralEffector));
+=======
+      NamedCommands.registerCommand("CoralOutake", new CoralOuttake(coralEffector));
+>>>>>>> AlgaeBranch
       
       //AlgaeArm
       // NamedCommands.registerCommand("ArmToDeAlgafy", new ArmToPosition(AlgaeEffector, Armc.DeAlgafy_Angle));
@@ -323,6 +458,7 @@ public class RobotContainer {
 
 
       //Sequential and Parralel Commands
+<<<<<<< HEAD
       //-------------------------------------------------------------------------------------------------
       //Intake CMD
       NamedCommands.registerCommand("IntakeCoral",
@@ -466,6 +602,9 @@ public class RobotContainer {
         //TODO: Make new scoring Autos
         //TODO: Change CMDS in PP
         /*NamedCommands.registerCommand("IntakeCoralNoLL",
+=======
+        NamedCommands.registerCommand("IntakeCoralNoLL",
+>>>>>>> AlgaeBranch
         new SequentialCommandGroup(
                         new ParallelCommandGroup(
                                 new CoralIntake(coralEffector))));
@@ -492,7 +631,11 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                         new ElevatorToPos(elevator, Elevatorc.l4),
                         new CoralOuttake(coralEffector),
+<<<<<<< HEAD
                         new ElevatorToPos(elevator, Elevatorc.downPos))));*/                          
+=======
+                        new ElevatorToPos(elevator, Elevatorc.downPos))));                             
+>>>>>>> AlgaeBranch
 
         /*NamedCommands.registerCommand("L2LL&&NoAlgae", new SequentialCommandGroup(
         new ParallelDeadlineGroup(
@@ -539,6 +682,7 @@ public class RobotContainer {
     }
 
     private void RegisterCustomAutos(){
+<<<<<<< HEAD
         /*autoChooser.addOption("DriveRaiseAutonL2Center", new SequentialCommandGroup(
           new LastResortAuto(drivetrain, 1, 4, 2.5), 
           new ElevatorToPos(elevator, l2)));
@@ -829,23 +973,112 @@ SHARK IN THE TANK
           new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
         ));   
     }*/
+=======
+         autoChooser.addOption("DriveRaiseAutonL4", new DriveRaiseAutonl4(drivetrain, elevator, 1));
+         autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
+         autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
+    
+    }
+    //private void setupAutos() {
+        //// CREATING PATHS from files
+        // if (!hasSetupAutos) {
+        //     autoCommands = new ArrayList<Command>();// clear old/nonexistent autos
+
+        //     for (int i = 0; i < autoNames.length; i++) {
+        //         String name = autoNames[i];
+
+        //         autoCommands.add(new PathPlannerAuto(name));
+
+                /*
+                 * // Charles' opinion: we shouldn't have it path find to the starting pose at
+                 * the start of match
+                 * new SequentialCommandGroup(
+                 * AutoBuilder.pathfindToPose(
+                 * PathPlannerAuto.getStaringPoseFromAutoFile(name),
+                 * PathPlannerAuto.getPathGroupFromAutoFile(name).get(0).
+                 * getPreviewStartingHolonomicPose(),
+                 * Autoc.pathConstraints),
+                 * new PathPlannerAuto(name));
+                 */
+            //}
+        //     hasSetupAutos = true;
+
+        //     // NOTHING
+        //     autoCommands.add(0, new PrintCommand("Running NULL Auto!"));
+        //     // RAW FORWARD command
+        //     // autoCommands.add(1, new SequentialCommandGroup(
+        //     // new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), new
+        //     // WaitCommand(0.5),
+        //     // new LastResortAuto(drivetrain)));
+        //     // dumb PP forward command
+        //     autoCommands.add(2, new PrintCommand("PPSimpleAuto not Configured!"));
+        // }
+        // // force regeneration each auto call
+        // autoCommands.set(2, constructPPSimpleAuto());// overwrite this slot each time auto runs
+    //}
+
+    //public Command constructPPSimpleAuto() {
+        /**
+         * PATHPLANNER SETTINGS Robot Width (m): .91 Robot Length(m): .94 Max Module Spd
+         * (m/s): 4.30
+         * Default Constraints Max Vel: 1.54, Max Accel: 6.86 Max Angvel: 360, Max
+         * AngAccel: 360
+         * (guesses!)
+         */
+        // default origin is on BLUE ALIANCE DRIVER RIGHT CORNER
+        // Pose2d currPos = drivetrain.getPose();
+
+        // FIXME running red PP file autos seems to break something, so the robot
+        // drivetrain drives in the wrong direction.
+        // running blue PP autos is fine though
+        // Note: alliance detection and path generation work correctly!
+        // Solution: Redeploy after auto.
+        // Pose2d endPos = (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
+        //         ? currPos.transformBy(new Transform2d(1, 0, new Rotation2d(0)))
+        //         : currPos.transformBy(new Transform2d(-1, 0, new Rotation2d(0)));
+
+        // List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currPos, endPos);
+
+        // // Create the path using the bezier points created above, /* m/s, m/s^2, rad/s,
+        // // rad/s^2 */
+        // PathPlannerPath path = new PathPlannerPath(bezierPoints,
+        //         Autoc.pathConstraints, null, new GoalEndState(0, currPos.getRotation()));
+
+        // path.preventFlipping = false;// don't flip, we do that manually already.
+
+        // return new SequentialCommandGroup(
+        //         new InstantCommand(() -> drivetrain.drive(-.0001, 0, 0)), // align drivetrain wheels.
+        //         AutoBuilder.followPath(path).beforeStarting(new WaitCommand(1)));
+        //return new PrintCommand("I HAT EEEYTHI");
+    //}
+>>>>>>> AlgaeBranch
 
     
 
   private void setDefaultCommands() {
     drivetrain.setDefaultCommand(new TeleopDrive(
       drivetrain,
+<<<<<<< HEAD
       () -> ProcessedAxisValue(driverController, Axis.kLeftY),//.06 drift purple, .10 drift black
       () -> ProcessedAxisValue(driverController, Axis.kLeftX),
       () -> ProcessedAxisValue(driverController, Axis.kRightX),
       () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
     //   SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     // SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
+=======
+      () -> ProcessedAxisValue(driverController, Axis.kLeftY),
+      () -> ProcessedAxisValue(driverController, Axis.kLeftX),
+      () -> ProcessedAxisValue(driverController, Axis.kRightX),
+      () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
+      SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
+    SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
+>>>>>>> AlgaeBranch
   }
 
   private void setBindingsManipulator() {
     // new JoystickButton(manipulatorController, OI.Manipulator.OUTAKE_BUTTON)
     //   .whileTrue(new CoralOutake(coralEffector))
+<<<<<<< HEAD
     //   .whileFalse(new CoralIntake(coralEffector));P
     // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
     //   .whileTrue(new ManualCoralIntake());
@@ -873,6 +1106,41 @@ SHARK IN THE TANK
         new CoralOuttake(coralEffector, .15)), babyModeSupplier));    
   }
   
+=======
+    //   .whileFalse(new CoralIntake(coralEffector));
+    // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
+    //   .whileTrue(new ManualCoralIntake());
+    axisTrigger(manipulatorController, Axis.kRightTrigger)
+    .whileTrue(new CoralOuttake(coralEffector));
+    //.whileFalse(new CoralIntake(coralEffector));
+    axisTrigger(manipulatorController, Axis.kLeftTrigger)
+    .whileTrue(new CoralOuttake(coralEffector));
+    new JoystickButton(manipulatorController, Button.kRightBumper.value)
+    .whileTrue(new CoralIntakeManual(coralEffector));
+    new JoystickButton(manipulatorController, Button.kLeftBumper.value)
+    .whileTrue(new CoralIntakeBackwards(coralEffector));
+new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
+        new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
+        new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
+        new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));
+
+    SmartDashboard.putData("Ground Intake Alage Command",new SequentialCommandGroup(
+        new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),
+       new GroundIntakeAlgae(algaeEffector), 
+       new ArmToPosition(algaeEffector, ARM_HOLDING_ALGAE_ANGLE)
+       //the command seems to take care of arm angles by itself. please change the command.
+       //FLJ: this is fine unless a dedicated command turns out to be needed.
+    ));
+    
+    SmartDashboard.putData("Algae Outtake Command",new SequentialCommandGroup(
+        new ArmToPosition(algaeEffector, ARM_OUTTAKE_ANGLE),
+       new OuttakeAlgae(algaeEffector)
+       //the command seems to take care of arm angles by itself. please change the command.
+       //FLJ: this is fine unless a dedicated command turns out to be needed.
+    ));
+  }
+    
+>>>>>>> AlgaeBranch
   
 
   public Command getAutonomousCommand() {
@@ -947,8 +1215,14 @@ SHARK IN THE TANK
   }
 
   private Trigger axisTrigger(GenericHID controller, Axis axis) {
+<<<<<<< HEAD
     return new Trigger( (BooleanSupplier)(() -> Math.abs(getStickValue(controller, axis)) > 0.2) );
   }
 
   
+=======
+    return new Trigger(() -> Math
+            .abs(getStickValue(controller, axis)) > Constants.OI.MIN_AXIS_TRIGGER_VALUE);
+  }
+>>>>>>> AlgaeBranch
 }

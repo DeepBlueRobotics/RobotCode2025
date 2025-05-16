@@ -3,8 +3,28 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package org.carlmontrobotics;
 
+import edu.wpi.first.wpilibj.StadiaController.Button;
+
+import edu.wpi.first.wpilibj.StadiaController.Button;
+
+import org.carlmontrobotics.lib199.swerve.SwerveConfig;
+
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.path.PathConstraints;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import static org.carlmontrobotics.Config.CONFIG;
+
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.StadiaController.Button;
 
 import edu.wpi.first.wpilibj.StadiaController.Button;
@@ -424,8 +444,9 @@ public final class Constants {
 
         
 		public static final int UPPER_MOTOR_PORT = 1; 
-		public static final int LOWER_MOTOR_PORT = 2;
+		public static final int LOWER_MOTOR_PORT = 33;
         public static final int PINCH_MOTOR_PORT = 3;
+        public static final int ARM_MOTOR_PORT = 34;
         public static final int ARM_MOTOR_PORT = 34;
         public static final int aChannelEnc = 0;
         public static final int bChannelEnc = 1;
@@ -436,20 +457,16 @@ public final class Constants {
         public static final int ARM_ARRAY_ORDER = 3;
         //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
         //TODO find these values out 
-        public static double INTAKE_TOP_RPM = 1000;  
-        public static double INTAKE_BOTTOM_RPM = 1000;  
+        
         public static double INTAKE_PINCHER_RPM = 1000;  
+        public static double BOTTOM_MOTOR_SPEED = 0.3;
 
-        public static double OUTTAKE_TOP_RPM = -2100;  
-        public static double OUTTAKE_BOTTOM_RPM = -2100;  
-        public static double OUTTAKE_PINCHER_RPM = -2100;  
-
-        public static double SHOOT_TOP_RPM = -2100;//ask design
-        public static double SHOOT_BOTTOM_RPM = -2100; 
+        
+        public static double OUTTAKE_PINCHER_RPM = -2100; 
+         
         public static double SHOOT_PINCHER_RPM = -2100; 
 
-        public static double DEALGAFY_TOP_RPM = 1000;  
-        public static double DEALGAFY_BOTTOM_RPM = 1000;  
+         
         public static double DEALGAFY_PINCHER_RPM = 1000; 
 
         public static double RPM_ALLOWED_ERROR = 150;//rpm
@@ -457,33 +474,35 @@ public final class Constants {
         public static final int TBE_CPR = 8192; //Through-Bore Encoder
         public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
-        public static final CounterBase.EncodingType encodingType = Encoder.EncodingType.k2X;
+        public static final CounterBase.EncodingType encodingType = CounterBase.EncodingType.k2X;
         
-        public static final double ARM_CHAIN_GEARING = 1;// TODO: set to 16.0/34
+        public static final double ARM_CHAIN_GEARING = 16.0/34;// TODO: set to 16.0/34
         public static final double ARM_GEAR_RATIO = 1.0/3;
         //TODO figure the zero out once encoder is on
-        public static final double ARM_ZERO_ROT = Units.degreesToRotations(207+41+40+12+12);
+        public static final double ARM_ZERO_ROT = Units.degreesToRotations(0); //Change for actual robot
         //TODO ask samo for angle to intake algae from pure vertical down
         public static final double ARM_INTAKE_ANGLE = 0;
-        //TODO Figure these two out if we will be shooting algae
+        //TODO Figure these two out 
         public static final double ARM_RAMP_UP_ANGLE = 0;
-        public static final double ARM_SHOOT_ANGLE = 0;
+        public static final double ARM_OUTTAKE_ANGLE = 0;
+        
         //TODO Figure angle for dealgafying
         public static final double ARM_DEALGAFYING_ANGLE = 0;
         //TODO figure out resting angle of the arm while algae inside
-        public static final double ARM_RESTING_ANGLE_WHILE_INTAKE_ALGAE = 0.0;
+        public static final double ARM_HOLDING_ALGAE_ANGLE = 0.0;
         //TODO figure out current threshold for pincher wheels
         public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
-        public static final double UPPER_ANGLE_LIMIT = -20;
-        public static final double LOWER_ANGLE_LIMIT = -90;
+        public static final double UPPER_ANGLE_LIMIT = 20;
+        public static final double LOWER_ANGLE_LIMIT = -93;
         public static final double ROTATION_TO_DEG = 360;
+        public static final double ROTATION_TO_RAD = 2*Math.PI;
         public static final double DEGREES_TO_RADS = Math.PI/180;
         public static final double ARM_DISCONT_DEG = -35;
         public static TrapezoidProfile.Constraints TRAP_CONSTRAINTS;
         public static final double MAX_FF_VEL_RAD_P_S = (Math.PI * .5)/2;
 		public static final double MAX_FF_ACCEL_RAD_P_S = (53.728 / 4)/2;
-        public static final double ARM_ERROR_MARGIN = 1;
+        public static final double ARM_ERROR_MARGIN = 5;
 
         public static final double ARM_SYS_ID_START_COMMAND_ANGLE = -22; //TODO:
 
