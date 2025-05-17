@@ -203,16 +203,14 @@ public class RobotContainer {
         new POVButton(driverController, 180)
             .whileTrue(new ParallelCommandGroup(
         new InstantCommand(() -> drivetrain.stop()),
-        new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true)));
+        new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator)));
 
 
         
         new JoystickButton(driverController, 8).onTrue(new SequentialCommandGroup(
-            new RotateToTag(drivetrain, limelight),
             new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
                 driverRumble)));
         new JoystickButton(driverController, 7).onTrue(new SequentialCommandGroup(
-            new RotateToTag(drivetrain, limelight),
             new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with right branch
                 driverRumble)));
         
@@ -839,7 +837,9 @@ SHARK IN THE TANK
       () -> ProcessedAxisValue(driverController, Axis.kLeftY),//.06 drift purple, .10 drift black
       () -> ProcessedAxisValue(driverController, Axis.kLeftX),
       () -> ProcessedAxisValue(driverController, Axis.kRightX),
-      () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
+      () -> driverController.getRawButton(OI.Driver.slowDriveButton),
+        elevator
+      ));
     //   SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     // SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
   }

@@ -294,7 +294,7 @@ public final class Constants {
 		public static double kSlowDriveRotation = 0.250; // Percent Multiplier
 
 		//baby speed values, i just guessed the percent multiplier. TODO: find actual ones we wana use
-		public static double kBabyDriveSpeed = 0.3;
+		public static double kBabyDriveSpeed = 0.1; //TODO: change it back to 0.3 after preschool break the robot
 		public static double kBabyDriveRotation = 0.2;
 		public static double kAlignMultiplier = 1D / 3D;
 		public static final double kAlignForward = 0.6;
@@ -423,6 +423,7 @@ public final class Constants {
         public final static int CORAL_MOTOR_PORT = 30;
         public final static int CORAL_LIMIT_SWITCH_PORT = 0;
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
+
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
         public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
         public final static double INPUT_FAST_SPEED =0.07; 

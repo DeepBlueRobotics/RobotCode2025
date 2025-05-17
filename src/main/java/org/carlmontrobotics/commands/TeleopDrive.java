@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
+import org.carlmontrobotics.subsystems.Elevator;
+
 public class TeleopDrive extends Command {
 
   private static double robotPeriod = Robot.kDefaultPeriod;
@@ -28,19 +30,21 @@ public class TeleopDrive extends Command {
   private double currentForwardVel = 0;
   private double currentStrafeVel = 0;
   private double prevTimestamp;
-  public static boolean babyMode = false;
-  public static BooleanSupplier babyModeSupplier = () -> false;
+  public static boolean babyMode = true;
+  public static BooleanSupplier babyModeSupplier = () -> true;
+  Elevator elevator;
 
   /**
    * Creates a new TeleopDrive.
    */
   public TeleopDrive(Drivetrain drivetrain, DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rcw,
-      BooleanSupplier slow) {
+      BooleanSupplier slow, Elevator elevator) {
     addRequirements(this.drivetrain = drivetrain);
     this.fwd = fwd;
     this.str = str;
     this.rcw = rcw;
     this.slow = slow;
+    this.elevator = elevator;
   }
 
   // Called when the command is initially scheduled.
@@ -51,7 +55,8 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("normal turn const", kNormalDriveRotation);
     // SmartDashboard.putNumber("normal speed const", kNormalDriveSpeed);
     prevTimestamp = Timer.getFPGATimestamp();
-    SmartDashboard.putBoolean("babymode", false);
+    SmartDashboard.putBoolean("babymode", babyMode
+    );
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -62,7 +67,7 @@ public class TeleopDrive extends Command {
     double[] speeds = getRequestedSpeeds();
     // SmartDashboard.putNumber("Elapsed time", currentTime - prevTimestamp);
     prevTimestamp = currentTime;
-    babyMode = SmartDashboard.getBoolean("babymode", false);
+    babyMode = SmartDashboard.getBoolean("babymode", true);
     // kSlowDriveRotation = SmartDashboard.getNumber("slow turn const", kSlowDriveRotation);
     // kSlowDriveSpeed = SmartDashboard.getNumber("slow speed const", kSlowDriveSpeed);
     // kNormalDriveRotation = SmartDashboard.getNumber("normal turn const", kNormalDriveRotation);
@@ -71,9 +76,15 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("fwd", speeds[0]);
     // SmartDashboard.putNumber("strafe", speeds[1]);
     // SmartDashboard.putNumber("turn", speeds[2]);
-    drivetrain.drive(speeds[0], speeds[1], speeds[2]);
+    if(babyMode && elevator.getCurrentHeight() < 0.05 || !babyMode){
+      drivetrain.drive(speeds[0], speeds[1], speeds[2]);
+    }else{
+      drivetrain.stop();
+    }
     babyModeSupplier = () -> babyMode;
     SmartDashboard.putBoolean("babysupplier", babyModeSupplier.getAsBoolean());
+    SmartDashboard.putBoolean("babymode", babyMode);
+
   }
 
   public double[] getRequestedSpeeds() {
