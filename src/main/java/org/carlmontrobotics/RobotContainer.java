@@ -96,7 +96,7 @@ public class RobotContainer {
     // 2. Use absolute paths from constants to reduce confusion
     public final GenericHID driverController = new GenericHID(Driver.port);
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
-    private final Drivetrain drivetrain =  new Drivetrain();
+    // private final Drivetrain drivetrain =  new Drivetrain(); //this was commented out for the robot simulation
 
 
     //private final Drivetrain drivetrain = new Drivetrain();
@@ -115,7 +115,7 @@ public class RobotContainer {
     // private boolean hasSetupAutos = false;
     // private final String[] autoNames = new String[] {};
     // private final AlgaeEffector algaeEffector = new AlgaeEffector();
-     private final Elevator elevator = new Elevator();
+    //  private final Elevator elevator = new Elevator(); //this was commented out for the robot simulation
      private final AlgaeEffector algaeEffector = new AlgaeEffector();
      private SendableChooser<Command> autoChooser = new SendableChooser<>();
      
@@ -160,11 +160,11 @@ public class RobotContainer {
              }
      
              RegisterAutoCommands();
-             autoChooser = AutoBuilder.buildAutoChooser();
-        RegisterCustomAutos();
+            //  autoChooser = AutoBuilder.buildAutoChooser(); //This was commented out for robot simulation
+        // RegisterCustomAutos(); //commented out for robot simulation
          SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
           SmartDashboard.putData("coral out", new CoralOuttake(coralEffector));
-        setDefaultCommands();
+        // setDefaultCommands(); commented out for robot simulation
         setBindingsDriver();
         setBindingsManipulator();
     }
@@ -172,9 +172,9 @@ public class RobotContainer {
    
 
     private void setBindingsDriver() {
-       
-      new JoystickButton(driverController, Driver.resetFieldOrientationButton)
-                .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
+       //this was commented out for the robot simulation
+      // new JoystickButton(driverController, Driver.resetFieldOrientationButton)
+      //           .onTrue(new InstantCommand(drivetrain::resetFieldOrientation));
     }
 
    
@@ -255,12 +255,12 @@ public class RobotContainer {
       // NamedCommands.registerCommand("ArmToIntake", new ArmToPosition(AlgaeEffector, Armc.Intake_Angle));
       // NamedCommands.registerCommand("ArmToShoot", new ArmToPosition(AlgaeEffector, Armc.Shoot_Angle));
 
-      //Elevator
-      NamedCommands.registerCommand("ElevatorIntake", new ElevatorToPos(elevator, Elevatorc.downPos));
-      NamedCommands.registerCommand("ElevatorL1", new ElevatorToPos(elevator, Elevatorc.l1));
-      NamedCommands.registerCommand("ElevatorL2", new ElevatorToPos(elevator, Elevatorc.l2));
-      NamedCommands.registerCommand("ElevatorL3", new ElevatorToPos(elevator, Elevatorc.l3));
-      NamedCommands.registerCommand("ElevatorL4", new ElevatorToPos(elevator, Elevatorc.l4));
+      // //Elevator {These were commented out on AlgaeBranch for the robot simulation}
+      // NamedCommands.registerCommand("ElevatorIntake", new ElevatorToPos(elevator, Elevatorc.downPos));
+      // NamedCommands.registerCommand("ElevatorL1", new ElevatorToPos(elevator, Elevatorc.l1));
+      // NamedCommands.registerCommand("ElevatorL2", new ElevatorToPos(elevator, Elevatorc.l2));
+      // NamedCommands.registerCommand("ElevatorL3", new ElevatorToPos(elevator, Elevatorc.l3));
+      // NamedCommands.registerCommand("ElevatorL4", new ElevatorToPos(elevator, Elevatorc.l4));
 
       // //Limelight
       // NamedCommands.registerCommand("AlignToCoralStation", new AlignToCoralStation(Limelight, drivetrain));
@@ -275,29 +275,32 @@ public class RobotContainer {
                         new ParallelCommandGroup(
                                 new CoralIntake(coralEffector))));
 
-        NamedCommands.registerCommand("L1NoLL&NoAlgae", new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l1),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorToPos(elevator, Elevatorc.downPos))));
+          //this section was commented out in AlgaeBranch for the robot simulation
+        // NamedCommands.registerCommand("L1NoLL&NoAlgae", new SequentialCommandGroup(
+        //         new SequentialCommandGroup(
+        //                 new ElevatorToPos(elevator, Elevatorc.l1),
+        //                 new CoralOuttake(coralEffector),
+        //                 new ElevatorToPos(elevator, Elevatorc.downPos))));
 
-        NamedCommands.registerCommand("L2NoLL&NoAlgae", new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l2),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorToPos(elevator, Elevatorc.downPos))));
+        // NamedCommands.registerCommand("L2NoLL&NoAlgae", new SequentialCommandGroup(
+        //         new SequentialCommandGroup(
+        //                 new ElevatorToPos(elevator, Elevatorc.l2),
+        //                 new CoralOuttake(coralEffector),
+        //                 new ElevatorToPos(elevator, Elevatorc.downPos))));
                     
-        NamedCommands.registerCommand("L3NoLL&NoAlgae", new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l3),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorToPos(elevator, Elevatorc.downPos))));
+        // NamedCommands.registerCommand("L3NoLL&NoAlgae", new SequentialCommandGroup(
+        //         new SequentialCommandGroup(
+        //                 new ElevatorToPos(elevator, Elevatorc.l3),
+        //                 new CoralOuttake(coralEffector),
+        //                 new ElevatorToPos(elevator, Elevatorc.downPos))));
 
-        NamedCommands.registerCommand("L4NoLL&NoAlgae", new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l4),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorToPos(elevator, Elevatorc.downPos))));                             
+        // NamedCommands.registerCommand("L4NoLL&NoAlgae", new SequentialCommandGroup(
+        //         new SequentialCommandGroup(
+        //                 new ElevatorToPos(elevator, Elevatorc.l4),
+        //                 new CoralOuttake(coralEffector),
+        //                 new ElevatorToPos(elevator, Elevatorc.downPos))));                             
+
+
 
         /*NamedCommands.registerCommand("L2LL&&NoAlgae", new SequentialCommandGroup(
         new ParallelDeadlineGroup(
@@ -343,12 +346,15 @@ public class RobotContainer {
 
     }
 
-    private void RegisterCustomAutos(){
-         autoChooser.addOption("DriveRaiseAutonL4", new DriveRaiseAutonl4(drivetrain, elevator, 1));
-         autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
-         autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
+    //This section was commented out for the robot simulation
+    // private void RegisterCustomAutos(){
+    //      autoChooser.addOption("DriveRaiseAutonL4", new DriveRaiseAutonl4(drivetrain, elevator, 1));
+    //      autoChooser.addOption("ForwardLastResortAuto", new LastResortAuto(drivetrain, 1));
+    //      autoChooser.addOption("BackwardLastResortAuto", new LastResortAuto(drivetrain, -1));
     
-    }
+    // }
+
+
     //private void setupAutos() {
         //// CREATING PATHS from files
         // if (!hasSetupAutos) {
@@ -423,17 +429,17 @@ public class RobotContainer {
     //}
 
     
-
-  private void setDefaultCommands() {
-    drivetrain.setDefaultCommand(new TeleopDrive(
-      drivetrain,
-      () -> ProcessedAxisValue(driverController, Axis.kLeftY),
-      () -> ProcessedAxisValue(driverController, Axis.kLeftX),
-      () -> ProcessedAxisValue(driverController, Axis.kRightX),
-      () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
-      SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
-    SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
-  }
+    //This section was commented out for the robot simulation
+  // private void setDefaultCommands() {
+  //   drivetrain.setDefaultCommand(new TeleopDrive(
+  //     drivetrain,
+  //     () -> ProcessedAxisValue(driverController, Axis.kLeftY),
+  //     () -> ProcessedAxisValue(driverController, Axis.kLeftX),
+  //     () -> ProcessedAxisValue(driverController, Axis.kRightX),
+  //     () -> driverController.getRawButton(OI.Driver.slowDriveButton)));
+  //     SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
+  //   SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
+  // }
 
   private void setBindingsManipulator() {
     // new JoystickButton(manipulatorController, OI.Manipulator.OUTAKE_BUTTON)
@@ -450,10 +456,11 @@ public class RobotContainer {
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
     .whileTrue(new CoralIntakeBackwards(coralEffector));
-new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
-        new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
-        new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
-        new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));
+    //These were commented out for the robot simulation
+// new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ElevatorToPos(elevator, l4));
+//         new JoystickButton(manipulatorController, Button.kA.value).onTrue(new ElevatorToPos(elevator, l1));
+//         new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
+//         new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));
 
     SmartDashboard.putData("Ground Intake Alage Command",new SequentialCommandGroup(
         new ArmToPosition(algaeEffector, ARM_INTAKE_ANGLE),

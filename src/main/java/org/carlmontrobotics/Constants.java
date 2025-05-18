@@ -468,6 +468,14 @@ public final class Constants {
 
         public static final double ARM_SYS_ID_START_COMMAND_ANGLE = -22; //TODO:
 
+		public static final double armKP = 0.0018;
+		public static final double armKI = 0.0;
+		public static final double armKD = 0.08;
+		public static final double armKS = 0.0;
+		public static final double armKV = 0.0;
+		public static final double armKA = 0.0;
+		public static final double armKG = 0.63;
+
 
 	}
     
