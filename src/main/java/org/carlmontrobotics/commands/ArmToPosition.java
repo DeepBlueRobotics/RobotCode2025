@@ -18,7 +18,7 @@ public class ArmToPosition extends Command{
 
     @Override
     public void initialize(){
-        algaeArm.setArmTarget(goalPosition); //sets target to position in degrees
+        algaeArm.setArmPosition(goalPosition); //sets target to position in degrees
     }
 
     // @Override

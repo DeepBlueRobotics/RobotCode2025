@@ -85,7 +85,8 @@ import edu.wpi.first.util.sendable.*;
 public class AlgaeEffector extends SubsystemBase {
 
     private double armGoal = LOWER_ANGLE_LIMIT; 
-    private double armMaxVelocityDegreesPerSecond;
+    private double clampedArmGoal = LOWER_ANGLE_LIMIT;
+    private double armMaxVelocityDegreesPerSecond = 720; //change if nessesary
 
     //This is for the manual sysID methods
     private final Timer timer = new Timer();
@@ -131,11 +132,10 @@ public class AlgaeEffector extends SubsystemBase {
     private double armGoalVelocity = 0;
     private final double dT = 0.02; // 20ms
     private TrapezoidProfile.Constraints armTrapConstraints = new TrapezoidProfile.Constraints(armMaxVelocityDegreesPerSecond, 100); 
-    private TrapezoidProfile.State currentArmTrapState = new TrapezoidProfile.State(getArmPos(), getArmVel());
-    
-    private TrapezoidProfile.State goalArmTrapState = new TrapezoidProfile.State(armGoal, armGoalVelocity);
+    private TrapezoidProfile.State armSetPoint = new TrapezoidProfile.State(getArmPos(), getArmVel()); //This represents the arm's current state but is also used for the arm's calculated state in dT seconds
+    private TrapezoidProfile.State armGoalState = new TrapezoidProfile.State(armGoal, armGoalVelocity);
     private TrapezoidProfile armTrapProfile = new TrapezoidProfile(armTrapConstraints);
-    private TrapezoidProfile.State nextPoint;
+    
     
     
 
@@ -144,13 +144,13 @@ public class AlgaeEffector extends SubsystemBase {
         
         configureMotors();
         
-        setArmTarget(0);
+        setArmPosition(0);
         updateArmPID(); 
 
-        SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmTarget(0)));
+        SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmPosition(0)));
         
-        SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
-        SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmTarget(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
+        SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmPosition(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
+        SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmPosition(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
         
        
         SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));
@@ -196,33 +196,26 @@ public class AlgaeEffector extends SubsystemBase {
         
     }
     
-    public void setArmTarget(double targetPos){ //this method takes in an angle and sets the arm to that angle 
-
-        armGoal = targetPos;
-        double clampedArmGoal = getArmClampedGoal(armGoal); //This takes in the inputted armgoal that was set to targetPos and clamps it so that it can't be outside the safe range
-
-        if (armMotor != null) {
+    public void setArmPosition(double targetPos){ //this method takes in an angle and sets the arm to that angle 
             
-            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(clampedArmGoal), 0.00001*(armGoal- getArmPos()));//this calculates the amount of voltage needed to move the arm
-            pidControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(clampedArmGoal), 0.00001*(armGoal- getArmPos()));//this calculates the amount of voltage needed to move the arm
+        pidControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
 
-        }
-        
+    }
+
+    public void setArmTarget(double targetPos){
+        armGoal = targetPos;
+        clampedArmGoal = getArmClampedGoal(armGoal); //This takes in the inputted armgoal that was set to targetPos and clamps it so that it can't be outside the safe range
+        armGoalState = new TrapezoidProfile.State(clampedArmGoal, armGoalVelocity); //this sets the goal state for trapezoidprofile
     }
     //move arm to position using TrapezoidProfile
     public void setArmTrapPosition(double targetPos){ //run this method in periodic()
-        armGoal = targetPos;
-        double clampedArmGoal = getArmClampedGoal(armGoal); //This takes in the inputted armgoal that was set to targetPos and clamps it so that it can't be outside the safe range
+        setArmTarget(targetPos); //sets the arm goal to the target position
 
-        if (armMotor != null) {
-            currentArmTrapState = new TrapezoidProfile.State(getArmPos(), getArmVel()); //sets the current state of the arm to its current position and velocity
-            goalArmTrapState = new TrapezoidProfile.State(clampedArmGoal, armGoalVelocity); //sets the goal state of the arm to its goal angle and velocity
-            nextPoint = armTrapProfile.calculate(dT, currentArmTrapState, goalArmTrapState); //calculates the state of the arm after dT seconds when using TrapezoidProfile motion
-
-            armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(nextPoint.position), Units.degreesToRadians(nextPoint.velocity));//this calculates the amount of voltage needed to move the arm
-            pidControllerArm.setReference(nextPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
-
-        }
+        armSetPoint = armTrapProfile.calculate(dT, armSetPoint, armGoalState); //sets the current state of the arm to its current position and velocity
+        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armSetPoint.position), Units.degreesToRadians(armSetPoint.velocity));//this calculates the amount of voltage needed to move the arm
+        pidControllerArm.setReference(armSetPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+        
     }
     
     public boolean armAtGoal(){ //This method returns if the arm is at its goal position with the error margin as the tolerance range
@@ -301,7 +294,7 @@ public class AlgaeEffector extends SubsystemBase {
        builder.addDoubleProperty("Set Arm Max Velocity", () -> armMaxVelocityDegreesPerSecond, (value) -> { armMaxVelocityDegreesPerSecond = value; updateArmPID(); });
        builder.addDoubleProperty("arm angle (degrees)", () -> getArmPos(), null);
        builder.addDoubleProperty("output volts", () -> armMotor.getAppliedOutput()*armMotor.getBusVoltage(), null);
-       builder.addDoubleProperty("Set Goal Angle in Degrees", () -> armGoal, (value) -> {setArmTarget(value); });
+       builder.addDoubleProperty("Set Goal Angle in Degrees", () -> armGoal, (value) -> {setArmPosition(value); });
     }
 
     //Manual SysId-----------------------------------------------------------------------------------------------------------------------------------------
