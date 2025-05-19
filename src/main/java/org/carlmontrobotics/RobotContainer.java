@@ -864,6 +864,21 @@ SHARK IN THE TANK
     axisTrigger(manipulatorController, Axis.kRightTrigger)
     .whileTrue(new CoralFastOutake(coralEffector));
     }
+
+    //l4 in one button
+    axisTrigger(driverController, Axis.kLeftTrigger)
+    .onTrue(
+        new SequentialCommandGroup(
+            new ElevatorToPos(elevator, testl4), 
+            new CoralOuttake(coralEffector, .15), 
+            new WaitCommand(.2), 
+            new ParallelCommandGroup(
+                new ElevatorToPos(elevator, testl4 + testl4RaiseHeight), 
+                new CoralOuttake(coralEffector, .15)), 
+            new WaitCommand(.2), 
+            new CoralOuttake(coralEffector, 0)
+            //,new ElevatorToPos(elevator, Elevatorc.l1)
+            ));
     new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
     new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2)); 
