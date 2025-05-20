@@ -870,13 +870,13 @@ SHARK IN THE TANK
     .onTrue(
         new SequentialCommandGroup(
             new ElevatorToPos(elevator, testl4), 
-            new CoralOuttake(coralEffector, .15), 
+            new AutonCoralOuttake(coralEffector), 
             new WaitCommand(.2), 
             new ParallelCommandGroup(
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight), 
-                new CoralOuttake(coralEffector, .15)), 
+                new AutonCoralOuttake(coralEffector)), 
             new WaitCommand(.2), 
-            new CoralOuttake(coralEffector, 0)
+            new InstantCommand(() -> new CoralOuttake(coralEffector, 0))
             //,new ElevatorToPos(elevator, Elevatorc.l1)
             ));
     new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
