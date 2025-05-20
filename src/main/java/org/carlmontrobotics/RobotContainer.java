@@ -164,7 +164,8 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, -1, 4, 8));
         RegisterCustomAutos();
-        SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
+        SmartDashboard.putData("Auto Chooser", autoChooser);    
+        SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
         SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
         setDefaultCommands();
         setBindingsDriver();
@@ -203,7 +204,7 @@ public class RobotContainer {
         new POVButton(driverController, 180)
             .whileTrue(new ParallelCommandGroup(
         new InstantCommand(() -> drivetrain.stop()),
-        new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator)));
+        new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator, coralEffector, manipulatorController)));
 
 
         
@@ -838,7 +839,9 @@ SHARK IN THE TANK
       () -> ProcessedAxisValue(driverController, Axis.kLeftX),
       () -> ProcessedAxisValue(driverController, Axis.kRightX),
       () -> driverController.getRawButton(OI.Driver.slowDriveButton),
-        elevator
+        elevator,
+        coralEffector,
+        manipulatorController
       ));
     //   SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     // SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
