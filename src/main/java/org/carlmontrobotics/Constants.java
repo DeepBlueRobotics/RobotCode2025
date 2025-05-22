@@ -293,8 +293,7 @@ public final class Constants {
 		public static double kSlowDriveSpeed = 0.4; // Percent Multiplier
 		public static double kSlowDriveRotation = 0.250; // Percent Multiplier
 
-		//baby speed values, i just guessed the percent multiplier. TODO: find actual ones we wana use
-		public static double kBabyDriveSpeed = 0.1; //TODO: change it back to 0.3 after preschool break the robot
+		public static double kBabyDriveSpeed = 0.3;
 		public static double kBabyDriveRotation = 0.2;
 		public static double kAlignMultiplier = 1D / 3D;
 		public static final double kAlignForward = 0.6;
