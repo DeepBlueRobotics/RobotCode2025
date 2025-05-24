@@ -475,10 +475,10 @@ public final class Constants {
         public static final boolean invertedTBE = false; //if the encoder needs to read invertedly
         public static final CounterBase.EncodingType encodingType = CounterBase.EncodingType.k2X;
         
-        public static final double ARM_CHAIN_GEARING = 16.0/34;// TODO: set to 16.0/34
+        public static final double ARM_CHAIN_GEARING = 16.0/34;
         public static final double ARM_GEAR_RATIO = 1.0/3;
         //TODO figure the zero out once encoder is on
-        public static final double ARM_ZERO_ROT = Units.degreesToRotations(0); //Change for actual robot
+        
         //TODO ask samo for angle to intake algae from pure vertical down
         public static final double ARM_INTAKE_ANGLE = 0;
         //TODO Figure these two out 
@@ -492,6 +492,7 @@ public final class Constants {
         //TODO figure out current threshold for pincher wheels
         public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
+		public static final double ARM_ZERO_ROT = Units.degreesToRotations(0); //Change for actual robot
         public static final double UPPER_ANGLE_LIMIT = 20;
         public static final double LOWER_ANGLE_LIMIT = -93;
         public static final double ROTATION_TO_DEG = 360;
@@ -505,14 +506,15 @@ public final class Constants {
 
         public static final double ARM_SYS_ID_START_COMMAND_ANGLE = -22; //TODO:
 
-		public static final double[] armKP = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0018};
-    	public static final double[] armKI = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};//DO NOT USE
-    	public static final double[] armKD = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.08};
+		//TODO: figure out the values for these
+		public static final double armKP = 0.0;
+    	public static final double armKI = 0.0;
+    	public static final double armKD = 0.0;
 
-    	public static final double[] armKS = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};//DOES NOT WORK
-    	public static final double[] armKV = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};//NOT IMPLEMENTED
-    	public static final double[] armKA = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.0};//NOT IMPLEMENTED
-    	public static final double[] armKG = {/*/Top/*/0.0, /*/Bottom/*/0.0, /*/Pincher/*/0.0, /*/Arm/*/0.63};
+    	public static final double armKS = 0.0;
+    	public static final double armKV = 0.0;
+    	public static final double armKA = 0.0;
+    	public static final double armKG = 0.0;
 
 
 

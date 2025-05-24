@@ -65,6 +65,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.LOWER_ANGLE_LIMIT;
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.UPPER_ANGLE_LIMIT;
 import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
 import static org.carlmontrobotics.Constants.Elevatorc.l1;
 import static org.carlmontrobotics.Constants.Elevatorc.l2;
@@ -114,7 +116,7 @@ public class RobotContainer {
 
     // private boolean hasSetupAutos = false;
     // private final String[] autoNames = new String[] {};
-    // private final AlgaeEffector algaeEffector = new AlgaeEffector();
+    private final AlgaeEffector algaeEffector = new AlgaeEffector();
      private final Elevator elevator = new Elevator();
      private SendableChooser<Command> autoChooser = new SendableChooser<>();
      
@@ -889,7 +891,12 @@ SHARK IN THE TANK
     new POVButton(manipulatorController, 180).onTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ElevatorToPos(elevator, testl4), babyModeSupplier));
     new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-        new CoralOuttake(coralEffector, .15)), babyModeSupplier));    
+        new CoralOuttake(coralEffector, .15)), babyModeSupplier));  
+        
+    //test to see if this botton works properly
+    new JoystickButton(manipulatorController, Button.kRightStick.value)
+    .whileTrue(new ArmToPosition(algaeEffector, UPPER_ANGLE_LIMIT))
+    .whileFalse(new ArmToPosition(algaeEffector, LOWER_ANGLE_LIMIT)); 
   }
   
   
