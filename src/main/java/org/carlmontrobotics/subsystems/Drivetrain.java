@@ -699,7 +699,9 @@ public class Drivetrain extends SubsystemBase {
         // return odometry.getPoseMeters();
         return poseEstimator.getEstimatedPosition();
     }
-
+     public Rotation2d getRotation2d() {
+        return gyro.getRotation2d();
+     }
     private Rotation2d simGyroOffset = new Rotation2d();
     public void setPose(Pose2d initialPose) {
         Rotation2d gyroRotation = gyro.getRotation2d();
