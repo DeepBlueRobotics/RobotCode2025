@@ -78,6 +78,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj.Encoder;
 
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
+import static org.carlmontrobotics.Constants.OI.Driver.a;
 import static org.carlmontrobotics.Constants.*;
 import edu.wpi.first.util.sendable.*;
 
@@ -110,21 +111,21 @@ public class AlgaeEffector extends SubsystemBase {
     AbsoluteEncoderConfig config = new AbsoluteEncoderConfig();
 
     //for sendable we need this stuff
-    private double armkS = Constants.AlgaeEffectorc.armKS[ARM_ARRAY_ORDER];
-    private double armkV = Constants.AlgaeEffectorc.armKV[ARM_ARRAY_ORDER];
-    private double armkA = AlgaeEffectorc.armKA[ARM_ARRAY_ORDER];
-    private double armkG = AlgaeEffectorc.armKG[ARM_ARRAY_ORDER];
-    private double armkP = Constants.AlgaeEffectorc.armKP[ARM_ARRAY_ORDER];
-    private double armkI = Constants.AlgaeEffectorc.armKI[ARM_ARRAY_ORDER];
-    private double armkD = Constants.AlgaeEffectorc.armKD[ARM_ARRAY_ORDER];
-    private ArmFeedforward armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
+    private double KS = armKS;
+    private double KV = armKV;
+    private double KA = armKA;
+    private double KG = armKG;
+    private double KP = armKP;
+    private double KI = armKI;
+    private double KD = armKD;
+    private ArmFeedforward armFeedforward = new ArmFeedforward(KS, KG, KV, KA);
     private void updateFeedforward() {
-        armFeedforward = new ArmFeedforward(armkS, armkG, armkV, armkA);
+        armFeedforward = new ArmFeedforward(KS, KG, KV, KA);
         //System.out.println("kG" + armkG+"*********************");
     }
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
-        armMotorConfig.closedLoop.pid(armkP, armkI , armkD).maxMotion.maxVelocity(armMaxVelocityDegreesPerSecond).maxAcceleration(100);
+        armMotorConfig.closedLoop.pid(KP, KI , KD).maxMotion.maxVelocity(armMaxVelocityDegreesPerSecond).maxAcceleration(100);
         armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
        
     }
@@ -165,18 +166,14 @@ public class AlgaeEffector extends SubsystemBase {
     //----------------------------------------------------------------------------------------
 
     private void configureMotors () { //This sets the settings for the motors and encoders by setting the PID values and other settings
-    
+        //TODO: set these to the constants once the values are found
         armMotorConfig.closedLoop.pid(
-            Constants.AlgaeEffectorc.armKP[ARM_ARRAY_ORDER], 
-            Constants.AlgaeEffectorc.armKI[ARM_ARRAY_ORDER],  
-            Constants.AlgaeEffectorc.armKD[ARM_ARRAY_ORDER]  
+            KP, 
+            KI,  
+            KD 
             ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
         
-        // armMotorConfig.closedLoop.pid( //TODO: revert to this when you get PID values
-        //     Constants.kP[ARM_ARRAY_ORDER],
-        //     Constants.kI[ARM_ARRAY_ORDER],
-        //     Constants.kD[ARM_ARRAY_ORDER]
-        //     ).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        
         armMotorConfig.idleMode(IdleMode.kBrake);
         armMotorConfig.inverted(true);
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
@@ -255,7 +252,7 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putNumber("feed volts", armFeedVolts);
         SmartDashboard.putNumber("ARM ERROR:", Math.abs(armGoal-getArmPos()));
         SmartDashboard.putNumber("Arm Angle", getArmPos());
-        SmartDashboard.putNumber("raw arm posution", armEncoder.getPosition());
+        SmartDashboard.putNumber("raw arm position", armEncoder.getPosition());
         SmartDashboard.putNumber("Arm Velocity", armAbsoluteEncoder.getVelocity());
         
         // System.out.println("_feedVolts: "+ armFeedVolts);
@@ -282,19 +279,19 @@ public class AlgaeEffector extends SubsystemBase {
         
     public void initSendable(SendableBuilder builder){
        super.initSendable(builder); 
-       builder.addDoubleProperty("arm kS", () -> armkS, (value) -> { armkS = value; updateFeedforward(); });
-       builder.addDoubleProperty("arm kV", ()-> armkV, (value) -> { armkV = value; updateFeedforward(); });
-       builder.addDoubleProperty("arm kA", ()-> armkA, (value) -> { armkA = value; updateFeedforward(); } );
-       builder.addDoubleProperty("arm kG", ()-> armkG, (value) -> { armkG = value; updateFeedforward(); } );
-       builder.addDoubleProperty("arm kP", () -> armkP , (value) -> { armkP = value; updateArmPID(); });
-       builder.addDoubleProperty("arm kI", () -> armkI , (value) -> { armkI = value; updateArmPID(); });
-       builder.addDoubleProperty("arm kD", () -> armkD, (value) -> { armkD = value; updateArmPID(); });
-       builder.addDoubleProperty("Upper Voltage Counter limit", () -> upperLimitAdjustmentVoltage, (value) -> { upperLimitAdjustmentVoltage = value;});
-       builder.addDoubleProperty("Lower Voltage Counter limit", () -> lowerLimitAdjustmentVoltage, (value) -> { lowerLimitAdjustmentVoltage = value;});
+       builder.addDoubleProperty("arm kS", () -> KS, (value) -> { KS = value; updateFeedforward(); });
+       builder.addDoubleProperty("arm kV", ()-> KV, (value) -> { KV = value; updateFeedforward(); });
+       builder.addDoubleProperty("arm kA", ()-> KA, (value) -> { KA = value; updateFeedforward(); } );
+       builder.addDoubleProperty("arm kG", ()-> KG, (value) -> { KG = value; updateFeedforward(); } );
+       builder.addDoubleProperty("arm kP", () -> KP , (value) -> { KP = value; updateArmPID(); });
+       builder.addDoubleProperty("arm kI", () -> KI , (value) -> { KI = value; updateArmPID(); });
+       builder.addDoubleProperty("arm kD", () -> KD, (value) -> { KD = value; updateArmPID(); });
+       builder.addDoubleProperty("Arm Upper Voltage Counter limit", () -> upperLimitAdjustmentVoltage, (value) -> { upperLimitAdjustmentVoltage = value;});
+       builder.addDoubleProperty("Arm Lower Voltage Counter limit", () -> lowerLimitAdjustmentVoltage, (value) -> { lowerLimitAdjustmentVoltage = value;});
        builder.addDoubleProperty("Set Arm Max Velocity", () -> armMaxVelocityDegreesPerSecond, (value) -> { armMaxVelocityDegreesPerSecond = value; updateArmPID(); });
        builder.addDoubleProperty("arm angle (degrees)", () -> getArmPos(), null);
-       builder.addDoubleProperty("output volts", () -> armMotor.getAppliedOutput()*armMotor.getBusVoltage(), null);
-       builder.addDoubleProperty("Set Goal Angle in Degrees", () -> armGoal, (value) -> {setArmPosition(value); });
+       builder.addDoubleProperty("arm output volts", () -> armMotor.getAppliedOutput()*armMotor.getBusVoltage(), null);
+       builder.addDoubleProperty("Set arm Goal Angle in Degrees", () -> armGoal, (value) -> {setArmPosition(value); });
     }
 
     //Manual SysId-----------------------------------------------------------------------------------------------------------------------------------------
