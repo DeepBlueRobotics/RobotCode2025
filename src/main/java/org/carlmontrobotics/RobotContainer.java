@@ -954,7 +954,7 @@ SHARK IN THE TANK
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
   }
-
+  
   private Trigger axisTrigger(GenericHID controller, Axis axis) {
     return new Trigger( (BooleanSupplier)(() -> Math.abs(getStickValue(controller, axis)) > 0.2) );
   }
