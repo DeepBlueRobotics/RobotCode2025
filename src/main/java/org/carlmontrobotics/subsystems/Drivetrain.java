@@ -3,6 +3,7 @@
 package org.carlmontrobotics.subsystems;
 
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
+import static org.carlmontrobotics.Constants.Limelightc.CORAL_LL;
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Drivetrainc;
 import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
 import org.carlmontrobotics.Robot;
+import org.carlmontrobotics.subsystems.Limelight;
 // import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
 import org.carlmontrobotics.commands.TeleopDrive;
 import org.carlmontrobotics.lib199.MotorConfig;
@@ -149,6 +151,8 @@ public class Drivetrain extends SubsystemBase {
     double kP = 0;
     double kI = 0;
     double kD = 0;
+
+    
     public Drivetrain() {
         AutoBuilder();
         //SmartDashboard.putNumber("Goal Velocity", 0);
@@ -415,6 +419,7 @@ public class Drivetrain extends SubsystemBase {
         // odometry.update(gyro.getRotation2d(), getModulePositions());
 
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
+        
         //odometry.update(Rotation2d.fromDegrees(getHeading()), getModulePositions());
 
         // updateMT2PoseEstimator();
@@ -700,6 +705,20 @@ public class Drivetrain extends SubsystemBase {
         return poseEstimator.getEstimatedPosition();
     }
 
+    public Pose2d getPoseWithLimelight(){
+        if (LimelightHelpers.getTV(REEF_LL)) {
+            
+            return LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+
+        } else if (LimelightHelpers.getTV(CORAL_LL)) {
+
+            return LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        } else {
+            // If no tag is seen, return the current pose
+            return getPose();
+        }
+    }
+
     private Rotation2d simGyroOffset = new Rotation2d();
     public void setPose(Pose2d initialPose) {
         Rotation2d gyroRotation = gyro.getRotation2d();
@@ -710,6 +729,48 @@ public class Drivetrain extends SubsystemBase {
         // We need the offset so that we can compensate for it during simulationPeriodic().
         simGyroOffset = initialPose.getRotation().minus(gyroRotation);
         //odometry.resetPosition(Rotation2d.fromDegrees(getHeading()), getModulePositions(), initialPose);
+    }
+
+    //This method will set the pose using limelight if it sees a tag and if not it is supposed to run like setPose()
+    public void setPoseWithLimelight(Pose2d backupPose){ //the pose will be set to backupPose if no tag is seen
+        Rotation2d gyroRotation = gyro.getRotation2d();
+        Pose2d pose;
+
+        if (LimelightHelpers.getTV(REEF_LL)) {
+            
+            pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+
+        } else if (LimelightHelpers.getTV(CORAL_LL)) {
+
+            pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        }
+        else {
+            pose = backupPose;
+        }
+
+        poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose);
+        simGyroOffset = pose.getRotation().minus(gyroRotation);
+        
+    }
+
+    public void updatePoseWithLimelight(){
+        Pose2d pose;
+        Rotation2d gyroRotation = gyro.getRotation2d();
+
+        if (LimelightHelpers.getTV(REEF_LL)) {
+            // Get the pose of the robot relative to the tag
+            pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+            poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose);
+
+        } else if (LimelightHelpers.getTV(CORAL_LL)) {
+
+            pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+            poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose);
+        }
+        else {
+            poseEstimator.update(gyroRotation, getModulePositions());
+        }
+        
     }
 
     // Resets the gyro, so that the direction the robotic currently faces is

@@ -3,7 +3,10 @@ package org.carlmontrobotics.subsystems;
 
 import static org.carlmontrobotics.Constants.Limelightc.*;
 
+import java.util.jar.Attributes.Name;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -82,35 +85,38 @@ public class Limelight extends SubsystemBase {
 
   //please test if these work we can use them for pathplanner
   //Also maybe add conditionals that will make them only run if the tag is seen depending on how you plan to use these methods
-  
-  //for blue alliance
-  public double getXpositionOnField_B(String name){ //gets x position relative to field
-    
-    Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
-    return robotPose.getX();
-  }
-  public double getZpositionOnField_B(String name){ //gets z position relative to field
-    Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
-    return robotPose.getZ();
-  }
-  public double getRotationAngleRad_B(String name){ //gets rotation of robot relative to field
-    Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
-    return robotPose.getRotation().getZ();
-  }
 
-  //for red alliance
-  public double getXpositionOnField_R(String name){ //gets x position relative to field
-    Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
-    return robotPose.getX();
+  public Pose2d get2DPoseOnField(String name){
+    return LimelightHelpers.getBotPose2d_wpiBlue(name); // gets the 2D position of the robot on the field
   }
-  public double getZpositionOnField_R(String name){ //gets z position relative to field
-    Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
-    return robotPose.getZ();
-  }
-  public double getRotationAngleRad_R(String name){ //gets rotation of robot relative to field
-    Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
-    return robotPose.getRotation().getZ();
-  }
+  // //for blue alliance
+  // public double getXpositionOnField_B(String name){ //gets x position relative to field
+    
+  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
+  //   return robotPose.getX();
+  // }
+  // public double getZpositionOnField_B(String name){ //gets z position relative to field
+  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
+  //   return robotPose.getZ();
+  // }
+  // public double getRotationAngleRad_B(String name){ //gets rotation of robot relative to field
+  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
+  //   return robotPose.getRotation().getZ();
+  // }
+
+  // //for red alliance
+  // public double getXpositionOnField_R(String name){ //gets x position relative to field
+  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
+  //   return robotPose.getX();
+  // }
+  // public double getZpositionOnField_R(String name){ //gets z position relative to field
+  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
+  //   return robotPose.getZ();
+  // }
+  // public double getRotationAngleRad_R(String name){ //gets rotation of robot relative to field
+  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
+  //   return robotPose.getRotation().getZ();
+  // }
 
 
 
