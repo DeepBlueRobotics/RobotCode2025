@@ -23,6 +23,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import static org.carlmontrobotics.Config.CONFIG;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.StadiaController.Button;
@@ -362,6 +364,32 @@ public final class Constants {
 					2 * Math.PI); // The constraints for this path. If using a differential drivetrain, the
 									// angular constraints have no effect.
 		}
+	}
+
+	public static final class AligningCords {
+		public static final Pose2d ID6_17Right = new Pose2d(2.087,4.737, Rotation2d.fromDegrees(60));
+		public static final Pose2d ID6_17Left = new Pose2d(3.530,2.679, Rotation2d.fromDegrees(60));
+		public static final Pose2d ID6_17Search = new Pose2d(3.650,2.611, Rotation2d.fromDegrees(60));
+
+		public static final Pose2d ID7_18Right = new Pose2d(2.837,3.840, Rotation2d.fromDegrees(0));
+		public static final Pose2d ID7_18Left = new Pose2d(2.837,4.181, Rotation2d.fromDegrees(0));
+		public static final Pose2d ID7_18Search = new Pose2d(2.844,4, Rotation2d.fromDegrees(0));
+		
+		public static final Pose2d ID8_19Right = new Pose2d(3.539,5.361, Rotation2d.fromDegrees(-60));
+		public static final Pose2d ID8_19Left = new Pose2d(3.832,5.546, Rotation2d.fromDegrees(-60));
+		public static final Pose2d ID8_19Search = new Pose2d(3.686,5.458, Rotation2d.fromDegrees(-60));
+
+		public static final Pose2d ID9_20Right = new Pose2d(5.148,5.546, Rotation2d.fromDegrees(-120));
+		public static final Pose2d ID9_20Left = new Pose2d(5.470,5.361, Rotation2d.fromDegrees(-120));
+		public static final Pose2d ID9_20Search = new Pose2d(5.285,5.448, Rotation2d.fromDegrees(-120));
+
+		public static final Pose2d ID10_21Right = new Pose2d(6.143,4.210, Rotation2d.fromDegrees(180));
+		public static final Pose2d ID10_21Left = new Pose2d(6.143,3.859, Rotation2d.fromDegrees(180));
+		public static final Pose2d ID10_21Search = new Pose2d(6.143,4, Rotation2d.fromDegrees(180));
+
+		public static final Pose2d ID11_22Right = new Pose2d(5, 2.8, Rotation2d.fromDegrees(120));
+		public static final Pose2d ID11_22Left = new Pose2d(5.28, 2.96, Rotation2d.fromDegrees(120));
+		public static final Pose2d ID11_22Search = new Pose2d(5.314, 2.619, Rotation2d.fromDegrees(120));
 	}
 
 	public static final class Limelightc {
