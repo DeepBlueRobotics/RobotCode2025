@@ -72,15 +72,15 @@ public class PathPlannerAlign extends Command {
   @Override
   public void execute() {
     if (searchingState && ll.seesTag(REEF_LL)) {
-      searchingState = false;
       currentPath.cancel();
       runPathToClosestReef();
+      searchingState = false;
 
     }
     if (!searchingState && !ll.seesTag(REEF_LL)) {
-      searchingState = true;
       currentPath.cancel();
       runToClosestSearchingPosition();
+      searchingState = true;
     }
   }
 
@@ -93,7 +93,7 @@ public class PathPlannerAlign extends Command {
 
   @Override
   public boolean isFinished() {
-    return !searchingState || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ) || (Math.abs(rStick.getAsDouble()) > 0.1 );
+    return (!searchingState && currentPath.isFinished()) || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ) || (Math.abs(rStick.getAsDouble()) > 0.1 );
   }
 
   private void runPathToClosestReef() {
@@ -207,6 +207,8 @@ public class PathPlannerAlign extends Command {
     constraints, 
     null, 
     new GoalEndState(0, targetLocation.getRotation()));
+    currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
+    currentPath.schedule();
   }
 
   public static Pose2d findClosestPose(Pose2d target, Pose2d[] poses) {
