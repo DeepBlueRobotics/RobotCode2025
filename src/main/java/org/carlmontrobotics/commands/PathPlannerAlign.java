@@ -78,9 +78,9 @@ public class PathPlannerAlign extends Command {
 
     }
     if (!searchingState && !ll.seesTag(REEF_LL)) {
+      searchingState = true;
       currentPath.cancel();
       runToClosestSearchingPosition();
-      searchingState = true;
     }
   }
 
