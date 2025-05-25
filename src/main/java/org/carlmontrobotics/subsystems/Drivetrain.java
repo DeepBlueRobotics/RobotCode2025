@@ -428,8 +428,8 @@ public class Drivetrain extends SubsystemBase {
 
         // odometry.update(gyro.getRotation2d(), getModulePositions());
 
-        poseEstimator.update(gyro.getRotation2d(), getModulePositions());
-        
+        // poseEstimator.update(gyro.getRotation2d(), getModulePositions());
+        updatePoseWithLimelight();
         //odometry.update(Rotation2d.fromDegrees(getHeading()), getModulePositions());
 
         // updateMT2PoseEstimator();
@@ -598,7 +598,7 @@ public class Drivetrain extends SubsystemBase {
                 //Supplier<Pose2d> poseSupplier,
                 this::getPose, // Robot pose supplier
                 //Consumer<Pose2d> resetPose,
-                this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::setPoseWithLimelight, // Method to reset odometry (will be called if your auto has a starting pose)
                 //Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
                 this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 //BiConsumer<ChassisSpeeds,DriveFeedforwards> output,
