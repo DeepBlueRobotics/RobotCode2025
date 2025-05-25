@@ -83,6 +83,7 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getTX(name);
   }
 
+<<<<<<< HEAD
   //please test if these work we can use them for pathplanner
   //Also maybe add conditionals that will make them only run if the tag is seen depending on how you plan to use these methods
 
@@ -120,11 +121,13 @@ public class Limelight extends SubsystemBase {
 
 
 
+=======
+>>>>>>> 9cf92b2fa4b1786f696abde1e56f5cf242422b8c
   //TODO: TEST WHICH ONE IS MORE ACCURATE
 
   public double getRotateAngleRadMT2(String limelightName) {
     Pose3d targetPoseRobotSpace = LimelightHelpers.getTargetPose3d_RobotSpace(limelightName); // pose of the target
-
+    
     double targetX = targetPoseRobotSpace.getX(); // the forward offset between the center of the
     // robot and target
     double targetZ = -targetPoseRobotSpace.getZ(); // the sideways offset
@@ -132,6 +135,11 @@ public class Limelight extends SubsystemBase {
     double targetOffsetRads = MathUtil.inputModulus(Math.atan2(targetX, targetZ), -Math.PI, Math.PI);
 
     return targetOffsetRads;
+  }
+
+  public Pose2d getRobotPoseInField(String limelightName) {
+    Pose2d robotPosFieldSpace = LimelightHelpers.getBotPose2d(limelightName);
+    return robotPosFieldSpace;
   }
 
 

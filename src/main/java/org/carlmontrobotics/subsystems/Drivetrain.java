@@ -680,6 +680,10 @@ public class Drivetrain extends SubsystemBase {
         return kinematics.toSwerveModuleStates(getChassisSpeeds(forward, -strafe, rotation));
     }
 
+    public SwerveModuleState[] getSwerveStates(ChassisSpeeds speeds) {
+        return kinematics.toSwerveModuleStates(speeds);
+    }
+
     // #endregion
 
     // #region Getters and Setters
@@ -718,6 +722,7 @@ public class Drivetrain extends SubsystemBase {
             return getPose();
         }
     }
+
 
     private Rotation2d simGyroOffset = new Rotation2d();
     public void setPose(Pose2d initialPose) {
