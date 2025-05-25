@@ -6,6 +6,7 @@ import static org.carlmontrobotics.Constants.Drivetrainc.*;
 import static org.carlmontrobotics.Constants.Limelightc.CORAL_LL;
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
+import java.sql.Time;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -360,6 +361,10 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
         SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
+        SmartDashboard.putNumber("X position with limelight", getPoseWithLimelight().getX());
+        SmartDashboard.putNumber("Y position with limelight", getPoseWithLimelight().getY());
+        SmartDashboard.putNumber("X position with gyro", getPose().getX());
+        SmartDashboard.putNumber("Y position with gyro", getPose().getY());
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);
@@ -709,6 +714,8 @@ public class Drivetrain extends SubsystemBase {
         return poseEstimator.getEstimatedPosition();
     }
 
+    //You can just use getPose() to get the position with limelight since limelight is incorporated into the pose estimator with updateposewithlimelight()
+    //This method can be used to get the pose with limelight on SmartDashboard and compare it to the pose using odometry
     public Pose2d getPoseWithLimelight(){
         if (LimelightHelpers.getTV(REEF_LL)) {
             
@@ -757,7 +764,8 @@ public class Drivetrain extends SubsystemBase {
         simGyroOffset = pose.getRotation().minus(gyroRotation);
         
     }
-
+    //This method will update the position of the robot with limelight to help 
+    //put this method in periodic() instead of the current line that updates the position
     public void updatePoseWithLimelight(){
         Pose2d pose;
         Rotation2d gyroRotation = gyro.getRotation2d();
@@ -765,15 +773,15 @@ public class Drivetrain extends SubsystemBase {
         if (LimelightHelpers.getTV(REEF_LL)) {
             // Get the pose of the robot relative to the tag
             pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
-            poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose);
+            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp()); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
 
         } else if (LimelightHelpers.getTV(CORAL_LL)) {
 
             pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-            poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose);
+            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
         }
         else {
-            poseEstimator.update(gyroRotation, getModulePositions());
+            poseEstimator.update(gyroRotation, getModulePositions()); //if the limelights don't see a tag then it will just update the pose using odometry
         }
         
     }
