@@ -83,46 +83,6 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getTX(name);
   }
 
-<<<<<<< HEAD
-  //please test if these work we can use them for pathplanner
-  //Also maybe add conditionals that will make them only run if the tag is seen depending on how you plan to use these methods
-
-  public Pose2d get2DPoseOnField(String name){
-    return LimelightHelpers.getBotPose2d_wpiBlue(name); // gets the 2D position of the robot on the field
-  }
-  // //for blue alliance
-  // public double getXpositionOnField_B(String name){ //gets x position relative to field
-    
-  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
-  //   return robotPose.getX();
-  // }
-  // public double getZpositionOnField_B(String name){ //gets z position relative to field
-  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
-  //   return robotPose.getZ();
-  // }
-  // public double getRotationAngleRad_B(String name){ //gets rotation of robot relative to field
-  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
-  //   return robotPose.getRotation().getZ();
-  // }
-
-  // //for red alliance
-  // public double getXpositionOnField_R(String name){ //gets x position relative to field
-  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
-  //   return robotPose.getX();
-  // }
-  // public double getZpositionOnField_R(String name){ //gets z position relative to field
-  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
-  //   return robotPose.getZ();
-  // }
-  // public double getRotationAngleRad_R(String name){ //gets rotation of robot relative to field
-  //   Pose3d robotPose = LimelightHelpers.getBotPose3d_wpiRed(name);
-  //   return robotPose.getRotation().getZ();
-  // }
-
-
-
-=======
->>>>>>> 9cf92b2fa4b1786f696abde1e56f5cf242422b8c
   //TODO: TEST WHICH ONE IS MORE ACCURATE
 
   public double getRotateAngleRadMT2(String limelightName) {
