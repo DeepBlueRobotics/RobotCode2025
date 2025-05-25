@@ -310,6 +310,10 @@ public class Drivetrain extends SubsystemBase {
 
     }
 
+    public SwerveDrivePoseEstimator getPoseEstimator() {
+        return poseEstimator;
+    }
+
     public boolean isAtAngle(double desiredAngleDeg, double toleranceDeg){
         for (SwerveModule module : modules) { 
             if (!(Math.abs(MathUtil.inputModulus(module.getModuleAngle() - desiredAngleDeg, -90, 90)) < toleranceDeg)) 
@@ -317,6 +321,7 @@ public class Drivetrain extends SubsystemBase {
         }
         return true;
     }
+
     @Override
     public void simulationPeriodic() {
         for (var moduleSim : moduleSims) {
