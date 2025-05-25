@@ -278,7 +278,7 @@ public class Drivetrain extends SubsystemBase {
 
             }
            
-            //SmartDashboard.putData("Field", field);
+            SmartDashboard.putData("Field", field);
 
             // for(SparkMax driveMotor : driveMotors)
             // driveMotor.setSmartCurrentLimit(80);
