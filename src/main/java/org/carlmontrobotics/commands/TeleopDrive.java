@@ -7,17 +7,22 @@ import java.util.function.DoubleSupplier;
 
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Robot;
+import org.carlmontrobotics.subsystems.CoralEffector;
 import org.carlmontrobotics.subsystems.Drivetrain;
 import static org.carlmontrobotics.RobotContainer.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import org.carlmontrobotics.subsystems.Elevator;
+import org.carlmontrobotics.subsystems.CoralEffector;
+import org.carlmontrobotics.commands.CoralIntake;
 
 public class TeleopDrive extends Command {
 
@@ -31,20 +36,24 @@ public class TeleopDrive extends Command {
   private double currentStrafeVel = 0;
   private double prevTimestamp;
   public static boolean babyMode = true;
-  public static BooleanSupplier babyModeSupplier = () -> true;
+  public static BooleanSupplier babyModeSupplier = () -> babyMode;
   Elevator elevator;
+  CoralEffector coralEffector;
+  GenericHID manipulatorController;
 
   /**
    * Creates a new TeleopDrive.
    */
   public TeleopDrive(Drivetrain drivetrain, DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rcw,
-      BooleanSupplier slow, Elevator elevator) {
+      BooleanSupplier slow, Elevator elevator, CoralEffector coralEffector, GenericHID manipulatorController) {
     addRequirements(this.drivetrain = drivetrain);
     this.fwd = fwd;
     this.str = str;
     this.rcw = rcw;
     this.slow = slow;
     this.elevator = elevator;
+    this.coralEffector = coralEffector;
+    this.manipulatorController = manipulatorController;
   }
 
   // Called when the command is initially scheduled.
@@ -55,8 +64,8 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("normal turn const", kNormalDriveRotation);
     // SmartDashboard.putNumber("normal speed const", kNormalDriveSpeed);
     prevTimestamp = Timer.getFPGATimestamp();
-    SmartDashboard.putBoolean("babymode", babyMode
-    );
+    SmartDashboard.putBoolean("babymode", babyMode);
+    new CoralIntake(coralEffector).until(() -> manipulatorController.getRawButtonPressed(Button.kLeftBumper.value)).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -76,7 +85,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("fwd", speeds[0]);
     // SmartDashboard.putNumber("strafe", speeds[1]);
     // SmartDashboard.putNumber("turn", speeds[2]);
-    if(babyMode && elevator.getCurrentHeight() < 0.05 || !babyMode){
+    if(babyMode && elevator.getCurrentHeight() < 0.05 || !babyMode){ //TODO: change this to use limit switch instead when the limit switch gets properly mounted (which is probably never :( )
       drivetrain.drive(speeds[0], speeds[1], speeds[2]);
     }else{
       drivetrain.stop();

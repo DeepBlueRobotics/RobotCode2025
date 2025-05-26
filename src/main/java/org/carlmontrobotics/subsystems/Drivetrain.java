@@ -2,9 +2,12 @@
 
 package org.carlmontrobotics.subsystems;
 
+import org.carlmontrobotics.subsystems.Elevator;
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
+import static org.carlmontrobotics.Constants.Limelightc.CORAL_LL;
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
+import java.sql.Time;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -13,6 +16,7 @@ import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Drivetrainc;
 import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
 import org.carlmontrobotics.Robot;
+import org.carlmontrobotics.subsystems.Limelight;
 // import org.carlmontrobotics.commands.RotateToFieldRelativeAngle;
 import org.carlmontrobotics.commands.TeleopDrive;
 import org.carlmontrobotics.lib199.MotorConfig;
@@ -149,7 +153,10 @@ public class Drivetrain extends SubsystemBase {
     double kP = 0;
     double kI = 0;
     double kD = 0;
-    public Drivetrain() {
+    
+    private final Elevator elevator;
+
+    public Drivetrain(Elevator elevator) {
         AutoBuilder();
         //SmartDashboard.putNumber("Goal Velocity", 0);
         //SmartDashboard.putNumber("kP", 0);
@@ -274,7 +281,7 @@ public class Drivetrain extends SubsystemBase {
 
             }
            
-            //SmartDashboard.putData("Field", field);
+            SmartDashboard.putData("Field", field);
 
             // for(SparkMax driveMotor : driveMotors)
             // driveMotor.setSmartCurrentLimit(80);
@@ -302,7 +309,12 @@ public class Drivetrain extends SubsystemBase {
 
         //                             SmartDashboard.putNumber("chassis speeds theta", 0);
         SmartDashboard.putData(this);
+        this.elevator = elevator;
 
+    }
+
+    public SwerveDrivePoseEstimator getPoseEstimator() {
+        return poseEstimator;
     }
 
     public boolean isAtAngle(double desiredAngleDeg, double toleranceDeg){
@@ -312,6 +324,7 @@ public class Drivetrain extends SubsystemBase {
         }
         return true;
     }
+
     @Override
     public void simulationPeriodic() {
         for (var moduleSim : moduleSims) {
@@ -356,6 +369,10 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
         SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
+        SmartDashboard.putNumber("X position with limelight", getPoseWithLimelight().getX());
+        SmartDashboard.putNumber("Y position with limelight", getPoseWithLimelight().getY());
+        SmartDashboard.putNumber("X position with gyro", getPose().getX());
+        SmartDashboard.putNumber("Y position with gyro", getPose().getY());
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);
@@ -414,7 +431,8 @@ public class Drivetrain extends SubsystemBase {
 
         // odometry.update(gyro.getRotation2d(), getModulePositions());
 
-        poseEstimator.update(gyro.getRotation2d(), getModulePositions());
+        // poseEstimator.update(gyro.getRotation2d(), getModulePositions());
+        updatePoseWithLimelight();
         //odometry.update(Rotation2d.fromDegrees(getHeading()), getModulePositions());
 
         // updateMT2PoseEstimator();
@@ -583,7 +601,7 @@ public class Drivetrain extends SubsystemBase {
                 //Supplier<Pose2d> poseSupplier,
                 this::getPose, // Robot pose supplier
                 //Consumer<Pose2d> resetPose,
-                this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::setPoseWithLimelight, // Method to reset odometry (will be called if your auto has a starting pose)
                 //Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
                 this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 //BiConsumer<ChassisSpeeds,DriveFeedforwards> output,
@@ -675,6 +693,10 @@ public class Drivetrain extends SubsystemBase {
         return kinematics.toSwerveModuleStates(getChassisSpeeds(forward, -strafe, rotation));
     }
 
+    public SwerveModuleState[] getSwerveStates(ChassisSpeeds speeds) {
+        return kinematics.toSwerveModuleStates(speeds);
+    }
+
     // #endregion
 
     // #region Getters and Setters
@@ -699,6 +721,24 @@ public class Drivetrain extends SubsystemBase {
         // return odometry.getPoseMeters();
         return poseEstimator.getEstimatedPosition();
     }
+
+    //You can just use getPose() to get the position with limelight since limelight is incorporated into the pose estimator with updateposewithlimelight()
+    //This method can be used to get the pose with limelight on SmartDashboard and compare it to the pose using odometry
+    public Pose2d getPoseWithLimelight(){
+        if (LimelightHelpers.getTV(REEF_LL)) {
+            
+            return LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+
+        } else if (LimelightHelpers.getTV(CORAL_LL)) {
+
+            return LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        } else {
+            // If no tag is seen, return the current pose
+            return getPose();
+        }
+    }
+
+
      public Rotation2d getRotation2d() {
         return gyro.getRotation2d();
      }
@@ -712,6 +752,49 @@ public class Drivetrain extends SubsystemBase {
         // We need the offset so that we can compensate for it during simulationPeriodic().
         simGyroOffset = initialPose.getRotation().minus(gyroRotation);
         //odometry.resetPosition(Rotation2d.fromDegrees(getHeading()), getModulePositions(), initialPose);
+    }
+
+    //This method will set the pose using limelight if it sees a tag and if not it is supposed to run like setPose()
+    public void setPoseWithLimelight(Pose2d backupPose){ //the pose will be set to backupPose if no tag is seen
+        Rotation2d gyroRotation = gyro.getRotation2d();
+        Pose2d pose;
+
+        if (LimelightHelpers.getTV(REEF_LL)) {
+            
+            pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+
+        } else if (LimelightHelpers.getTV(CORAL_LL)) {
+
+            pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        }
+        else {
+            pose = backupPose;
+        }
+
+        poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose);
+        simGyroOffset = pose.getRotation().minus(gyroRotation);
+        
+    }
+    //This method will update the position of the robot with limelight to help 
+    //put this method in periodic() instead of the current line that updates the position
+    public void updatePoseWithLimelight(){
+        Pose2d pose;
+        Rotation2d gyroRotation = gyro.getRotation2d();
+
+        if (LimelightHelpers.getTV(REEF_LL) && elevator.getBottomLimitSwitch()) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
+            // Get the pose of the robot relative to the tag
+            pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp()); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
+
+        } else if (LimelightHelpers.getTV(CORAL_LL)) {
+
+            pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
+        }
+        else {
+            poseEstimator.update(gyroRotation, getModulePositions()); //if the limelights don't see a tag then it will just update the pose using odometry
+        }
+        
     }
 
     // Resets the gyro, so that the direction the robotic currently faces is

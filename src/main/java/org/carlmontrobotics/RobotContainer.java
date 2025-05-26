@@ -65,6 +65,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.LOWER_ANGLE_LIMIT;
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.UPPER_ANGLE_LIMIT;
 import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
 import static org.carlmontrobotics.Constants.Elevatorc.l1;
 import static org.carlmontrobotics.Constants.Elevatorc.l2;
@@ -94,9 +96,9 @@ public class RobotContainer {
 
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
 
-    public final Drivetrain drivetrain =  new Drivetrain();
+    
     //public final AlgaeEffector algaeEffector = new AlgaeEffector();
-    private final Limelight limelight = new Limelight(drivetrain);
+    
 
 
     //private final Drivetrain drivetrain = new Drivetrain();
@@ -114,8 +116,10 @@ public class RobotContainer {
 
     // private boolean hasSetupAutos = false;
     // private final String[] autoNames = new String[] {};
-    // private final AlgaeEffector algaeEffector = new AlgaeEffector();
+    private final AlgaeEffector algaeEffector = new AlgaeEffector();
      private final Elevator elevator = new Elevator();
+     public final Drivetrain drivetrain =  new Drivetrain(elevator);
+     private final Limelight limelight = new Limelight(drivetrain);
      private SendableChooser<Command> autoChooser = new SendableChooser<>();
      
      
@@ -127,10 +131,12 @@ public class RobotContainer {
        //public final AlgaeEffector algaeEffector = new AlgaeEffector();
      
        // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
+       public boolean alignOverride = false;
      
          public RobotContainer() {
              {
                 SmartDashboard.putData("intake", new CoralIntake(coralEffector));
+                
                  // Put any configuration overrides to the dashboard and the terminal
                  // SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
                  // SmartDashboard.putData(drivetrain);
@@ -164,17 +170,17 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, -1, 4, 8));
         RegisterCustomAutos();
-        SmartDashboard.putData("Auto Chooser", autoChooser);    SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
+        SmartDashboard.putData("Auto Chooser", autoChooser);    
+        SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
         SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
+
+        SmartDashboard.putBoolean("AlignOverride", alignOverride);
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
         // SmartDashboard.putData("align right", new MoveToRightBranch(drivetrain, limelight));
         // SmartDashboard.putData("align left", new MoveToLeftBranch(drivetrain, limelight));
-        final int waitTime = 3;
-        final int speed = 2;
         SmartDashboard.putData("Battery testing go vroooom", new SequentialCommandGroup(
-            // Right L2 then reset
              new BatteryTesting(drivetrain, elevator, limelight, l2),
              new BatteryTesting(drivetrain, elevator, limelight, l3),
              new BatteryTesting(drivetrain, elevator, limelight, l4)
@@ -203,7 +209,7 @@ public class RobotContainer {
         new POVButton(driverController, 180)
             .whileTrue(new ParallelCommandGroup(
         new InstantCommand(() -> drivetrain.stop()),
-        new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator)));
+        new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator, coralEffector, manipulatorController)));
 
 
         
@@ -213,6 +219,32 @@ public class RobotContainer {
         new JoystickButton(driverController, 7).onTrue(new SequentialCommandGroup(
             new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with right branch
                 driverRumble)));
+        //conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
+        //this is for the left branch or left station (left station refers to the coral station to the left of the driver)
+        new JoystickButton(driverController, Driver.y)
+            .onTrue(new ConditionalCommand(
+                new PathPlannerToReef(drivetrain, limelight, false, 
+                () -> driverController.getRawAxis(0), 
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                new GoToCoralStation(drivetrain, false,
+                () -> driverController.getRawAxis(0),
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", false)));
+                
+        //this is for the right branch or right station
+        new JoystickButton(driverController, Driver.y)
+            .onTrue(new ConditionalCommand(
+                new PathPlannerToReef(drivetrain, limelight, true, 
+                () -> driverController.getRawAxis(0), 
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                new GoToCoralStation(drivetrain, true,
+                () -> driverController.getRawAxis(0),
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", false)));
         
         //TODO test rotation, need to tune pid for that
         // new POVButton(driverController, 0)
@@ -838,7 +870,9 @@ SHARK IN THE TANK
       () -> ProcessedAxisValue(driverController, Axis.kLeftX),
       () -> ProcessedAxisValue(driverController, Axis.kRightX),
       () -> driverController.getRawButton(OI.Driver.slowDriveButton),
-        elevator
+        elevator,
+        coralEffector,
+        manipulatorController
       ));
     //   SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     // SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
@@ -886,7 +920,12 @@ SHARK IN THE TANK
     new POVButton(manipulatorController, 180).onTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ElevatorToPos(elevator, testl4), babyModeSupplier));
     new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-        new CoralOuttake(coralEffector, .15)), babyModeSupplier));    
+        new CoralOuttake(coralEffector, .15)), babyModeSupplier));  
+        
+    //test to see if this botton works properly
+    new JoystickButton(manipulatorController, Button.kRightStick.value)
+    .whileTrue(new ArmToPosition(algaeEffector, UPPER_ANGLE_LIMIT))
+    .whileFalse(new ArmToPosition(algaeEffector, LOWER_ANGLE_LIMIT)); 
   }
   
   
@@ -951,7 +990,7 @@ SHARK IN THE TANK
   private double ProcessedAxisValue(GenericHID hid, Axis axis){
     return inputProcessing(getStickValue(hid, axis));
   }
-
+  
   private Trigger axisTrigger(GenericHID controller, Axis axis) {
     return new Trigger( (BooleanSupplier)(() -> Math.abs(getStickValue(controller, axis)) > 0.2) );
   }
