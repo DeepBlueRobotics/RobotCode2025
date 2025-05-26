@@ -87,7 +87,7 @@ public class PathPlannerToReef extends Command {
 
     }
     else if (searchingState && ll.seesTag(REEF_LL)) {
-      searchingState = false;
+      searchingState = false; // what does this do? 
     }
     // if (!searchingState && !ll.seesTag(REEF_LL)) {
     //   currentPath.cancel();
@@ -106,7 +106,7 @@ public class PathPlannerToReef extends Command {
 
   @Override
   public boolean isFinished() {
-    return (currentPath.isFinished()) || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ) || (Math.abs(rStick.getAsDouble()) > 0.1 );
+    return (currentPath.isFinished() && searchingState == false) || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ) || (Math.abs(rStick.getAsDouble()) > 0.1 );
   }
 
   private void runPathToClosestReef() {
