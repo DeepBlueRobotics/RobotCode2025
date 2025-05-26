@@ -174,7 +174,7 @@ public class RobotContainer {
         SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
         SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
 
-        SmartDashboard.putBoolean("AlignOverride", alignOverride)
+        SmartDashboard.putBoolean("AlignOverride", alignOverride);
         setDefaultCommands();
         setBindingsDriver();
         setBindingsManipulator();
