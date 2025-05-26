@@ -180,10 +180,7 @@ public class RobotContainer {
         setBindingsManipulator();
         // SmartDashboard.putData("align right", new MoveToRightBranch(drivetrain, limelight));
         // SmartDashboard.putData("align left", new MoveToLeftBranch(drivetrain, limelight));
-        final int waitTime = 3;
-        final int speed = 2;
         SmartDashboard.putData("Battery testing go vroooom", new SequentialCommandGroup(
-            // Right L2 then reset
              new BatteryTesting(drivetrain, elevator, limelight, l2),
              new BatteryTesting(drivetrain, elevator, limelight, l3),
              new BatteryTesting(drivetrain, elevator, limelight, l4)

@@ -36,7 +36,7 @@ public class TeleopDrive extends Command {
   private double currentStrafeVel = 0;
   private double prevTimestamp;
   public static boolean babyMode = true;
-  public static BooleanSupplier babyModeSupplier = () -> true;
+  public static BooleanSupplier babyModeSupplier = () -> babyMode;
   Elevator elevator;
   CoralEffector coralEffector;
   GenericHID manipulatorController;
@@ -64,8 +64,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("normal turn const", kNormalDriveRotation);
     // SmartDashboard.putNumber("normal speed const", kNormalDriveSpeed);
     prevTimestamp = Timer.getFPGATimestamp();
-    SmartDashboard.putBoolean("babymode", babyMode
-    );
+    SmartDashboard.putBoolean("babymode", babyMode);
     new CoralIntake(coralEffector).until(() -> manipulatorController.getRawButtonPressed(Button.kLeftBumper.value)).schedule();
   }
 
@@ -86,7 +85,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("fwd", speeds[0]);
     // SmartDashboard.putNumber("strafe", speeds[1]);
     // SmartDashboard.putNumber("turn", speeds[2]);
-    if(babyMode && elevator.getCurrentHeight() < 0.05 || !babyMode){
+    if(babyMode && elevator.getCurrentHeight() < 0.05 || !babyMode){ //TODO: change this to use limit switch instead when the limit switch gets properly mounted (which is probably never :( )
       drivetrain.drive(speeds[0], speeds[1], speeds[2]);
     }else{
       drivetrain.stop();
