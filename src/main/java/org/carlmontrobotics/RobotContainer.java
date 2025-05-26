@@ -96,9 +96,9 @@ public class RobotContainer {
 
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
 
-    public final Drivetrain drivetrain =  new Drivetrain();
+    
     //public final AlgaeEffector algaeEffector = new AlgaeEffector();
-    private final Limelight limelight = new Limelight(drivetrain);
+    
 
 
     //private final Drivetrain drivetrain = new Drivetrain();
@@ -118,6 +118,8 @@ public class RobotContainer {
     // private final String[] autoNames = new String[] {};
     private final AlgaeEffector algaeEffector = new AlgaeEffector();
      private final Elevator elevator = new Elevator();
+     public final Drivetrain drivetrain =  new Drivetrain(elevator);
+     private final Limelight limelight = new Limelight(drivetrain);
      private SendableChooser<Command> autoChooser = new SendableChooser<>();
      
      

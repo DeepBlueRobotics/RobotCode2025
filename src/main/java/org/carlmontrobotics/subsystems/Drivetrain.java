@@ -153,10 +153,10 @@ public class Drivetrain extends SubsystemBase {
     double kP = 0;
     double kI = 0;
     double kD = 0;
-
+    
     private final Elevator elevator;
 
-    public Drivetrain() {
+    public Drivetrain(Elevator elevator) {
         AutoBuilder();
         //SmartDashboard.putNumber("Goal Velocity", 0);
         //SmartDashboard.putNumber("kP", 0);
@@ -309,7 +309,7 @@ public class Drivetrain extends SubsystemBase {
 
         //                             SmartDashboard.putNumber("chassis speeds theta", 0);
         SmartDashboard.putData(this);
-        elevator = new Elevator();
+        this.elevator = elevator;
 
     }
 
