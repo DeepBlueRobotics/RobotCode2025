@@ -22,6 +22,7 @@ import org.photonvision.targeting.proto.PhotonPipelineResultProto;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.proto.Photon;
 import org.photonvision.PhotonUtils;
 
 import org.carlmontrobotics.subsystems.Drivetrain;
@@ -30,19 +31,20 @@ public class PhotonVision extends SubsystemBase {
 
   Drivetrain drivetrain;
 
-  // Define all the cameras here
-  PhotonCamera camera = new PhotonCamera("camera");
-  public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); //layout of the field
-  public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); //layout of the field 
-  public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
-  public static final Transform3d kCamToRobot = kRobotToCam.inverse();
+  private PhotonCamera camera; 
+  private final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); //layout of the field
+  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); //layout of the field 
+  private final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0)); //find values later and make it configurable with a CONFIG (I am too lazy to do it now)
+  private final Transform3d kCamToRobot = kRobotToCam.inverse();
   private PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
 
 
   List<PhotonPipelineResult> latestResult;
 
-  public PhotonVision(Drivetrain drivetrain) {
+  public PhotonVision(Drivetrain drivetrain, String cameraName) {
     this.drivetrain = drivetrain;
+    PhotonCamera camera = new PhotonCamera(cameraName);
+
   }
 
   public List<PhotonPipelineResult> getUnreadResultsList() {
@@ -94,7 +96,8 @@ public class PhotonVision extends SubsystemBase {
     }
   }
 
-  
+
+
 
   // public void EstimateFieldToRobot(PhotonTrackedTarget target){
   //   Pose3d targetPose3d = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
@@ -107,6 +110,8 @@ public class PhotonVision extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     latestResult = getUnreadResultsList();
-    getData(getBestTarget(), PhotonDataTypes.yaw); //IT'S ALIVE
+
+    //just some testing, remive later
+    getData(getBestTarget(), PhotonDataTypes.yaw);
   }
 }
