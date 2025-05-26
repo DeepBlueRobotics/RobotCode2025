@@ -45,18 +45,20 @@ public class GoToCoralStation extends Command {
 
   private Pose2d targetLocation;
   private boolean rightStation; //right station refers to the coral station on the right of the driver from the blue alliance perspective
-  private DoubleSupplier xStick;
-  private DoubleSupplier yStick;
+  private DoubleSupplier xStick; //x axis on left joystick
+  private DoubleSupplier yStick; //y axis on left joystick
+  private DoubleSupplier rStick; //x axis on right joystick
   
   private Command currentPath; 
   private PathConstraints constraints = new PathConstraints(1, 1, 1, 1); //TODO tune this for fastest possible alignment
 
   public GoToCoralStation(Drivetrain drivetrain , boolean rightStation,
-    DoubleSupplier xStick, DoubleSupplier yStick //For cancellation purposes
+    DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
     ) {
     addRequirements(dt=drivetrain);
     this.xStick = xStick;
     this.yStick = yStick;
+    this.rStick = rStick;
     this.rightStation = rightStation;
     
   }
@@ -81,7 +83,10 @@ public class GoToCoralStation extends Command {
 
   @Override
   public boolean isFinished() {
-    return (currentPath.isFinished()) || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ); //adjust the joystick requirements if nessesary
+    return (currentPath.isFinished()) 
+    || (Math.abs(xStick.getAsDouble()) > 0.1 ) 
+    || (Math.abs(yStick.getAsDouble()) > 0.1 )
+    || (Math.abs(rStick.getAsDouble()) > 0.1); //adjust the joystick requirements if nessesary
   }
 
   private void runPathToStation(){

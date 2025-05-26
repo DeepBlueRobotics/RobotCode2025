@@ -133,6 +133,7 @@ public class RobotContainer {
          public RobotContainer() {
              {
                 SmartDashboard.putData("intake", new CoralIntake(coralEffector));
+                
                  // Put any configuration overrides to the dashboard and the terminal
                  // SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
                  // SmartDashboard.putData(drivetrain);
@@ -216,6 +217,17 @@ public class RobotContainer {
         new JoystickButton(driverController, 7).onTrue(new SequentialCommandGroup(
             new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with right branch
                 driverRumble)));
+        //Buttons for going to the coral station
+        new JoystickButton(driverController, Driver.y)
+            .onTrue(new GoToCoralStation(drivetrain, false, 
+            () -> driverController.getRawAxis(0),
+            () -> driverController.getRawAxis(1), 
+            ()-> driverController.getRawAxis(5)));
+        new JoystickButton(driverController, Driver.a)
+            .onTrue(new GoToCoralStation(drivetrain, true, 
+            () -> driverController.getRawAxis(0),
+            () -> driverController.getRawAxis(1), 
+            ()-> driverController.getRawAxis(5)));
         
         //TODO test rotation, need to tune pid for that
         // new POVButton(driverController, 0)
