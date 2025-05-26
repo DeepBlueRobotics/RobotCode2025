@@ -123,18 +123,18 @@ public class PathPlannerToReef extends Command {
   private void runPathToClosestReef() {
       targetID = (int) LimelightHelpers.getFiducialID(REEF_LL);
       if (rightBranch) {
-        if (blueIDs.contains(targetID)) {
+        if (blueIDs.contains(targetID) && blueAlliance) {
           targetLocation = rightPoses[blueIDs.indexOf(targetID)];
         }
-        else if (redIDs.contains(targetID)) {
+        else if (redIDs.contains(targetID) && !blueAlliance) {
           targetLocation = rightPoses[redIDs.indexOf(targetID)];
         }
       }
       else {
-        if (blueIDs.contains(targetID)) {
+        if (blueIDs.contains(targetID) && blueAlliance) {
           targetLocation = leftPoses[blueIDs.indexOf(targetID)];
         }
-        else if (redIDs.contains(targetID)) {
+        else if (redIDs.contains(targetID) && !blueAlliance) {
           targetLocation = leftPoses[redIDs.indexOf(targetID)];
         }
       }
