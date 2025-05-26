@@ -38,7 +38,7 @@ public class PathPlannerToReef extends Command {
   private final SwerveDrivePoseEstimator poseEstimator;
   
 
-
+  private boolean blueAlliance;
   private final Pose2d[] searchPoses = {ID6_17Search, ID7_18Search, ID8_19Search, ID9_20Search, ID10_21Search, ID11_22Search};
   private final List<Integer> blueIDs = List.of(17,18,19,20,21,22);
   private final List<Integer> redIDs = List.of(6,7,8,9,10,11);//I cannot do a freakin array cause it has no indexing option
@@ -68,6 +68,7 @@ public class PathPlannerToReef extends Command {
 
   @Override
   public void initialize() {
+    getAlliance(); 
     if (ll.seesTag(REEF_LL)) {
       runPathToClosestReef();
       searchingState = false;
@@ -107,6 +108,16 @@ public class PathPlannerToReef extends Command {
   @Override
   public boolean isFinished() {
     return (currentPath.isFinished()) || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ) || (Math.abs(rStick.getAsDouble()) > 0.1 );
+  }
+
+  private boolean getAlliance(){
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      blueAlliance = true;
+    }
+    else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+      blueAlliance = false;
+    }
+    return blueAlliance;
   }
 
   private void runPathToClosestReef() {
@@ -150,18 +161,18 @@ public class PathPlannerToReef extends Command {
   private void runToClosestSearchingPosition() {
     targetLocation = findClosestPose(poseEstimator.getEstimatedPosition(), searchPoses);
     if (rightBranch) {
-        if (blueIDs.contains(targetID)) {
+        if (blueIDs.contains(targetID) && blueAlliance) {
           finalLocation = rightPoses[blueIDs.indexOf(targetID)];
         }
-        else if (redIDs.contains(targetID)) {
+        else if (redIDs.contains(targetID) && !blueAlliance) {
           finalLocation = rightPoses[redIDs.indexOf(targetID)];
         }
       }
     else {
-      if (blueIDs.contains(targetID)) {
+      if (blueIDs.contains(targetID) && blueAlliance) {
         finalLocation = leftPoses[blueIDs.indexOf(targetID)];
       }
-      else if (redIDs.contains(targetID)) {
+      else if (redIDs.contains(targetID) && !blueAlliance) {
         finalLocation = leftPoses[redIDs.indexOf(targetID)];
       }
     }
@@ -187,15 +198,18 @@ public class PathPlannerToReef extends Command {
       }
     }
     if (closestIndex != -1) {
-      if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      if (blueAlliance) {
         targetID = blueIDs.get(closestIndex);
       }
-      else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+      else if (!blueAlliance) {
         targetID = redIDs.get(closestIndex);
       }
       return poses[closestIndex];
+    } 
+    else {
+      return null;
     }
-    return null;
+    
   }
 
 }
