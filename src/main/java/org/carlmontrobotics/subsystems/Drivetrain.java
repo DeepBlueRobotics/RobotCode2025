@@ -778,16 +778,29 @@ public class Drivetrain extends SubsystemBase {
         Pose2d pose;
         Rotation2d gyroRotation = gyro.getRotation2d();
 
-        if (LimelightHelpers.getTV(REEF_LL) && elevator.getBottomLimitSwitch()) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
+        if (LimelightHelpers.getTV(REEF_LL) && elevator.getBottomLimitSwitch() && LimelightHelpers.getTV(CORAL_LL)){ //This is for if both limelights see a tag
+            double coralLLArea = LimelightHelpers.getTA(CORAL_LL);
+            double reefLLArea = LimelightHelpers.getTA(REEF_LL);
+            if (reefLLArea > coralLLArea) { //if the reef limelight's tag is closer than the coral limelight's tag then it will use the reef limelight's tag to update the pose
+                pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
+            } else {
+                pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
+            }
+        }
+        else if (LimelightHelpers.getTV(REEF_LL) && elevator.getBottomLimitSwitch()) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
             // Get the pose of the robot relative to the tag
             pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
             poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp()); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
 
-        } else if (LimelightHelpers.getTV(CORAL_LL)) {
+        } 
+        else if (LimelightHelpers.getTV(CORAL_LL)) {
 
             pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
             poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
-        }
+
+        } 
         else {
             poseEstimator.update(gyroRotation, getModulePositions()); //if the limelights don't see a tag then it will just update the pose using odometry
         }
