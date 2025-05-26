@@ -41,6 +41,7 @@ public class PathPlannerToReef extends Command {
   private final Pose2d[] searchPoses = {ID6_17Search, ID7_18Search, ID8_19Search, ID9_20Search, ID10_21Search, ID11_22Search};
 
   private Pose2d targetLocation;
+  private int targetID;
   private boolean rightBranch;
   private DoubleSupplier xStick;
   private DoubleSupplier yStick;
@@ -61,11 +62,12 @@ public class PathPlannerToReef extends Command {
   @Override
   public void initialize() {
     if (ll.seesTag(REEF_LL)) {
+      runPathToClosestReef();
       searchingState = false;
     } 
     else {
-      searchingState = true;
       runToClosestSearchingPosition();
+      searchingState = true;
     }
   }
 
@@ -78,9 +80,9 @@ public class PathPlannerToReef extends Command {
 
     }
     if (!searchingState && !ll.seesTag(REEF_LL)) {
-      searchingState = true;
       currentPath.cancel();
       runToClosestSearchingPosition();
+      searchingState = true;
     }
   }
 
@@ -97,8 +99,9 @@ public class PathPlannerToReef extends Command {
   }
 
   private void runPathToClosestReef() {
+    targetID = (int) LimelightHelpers.getFiducialID(REEF_LL);
       if (rightBranch) {
-        switch ((int) LimelightHelpers.getFiducialID(REEF_LL)) { //this is beautiful
+        switch (targetID) { //this is beautiful
           case 6:
             targetLocation = ID6_17Right;
             break;
@@ -140,7 +143,7 @@ public class PathPlannerToReef extends Command {
         }
       }
       else {
-        switch ((int) LimelightHelpers.getFiducialID(REEF_LL)) { //this is beautiful
+        switch (targetID) { //this is beautiful
           case 6:
             targetLocation = ID6_17Left;
             break;
@@ -213,6 +216,7 @@ public class PathPlannerToReef extends Command {
 
   public static Pose2d findClosestPose(Pose2d target, Pose2d[] poses) {
     Pose2d closest = null;
+    int closestID = 0;
     double minDistance = Double.MAX_VALUE;
 
     for (Pose2d pose : poses) {
