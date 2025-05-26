@@ -28,20 +28,25 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class PathPlannerToReef extends Command {
   private Drivetrain dt;
   private Limelight ll;
   private boolean searchingState = true;
-  private final SwerveDrivePoseEstimator poseEstimator = dt.getPoseEstimator();
+  private final SwerveDrivePoseEstimator poseEstimator;
   
 
 
   private final Pose2d[] searchPoses = {ID6_17Search, ID7_18Search, ID8_19Search, ID9_20Search, ID10_21Search, ID11_22Search};
-
+  private final List<Integer> blueIDs = List.of(17,18,19,20,21,22);
+  private final List<Integer> redIDs = List.of(6,7,8,9,10,11);//I cannot do a freakin array cause it has no indexing option
+  private final Pose2d[] rightPoses = {ID6_17Right, ID7_18Right, ID8_19Right, ID9_20Right, ID10_21Right, ID11_22Right};
+  private final Pose2d[] leftPoses = {ID6_17Left, ID7_18Left, ID8_19Left, ID9_20Left, ID10_21Left, ID11_22Left};
   private Pose2d targetLocation;
   private int targetID;
+  private Pose2d finalLocation;
   private boolean rightBranch;
   private DoubleSupplier xStick;
   private DoubleSupplier yStick;
@@ -57,6 +62,8 @@ public class PathPlannerToReef extends Command {
     this.yStick = yStick;
     this.rStick = rStick;
     this.rightBranch = rightBranch;
+    targetID = -1;
+    poseEstimator = dt.getPoseEstimator();
   }
 
   @Override
@@ -73,17 +80,21 @@ public class PathPlannerToReef extends Command {
 
   @Override
   public void execute() {
-    if (searchingState && ll.seesTag(REEF_LL)) {
+    if (searchingState && ll.seesTag(REEF_LL) && (int) LimelightHelpers.getFiducialID(REEF_LL) != targetID) {
       currentPath.cancel();
       runPathToClosestReef();
       searchingState = false;
 
     }
-    if (!searchingState && !ll.seesTag(REEF_LL)) {
-      currentPath.cancel();
-      runToClosestSearchingPosition();
-      searchingState = true;
+    else if (searchingState && ll.seesTag(REEF_LL)) {
+      searchingState = false;
     }
+    // if (!searchingState && !ll.seesTag(REEF_LL)) {
+    //   currentPath.cancel();
+    //   runToClosestSearchingPosition();
+    //   searchingState = true;
+    // }
+    //I feel like the problem with this thing is that its gonna activate if the tag is flickering which is bad
   }
 
   @Override
@@ -95,95 +106,27 @@ public class PathPlannerToReef extends Command {
 
   @Override
   public boolean isFinished() {
-    return (!searchingState && currentPath.isFinished()) || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ) || (Math.abs(rStick.getAsDouble()) > 0.1 );
+    return (currentPath.isFinished()) || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ) || (Math.abs(rStick.getAsDouble()) > 0.1 );
   }
 
   private void runPathToClosestReef() {
-    targetID = (int) LimelightHelpers.getFiducialID(REEF_LL);
+      targetID = (int) LimelightHelpers.getFiducialID(REEF_LL);
       if (rightBranch) {
-        switch (targetID) { //this is beautiful
-          case 6:
-            targetLocation = ID6_17Right;
-            break;
-          case 7:
-            targetLocation = ID7_18Right;
-            break;
-          case 8:
-            targetLocation = ID8_19Right;
-            break;
-          case 9:
-            targetLocation = ID9_20Right;
-            break;
-          case 10:
-            targetLocation = ID10_21Right;
-            break;
-          case 11:
-            targetLocation = ID11_22Right;
-            break;
-          case 17:
-            targetLocation = ID6_17Right;
-            break;
-          case 18:
-            targetLocation = ID7_18Right;
-            break;
-          case 19:
-            targetLocation = ID8_19Right;
-            break;
-          case 20:
-            targetLocation = ID9_20Right;
-            break;
-          case 21:
-            targetLocation = ID10_21Right;
-            break;
-          case 22:
-            targetLocation = ID11_22Right;
-            break;
-          default:
-            break;
+        if (blueIDs.contains(targetID)) {
+          targetLocation = rightPoses[blueIDs.indexOf(targetID)];
+        }
+        else if (redIDs.contains(targetID)) {
+          targetLocation = rightPoses[redIDs.indexOf(targetID)];
         }
       }
       else {
-        switch (targetID) { //this is beautiful
-          case 6:
-            targetLocation = ID6_17Left;
-            break;
-          case 7:
-            targetLocation = ID7_18Left;
-            break;
-          case 8:
-            targetLocation = ID8_19Left;
-            break;
-          case 9:
-            targetLocation = ID9_20Left;
-            break;
-          case 10:
-            targetLocation = ID10_21Left;
-            break;
-          case 11:
-            targetLocation = ID11_22Left;
-            break;
-          case 17:
-            targetLocation = ID6_17Left;
-            break;
-          case 18:
-            targetLocation = ID7_18Left;
-            break;
-          case 19:
-            targetLocation = ID8_19Left;
-            break;
-          case 20:
-            targetLocation = ID9_20Left;
-            break;
-          case 21:
-            targetLocation = ID10_21Left;
-            break;
-          case 22:
-            targetLocation = ID11_22Left;
-            break;
-          default:
-            break;
+        if (blueIDs.contains(targetID)) {
+          targetLocation = leftPoses[blueIDs.indexOf(targetID)];
+        }
+        else if (redIDs.contains(targetID)) {
+          targetLocation = leftPoses[redIDs.indexOf(targetID)];
+        }
       }
-    }
       PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
         List.of(poseEstimator.getEstimatedPosition(), targetLocation)), 
         constraints, 
@@ -206,28 +149,53 @@ public class PathPlannerToReef extends Command {
   }
   private void runToClosestSearchingPosition() {
     targetLocation = findClosestPose(poseEstimator.getEstimatedPosition(), searchPoses);
-    PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(List.of(poseEstimator.getEstimatedPosition(), targetLocation)), 
+    if (rightBranch) {
+        if (blueIDs.contains(targetID)) {
+          finalLocation = rightPoses[blueIDs.indexOf(targetID)];
+        }
+        else if (redIDs.contains(targetID)) {
+          finalLocation = rightPoses[redIDs.indexOf(targetID)];
+        }
+      }
+    else {
+      if (blueIDs.contains(targetID)) {
+        finalLocation = leftPoses[blueIDs.indexOf(targetID)];
+      }
+      else if (redIDs.contains(targetID)) {
+        finalLocation = leftPoses[redIDs.indexOf(targetID)];
+      }
+    }
+    PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(List.of(poseEstimator.getEstimatedPosition(), targetLocation, finalLocation)), 
     constraints, 
     null, 
-    new GoalEndState(0, targetLocation.getRotation()));
+    new GoalEndState(0, finalLocation.getRotation()));
     currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
     currentPath.schedule();
   }
 
-  public static Pose2d findClosestPose(Pose2d target, Pose2d[] poses) {
-    Pose2d closest = null;
-    int closestID = 0;
+  public Pose2d findClosestPose(Pose2d target, Pose2d[] poses) {
+    int closestIndex = -1;
     double minDistance = Double.MAX_VALUE;
 
-    for (Pose2d pose : poses) {
-        double distance = pose.getTranslation().getDistance(target.getTranslation());
-        if (distance < minDistance) {
-            minDistance = distance;
-            closest = pose;
-        }
+    for (int i = 0; i < poses.length; i++) {
+      Pose2d pose = poses[i];
+      double distance = pose.getTranslation().getDistance(target.getTranslation());
+  
+      if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = i;
+      }
     }
-
-    return closest;
+    if (closestIndex != -1) {
+      if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        targetID = blueIDs.get(closestIndex);
+      }
+      else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+        targetID = redIDs.get(closestIndex);
+      }
+      return poses[closestIndex];
+    }
+    return null;
   }
 
 }
