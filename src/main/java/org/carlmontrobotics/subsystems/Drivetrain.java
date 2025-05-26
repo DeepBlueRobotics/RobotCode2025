@@ -2,6 +2,7 @@
 
 package org.carlmontrobotics.subsystems;
 
+import org.carlmontrobotics.subsystems.Elevator;
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
 import static org.carlmontrobotics.Constants.Limelightc.CORAL_LL;
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
@@ -153,7 +154,8 @@ public class Drivetrain extends SubsystemBase {
     double kI = 0;
     double kD = 0;
 
-    
+    private final Elevator elevator;
+
     public Drivetrain() {
         AutoBuilder();
         //SmartDashboard.putNumber("Goal Velocity", 0);
@@ -307,6 +309,7 @@ public class Drivetrain extends SubsystemBase {
 
         //                             SmartDashboard.putNumber("chassis speeds theta", 0);
         SmartDashboard.putData(this);
+        elevator = new Elevator();
 
     }
 
@@ -775,7 +778,7 @@ public class Drivetrain extends SubsystemBase {
         Pose2d pose;
         Rotation2d gyroRotation = gyro.getRotation2d();
 
-        if (LimelightHelpers.getTV(REEF_LL)) {
+        if (LimelightHelpers.getTV(REEF_LL) && elevator.getBottomLimitSwitch()) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
             // Get the pose of the robot relative to the tag
             pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
             poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp()); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
