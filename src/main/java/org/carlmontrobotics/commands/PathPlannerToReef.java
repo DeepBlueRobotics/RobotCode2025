@@ -30,7 +30,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class PathPlannerAlign extends Command {
+public class PathPlannerToReef extends Command {
   private Drivetrain dt;
   private Limelight ll;
   private boolean searchingState = true;
@@ -48,7 +48,7 @@ public class PathPlannerAlign extends Command {
   private Command currentPath; 
   private PathConstraints constraints = new PathConstraints(1, 1, 1, 1); //TODO tune this for fastest possible alignment
 
-  public PathPlannerAlign(Drivetrain drivetrain, Limelight limelight, boolean rightBranch,
+  public PathPlannerToReef(Drivetrain drivetrain, Limelight limelight, boolean rightBranch,
     DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
     ) {
     addRequirements(dt=drivetrain, ll=limelight);

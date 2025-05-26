@@ -219,17 +219,32 @@ public class RobotContainer {
         new JoystickButton(driverController, 7).onTrue(new SequentialCommandGroup(
             new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with right branch
                 driverRumble)));
-        //Buttons for going to the coral station
+        //conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
+        //this is for the left branch or left station (left station refers to the coral station to the left of the driver)
         new JoystickButton(driverController, Driver.y)
-            .onTrue(new GoToCoralStation(drivetrain, false, 
-            () -> driverController.getRawAxis(0),
-            () -> driverController.getRawAxis(1), 
-            ()-> driverController.getRawAxis(5)));
-        new JoystickButton(driverController, Driver.a)
-            .onTrue(new GoToCoralStation(drivetrain, true, 
-            () -> driverController.getRawAxis(0),
-            () -> driverController.getRawAxis(1), 
-            ()-> driverController.getRawAxis(5)));
+            .onTrue(new ConditionalCommand(
+                new PathPlannerToReef(drivetrain, limelight, false, 
+                () -> driverController.getRawAxis(0), 
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                new GoToCoralStation(drivetrain, false,
+                () -> driverController.getRawAxis(0),
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                coralEffector::limitSwitchSeesCoral));
+                
+        //this is for the right branch or right station
+        new JoystickButton(driverController, Driver.y)
+            .onTrue(new ConditionalCommand(
+                new PathPlannerToReef(drivetrain, limelight, true, 
+                () -> driverController.getRawAxis(0), 
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                new GoToCoralStation(drivetrain, true,
+                () -> driverController.getRawAxis(0),
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                coralEffector::limitSwitchSeesCoral));
         
         //TODO test rotation, need to tune pid for that
         // new POVButton(driverController, 0)
