@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import java.util.Optional;
+
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -33,7 +35,6 @@ public class PhotonVisionCamera extends SubsystemBase {
 
   private PhotonCamera camera; 
   private final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); //layout of the field
-  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); //layout of the field 
   private final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0)); //find values later and make it configurable (or not, if we have multiple cameras) with a CONFIG (I am too lazy to do it now)
   private final Transform3d kCamToRobot = kRobotToCam.inverse();
   private PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
@@ -45,21 +46,25 @@ public class PhotonVisionCamera extends SubsystemBase {
 
   public PhotonVisionCamera(Drivetrain drivetrain, String cameraName) { //maybe will not make camera passable if we end up using multiple cameras TBD, for now for simplicity it is
     this.drivetrain = drivetrain;
-    PhotonCamera camera = new PhotonCamera(cameraName);
-
+    this.camera = new PhotonCamera(cameraName);
   }
 
   public List<PhotonPipelineResult> getUnreadResultsList() {
     return camera.getAllUnreadResults();
   }
 
-  public PhotonPipelineResult getLatestResult(){
+  public PhotonPipelineResult getCameraLatestResult(){ //getLatestResult() is defined in PhotoVision so it is named getCameraLatestResult() to avoid conflicts
     return latestResult.get(0);
   }
 
   public PhotonTrackedTarget getBestTarget() {
-    return latestResult.get(0).getBestTarget();
-  }
+    if (latestResult.get(0).hasTargets()) {
+      return latestResult.get(0).getBestTarget();
+    }
+    return null; // No targets available
+}
+
+    
 
   enum PhotonDataTypes {
     yaw,
@@ -89,8 +94,8 @@ public class PhotonVisionCamera extends SubsystemBase {
   }
 
   public Pose3d getPosRelToTarget(PhotonTrackedTarget target){
-    if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
-      Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), kCamToRobot);
+    if (kTagLayout.getTagPose(target.getFiducialId()).isPresent()) {
+      Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), kTagLayout.getTagPose(target.getFiducialId()).get(), kCamToRobot);
       return robotPose;
     } else {
       System.out.println("Tag not found");
@@ -101,8 +106,18 @@ public class PhotonVisionCamera extends SubsystemBase {
    return getPosRelToTarget(target);
   }
 
-    public Pose3d getRobotPos3D(PhotonTrackedTarget target) { //need to add odometry to this 
-   return getPosRelToTarget(target);
+    public Pose3d getRobotPos3D(PhotonTrackedTarget target) { //test if odometry actually works on this
+Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose();
+    if (estimatedPose.isPresent()) {
+      return estimatedPose.get().estimatedPose;
+    }
+    return getPosRelToTarget(target);  
+  }
+
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+    photonEstimator.setReferencePose(drivetrain.getPose());
+    PhotonPipelineResult latestResult = getCameraLatestResult();
+    return photonEstimator.update(latestResult);
   }
 
   // public void EstimateFieldToRobot(PhotonTrackedTarget target){
@@ -117,7 +132,16 @@ public class PhotonVisionCamera extends SubsystemBase {
     // This method will be called once per scheduler run
     latestResult = getUnreadResultsList();
 
-    //just some testing, remive later
-    getData(getBestTarget(), PhotonDataTypes.yaw);
-  }
+
+    // Only run if we have results
+    if (latestResult != null && !latestResult.isEmpty()) {
+        Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose();
+        if (estimatedPose.isPresent()) {
+            drivetrain.addVisionMeasurement(
+                estimatedPose.get().estimatedPose.toPose2d(), 
+                estimatedPose.get().timestampSeconds
+            );
+        }
+    }
+}
 }

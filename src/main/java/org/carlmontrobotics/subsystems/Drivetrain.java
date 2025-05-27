@@ -1276,5 +1276,9 @@ public class Drivetrain extends SubsystemBase {
     public double getGyroRate() {
         return gyro.getRate();
     }
+
+    public void addVisionMeasurement(Pose2d visionPose, double timestampSeconds) {
+        poseEstimator.addVisionMeasurement(visionPose, timestampSeconds);
+}
     // #endregion
 }
