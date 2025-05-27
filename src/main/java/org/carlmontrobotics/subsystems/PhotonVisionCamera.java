@@ -27,21 +27,23 @@ import org.photonvision.PhotonUtils;
 
 import org.carlmontrobotics.subsystems.Drivetrain;
 
-public class PhotonVision extends SubsystemBase {
+public class PhotonVisionCamera extends SubsystemBase {
 
   Drivetrain drivetrain;
 
   private PhotonCamera camera; 
   private final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); //layout of the field
   private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); //layout of the field 
-  private final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0)); //find values later and make it configurable with a CONFIG (I am too lazy to do it now)
+  private final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0)); //find values later and make it configurable (or not, if we have multiple cameras) with a CONFIG (I am too lazy to do it now)
   private final Transform3d kCamToRobot = kRobotToCam.inverse();
   private PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
 
 
+  
+
   List<PhotonPipelineResult> latestResult;
 
-  public PhotonVision(Drivetrain drivetrain, String cameraName) {
+  public PhotonVisionCamera(Drivetrain drivetrain, String cameraName) { //maybe will not make camera passable if we end up using multiple cameras TBD, for now for simplicity it is
     this.drivetrain = drivetrain;
     PhotonCamera camera = new PhotonCamera(cameraName);
 
@@ -95,9 +97,13 @@ public class PhotonVision extends SubsystemBase {
       return null;
     }
   }
+  public Pose3d getRobotPos3DWithCamera(PhotonTrackedTarget target) { //change if we get multicamera setup
+   return getPosRelToTarget(target);
+  }
 
-
-
+    public Pose3d getRobotPos3D(PhotonTrackedTarget target) { //need to add odometry to this 
+   return getPosRelToTarget(target);
+  }
 
   // public void EstimateFieldToRobot(PhotonTrackedTarget target){
   //   Pose3d targetPose3d = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
