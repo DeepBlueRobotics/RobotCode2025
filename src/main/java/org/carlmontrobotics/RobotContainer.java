@@ -118,8 +118,9 @@ public class RobotContainer {
     // private final String[] autoNames = new String[] {};
     private final AlgaeEffector algaeEffector = new AlgaeEffector();
      private final Elevator elevator = new Elevator();
-     public final Drivetrain drivetrain =  new Drivetrain(elevator);
-     private final Limelight limelight = new Limelight(drivetrain);
+     private final Limelight limelight = new Limelight();
+     public final Drivetrain drivetrain =  new Drivetrain(elevator, limelight);
+     
      private SendableChooser<Command> autoChooser = new SendableChooser<>();
      
      

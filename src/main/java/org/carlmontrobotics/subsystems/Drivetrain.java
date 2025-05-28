@@ -5,6 +5,7 @@ package org.carlmontrobotics.subsystems;
 import org.carlmontrobotics.subsystems.Elevator;
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
 import static org.carlmontrobotics.Constants.Limelightc.CORAL_LL;
+import static org.carlmontrobotics.Constants.Limelightc.LL_ACCURACY_LIMIT_METERS;
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
 import java.sql.Time;
@@ -66,6 +67,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 // import edu.wpi.first.units.Angle;
 // import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.measure.Angle;
@@ -155,8 +157,8 @@ public class Drivetrain extends SubsystemBase {
     double kD = 0;
     
     private final Elevator elevator;
-
-    public Drivetrain(Elevator elevator) {
+    public final Limelight ll;
+    public Drivetrain(Elevator elevator, Limelight ll) {
         AutoBuilder();
         //SmartDashboard.putNumber("Goal Velocity", 0);
         //SmartDashboard.putNumber("kP", 0);
@@ -310,6 +312,7 @@ public class Drivetrain extends SubsystemBase {
         //                             SmartDashboard.putNumber("chassis speeds theta", 0);
         SmartDashboard.putData(this);
         this.elevator = elevator;
+        this.ll = ll;
 
     }
 
@@ -777,28 +780,37 @@ public class Drivetrain extends SubsystemBase {
     public void updatePoseWithLimelight(){
         Pose2d pose;
         Rotation2d gyroRotation = gyro.getRotation2d();
-
-        if (LimelightHelpers.getTV(REEF_LL) && elevator.getBottomLimitSwitch() && LimelightHelpers.getTV(CORAL_LL)){ //This is for if both limelights see a tag
-            double coralLLArea = LimelightHelpers.getTA(CORAL_LL);
-            double reefLLArea = LimelightHelpers.getTA(REEF_LL);
-            if (reefLLArea > coralLLArea) { //if the reef limelight's tag is closer than the coral limelight's tag then it will use the reef limelight's tag to update the pose
+        
+        boolean elevatorAtBottom = elevator.getBottomLimitSwitch();
+        
+        double distanceToTagReefLL = ll.getDistanceToApriltag3D(REEF_LL);
+        double distanceToTagCoralLL = ll.getDistanceToApriltag3D(CORAL_LL);
+        //these are used to check if the limelight sees a tag and it is within the distance where limelight can provide accurate data
+        boolean reefLLtagValid = ll.seesTag(REEF_LL) && distanceToTagReefLL < LL_ACCURACY_LIMIT_METERS;
+        boolean coralLLtagValid = ll.seesTag(CORAL_LL) && distanceToTagCoralLL < LL_ACCURACY_LIMIT_METERS;
+        //the time delay of the limelight when it gives data is accounted for here
+        double latencyReefLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(REEF_LL) + LimelightHelpers.getLatency_Pipeline(REEF_LL)); 
+        double latencyCoralLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(CORAL_LL) + LimelightHelpers.getLatency_Pipeline(CORAL_LL));
+        if (reefLLtagValid && elevatorAtBottom && coralLLtagValid){ //This is for if both limelights see a tag
+            
+            if (distanceToTagReefLL < distanceToTagCoralLL) { //if the reef limelight's tag is closer than the coral limelight's tag then it will use the reef limelight's tag to update the pose
                 pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
-                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
+                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyReefLL);
             } else {
                 pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
+                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyCoralLL);
             }
-        }
-        else if (LimelightHelpers.getTV(REEF_LL) && elevator.getBottomLimitSwitch()) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
+        } 
+        else if (reefLLtagValid && elevatorAtBottom) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
             // Get the pose of the robot relative to the tag
             pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
-            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp()); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
+            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyReefLL); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
 
         } 
-        else if (LimelightHelpers.getTV(CORAL_LL)) {
+        else if (coralLLtagValid) {
 
             pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp());
+            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyCoralLL); //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
 
         } 
         else {
@@ -811,6 +823,7 @@ public class Drivetrain extends SubsystemBase {
     // considered "forward"
     public void resetHeading() {
         gyro.reset();
+        
     }
 
     public double getPitch() {
