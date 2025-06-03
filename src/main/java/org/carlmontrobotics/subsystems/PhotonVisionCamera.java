@@ -27,8 +27,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.proto.Photon;
 import org.photonvision.PhotonUtils;
 
-import org.carlmontrobotics.subsystems.Drivetrain;
-
+//NOTE: This is just me messing around with PhotonVision, no anything that is supposed to be used
 public class PhotonVisionCamera extends SubsystemBase {
 
   Drivetrain drivetrain;
@@ -54,17 +53,15 @@ public class PhotonVisionCamera extends SubsystemBase {
   }
 
   public PhotonPipelineResult getCameraLatestResult(){ //getLatestResult() is defined in PhotoVision so it is named getCameraLatestResult() to avoid conflicts
-    return latestResult.get(0);
+    return latestResult.get(latestResult.size() - 1);
   }
 
   public PhotonTrackedTarget getBestTarget() {
-    if (latestResult.get(0).hasTargets()) {
-      return latestResult.get(0).getBestTarget();
+    if (getCameraLatestResult().hasTargets()) {
+      return getCameraLatestResult().getBestTarget();
     }
     return null; // No targets available
 }
-
-    
 
   enum PhotonDataTypes {
     yaw,
@@ -89,7 +86,7 @@ public class PhotonVisionCamera extends SubsystemBase {
         return target.getSkew();
       default:
         System.out.println("Invalid data type");
-        return -1;
+        return 0;
     }
   }
 
@@ -106,12 +103,12 @@ public class PhotonVisionCamera extends SubsystemBase {
    return getPosRelToTarget(target);
   }
 
-    public Pose3d getRobotPos3D(PhotonTrackedTarget target) { //test if odometry actually works on this
+    public Pose3d getRobotPos3D() { //test if odometry actually works on this
 Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose();
     if (estimatedPose.isPresent()) {
       return estimatedPose.get().estimatedPose;
     }
-    return getPosRelToTarget(target);  
+    return getPosRelToTarget(getBestTarget());
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
