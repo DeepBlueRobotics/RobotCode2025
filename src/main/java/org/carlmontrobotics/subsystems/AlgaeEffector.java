@@ -28,12 +28,11 @@ import java.util.function.BooleanSupplier;
 
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
-import org.carlmontrobotics.commands.DealgaficationIntake;
-import org.carlmontrobotics.commands.GroundIntakeAlgae;
-import org.carlmontrobotics.commands.ManualDynamicForArm;
-import org.carlmontrobotics.commands.ManualQuasistaticForArm;
-import org.carlmontrobotics.commands.OuttakeAlgae;
-
+import org.carlmontrobotics.commands.AlgaeCommands.DealgaficationIntake;
+import org.carlmontrobotics.commands.AlgaeCommands.GroundIntakeAlgae;
+import org.carlmontrobotics.commands.AlgaeCommands.ManualDynamicForArm;
+import org.carlmontrobotics.commands.AlgaeCommands.ManualQuasistaticForArm;
+import org.carlmontrobotics.commands.AlgaeCommands.OuttakeAlgae;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;

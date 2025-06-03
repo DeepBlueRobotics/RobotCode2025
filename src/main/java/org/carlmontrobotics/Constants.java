@@ -410,7 +410,7 @@ public final class Constants {
 		public static final double areaPercentageGoal = 8.4; //TODO figure this out por favor
 		public static final double areaTolerance = 0.1; //TODO needs to get tuned
 		public static final double strafeTolerance = 0.02;
-
+		public static final double LL_ACCURACY_LIMIT_METERS = 5.0; //TODO: find at what distance limelight becomes inaccurate
 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
 		public static final double STD_DEV_Y_METERS = 0.7; // uncertainty of 0.7 meters on the field

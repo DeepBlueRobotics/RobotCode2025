@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
-  private final Drivetrain drivetrain;
+  
 
   // NEEDS TO SEE: Barge, Reef, Processor, Coral Dropoff
-  public Limelight(Drivetrain drivetrain) {
-    this.drivetrain = drivetrain;
+  public Limelight() {
+    
     LimelightHelpers.SetFiducialIDFiltersOverride(CORAL_LL, CORAL_VALID_IDS);
     LimelightHelpers.SetFiducialIDFiltersOverride(REEF_LL, REEF_VALID_IDS);
 
@@ -71,6 +71,16 @@ public class Limelight extends SubsystemBase {
     return Math.hypot(x, z);
   }
 
+  public double getDistanceToApriltag3D(String limelightName){ //This method is for if you need the actual distance to the tag(with height considered)
+    Pose3d targetPoseRobotSpace = LimelightHelpers.getTargetPose3d_RobotSpace(limelightName);
+
+    double x = targetPoseRobotSpace.getX();
+    double z = targetPoseRobotSpace.getZ();
+    double y = targetPoseRobotSpace.getY();
+
+    return Math.sqrt(x * x + z * z + y * y); //calculates the actual 3D distance (with height component included) 
+  }
+
   public double getAprilWidth (String name) {
     return LimelightHelpers.getThor(name);
   }
@@ -96,6 +106,8 @@ public class Limelight extends SubsystemBase {
 
     return targetOffsetRads;
   }
+
+  
 
   public Pose2d getRobotPoseInField(String limelightName) {
     Pose2d robotPosFieldSpace = LimelightHelpers.getBotPose2d(limelightName);
