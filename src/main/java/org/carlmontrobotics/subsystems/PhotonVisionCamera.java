@@ -27,7 +27,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.proto.Photon;
 import org.photonvision.PhotonUtils;
 
-//NOTE: This is just me messing around with PhotonVision, no anything that is supposed to be used
+//NOTE: This is just me messing around with PhotonVision,not the final code
 public class PhotonVisionCamera extends SubsystemBase {
 
   Drivetrain drivetrain;
