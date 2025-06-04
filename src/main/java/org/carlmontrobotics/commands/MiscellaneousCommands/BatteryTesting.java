@@ -11,72 +11,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // the WPILib BSD license file in the root directory of this project.
 
 //199 files
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
-
-import org.carlmontrobotics.Constants.AlgaeEffectorc;
-import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
-import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
-import org.carlmontrobotics.Constants.Elevatorc;
-import org.carlmontrobotics.Constants.OI;
-import org.carlmontrobotics.Constants.OI.Driver;
-import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.AlignCommands.MoveToLeftBranch;
 import org.carlmontrobotics.commands.AlignCommands.MoveToRightBranch;
 import org.carlmontrobotics.commands.ElevatorCommands.ElevatorToPos;
 import org.carlmontrobotics.subsystems.Limelight;
 import org.carlmontrobotics.subsystems.Drivetrain;
 import org.carlmontrobotics.subsystems.Elevator;
-
-import static org.carlmontrobotics.Constants.OI.Manipulator.*;
-import static org.carlmontrobotics.commands.DriveCommands.TeleopDrive.babyMode;
-import static org.carlmontrobotics.commands.DriveCommands.TeleopDrive.babyModeSupplier;
-
 //import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import java.util.function.BooleanSupplier;
-import com.pathplanner.lib.auto.NamedCommands;
-
-import org.carlmontrobotics.Constants.OI;
-import org.carlmontrobotics.Constants.OI.Manipulator;
-
-//limit switch
-import edu.wpi.first.wpilibj.DigitalInput;
-//controllers
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Axis;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//commands
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-//control bindings
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
 import static org.carlmontrobotics.Constants.Elevatorc.l1;
 import static org.carlmontrobotics.Constants.Elevatorc.l2;
@@ -84,11 +31,6 @@ import static org.carlmontrobotics.Constants.Elevatorc.l3;
 import static org.carlmontrobotics.Constants.Elevatorc.l4;
 import static org.carlmontrobotics.Constants.Elevatorc.testl4;
 import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
-//constats
-//import static org.carlmontrobotics.Constants.CoralEffectorc.*;
-import static org.carlmontrobotics.Constants.OI.Driver.*;
-import static org.carlmontrobotics.Constants.OI.Manipulator.*;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class BatteryTesting extends Command {
