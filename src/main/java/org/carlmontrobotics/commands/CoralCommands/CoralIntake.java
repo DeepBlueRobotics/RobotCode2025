@@ -35,42 +35,6 @@ public class CoralIntake extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // if (CoralEffector.distanceSensorSees) {
-        //     coralIn = true;
-        //     if (CoralEffector.limitSwitchSees) {
-        //         CoralEffector.coralMotor.set(CoralEffectorConstants.coralEffectorMotorSlowSpeed);
-        //         spin = CoralEffectorConstants.coralEffectorMotorSlowSpeed;
-        //     } else {
-        //         if (timer.get() < 0.15) {
-        //             CoralEffector.coralMotor.set(CoralEffectorConstants.coralEffectorMotorFastSpeed);
-        //             spin = CoralEffectorConstants.coralEffectorMotorFastSpeed;
-        //         } else {
-        //             CoralEffector.coralMotor.set(CoralEffectorConstants.coralEffectorMotorFastSpeed2);
-        //             spin = CoralEffectorConstants.coralEffectorMotorFastSpeed2;
-        //         }
-        //     }
-        // } else {
-        //     CoralEffector.coralMotor.set(0);
-        //     spin = 0;
-        //     timer.restart();
-        // }
-        // CoralEffector.coralMotor.set(0.1);
-        // spin = 10;
-        // SmartDashboard.putNumber("spin", spin);
-        //SmartDashboard.putNumber("timer", timer.get());
-        // SmartDashboard.getBoolean("outtakeGet", coralIn);
-
-        // if (!coralEffector.distanceSensorSeesCoral() && coralEffector.coralIn){
-        //     coralEffector.setReferencePosition(coralMotorPosition + CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET); //rotations
-        // }
-        // else if (coralEffector.distanceSensorSeesCoral()){
-        //     coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
-        //     coralMotorPosition = coralEffector.getEncoderPos(); //mark the position in rotations
-        //     coralEffector.coralIn = true;
-        // }
-        // else if (coralEffector.limitSwitchSeesCoral()){
-        //     coralEffector.setMotorSpeed(INPUT_SLOW_SPEED);
-        // }
         if (coralEffector.distanceSensorSeesCoral() && !coralEffector.limitSwitchSeesCoral()) {
             coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
             coralMotorPosition = coralEffector.getEncoderPos(); // mark the position in rotations
