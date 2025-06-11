@@ -785,8 +785,8 @@ public class Drivetrain extends SubsystemBase {
         double distanceToTagReefLL = ll.getDistanceToApriltag3D(REEF_LL);
         double distanceToTagCoralLL = ll.getDistanceToApriltag3D(CORAL_LL);
         //these are used to check if the limelight sees a tag and it is within the distance where limelight can provide accurate data
-        boolean reefLLtagValid = ll.seesTag(REEF_LL) && distanceToTagReefLL < LL_ACCURACY_LIMIT_METERS;
-        boolean coralLLtagValid = ll.seesTag(CORAL_LL) && distanceToTagCoralLL < LL_ACCURACY_LIMIT_METERS;
+        boolean reefLLtagValid = ll.seesTag(REEF_LL); // ll.seesTag(REEF_LL) && distanceToTagReefLL < LL_ACCURACY_LIMIT_METERS;
+        boolean coralLLtagValid = ll.seesTag(CORAL_LL); //ll.seesTag(CORAL_LL) && distanceToTagCoralLL < LL_ACCURACY_LIMIT_METERS;
         //the time delay of the limelight when it gives data is accounted for here
         double latencyReefLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(REEF_LL) + LimelightHelpers.getLatency_Pipeline(REEF_LL)); 
         double latencyCoralLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(CORAL_LL) + LimelightHelpers.getLatency_Pipeline(CORAL_LL));

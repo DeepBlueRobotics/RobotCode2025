@@ -6,6 +6,8 @@ package org.carlmontrobotics.commands.AlignCommands;
 
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 import static org.carlmontrobotics.Constants.AligningCords.*;
+
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -29,6 +31,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class PathPlannerToReef extends Command {
@@ -36,7 +40,7 @@ public class PathPlannerToReef extends Command {
   private Limelight ll;
   private boolean searchingState = true;
   private final SwerveDrivePoseEstimator poseEstimator;
-  
+  private Field2d targetField;
 
   private boolean blueAlliance;
   private final Pose2d[] searchPoses = {ID6_17Search, ID7_18Search, ID8_19Search, ID9_20Search, ID10_21Search, ID11_22Search};
@@ -64,6 +68,8 @@ public class PathPlannerToReef extends Command {
     this.rightBranch = rightBranch;
     targetID = -1;
     poseEstimator = dt.getPoseEstimator();
+    targetField = new Field2d();
+    SmartDashboard.putData("targetField", targetField);
   }
 
   @Override
@@ -81,6 +87,7 @@ public class PathPlannerToReef extends Command {
 
   @Override
   public void execute() {
+    
     if (searchingState && ll.seesTag(REEF_LL) && (int) LimelightHelpers.getFiducialID(REEF_LL) != targetID) {
       currentPath.cancel();
       runPathToClosestReef();
@@ -96,6 +103,7 @@ public class PathPlannerToReef extends Command {
     //   searchingState = true;
     // }
     //I feel like the problem with this thing is that its gonna activate if the tag is flickering which is bad
+    SmartDashboard.putData("targetField", targetField);
   }
 
   @Override
@@ -113,15 +121,18 @@ public class PathPlannerToReef extends Command {
   private boolean getAlliance(){
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       blueAlliance = true;
+      SmartDashboard.putBoolean("BlueAlliance", true);
     }
     else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
       blueAlliance = false;
+      SmartDashboard.putBoolean("BlueAlliance", false);
     }
     return blueAlliance;
   }
 
   private void runPathToClosestReef() {
       targetID = (int) LimelightHelpers.getFiducialID(REEF_LL);
+      SmartDashboard.putNumber("TargetId", targetID);
       if (rightBranch) {
         if (blueIDs.contains(targetID) && blueAlliance) {
           targetLocation = rightPoses[blueIDs.indexOf(targetID)];
@@ -138,6 +149,7 @@ public class PathPlannerToReef extends Command {
           targetLocation = leftPoses[redIDs.indexOf(targetID)];
         }
       }
+      targetField.setRobotPose(targetLocation);
       PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
         List.of(poseEstimator.getEstimatedPosition(), targetLocation)), 
         constraints, 

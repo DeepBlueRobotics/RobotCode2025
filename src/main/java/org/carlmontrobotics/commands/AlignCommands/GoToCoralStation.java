@@ -37,11 +37,11 @@ public class GoToCoralStation extends Command {
   private Drivetrain dt;
 
   
-  private final SwerveDrivePoseEstimator poseEstimator = dt.getPoseEstimator();
+  
   
 
 
-  
+  private final SwerveDrivePoseEstimator poseEstimator;
 
   private Pose2d targetLocation;
   private boolean rightStation; //right station refers to the coral station on the right of the driver from the blue alliance perspective
@@ -60,6 +60,7 @@ public class GoToCoralStation extends Command {
     this.yStick = yStick;
     this.rStick = rStick;
     this.rightStation = rightStation;
+    poseEstimator = dt.getPoseEstimator();
     
   }
 

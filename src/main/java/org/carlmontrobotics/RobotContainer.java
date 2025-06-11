@@ -206,6 +206,7 @@ public class RobotContainer {
              new BatteryTesting(drivetrain, elevator, limelight, l4)
         ));
         SmartDashboard.putData("Rotate Command",new RotateToTag(drivetrain, limelight));
+        SmartDashboard.putBoolean("AlignOverride", false);
     }
    
    
@@ -254,7 +255,7 @@ public class RobotContainer {
                 () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", false)));
                 
         //this is for the right branch or right station
-        new JoystickButton(driverController, Driver.y)
+        new JoystickButton(driverController, Driver.a)
             .onTrue(new ConditionalCommand(
                 new PathPlannerToReef(drivetrain, limelight, true, 
                 () -> driverController.getRawAxis(0), 
