@@ -145,6 +145,13 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModule moduleBR;
 
     private final Field2d field = new Field2d();
+    private final Field2d odometryField = new Field2d();
+    private final Field2d poseWithLimelightField = new Field2d();
+
+    double accelX;
+    double accelY;
+    double accelXY;
+
     private SwerveModuleSim[] moduleSims;
     private SimDouble gyroYawSim;
     private Timer simTimer = new Timer();
@@ -283,6 +290,12 @@ public class Drivetrain extends SubsystemBase {
             }
            
             SmartDashboard.putData("Field", field);
+            SmartDashboard.putData("Odometry Field", odometryField);
+            SmartDashboard.putData("Pose with Limelight Field", poseWithLimelightField);
+
+            accelX = gyro.getWorldLinearAccelX(); // Acceleration along the X-axis
+            accelY = gyro.getWorldLinearAccelY(); // Acceleration along the Y-axis
+            accelXY = Math.sqrt(gyro.getWorldLinearAccelX() * gyro.getWorldLinearAccelX() + gyro.getWorldLinearAccelY() * gyro.getWorldLinearAccelY())
 
             // for(SparkMax driveMotor : driveMotors)
             // driveMotor.setSmartCurrentLimit(80);
@@ -367,14 +380,31 @@ public class Drivetrain extends SubsystemBase {
     // return new PrintCommand("Invalid Command");
     // }
 
+    
     @Override
     public void periodic() {
+        updatePoseWithLimelight();
+        detectCollision();
+
         SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
         SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
         SmartDashboard.putNumber("X position with limelight", getPoseWithLimelight().getX());
         SmartDashboard.putNumber("Y position with limelight", getPoseWithLimelight().getY());
         SmartDashboard.putNumber("X position with gyro", getPose().getX());
         SmartDashboard.putNumber("Y position with gyro", getPose().getY());
+
+        
+        //For finding acceleration of drivetrain for collision detector
+        SmartDashboard.putNumber("Accel X", accelX);
+        SmartDashboard.putNumber("Accel Y", accelY);
+        SmartDashboard.putNumber("2D Acceleration ", accelXY);
+
+        field.setRobotPose(poseEstimator.getEstimatedPosition());
+        //maybe add the field with the position of the robot with only limelight and the field with the position of the robot with only odometry?
+        //We can compare the two fields to see if odometry is causing the pose to be inaccurate when it hits the reef.
+
+
+        
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);
@@ -429,12 +459,12 @@ public class Drivetrain extends SubsystemBase {
 
         // field.setRobotPose(odometry.getPoseMeters());
 
-        field.setRobotPose(poseEstimator.getEstimatedPosition());
+        
 
         // odometry.update(gyro.getRotation2d(), getModulePositions());
 
         // poseEstimator.update(gyro.getRotation2d(), getModulePositions());
-        updatePoseWithLimelight();
+        
         //odometry.update(Rotation2d.fromDegrees(getHeading()), getModulePositions());
 
         // updateMT2PoseEstimator();
@@ -774,6 +804,16 @@ public class Drivetrain extends SubsystemBase {
         simGyroOffset = pose.getRotation().minus(gyroRotation);
         
     }
+    //This is supposed to be a constant but move it into constants.java once the actual collision threshold is found
+    public final double COLLISION_ACCELERATION_THRESHOLD = 2; //The minimum acceleration that will trigger a collision detection, in m/s^2
+
+    public boolean detectCollision(){ //We can implement this method into updatePoseWithLimelight so that if there is a collision it stops using odometry
+        accelX = gyro.getWorldLinearAccelX(); // Acceleration along the X-axis
+        accelY = gyro.getWorldLinearAccelY(); // Acceleration along the Y-axis
+        accelXY = Math.sqrt(accelX * accelX + accelY * accelY); // 2D Acceleration
+        return accelXY > COLLISION_ACCELERATION_THRESHOLD; // return true if collision detected
+
+    }
     //This method will update the position of the robot with limelight to help 
     //put this method in periodic() instead of the current line that updates the position
     public void updatePoseWithLimelight(){
@@ -790,6 +830,22 @@ public class Drivetrain extends SubsystemBase {
         //the time delay of the limelight when it gives data is accounted for here
         double latencyReefLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(REEF_LL) + LimelightHelpers.getLatency_Pipeline(REEF_LL)); 
         double latencyCoralLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(CORAL_LL) + LimelightHelpers.getLatency_Pipeline(CORAL_LL));
+
+        if (detectCollision()){ //This if for if there is a collision
+            if (reefLLtagValid && elevatorAtBottom){ //This is for if both limelights see a tag
+                pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+                poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose); 
+                return;
+            } else if (coralLLtagValid) {
+                pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+                poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose); 
+                return;
+            } else {
+                return; //if there is a collision and no tag is detected then it will not update the pose
+            }
+        }
+        //If there is no collision:
+        //Sorry for all of the conditionals I didnt want to use switch statements
         if (reefLLtagValid && elevatorAtBottom && coralLLtagValid){ //This is for if both limelights see a tag
             
             if (distanceToTagReefLL < distanceToTagCoralLL) { //if the reef limelight's tag is closer than the coral limelight's tag then it will use the reef limelight's tag to update the pose
