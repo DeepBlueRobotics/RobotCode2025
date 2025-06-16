@@ -295,7 +295,7 @@ public class Drivetrain extends SubsystemBase {
 
             accelX = gyro.getWorldLinearAccelX(); // Acceleration along the X-axis
             accelY = gyro.getWorldLinearAccelY(); // Acceleration along the Y-axis
-            accelXY = Math.sqrt(gyro.getWorldLinearAccelX() * gyro.getWorldLinearAccelX() + gyro.getWorldLinearAccelY() * gyro.getWorldLinearAccelY())
+            accelXY = Math.sqrt(gyro.getWorldLinearAccelX() * gyro.getWorldLinearAccelX() + gyro.getWorldLinearAccelY() * gyro.getWorldLinearAccelY());
 
             // for(SparkMax driveMotor : driveMotors)
             // driveMotor.setSmartCurrentLimit(80);

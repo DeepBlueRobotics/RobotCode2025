@@ -149,26 +149,19 @@ public class PathPlannerToReef extends Command {
           targetLocation = leftPoses[redIDs.indexOf(targetID)];
         }
       }
+      if (targetLocation != null) {
       targetField.setRobotPose(targetLocation);
       PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
         List.of(poseEstimator.getEstimatedPosition(), targetLocation)), 
         constraints, 
         null, 
         new GoalEndState(0, targetLocation.getRotation()));
-  
-      // FollowPathCommand command = new FollowPathCommand(
-      //   path, 
-      //   () -> poseEstimator.getEstimatedPosition(), 
-      //   () -> dt.getSpeeds(),  
-      //   (speeds, feedforwards) -> dt.drive(dt.getSwerveStates(speeds)),
-      //   new PPHolonomicDriveController(
-      //     new PIDConstants(5.0, 0.0, 0.0),
-      //     new PIDConstants(5.0, 0.0, 0.0)), 
-      //   Constants.Drivetrainc.Autoc.robotConfig, 
-      //   () -> false
-      //   ); // Not sure if dt should be added here as a requirement (extra parameter) since it is already a requirement in the pathplanneralign command
-      currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
-      currentPath.schedule();
+        currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
+        currentPath.schedule();
+      }
+      else {
+        System.err.println("UMMM SIR THIS IS WIERD");
+      }
   }
   private void runToClosestSearchingPosition() {
     targetLocation = findClosestPose(poseEstimator.getEstimatedPosition(), searchPoses);
