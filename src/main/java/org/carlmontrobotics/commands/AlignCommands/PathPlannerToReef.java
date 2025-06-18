@@ -25,6 +25,8 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -56,7 +58,7 @@ public class PathPlannerToReef extends Command {
   private DoubleSupplier yStick;
   private DoubleSupplier rStick;
   private Command currentPath; 
-  private PathConstraints constraints = new PathConstraints(1, 1, 1, 1); //TODO tune this for fastest possible alignment
+  private PathConstraints constraints = new PathConstraints(1, 1, 2, 2); //TODO tune this for fastest possible alignment
 
   public PathPlannerToReef(Drivetrain drivetrain, Limelight limelight, boolean rightBranch,
     DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
@@ -69,25 +71,34 @@ public class PathPlannerToReef extends Command {
     targetID = -1;
     poseEstimator = dt.getPoseEstimator();
     targetField = new Field2d();
-    SmartDashboard.putData("targetField", targetField);
+    SmartDashboard.putBoolean("target location is null",targetLocation == null);
+    System.out.println(targetLocation);
+    System.out.println(targetLocation == null);
+
   }
 
   @Override
   public void initialize() {
+    SmartDashboard.putData("targetField", targetField);
+    SmartDashboard.putBoolean("target location is null",targetLocation == null);
+    SmartDashboard.putBoolean("searchisyes", searchingState);
     getAlliance(); 
     if (ll.seesTag(REEF_LL)) {
       runPathToClosestReef();
       searchingState = false;
     } 
     else {
-      runToClosestSearchingPosition();
+      // runToClosestSearchingPosition();
       searchingState = true;
+      System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+  
     }
   }
 
   @Override
   public void execute() {
-    
+    SmartDashboard.putBoolean("target location is null",targetLocation == null);
+    SmartDashboard.putBoolean("searching state", searchingState);
     if (searchingState && ll.seesTag(REEF_LL) && (int) LimelightHelpers.getFiducialID(REEF_LL) != targetID) {
       currentPath.cancel();
       runPathToClosestReef();
@@ -104,6 +115,8 @@ public class PathPlannerToReef extends Command {
     // }
     //I feel like the problem with this thing is that its gonna activate if the tag is flickering which is bad
     SmartDashboard.putData("targetField", targetField);
+    System.out.println(targetLocation);
+    System.out.println(targetLocation == null);
   }
 
   @Override
@@ -134,87 +147,98 @@ public class PathPlannerToReef extends Command {
       targetID = (int) LimelightHelpers.getFiducialID(REEF_LL);
       SmartDashboard.putNumber("TargetId", targetID);
       if (rightBranch) {
-        if (blueIDs.contains(targetID) && blueAlliance) {
+        if (getAlliance()) {
           targetLocation = rightPoses[blueIDs.indexOf(targetID)];
         }
-        else if (redIDs.contains(targetID) && !blueAlliance) {
+        else if (!getAlliance()) {
           targetLocation = rightPoses[redIDs.indexOf(targetID)];
         }
       }
       else {
-        if (blueIDs.contains(targetID) && blueAlliance) {
+        if (getAlliance()) {
           targetLocation = leftPoses[blueIDs.indexOf(targetID)];
         }
-        else if (redIDs.contains(targetID) && !blueAlliance) {
+        else if (!getAlliance()) {
           targetLocation = leftPoses[redIDs.indexOf(targetID)];
         }
       }
       if (targetLocation != null) {
       targetField.setRobotPose(targetLocation);
+      targetLocation = FlippingUtil.flipFieldPose(targetLocation);
       PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
-        List.of(poseEstimator.getEstimatedPosition(), targetLocation)), 
+        List.of(poseEstimator.getEstimatedPosition(), targetLocation)),
         constraints, 
         null, 
         new GoalEndState(0, targetLocation.getRotation()));
-        currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
-        currentPath.schedule();
-      }
-      else {
-        System.err.println("UMMM SIR THIS IS WIERD");
-      }
-  }
-  private void runToClosestSearchingPosition() {
-    targetLocation = findClosestPose(poseEstimator.getEstimatedPosition(), searchPoses);
-    if (rightBranch) {
-        if (blueIDs.contains(targetID) && blueAlliance) {
-          finalLocation = rightPoses[blueIDs.indexOf(targetID)];
-        }
-        else if (redIDs.contains(targetID) && !blueAlliance) {
-          finalLocation = rightPoses[redIDs.indexOf(targetID)];
-        }
-      }
-    else {
-      if (blueIDs.contains(targetID) && blueAlliance) {
-        finalLocation = leftPoses[blueIDs.indexOf(targetID)];
-      }
-      else if (redIDs.contains(targetID) && !blueAlliance) {
-        finalLocation = leftPoses[redIDs.indexOf(targetID)];
-      }
-    }
-    PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(List.of(poseEstimator.getEstimatedPosition(), targetLocation, finalLocation)), 
-    constraints, 
-    null, 
-    new GoalEndState(0, finalLocation.getRotation()));
-    currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
-    currentPath.schedule();
-  }
-
-  public Pose2d findClosestPose(Pose2d target, Pose2d[] poses) {
-    int closestIndex = -1;
-    double minDistance = Double.MAX_VALUE;
-
-    for (int i = 0; i < poses.length; i++) {
-      Pose2d pose = poses[i];
-      double distance = pose.getTranslation().getDistance(target.getTranslation());
+        path.preventFlipping = true;
+      //SmartDashboard.putBoolean("mehappy", blueAlliance);
   
-      if (distance < minDistance) {
-          minDistance = distance;
-          closestIndex = i;
-      }
-    }
-    if (closestIndex != -1) {
-      if (blueAlliance) {
-        targetID = blueIDs.get(closestIndex);
-      }
-      else if (!blueAlliance) {
-        targetID = redIDs.get(closestIndex);
-      }
-      return poses[closestIndex];
-    } 
-    else {
-      return null;
-    }
-    
+      // FollowPathCommand command = new FollowPathCommand(
+      //   path, 
+      //   () -> poseEstimator.getEstimatedPosition(), 
+      //   () -> dt.getSpeeds(),  
+      //   (speeds, feedforwards) -> dt.drive(dt.getSwerveStates(speeds)),
+      //   new PPHolonomicDriveController(
+      //     new PIDConstants(5.0, 0.0, 0.0),
+      //     new PIDConstants(5.0, 0.0, 0.0)), 
+      //   Constants.Drivetrainc.Autoc.robotConfig, 
+      //   () -> false
+      //   ); // Not sure if dt should be added here as a requirement (extra parameter) since it is already a requirement in the pathplanneralign command
+      currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
+      currentPath.schedule();
   }
+  // private void runToClosestSearchingPosition() {
+  //   targetLocation = findClosestPose(poseEstimator.getEstimatedPosition(), searchPoses);
+  //   if (rightBranch) {
+  //       if (blueIDs.contains(targetID)) {
+  //         finalLocation = rightPoses[blueIDs.indexOf(targetID)];
+  //       }
+  //       else if (redIDs.contains(targetID)) {
+  //         finalLocation = rightPoses[redIDs.indexOf(targetID)];
+  //       }
+  //     }
+  //   else {
+  //     if (blueIDs.contains(targetID)) {
+  //       finalLocation = leftPoses[blueIDs.indexOf(targetID)];
+  //     }
+  //     else if (redIDs.contains(targetID)) {
+  //       finalLocation = leftPoses[redIDs.indexOf(targetID)];
+  //     }
+  //   }
+  //   PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(List.of(poseEstimator.getEstimatedPosition(), targetLocation, finalLocation)), 
+  //   constraints, 
+  //   null, 
+  //   new GoalEndState(0, finalLocation.getRotation()));
+  //   currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
+  //   currentPath.schedule();
+  // }
+
+  // public Pose2d findClosestPose(Pose2d target, Pose2d[] poses) {
+  //   int closestIndex = -1;
+  //   double minDistance = Double.MAX_VALUE;
+
+  //   for (int i = 0; i < poses.length; i++) {
+  //     Pose2d pose = poses[i];
+  //     double distance = pose.getTranslation().getDistance(target.getTranslation());
+  
+  //     if (distance < minDistance) {
+  //         minDistance = distance;
+  //         closestIndex = i;
+  //     }
+  //   }
+  //   if (closestIndex != -1) {
+  //     if (blueAlliance) {
+  //       targetID = blueIDs.get(closestIndex);
+  //     }
+  //     else if (!blueAlliance) {
+  //       targetID = redIDs.get(closestIndex);
+  //     }
+  //     return poses[closestIndex];
+  //   } 
+  //   else {
+  //     return null;
+  //   }
+    
+  // }
 
 }

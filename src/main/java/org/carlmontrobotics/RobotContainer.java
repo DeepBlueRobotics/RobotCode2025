@@ -151,7 +151,7 @@ public class RobotContainer {
        //public final AlgaeEffector algaeEffector = new AlgaeEffector();
      
        // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
-       public boolean alignOverride = false;
+       public boolean alignOverride = true;
      
          public RobotContainer() {
              {
@@ -206,7 +206,7 @@ public class RobotContainer {
              new BatteryTesting(drivetrain, elevator, limelight, l4)
         ));
         SmartDashboard.putData("Rotate Command",new RotateToTag(drivetrain, limelight));
-        SmartDashboard.putBoolean("AlignOverride", false);
+        SmartDashboard.putBoolean("AlignOverride", true);
     }
    
    
@@ -252,7 +252,7 @@ public class RobotContainer {
                 () -> driverController.getRawAxis(0),
                 () -> driverController.getRawAxis(1),
                 ()-> driverController.getRawAxis(5)), 
-                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", false)));
+                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
                 
         //this is for the right branch or right station
         new JoystickButton(driverController, Driver.a)
@@ -265,7 +265,7 @@ public class RobotContainer {
                 () -> driverController.getRawAxis(0),
                 () -> driverController.getRawAxis(1),
                 ()-> driverController.getRawAxis(5)), 
-                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", false)));
+                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
         
         //TODO test rotation, need to tune pid for that
         // new POVButton(driverController, 0)

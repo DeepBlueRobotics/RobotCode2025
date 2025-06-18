@@ -820,7 +820,7 @@ public class Drivetrain extends SubsystemBase {
         Pose2d pose;
         Rotation2d gyroRotation = gyro.getRotation2d();
         
-        boolean elevatorAtBottom = elevator.getBottomLimitSwitch();
+        boolean elevatorAtBottom = true;
         
         double distanceToTagReefLL = ll.getDistanceToApriltag3D(REEF_LL);
         double distanceToTagCoralLL = ll.getDistanceToApriltag3D(CORAL_LL);
@@ -831,46 +831,51 @@ public class Drivetrain extends SubsystemBase {
         double latencyReefLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(REEF_LL) + LimelightHelpers.getLatency_Pipeline(REEF_LL)); 
         double latencyCoralLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(CORAL_LL) + LimelightHelpers.getLatency_Pipeline(CORAL_LL));
 
-        if (detectCollision()){ //This if for if there is a collision
-            if (reefLLtagValid && elevatorAtBottom){ //This is for if both limelights see a tag
-                pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
-                poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose); 
-                return;
-            } else if (coralLLtagValid) {
-                pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-                poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose); 
-                return;
-            } else {
-                return; //if there is a collision and no tag is detected then it will not update the pose
-            }
-        }
+        // if (detectCollision()){ //This if for if there is a collision
+        //     if (reefLLtagValid && elevatorAtBottom){ //This is for if both limelights see a tag
+        //         pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+        //         poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose); 
+        //         return;
+        //     } else if (coralLLtagValid) {
+        //         pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        //         poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose); 
+        //         return;
+        //     } else {
+        //         return; //if there is a collision and no tag is detected then it will not update the pose
+        //     }
+        // }
         //If there is no collision:
         //Sorry for all of the conditionals I didnt want to use switch statements
-        if (reefLLtagValid && elevatorAtBottom && coralLLtagValid){ //This is for if both limelights see a tag
-            
-            if (distanceToTagReefLL < distanceToTagCoralLL) { //if the reef limelight's tag is closer than the coral limelight's tag then it will use the reef limelight's tag to update the pose
-                pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
-                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyReefLL);
-            } else {
-                pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyCoralLL);
-            }
-        } 
-        else if (reefLLtagValid && elevatorAtBottom) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
-            // Get the pose of the robot relative to the tag
-            pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
-            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyReefLL); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
+        poseEstimator.update(gyroRotation, getModulePositions());
+        odometryField.setRobotPose(poseEstimator.getEstimatedPosition());
+        SmartDashboard.putData("Odometry Field", odometryField);
 
-        } 
-        else if (coralLLtagValid) {
-
-            pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyCoralLL); //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
-
-        } 
-        else {
-            poseEstimator.update(gyroRotation, getModulePositions()); //if the limelights don't see a tag then it will just update the pose using odometry
+        if (reefLLtagValid && elevatorAtBottom){
+            Pose2d llpose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+            poseEstimator.addVisionMeasurement(llpose, Timer.getFPGATimestamp() - latencyReefLL);
         }
+        if (coralLLtagValid) { 
+            Pose2d llpose2 = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+            poseEstimator.addVisionMeasurement(llpose2, Timer.getFPGATimestamp() - latencyCoralLL);
+        }
+                
+            
+        // } 
+        // else if (reefLLtagValid && elevatorAtBottom) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
+        //     // Get the pose of the robot relative to the tag
+        //     pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+        //     poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyReefLL); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
+
+        // } 
+        // else if (coralLLtagValid) {
+
+        //     pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        //     poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyCoralLL); //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
+
+        // } 
+        
+         //if the limelights don't see a tag then it will just update the pose using odometry
+        
         
     }
 
