@@ -331,7 +331,7 @@ public final class Constants {
 					// ModuleConfig moduleConfig,
 					new ModuleConfig(
 							// double wheelRadiusMeters,
-							swerveRadius,
+							wheelDiameterMeters/2,
 							// double maxDriveVelocityMPS,
 							autoMaxSpeedMps,
 							// double wheelCOF,
