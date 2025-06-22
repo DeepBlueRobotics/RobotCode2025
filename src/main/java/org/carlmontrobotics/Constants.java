@@ -160,7 +160,7 @@ public final class Constants {
 																						* correction
 																						*/;
 		public static final double mu = 1; /* 70/83.2; */ // coefficient of friction. less means less max acceleration.
-		public static final double ROBOTMASS_KG = 135;// max is 135kg
+		public static final double ROBOTMASS_KG = 60;// max is 135kg
 		// moment of inertia, kg/mm
 		// calculated by integral of mass * radius^2 for every point of the robot
 		// easy way? just do total mass * radius^2

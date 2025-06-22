@@ -47,12 +47,11 @@ public class PathPlannerToReef extends Command {
   private boolean blueAlliance;
   private final Pose2d[] searchPoses = {ID6_17Search, ID7_18Search, ID8_19Search, ID9_20Search, ID10_21Search, ID11_22Search};
   private final List<Integer> blueIDs = List.of(17,18,19,20,21,22);
-  private final List<Integer> redIDs = List.of(6,7,8,9,10,11);//I cannot do a freakin array cause it has no indexing option
+  private final List<Integer> redIDs = List.of(8,7,6,11,10,9);//I cannot do a freakin array cause it has no indexing option
   private final Pose2d[] rightPoses = {ID6_17Right, ID7_18Right, ID8_19Right, ID9_20Right, ID10_21Right, ID11_22Right};
   private final Pose2d[] leftPoses = {ID6_17Left, ID7_18Left, ID8_19Left, ID9_20Left, ID10_21Left, ID11_22Left};
   private Pose2d targetLocation;
   private int targetID;
-  private Pose2d finalLocation;
   private boolean rightBranch;
   private DoubleSupplier xStick;
   private DoubleSupplier yStick;
@@ -121,14 +120,18 @@ public class PathPlannerToReef extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    if (searchingState) {
+    if (searchingState && currentPath!=null) {
       currentPath.cancel();
     }
   }
 
   @Override
   public boolean isFinished() {
-    return (currentPath.isFinished() && searchingState == false) || (Math.abs(xStick.getAsDouble()) > 0.1 ) || (Math.abs(yStick.getAsDouble()) > 0.1 ) || (Math.abs(rStick.getAsDouble()) > 0.1 );
+    return currentPath == null || (
+      currentPath.isFinished() && searchingState == false) || 
+      (Math.abs(xStick.getAsDouble()) > 0.1 ) || 
+      (Math.abs(yStick.getAsDouble()) > 0.1 ) || 
+      (Math.abs(rStick.getAsDouble()) > 0.1 );
   }
 
   private boolean getAlliance(){
@@ -147,24 +150,29 @@ public class PathPlannerToReef extends Command {
       targetID = (int) LimelightHelpers.getFiducialID(REEF_LL);
       SmartDashboard.putNumber("TargetId", targetID);
       if (rightBranch) {
-        if (getAlliance()) {
+        if (blueIDs.contains(targetID)) {
           targetLocation = rightPoses[blueIDs.indexOf(targetID)];
         }
-        else if (!getAlliance()) {
+        else if ( redIDs.contains(targetID)) {
           targetLocation = rightPoses[redIDs.indexOf(targetID)];
         }
       }
       else {
-        if (getAlliance()) {
+        if (blueIDs.contains(targetID)) {
           targetLocation = leftPoses[blueIDs.indexOf(targetID)];
         }
-        else if (!getAlliance()) {
+        else if (redIDs.contains(targetID)) {
           targetLocation = leftPoses[redIDs.indexOf(targetID)];
         }
       }
       if (targetLocation != null) {
       targetField.setRobotPose(targetLocation);
-      targetLocation = FlippingUtil.flipFieldPose(targetLocation);
+      //double poopy = targetLocation.getY();
+      if (redIDs.contains(targetID)) {
+        targetLocation = FlippingUtil.flipFieldPose(targetLocation);
+      }
+    
+      //targetLocation = new Pose2d(0,0);
       PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
         List.of(poseEstimator.getEstimatedPosition(), targetLocation)),
         constraints, 
@@ -239,6 +247,6 @@ public class PathPlannerToReef extends Command {
   //     return null;
   //   }
     
-  // }
+  }
 
 }
