@@ -81,7 +81,7 @@ public class PathPlannerToReef extends Command {
     SmartDashboard.putData("targetField", targetField);
     SmartDashboard.putBoolean("target location is null",targetLocation == null);
     SmartDashboard.putBoolean("searchisyes", searchingState);
-    getAlliance(); 
+    setIfBlueAlliance(); 
     if (ll.seesTag(REEF_LL)) {
       runPathToClosestReef();
       searchingState = false;
@@ -134,7 +134,7 @@ public class PathPlannerToReef extends Command {
       (Math.abs(rStick.getAsDouble()) > 0.1 );
   }
 
-  private boolean getAlliance(){
+  private boolean setIfBlueAlliance(){
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       blueAlliance = true;
       SmartDashboard.putBoolean("BlueAlliance", true);
@@ -195,6 +195,8 @@ public class PathPlannerToReef extends Command {
       currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
       currentPath.schedule();
   }
+
+  
   // private void runToClosestSearchingPosition() {
   //   targetLocation = findClosestPose(poseEstimator.getEstimatedPosition(), searchPoses);
   //   if (rightBranch) {
@@ -247,6 +249,44 @@ public class PathPlannerToReef extends Command {
   //     return null;
   //   }
     
+  }
+
+  private void goToClosestReef_NoLimelightNeeded(){
+
+    Pose2d currentPose = poseEstimator.getEstimatedPosition();
+    Pose2d[] branchPoses = rightBranch ? rightPoses : leftPoses;
+
+    double closestDistance = Double.MAX_VALUE;
+    Pose2d closestBranch = null;
+
+    for (Pose2d branchPose : branchPoses) {
+
+      if (setIfBlueAlliance() == false){
+        branchPose = FlippingUtil.flipFieldPose(branchPose); //flips the pose if the alliance is red
+      }
+
+      //get the distance from the current pose to the branch pose
+      double distance = currentPose.getTranslation().getDistance(branchPose.getTranslation());
+      //if the distance is less than any of the other distances checked it will set the closest branch to that pose
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestBranch = branchPose;
+      }
+    }
+
+    targetLocation = closestBranch;
+    targetField.setRobotPose(targetLocation);
+
+    PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
+      List.of(poseEstimator.getEstimatedPosition(), targetLocation)),
+      constraints, 
+      null, 
+      new GoalEndState(0, targetLocation.getRotation()));
+    path.preventFlipping = true;
+    
+    currentPath = AutoBuilder.followPath(path); 
+    currentPath.schedule();
+
   }
 
 }
