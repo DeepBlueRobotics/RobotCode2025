@@ -146,9 +146,9 @@ public class AlgaeEffector extends SubsystemBase {
         
         setArmPosition(0);
         updateArmPID(); 
-
+        SmartDashboard.putData("Algae Effector", this);
         SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmPosition(0)));
-        
+       
         SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmPosition(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
         SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmPosition(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
         
@@ -250,8 +250,8 @@ public class AlgaeEffector extends SubsystemBase {
         
         SmartDashboard.putNumber("feed volts", armFeedVolts);
         SmartDashboard.putNumber("ARM ERROR:", Math.abs(armGoal-getArmPos()));
-        SmartDashboard.putNumber("Arm Angle", getArmPos());
-        SmartDashboard.putNumber("raw arm position", armEncoder.getPosition());
+        //SmartDashboard.putNumber("Arm Angle", getArmPos());
+        //SmartDashboard.putNumber("raw arm position", armEncoder.getPosition());
         SmartDashboard.putNumber("Arm Velocity", armAbsoluteEncoder.getVelocity());
         
         // System.out.println("_feedVolts: "+ armFeedVolts);
@@ -290,7 +290,8 @@ public class AlgaeEffector extends SubsystemBase {
        builder.addDoubleProperty("Set Arm Max Velocity", () -> armMaxVelocityDegreesPerSecond, (value) -> { armMaxVelocityDegreesPerSecond = value; updateArmPID(); });
        builder.addDoubleProperty("arm angle (degrees)", () -> getArmPos(), null);
        builder.addDoubleProperty("arm output volts", () -> armMotor.getAppliedOutput()*armMotor.getBusVoltage(), null);
-       builder.addDoubleProperty("Set arm Goal Angle in Degrees", () -> armGoal, (value) -> {setArmPosition(value); });
+       builder.addDoubleProperty("Set arm Goal Angle in Degrees", () -> armGoal, (value) -> {setArmTrapPosition(value); });
+       builder.addDoubleProperty("Set arm Goal(setReference())", () -> armGoal, (value) -> {setArmPosition(value); });
     }
 
     //Manual SysId-----------------------------------------------------------------------------------------------------------------------------------------
