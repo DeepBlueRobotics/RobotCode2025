@@ -143,8 +143,8 @@ public final class Constants {
 
 	public static final class Drivetrainc {
 		// #region Subsystem Constants
-		public static final double wheelBase = 24.75; //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
-		public static final double trackWidth = 24.75;//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
+		public static final double wheelBase = Units.inchesToMeters(24.75); //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
+		public static final double trackWidth = Units.inchesToMeters(24.75);//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
 		// "swerveRadius" is the distance from the center of the robot to one of the
 		// modules
 		public static final double swerveRadius = Math.sqrt(Math.pow(wheelBase / 2, 2) + Math.pow(trackWidth / 2, 2));
@@ -160,7 +160,7 @@ public final class Constants {
 																						* correction
 																						*/;
 		public static final double mu = 1; /* 70/83.2; */ // coefficient of friction. less means less max acceleration.
-		public static final double ROBOTMASS_KG = 60;// max is 135kg
+		public static final double ROBOTMASS_KG = 61.235;// max is 135 lbs
 		// moment of inertia, kg/mm
 		// calculated by integral of mass * radius^2 for every point of the robot
 		// easy way? just do total mass * radius^2
@@ -245,6 +245,7 @@ public final class Constants {
 		public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
 		public static final double autoMaxAccelMps2 = mu * g; // Meters / seconds^2
 		public static final double autoMaxVolt = 10.0; // For Drivetrain voltage constraint in RobotPath.java
+		public static final double autoMaxAmps = 40.0;
 		// The maximum acceleration the robot can achieve is equal to the coefficient of
 		// static friction times the gravitational acceleration
 		// a = mu * 9.8 m/s^2
@@ -337,13 +338,13 @@ public final class Constants {
 							// double wheelCOF,
 							mu,
 							// DCMotor driveMotor,
-							DCMotor.getNEO(4), // FIXME is it 1 for 1 each or 4 for 1 robot
+							DCMotor.getNEO(1), // FIXME is it 1 for 1 each or 4 for 1 robot
 							// double driveGearing,
 							driveGearing,
 							// double driveCurrentLimit,
-							autoMaxVolt,
+							autoMaxAmps,
 							// int numMotors
-							4),
+							1),
 					// Translation2d... moduleOffsets
 					new Translation2d(wheelBase / 2, trackWidth / 2),
 					new Translation2d(wheelBase / 2, -trackWidth / 2),

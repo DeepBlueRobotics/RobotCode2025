@@ -148,6 +148,15 @@ public class Drivetrain extends SubsystemBase {
     private final Field2d odometryField = new Field2d();
     private final Field2d poseWithLimelightField = new Field2d();
 
+    private double ppKpDrive = 0;
+    private double ppKiDrive = 0;
+    private double ppKdDrive = 0;
+
+    private double ppKpTurn = 0;
+    private double ppKiTurn = 0;
+    private double ppKdTurn = 0;
+
+
     double accelX;
     double accelY;
     double accelXY;
@@ -535,9 +544,52 @@ public class Drivetrain extends SubsystemBase {
                 () -> moduleBL.getModuleAngle(), null);
         builder.addDoubleProperty("BR Turn Encoder (Deg)",
                 () -> moduleBR.getModuleAngle(), null);
+        builder.addDoubleProperty("PathKpDrive", () -> ppKpDrive, (value) -> {ppKpDrive = value; configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+        builder.addDoubleProperty("PathKdDrive", () -> ppKiDrive, (value) -> {ppKiDrive = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+        builder.addDoubleProperty("PathkIDrive", () -> ppKdDrive, (value) -> {ppKdDrive = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
 
+builder.addDoubleProperty("PathKpTurn", () -> ppKpTurn, (value) -> {ppKpTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+        builder.addDoubleProperty("PathKdTurn", () -> ppKiTurn, (value) -> {ppKiTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+        builder.addDoubleProperty("PathkITurn", () -> ppKdTurn, (value) -> {ppKdTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
     }
 
+    public void configurePP(double kpDrive,double kiDrive,double kdDrive,double kpTurn,double kiTurn,double kdTurn) {
+        RobotConfig config;
+        config = Constants.Drivetrainc.Autoc.robotConfig;
+        AutoBuilder.configure(
+            //Supplier<Pose2d> poseSupplier,
+            this::getPose, // Robot pose supplier
+            //Consumer<Pose2d> resetPose,
+            this::setPoseWithLimelight, // Method to reset odometry (will be called if your auto has a starting pose)
+            //Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+            this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            //BiConsumer<ChassisSpeeds,DriveFeedforwards> output,
+            (speeds, feedforwards) -> drive(kinematics.toSwerveModuleStates(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            //PathFollowingController controller,
+            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                    //new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
+                    //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
+                    new PIDConstants(ppKdDrive
+                    , ppKiDrive, ppKdDrive), // Translation PID constants FIXME do these need to be accurate?
+                    new PIDConstants(ppKpTurn, ppKiTurn, ppKdTurn)
+            ),
+            //RobotConfig robotConfig,
+            config, // The robot configuration
+            //BooleanSupplier shouldFlipPath,
+            () -> {
+                // Boolean supplier that controls when the path will be mirrored for the red alliance
+                // This will flip the path being followed to the red side of the field.
+                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;//stolen from official pplib
+                }
+                return false;
+            },
+            //Subsystem... driveRequirements
+            this // Reference to this subsystem to set requirements
+        );
+    }
     // #region Drive Methods
 
     /**
@@ -642,8 +694,9 @@ public class Drivetrain extends SubsystemBase {
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
                         //new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
                         //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants FIXME do these need to be accurate?
-                        new PIDConstants(5.0, 0.0, 0.0)
+                        new PIDConstants(ppKdDrive
+                        , ppKiDrive, ppKdDrive), // Translation PID constants FIXME do these need to be accurate?
+                        new PIDConstants(ppKpTurn, ppKiTurn, ppKdTurn)
                 ),
                 //RobotConfig robotConfig,
                 config, // The robot configuration
