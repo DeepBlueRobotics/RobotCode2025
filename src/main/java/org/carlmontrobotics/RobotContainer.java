@@ -188,7 +188,7 @@ public class RobotContainer {
      
         RegisterAutoCommands();
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.setDefaultOption("null forward auto", new LastResortAuto(drivetrain, -1, 4, 8));
+        autoChooser.setDefaultOption("null forward auto", new PathPlannerAuto("Center 1 Piece L4 Auto"));
         RegisterCustomAutos();
         SmartDashboard.putData("Auto Chooser", autoChooser);    
         SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
@@ -953,13 +953,13 @@ SHARK IN THE TANK
 
   public Command getAutonomousCommand() {
     // return Commands.print("No autonomous command configured");
-    // Command cmd = autoChooser.getSelected();
-    // System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
+    Command cmd = autoChooser.getSelected();
+    System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
     // Command cmd = new LastResortAuto(drivetrain, -1, 4, 8);
     // System.out.println("running getAutounmousCommand");
-    // //return cmd;
+    return cmd;
     // return autoChooser.getSelected();
-    return new LastResortAuto(drivetrain, 1, 1, 4);
+    //return new LastResortAuto(drivetrain, 1, 1, 4);
     /*
     return  new SequentialCommandGroup(
         new LastResortAuto(drivetrain, 1, 1, 4),  
