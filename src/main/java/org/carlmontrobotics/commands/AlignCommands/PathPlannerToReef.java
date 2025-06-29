@@ -262,8 +262,9 @@ public class PathPlannerToReef extends Command {
 
     for (Pose2d branchPose : branchPoses) {
 
-      if (setIfBlueAlliance() == false){
-        branchPose = FlippingUtil.flipFieldPose(branchPose); //flips the pose if the alliance is red
+      if (setIfBlueAlliance() == false || currentPose.getX() > 10){ //when the robot's x coordinate is greater than 10 then it should not try to move to its own reef (10 is just a rough estimate)
+        //If the alliance is red or the robot is on the opposite side of the field then it will flip the coordinates so that it looks at the reef coordinates on the opposite side
+        branchPose = FlippingUtil.flipFieldPose(branchPose); 
       }
 
       //get the distance from the current pose to the branch pose
