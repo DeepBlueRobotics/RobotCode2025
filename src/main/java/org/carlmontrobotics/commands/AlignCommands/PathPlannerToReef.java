@@ -82,31 +82,32 @@ public class PathPlannerToReef extends Command {
     SmartDashboard.putBoolean("target location is null",targetLocation == null);
     SmartDashboard.putBoolean("searchisyes", searchingState);
     setIfBlueAlliance(); 
-    if (ll.seesTag(REEF_LL)) {
-      runPathToClosestReef();
-      searchingState = false;
-    } 
-    else {
-      // runToClosestSearchingPosition();
-      searchingState = true;
-      System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    goToClosestReef_NoLimelightNeeded();
+    // if (ll.seesTag(REEF_LL)) {
+    //   runPathToClosestReef();
+    //   searchingState = false;
+    // } 
+    // else {
+    //   // runToClosestSearchingPosition();
+    //   searchingState = true;
+    //   System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
   
-    }
+    // }
   }
 
   @Override
   public void execute() {
     SmartDashboard.putBoolean("target location is null",targetLocation == null);
     SmartDashboard.putBoolean("searching state", searchingState);
-    if (searchingState && ll.seesTag(REEF_LL) && (int) LimelightHelpers.getFiducialID(REEF_LL) != targetID) {
-      currentPath.cancel();
-      runPathToClosestReef();
-      searchingState = false;
+    // if (searchingState && ll.seesTag(REEF_LL) && (int) LimelightHelpers.getFiducialID(REEF_LL) != targetID) {
+    //   currentPath.cancel();
+    //   runPathToClosestReef();
+    //   searchingState = false;
 
-    }
-    else if (searchingState && ll.seesTag(REEF_LL)) {
-      searchingState = false; // what does this do? Turns off searching state so that the other function wont turn on
-    }
+    // }
+    // else if (searchingState && ll.seesTag(REEF_LL)) {
+    //   searchingState = false; // what does this do? Turns off searching state so that the other function wont turn on
+    // }
     // if (!searchingState && !ll.seesTag(REEF_LL)) {
     //   currentPath.cancel();
     //   runToClosestSearchingPosition();
@@ -128,7 +129,7 @@ public class PathPlannerToReef extends Command {
   @Override
   public boolean isFinished() {
     return currentPath == null || (
-      currentPath.isFinished() && searchingState == false) || 
+      currentPath.isFinished()) || 
       (Math.abs(xStick.getAsDouble()) > 0.1 ) || 
       (Math.abs(yStick.getAsDouble()) > 0.1 ) || 
       (Math.abs(rStick.getAsDouble()) > 0.1 );
