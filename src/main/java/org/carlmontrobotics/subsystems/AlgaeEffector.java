@@ -303,22 +303,25 @@ public class AlgaeEffector extends SubsystemBase {
         // System.out.println("_feedVolts: "+ armFeedVolts);
         // System.out.println("pid: "+armkP+", "+armkI+", "+armkD+" | ff sg: "+armkS+", "+armkG);
         // System.out.println("goal angle:" + armGoal);
-        
-        if (getArmPos() < LOWER_ANGLE_LIMIT) { //if the arm is below this angle limit it is supposed to stop applying voltage
-            armMotor.set(0);
-            if (Math.abs(getArmPos()-LOWER_ANGLE_LIMIT) > ARM_ERROR_MARGIN){ //if the arm gets too far from the angle limit it applies a reverse voltage to slow it down
-                armMotor.set(0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
-            }
+        //Killed for now under suspect of murdering arm
+        //Case number 0001
+        //Victim Arm
+        //Prime suspect: this code
+        // if (getArmPos() < LOWER_ANGLE_LIMIT) { //if the arm is below this angle limit it is supposed to stop applying voltage
+        //     armMotor.set(0);
+        //     if (Math.abs(getArmPos()-LOWER_ANGLE_LIMIT) > ARM_ERROR_MARGIN){ //if the arm gets too far from the angle limit it applies a reverse voltage to slow it down
+        //         armMotor.set(0.02 * armAbsoluteEncoder.getVelocity() + lowerLimitAdjustmentVoltage);
+        //     }
             
-        }
-        if (getArmPos() > UPPER_ANGLE_LIMIT) { //if the arm is above is angle limit then it is supposed to stop applying voltage
+        // }
+        // if (getArmPos() > UPPER_ANGLE_LIMIT) { //if the arm is above is angle limit then it is supposed to stop applying voltage
             
-            armMotor.set(0);
-            if (Math.abs(getArmPos() - UPPER_ANGLE_LIMIT) > ARM_ERROR_MARGIN) { //if the arm gets too far from the upper angle limit then it applies a reverse voltage
-                armMotor.set(-0.02 * armAbsoluteEncoder.getVelocity() + upperLimitAdjustmentVoltage);
-            }
+        //     armMotor.set(0);
+        //     if (Math.abs(getArmPos() - UPPER_ANGLE_LIMIT) > ARM_ERROR_MARGIN) { //if the arm gets too far from the upper angle limit then it applies a reverse voltage
+        //         armMotor.set(-0.02 * armAbsoluteEncoder.getVelocity() + upperLimitAdjustmentVoltage);
+        //     }
             
-        }
+        // }
             
         }
         
