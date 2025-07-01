@@ -55,6 +55,7 @@ import com.revrobotics.spark.SparkMaxAlternateEncoder;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -97,6 +98,7 @@ public class AlgaeEffector extends SubsystemBase {
     private double upperLimitAdjustmentVoltage = -0.2;
     private double lowerLimitAdjustmentVoltage = 0.2;
     private double armFeedVolts;
+    private double armPIDVolts;
 
     private final SparkMax armMotor = MotorControllerFactory.createSparkMax(ARM_MOTOR_PORT, MotorConfig.NEO);
 
@@ -106,7 +108,8 @@ public class AlgaeEffector extends SubsystemBase {
     private final AbsoluteEncoder armAbsoluteEncoder = (armMotor != null ? armMotor.getAbsoluteEncoder() : null);
 
     
-    private final SparkClosedLoopController pidControllerArm = (armMotor != null ? armMotor.getClosedLoopController() : null);
+    private final SparkClosedLoopController pidSparkPIDControllerArm = (armMotor != null ? armMotor.getClosedLoopController() : null);
+    private PIDController pidControllerArm = new PIDController(0, 0, 0);
     AbsoluteEncoderConfig config = new AbsoluteEncoderConfig();
 
     //for sendable we need this stuff
@@ -118,14 +121,25 @@ public class AlgaeEffector extends SubsystemBase {
     private double KI = armKI;
     private double KD = armKD;
     private ArmFeedforward armFeedforward = new ArmFeedforward(KS, KG, KV, KA);
+    
+    /**
+     * Updates ArmFeedForward
+     * For testing purely
+     */
     private void updateFeedforward() {
         armFeedforward = new ArmFeedforward(KS, KG, KV, KA);
         //System.out.println("kG" + armkG+"*********************");
     }
+
+    /**
+     * Updates wpilib armPID
+     * For testing purely
+     */
     private void updateArmPID() {
         // Update the arm motor PID configuration with the new values
-        armMotorConfig.closedLoop.pid(KP, KI , KD).maxMotion.maxVelocity(armMaxVelocityDegreesPerSecond).maxAcceleration(100);
-        armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        pidControllerArm = new PIDController(KP, KI, KD);
+        // armMotorConfig.closedLoop.pid(KP, KI , KD).maxMotion.maxVelocity(armMaxVelocityDegreesPerSecond).maxAcceleration(100);
+        // armMotor.configure(armMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
        
     }
     //TrapezoidProfile components
@@ -163,8 +177,10 @@ public class AlgaeEffector extends SubsystemBase {
 
     }
     //----------------------------------------------------------------------------------------
-
-    private void configureMotors () { //This sets the settings for the motors and encoders by setting the PID values and other settings
+    /**
+     * This sets the settings for the motors and encoders by setting the PID values and other settings
+     */
+    private void configureMotors () { 
         //TODO: set these to the constants once the values are found
         armMotorConfig.closedLoop.pid(
             KP, 
@@ -191,48 +207,75 @@ public class AlgaeEffector extends SubsystemBase {
         }
         
     }
-    
+    /**
+     * Uses wpilib controller instead of rev to avoid losing conversion factor
+     * @param targetPos goal in degrees
+     */
+    public void setArmPositionWpilib(double targetPos) {
+        clampedArmGoal = getArmClampedGoal(targetPos);
+        armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(clampedArmGoal), clampedArmGoal - getArmPos());
+        armPIDVolts = pidControllerArm.calculate(getArmPos(), clampedArmGoal);
+        armMotor.setVoltage(armFeedVolts + armPIDVolts);
+    }
+
     public void setArmPosition(double targetPos){ //this method takes in an angle and sets the arm to that angle 
             
         armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(clampedArmGoal), 0.00001*(armGoal- getArmPos()));//this calculates the amount of voltage needed to move the arm
-        pidControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+        pidSparkPIDControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
 
     }
-
+    /**
+     * Moves arm to position using rev controller integrated into the motor
+     * @param targetPos goal in degrees
+     */
     public void setArmTarget(double targetPos){
         armGoal = targetPos;
         clampedArmGoal = getArmClampedGoal(armGoal); //This takes in the inputted armgoal that was set to targetPos and clamps it so that it can't be outside the safe range
         armGoalState = new TrapezoidProfile.State(clampedArmGoal, armGoalVelocity); //this sets the goal state for trapezoidprofile
     }
-    //move arm to position using TrapezoidProfile
+    /** move arm to position using TrapezoidProfile 
+     * @param targetPos goal in Degrees
+    */
     public void setArmTrapPosition(double targetPos){ //run this method in periodic()
         setArmTarget(targetPos); //sets the arm goal to the target position
 
         armSetPoint = armTrapProfile.calculate(dT, armSetPoint, armGoalState); //sets the current state of the arm to its current position and velocity
         armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armSetPoint.position), Units.degreesToRadians(armSetPoint.velocity));//this calculates the amount of voltage needed to move the arm
-        pidControllerArm.setReference(armSetPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+        pidSparkPIDControllerArm.setReference(armSetPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
         
     }
-    
-    public boolean armAtGoal(){ //This method returns if the arm is at its goal position with the error margin as the tolerance range
+    /**
+     * Checks
+     * @return if the arm is at its goal position with the error margin as the tolerance range
+     */
+    public boolean armAtGoal(){
         return Math.abs(getArmPos()-armGoal) <= ARM_ERROR_MARGIN;
     }
 
+    /**
+     * method takes in the input angle and sets it to the range given(Lower angle limit to upper angle limit) 
+     * @param goalAngle goal in degrees
+     * @return clampedGoal in degrees
+     */
     public double getArmClampedGoal(double goalAngle) {
-        //this method takes in the input angle and sets it to the range given(Lower angle limit to upper angle limit) 
         return MathUtil.clamp(
             MathUtil.inputModulus(goalAngle, -180, 
                 180),
                 LOWER_ANGLE_LIMIT, UPPER_ANGLE_LIMIT
         );
     }
-
+    /**
+     * Figures out the position of the arm in degrees based off pure vertical down
+     * @return arm angle in degrees
+     */
     public double getArmPos() {
-        //figures out the position of the arm in degrees based off pure vertical down
         return armAbsoluteEncoder.getPosition(); 
 
     }
-   
+    
+    /**
+     * Stops feeding voltage into arm
+     */
     public void stopArm() {
         if (armMotor != null) {
             armMotor.set(0);
@@ -240,7 +283,10 @@ public class AlgaeEffector extends SubsystemBase {
        
     }
 
-
+    /**
+     * Gets velocity of arm
+     * @return rpm of arm
+     */
     public double getArmVel() {
         return armAbsoluteEncoder.getVelocity();
     }
