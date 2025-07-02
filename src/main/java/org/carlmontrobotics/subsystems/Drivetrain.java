@@ -148,7 +148,7 @@ public class Drivetrain extends SubsystemBase {
     private final Field2d odometryField = new Field2d();
     private final Field2d poseWithLimelightField = new Field2d();
 
-    private double ppKpDrive = 20;
+    private double ppKpDrive = 100;
     private double ppKiDrive = 0;
     private double ppKdDrive = 0;
 
@@ -156,6 +156,7 @@ public class Drivetrain extends SubsystemBase {
     private double ppKiTurn = 0;
     private double ppKdTurn = 0;
 
+    private double veryImportantCounter = 0;
 
     double accelX;
     double accelY;
@@ -389,7 +390,10 @@ public class Drivetrain extends SubsystemBase {
     // return new PrintCommand("Invalid Command");
     // }
 
-    
+    public void click() {
+        veryImportantCounter += 1;
+    }
+
     @Override
     public void periodic() {
         updatePoseWithLimelight();
@@ -401,7 +405,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Y position with limelight", getPoseWithLimelight().getY());
         SmartDashboard.putNumber("X position with gyro", getPose().getX());
         SmartDashboard.putNumber("Y position with gyro", getPose().getY());
-
+        SmartDashboard.putData(CONFIG);
         
         //For finding acceleration of drivetrain for collision detector
         SmartDashboard.putNumber("Accel X", accelX);
@@ -412,8 +416,8 @@ public class Drivetrain extends SubsystemBase {
         //maybe add the field with the position of the robot with only limelight and the field with the position of the robot with only odometry?
         //We can compare the two fields to see if odometry is causing the pose to be inaccurate when it hits the reef.
 
-
-        
+        SmartDashboard.putData(new InstantCommand(() -> click()));
+        SmartDashboard.putNumber("Clicks", veryImportantCounter);
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);
