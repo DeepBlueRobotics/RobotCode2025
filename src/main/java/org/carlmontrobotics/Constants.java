@@ -242,7 +242,7 @@ public final class Constants {
 		public static final double[] kForwardAccels = { 0, 0, 0, 0 };//{0.31958, 0.33557, 0.70264, 0.46644};    //{ 0, 0, 0, 0 };// volts per m/s^2
 		public static final double[] kBackwardAccels = kForwardAccels;
 
-		public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
+		public static final double autoMaxSpeedMps = 4; // Meters / second
 		public static final double autoMaxAccelMps2 = mu * g; // Meters / seconds^2
 		public static final double autoMaxVolt = 10.0; // For Drivetrain voltage constraint in RobotPath.java
 		public static final double autoMaxAmps = 40.0;
@@ -361,7 +361,7 @@ public final class Constants {
 			// 0.8 // error spike threshold, in meters, that will cause the path to be
 			// replanned
 			// );
-			public static final PathConstraints pathConstraints = new PathConstraints(1.54, 6.86, 2 * Math.PI,
+			public static final PathConstraints pathConstraints = new PathConstraints(1, 1, 2 * Math.PI,
 					2 * Math.PI); // The constraints for this path. If using a differential drivetrain, the
 									// angular constraints have no effect.
 		}
@@ -373,7 +373,7 @@ public final class Constants {
 		public static final Pose2d ID6_17Search = new Pose2d(3.650,2.611, Rotation2d.fromDegrees(60));
 
 		public static final Pose2d ID7_18Right = new Pose2d(2.837,3.840, Rotation2d.fromDegrees(0));
-		public static final Pose2d ID7_18Left = new Pose2d(2.837,4.181, Rotation2d.fromDegrees(0));
+		public static final Pose2d ID7_18Left = new Pose2d(3.188,4.254, Rotation2d.fromDegrees(0));
 		public static final Pose2d ID7_18Search = new Pose2d(2.844,4, Rotation2d.fromDegrees(0));
 		
 		public static final Pose2d ID8_19Right = new Pose2d(3.539,5.361, Rotation2d.fromDegrees(-60));

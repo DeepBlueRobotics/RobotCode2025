@@ -148,11 +148,11 @@ public class Drivetrain extends SubsystemBase {
     private final Field2d odometryField = new Field2d();
     private final Field2d poseWithLimelightField = new Field2d();
 
-    private double ppKpDrive = 0;
+    private double ppKpDrive = 20;
     private double ppKiDrive = 0;
     private double ppKdDrive = 0;
 
-    private double ppKpTurn = 0;
+    private double ppKpTurn = 5;
     private double ppKiTurn = 0;
     private double ppKdTurn = 0;
 
@@ -544,13 +544,13 @@ public class Drivetrain extends SubsystemBase {
                 () -> moduleBL.getModuleAngle(), null);
         builder.addDoubleProperty("BR Turn Encoder (Deg)",
                 () -> moduleBR.getModuleAngle(), null);
-        builder.addDoubleProperty("PathKpDrive", () -> ppKpDrive, (value) -> {ppKpDrive = value; configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-        builder.addDoubleProperty("PathKdDrive", () -> ppKiDrive, (value) -> {ppKiDrive = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-        builder.addDoubleProperty("PathkIDrive", () -> ppKdDrive, (value) -> {ppKdDrive = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+        // builder.addDoubleProperty("PathKpDrive", () -> ppKpDrive, (value) -> {ppKpDrive = value; configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+        // builder.addDoubleProperty("PathKdDrive", () -> ppKiDrive, (value) -> {ppKiDrive = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+        // builder.addDoubleProperty("PathkIDrive", () -> ppKdDrive, (value) -> {ppKdDrive = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
 
-builder.addDoubleProperty("PathKpTurn", () -> ppKpTurn, (value) -> {ppKpTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-        builder.addDoubleProperty("PathKdTurn", () -> ppKiTurn, (value) -> {ppKiTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-        builder.addDoubleProperty("PathkITurn", () -> ppKdTurn, (value) -> {ppKdTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+// builder.addDoubleProperty("PathKpTurn", () -> ppKpTurn, (value) -> {ppKpTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+//         builder.addDoubleProperty("PathKdTurn", () -> ppKiTurn, (value) -> {ppKiTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
+//         builder.addDoubleProperty("PathkITurn", () -> ppKdTurn, (value) -> {ppKdTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
     }
 
     public void configurePP(double kpDrive,double kiDrive,double kdDrive,double kpTurn,double kiTurn,double kdTurn) {
@@ -569,7 +569,7 @@ builder.addDoubleProperty("PathKpTurn", () -> ppKpTurn, (value) -> {ppKpTurn = v
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
                     //new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
                     //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
-                    new PIDConstants(ppKdDrive
+                    new PIDConstants(ppKpDrive
                     , ppKiDrive, ppKdDrive), // Translation PID constants FIXME do these need to be accurate?
                     new PIDConstants(ppKpTurn, ppKiTurn, ppKdTurn)
             ),

@@ -57,7 +57,7 @@ public class PathPlannerToReef extends Command {
   private DoubleSupplier yStick;
   private DoubleSupplier rStick;
   private Command currentPath; 
-  private PathConstraints constraints = new PathConstraints(1, 1, 2, 2); //TODO tune this for fastest possible alignment
+  private PathConstraints constraints = new PathConstraints(3.5, 2.5, 2*Math.PI-0.5, 2*Math.PI-0.5); //TODO tune this for fastest possible alignment
 
   public PathPlannerToReef(Drivetrain drivetrain, Limelight limelight, boolean rightBranch,
     DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
@@ -122,7 +122,7 @@ public class PathPlannerToReef extends Command {
   @Override
   public void end(boolean interrupted) {
     if (searchingState && currentPath!=null) {
-      currentPath.cancel();
+      //currentPath.cancel();
     }
   }
 

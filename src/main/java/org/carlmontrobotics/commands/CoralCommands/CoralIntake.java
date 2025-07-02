@@ -29,7 +29,8 @@ public class CoralIntake extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-       
+        SmartDashboard.putBoolean("autoIntake", enableAutoIntake);
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -49,7 +50,7 @@ public class CoralIntake extends Command {
             coralEffector.setReferencePosition(coralMotorPosition);
 
         }
-        enableAutoIntake = SmartDashboard.getBoolean("Enable Auto Coral Intake?", true);
+        enableAutoIntake = SmartDashboard.getBoolean("autoIntake", enableAutoIntake);
 
     }
 

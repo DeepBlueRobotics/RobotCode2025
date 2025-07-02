@@ -197,6 +197,7 @@ public class RobotContainer {
         SmartDashboard.putBoolean("AlignOverride", alignOverride);
         setDefaultCommands();
         setBindingsDriver();
+
         setBindingsManipulator();
         // SmartDashboard.putData("align right", new MoveToRightBranch(drivetrain, limelight));
         // SmartDashboard.putData("align left", new MoveToLeftBranch(drivetrain, limelight));
@@ -951,6 +952,7 @@ SHARK IN THE TANK
   
   
 
+  
   public Command getAutonomousCommand() {
     // return Commands.print("No autonomous command configured");
     Command cmd = autoChooser.getSelected();
