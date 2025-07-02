@@ -69,7 +69,7 @@ import edu.wpi.first.wpilibj.Encoder;
  */
 public final class Constants {
 	public static final double g = 9.81; // meters per second squared
-	
+	//#region Elevator constants
 	public static final class Elevatorc {
 		// ports
 		public static final int masterPort = 20;
@@ -139,10 +139,9 @@ public final class Constants {
 		public static final double elevatorOffset = 0.05; 
 
 	}// Tolerance
-	
-
+	//#endregion
 	public static final class Drivetrainc {
-		// #region Subsystem Constants
+		// #region Drivetrain Constants
 		public static final double wheelBase = Units.inchesToMeters(24.75); //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
 		public static final double trackWidth = Units.inchesToMeters(24.75);//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
 		// "swerveRadius" is the distance from the center of the robot to one of the
@@ -314,7 +313,6 @@ public final class Constants {
 																													// Degrees/Second
 
 		// #endregion
-		// #region Subsystem Constants
 
 		// "swerveRadius" is the distance from the center of the robot to one of the
 		// modules
@@ -323,6 +321,7 @@ public final class Constants {
 
 		public static final double driveIzone = .1;
 
+		//#region Drivetrain Auto
 		public static final class Autoc {
 			public static final RobotConfig robotConfig = new RobotConfig(
 					// Mass mass, kg
@@ -366,7 +365,9 @@ public final class Constants {
 									// angular constraints have no effect.
 		}
 	}
-
+	//#endregion
+	// #region Subsystem Constants
+	//#endregion
 	public static final class AligningCords {
 		public static final Pose2d ID6_17Right = new Pose2d(2.087,4.737, Rotation2d.fromDegrees(60));
 		public static final Pose2d ID6_17Left = new Pose2d(3.530,2.679, Rotation2d.fromDegrees(60));
@@ -392,7 +393,7 @@ public final class Constants {
 		public static final Pose2d ID11_22Left = new Pose2d(5.28, 2.96, Rotation2d.fromDegrees(120));
 		public static final Pose2d ID11_22Search = new Pose2d(5.314, 2.619, Rotation2d.fromDegrees(120));
 	}
-
+		// #region Limelight Constants
 	public static final class Limelightc {
 		public static final String CORAL_LL = "limelight-coral";
 		public static final String REEF_LL = "limelight-reef";
@@ -422,6 +423,7 @@ public final class Constants {
             public static final double REEF_HEIGHT_METERS = Units.inchesToMeters(8.75); // Also center of Reef
         }
     }
+	// #endregion
 
 	public static final class OI {
 		public static final class Driver {
@@ -447,6 +449,9 @@ public final class Constants {
 		public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;// woah, this is high.
 
 	}
+
+
+	//#region Coral constants
 	public static final class CoralEffectorc{
         public final static int CORAL_MOTOR_PORT = 30;
         public final static int CORAL_LIMIT_SWITCH_PORT = 0;
@@ -471,6 +476,8 @@ public final class Constants {
         public final static double OUTTAKE_TIME_OUT = 10;
         public final static double MANUAL_INTAKE_TIME_OUT = 1;
     }
+	//#endregion
+	//#region Algea Constants
 	public static final class AlgaeEffectorc {
 
         //EFFECTOR
@@ -552,5 +559,5 @@ public final class Constants {
 
 
 	}
-    
+    //#endregion
 }
