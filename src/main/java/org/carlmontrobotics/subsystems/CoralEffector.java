@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,6 +41,7 @@ public class CoralEffector extends SubsystemBase {
     public SparkFlex coralMotor = new SparkFlex(CORAL_MOTOR_PORT, MotorType.kBrushless);
     public DigitalInput coralLimitSwitch = new DigitalInput(CORAL_LIMIT_SWITCH_PORT);
     public TimeOfFlight distanceSensor = new TimeOfFlight(CORAL_DISTANCE_SENSOR_PORT);
+    public static boolean enableAutoIntake;
     
     
     public final RelativeEncoder coralEncoder = coralMotor.getEncoder();
@@ -60,6 +62,8 @@ public class CoralEffector extends SubsystemBase {
         .pid(KP, KI, KD);
         
     coralMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    SmartDashboard.putBoolean("autoIntake", enableAutoIntake);
+    enableAutoIntake = SmartDashboard.getBoolean("autoIntake", enableAutoIntake);
    }
 
   /**
@@ -133,5 +137,9 @@ public class CoralEffector extends SubsystemBase {
     SmartDashboard.putNumber("Coral Speed", coralEncoder.getVelocity());
     SmartDashboard.putNumber("coral output", coralOutput);
     SmartDashboard.getNumber("P", KP);
+    enableAutoIntake = SmartDashboard.getBoolean("autoIntake", enableAutoIntake);
+    if (distanceSensor.getRange() == 0){
+      DriverStation.reportWarning("The distance sensor no worky (it at 0)", false);
+    }
   }
 }

@@ -4,6 +4,7 @@ import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
 import org.carlmontrobotics.Constants.CoralEffectorc;
 import org.carlmontrobotics.subsystems.CoralEffector;
+import static org.carlmontrobotics.subsystems.CoralEffector.enableAutoIntake;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +18,6 @@ public class CoralIntake extends Command {
     // Timer coralInTimer = new Timer();
     public static double coralMotorPosition;
     private CoralEffector coralEffector;
-    private boolean enableAutoIntake = true;
 
     public CoralIntake(CoralEffector coralEffector) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -28,30 +28,27 @@ public class CoralIntake extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {
-        SmartDashboard.putBoolean("autoIntake", true);
-
-    }
+    public void initialize() {}
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (coralEffector.distanceSensorSeesCoral() && !coralEffector.limitSwitchSeesCoral()) {
-            coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
-            coralMotorPosition = coralEffector.getEncoderPos(); // mark the position in rotations
-            //coralEffector.coralIn = true;
-            coralMotorPosition = coralEffector.getEncoderPos() + CoralEffectorc.CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET;
-        }
-        else if (coralEffector.distanceSensorSeesCoral() /*&& coralEffector.coralIn == false&*/ && coralEffector.limitSwitchSeesCoral()) {
-            coralEffector.setMotorSpeed(INPUT_SLOW_SPEED); 
-        }
-        else {
-            coralEffector.setMotorSpeed(0);
-            coralEffector.setReferencePosition(coralMotorPosition);
+        if (enableAutoIntake){
+            if (coralEffector.distanceSensorSeesCoral() && !coralEffector.limitSwitchSeesCoral()) {
+                coralEffector.setMotorSpeed(INPUT_FAST_SPEED);
+                coralMotorPosition = coralEffector.getEncoderPos(); // mark the position in rotations
+                //coralEffector.coralIn = true;
+                coralMotorPosition = coralEffector.getEncoderPos() + CoralEffectorc.CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET;
+            }
+            else if (coralEffector.distanceSensorSeesCoral() /*&& coralEffector.coralIn == false&*/ && coralEffector.limitSwitchSeesCoral()) {
+                coralEffector.setMotorSpeed(INPUT_SLOW_SPEED); 
+            }
+            else {
+                coralEffector.setMotorSpeed(0);
+                coralEffector.setReferencePosition(coralMotorPosition);
 
+            }
         }
-        enableAutoIntake = SmartDashboard.getBoolean("autoIntake", true);
-
     }
 
     // Called once the command ends or is interrupted.
