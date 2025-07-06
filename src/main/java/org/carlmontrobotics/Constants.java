@@ -394,32 +394,117 @@ public final class Constants {
 	}
 	
 	//#endregion
-	public static final class AligningCords {
-		public static final float translation = 0; //I'll find this later
-		public static final Pose2d ID6_17Right = new Pose2d(2.087,4.737, Rotation2d.fromDegrees(60));
-		public static final Pose2d ID6_17Left = new Pose2d(3.530,2.679, Rotation2d.fromDegrees(60));
-		public static final Pose2d ID6_17Search = new Pose2d(3.650,2.611, Rotation2d.fromDegrees(60));
+public static final class AligningCords {
+	public static final double translation = Units.inchesToMeters(8.5); 
 
-		public static final Pose2d ID7_18Right = new Pose2d(2.837,3.840, Rotation2d.fromDegrees(0));
-		public static final Pose2d ID7_18Left = new Pose2d(3.188,4.254, Rotation2d.fromDegrees(0));
-		public static final Pose2d ID7_18Search = new Pose2d(2.844,4, Rotation2d.fromDegrees(0));
-		
-		public static final Pose2d ID8_19Right = new Pose2d(3.539,5.361, Rotation2d.fromDegrees(-60));
-		public static final Pose2d ID8_19Left = new Pose2d(3.832,5.546, Rotation2d.fromDegrees(-60));
-		public static final Pose2d ID8_19Search = new Pose2d(3.686,5.458, Rotation2d.fromDegrees(-60));
+	public static final Pose2d ID6_17Right = new Pose2d(
+		translatePpCords(2.087, 4.737, 60, "x", translation),
+		translatePpCords(2.087, 4.737, 60, "y", translation),
+		Rotation2d.fromDegrees(60)
+	);
 
-		public static final Pose2d ID9_20Right = new Pose2d(5.148,5.546, Rotation2d.fromDegrees(-120));
-		public static final Pose2d ID9_20Left = new Pose2d(5.470,5.361, Rotation2d.fromDegrees(-120));
-		public static final Pose2d ID9_20Search = new Pose2d(5.285,5.448, Rotation2d.fromDegrees(-120));
+	public static final Pose2d ID6_17Left = new Pose2d(
+		translatePpCords(3.530, 2.679, 60, "x", translation),
+		translatePpCords(3.530, 2.679, 60, "y", translation),
+		Rotation2d.fromDegrees(60)
+	);
 
-		public static final Pose2d ID10_21Right = new Pose2d(6.143,4.210, Rotation2d.fromDegrees(180));
-		public static final Pose2d ID10_21Left = new Pose2d(6.143,3.859, Rotation2d.fromDegrees(180));
-		public static final Pose2d ID10_21Search = new Pose2d(6.143,4, Rotation2d.fromDegrees(180));
+	public static final Pose2d ID6_17Search = new Pose2d(
+		translatePpCords(3.650, 2.611, 60, "x", translation),
+		translatePpCords(3.650, 2.611, 60, "y", translation),
+		Rotation2d.fromDegrees(60)
+	);
 
-		public static final Pose2d ID11_22Right = new Pose2d(5, 2.8, Rotation2d.fromDegrees(120));
-		public static final Pose2d ID11_22Left = new Pose2d(5.28, 2.96, Rotation2d.fromDegrees(120));
-		public static final Pose2d ID11_22Search = new Pose2d(5.314, 2.619, Rotation2d.fromDegrees(120));
-	}
+	public static final Pose2d ID7_18Right = new Pose2d(
+		translatePpCords(2.837, 3.840, 0, "x", translation),
+		translatePpCords(2.837, 3.840, 0, "y", translation),
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID7_18Left = new Pose2d(
+		translatePpCords(3.188, 4.254, 0, "x", translation),
+		translatePpCords(3.188, 4.254, 0, "y", translation),
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID7_18Search = new Pose2d(
+		translatePpCords(2.844, 4, 0, "x", translation),
+		translatePpCords(2.844, 4, 0, "y", translation),
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID8_19Right = new Pose2d(
+		translatePpCords(3.539, 5.361, -60, "x", translation),
+		translatePpCords(3.539, 5.361, -60, "y", translation),
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID8_19Left = new Pose2d(
+		translatePpCords(3.832, 5.546, -60, "x", translation),
+		translatePpCords(3.832, 5.546, -60, "y", translation),
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID8_19Search = new Pose2d(
+		translatePpCords(3.686, 5.458, -60, "x", translation),
+		translatePpCords(3.686, 5.458, -60, "y", translation),
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID9_20Right = new Pose2d(
+		translatePpCords(5.148, 5.546, -120, "x", translation),
+		translatePpCords(5.148, 5.546, -120, "y", translation),
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID9_20Left = new Pose2d(
+		translatePpCords(5.470, 5.361, -120, "x", translation),
+		translatePpCords(5.470, 5.361, -120, "y", translation),
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID9_20Search = new Pose2d(
+		translatePpCords(5.285, 5.448, -120, "x", translation),
+		translatePpCords(5.285, 5.448, -120, "y", translation),
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID10_21Right = new Pose2d(
+		translatePpCords(6.143, 4.210, 180, "x", translation),
+		translatePpCords(6.143, 4.210, 180, "y", translation),
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID10_21Left = new Pose2d(
+		translatePpCords(6.143, 3.859, 180, "x", translation),
+		translatePpCords(6.143, 3.859, 180, "y", translation),
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID10_21Search = new Pose2d(
+		translatePpCords(6.143, 4, 180, "x", translation),
+		translatePpCords(6.143, 4, 180, "y", translation),
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID11_22Right = new Pose2d(
+		translatePpCords(5, 2.8, 120, "x", translation),
+		translatePpCords(5, 2.8, 120, "y", translation),
+		Rotation2d.fromDegrees(120)
+	);
+
+	public static final Pose2d ID11_22Left = new Pose2d(
+		translatePpCords(5.28, 2.96, 120, "x", translation),
+		translatePpCords(5.28, 2.96, 120, "y", translation),
+		Rotation2d.fromDegrees(120)
+	);
+
+	public static final Pose2d ID11_22Search = new Pose2d(
+		translatePpCords(5.314, 2.619, 120, "x", translation),
+		translatePpCords(5.314, 2.619, 120, "y", translation),
+		Rotation2d.fromDegrees(120)
+	);
+}
 		// #region Limelight Constants
 	public static final class Limelightc {
 		public static final String CORAL_LL = "limelight-coral";
