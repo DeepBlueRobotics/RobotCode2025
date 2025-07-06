@@ -108,7 +108,7 @@ public class AlgaeEffector extends SubsystemBase {
     private final AbsoluteEncoder armAbsoluteEncoder = (armMotor != null ? armMotor.getAbsoluteEncoder() : null);
 
     
-    private final SparkClosedLoopController pidSparkPIDControllerArm = (armMotor != null ? armMotor.getClosedLoopController() : null);
+    private final SparkClosedLoopController sparkPIDControllerArm = (armMotor != null ? armMotor.getClosedLoopController() : null);
     private PIDController pidControllerArm = new PIDController(0, 0, 0);
     AbsoluteEncoderConfig config = new AbsoluteEncoderConfig();
 
@@ -211,7 +211,7 @@ public class AlgaeEffector extends SubsystemBase {
      * Uses wpilib controller instead of rev to avoid losing conversion factor
      * @param targetPos goal in degrees
      */
-    public void setArmPositionWpilib(double targetPos) {
+    public void setArmPosition_2(double targetPos) {
         clampedArmGoal = getArmClampedGoal(targetPos);
         armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(clampedArmGoal), clampedArmGoal - getArmPos());
         armPIDVolts = pidControllerArm.calculate(getArmPos(), clampedArmGoal);
@@ -219,9 +219,9 @@ public class AlgaeEffector extends SubsystemBase {
     }
 
     public void setArmPosition(double targetPos){ //this method takes in an angle and sets the arm to that angle 
-            
+        
         armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(clampedArmGoal), 0.00001*(armGoal- getArmPos()));//this calculates the amount of voltage needed to move the arm
-        pidSparkPIDControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+        sparkPIDControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
 
     }
     /**
@@ -241,7 +241,7 @@ public class AlgaeEffector extends SubsystemBase {
 
         armSetPoint = armTrapProfile.calculate(dT, armSetPoint, armGoalState); //sets the current state of the arm to its current position and velocity
         armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armSetPoint.position), Units.degreesToRadians(armSetPoint.velocity));//this calculates the amount of voltage needed to move the arm
-        pidSparkPIDControllerArm.setReference(armSetPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+        sparkPIDControllerArm.setReference(armSetPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
         
     }
     /**
@@ -339,8 +339,8 @@ public class AlgaeEffector extends SubsystemBase {
        builder.addDoubleProperty("Set Arm Max Velocity", () -> armMaxVelocityDegreesPerSecond, (value) -> { armMaxVelocityDegreesPerSecond = value; updateArmPID(); });
        builder.addDoubleProperty("arm angle (degrees)", () -> getArmPos(), null);
        builder.addDoubleProperty("arm output volts", () -> armMotor.getAppliedOutput()*armMotor.getBusVoltage(), null);
-       builder.addDoubleProperty("Set arm Goal Angle in Degrees", () -> armGoal, (value) -> {setArmTrapPosition(value); });
-       builder.addDoubleProperty("Set arm Goal(setReference())", () -> armGoal, (value) -> {setArmPosition(value); });
+       //builder.addDoubleProperty("Set arm Goal Angle in Degrees", () -> armGoal, (value) -> {setArmTrapPosition(value); });
+       builder.addDoubleProperty("Set arm position", () -> armGoal, (value) -> {setArmPosition_2(value); });
     }
 
     //Manual SysId-----------------------------------------------------------------------------------------------------------------------------------------
