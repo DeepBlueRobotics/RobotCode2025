@@ -367,8 +367,35 @@ public final class Constants {
 	}
 	//#endregion
 	// #region Subsystem Constants
+
+		/**
+	 * Translates either the x or y coordinate of pp by translation along a line with slope of degrees
+	 *
+	 * @param x The original x coordinate
+	 * @param y The original y coordinate
+	 * @param degrees The angle in degrees (slope direction)
+	 * @param axis The axis to output ("x" or "y"), not case sensetive
+	 * @param translation The translation distance
+	 * @return The new value of the chosen axis (x or y)
+	 */
+	public static double translatePpCords(double x, double y, double degrees, String axis, double translation) {
+		double radians = Math.toRadians(degrees); 
+
+		double x2 = Math.cos(radians) * translation;
+		double y2 = Math.sin(radians) * translation;
+
+		if (axis.equalsIgnoreCase("x")) {
+			return x + x2;
+		} else if (axis.equalsIgnoreCase("y")) {
+			return y + y2;
+		} else {
+			throw new IllegalArgumentException("wdym " + axis + " for the axis??? give an axis (x or y)");
+		}
+	}
+	
 	//#endregion
 	public static final class AligningCords {
+		public static final float translation = 0; //I'll find this later
 		public static final Pose2d ID6_17Right = new Pose2d(2.087,4.737, Rotation2d.fromDegrees(60));
 		public static final Pose2d ID6_17Left = new Pose2d(3.530,2.679, Rotation2d.fromDegrees(60));
 		public static final Pose2d ID6_17Search = new Pose2d(3.650,2.611, Rotation2d.fromDegrees(60));
