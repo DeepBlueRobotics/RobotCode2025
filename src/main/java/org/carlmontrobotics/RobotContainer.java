@@ -386,17 +386,13 @@ public class RobotContainer {
       //L1 CMDS
       NamedCommands.registerCommand("L1 Right",
               new SequentialCommandGroup(
-                  new MoveToRightBranch(drivetrain, limelight, elevator),
-                  new ElevatorToPos(elevator, Elevatorc.l1), 
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+                  new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
+                  new AutonCoralOuttake(coralEffector)));
 
       NamedCommands.registerCommand("L1 Left",
               new SequentialCommandGroup(
-                  new MoveToLeftBranch(drivetrain, limelight, elevator),
-                  new ElevatorToPos(elevator, Elevatorc.l1), 
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+                  new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
+                  new AutonCoralOuttake(coralEffector)));
 
       // //L2 Dealgify CMDs 
       // NamedCommands.registerCommand("L2 Dealgify Left",
@@ -424,14 +420,14 @@ public class RobotContainer {
       //L2 No-Dealify CMDS
       NamedCommands.registerCommand("L2 No-Dealgify Left", 
               new SequentialCommandGroup(
-                  new MoveToLeftBranch(drivetrain, limelight, elevator),
+                  new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
                   new ElevatorToPos(elevator, Elevatorc.l2), 
                   new AutonCoralOuttake(coralEffector), 
                   new ElevatorToPos(elevator, Elevatorc.downPos)));
       
       NamedCommands.registerCommand("L2 No-Dealgify Right", 
               new SequentialCommandGroup(
-                  new MoveToRightBranch(drivetrain, limelight, elevator),
+                  new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
                   new ElevatorToPos(elevator, Elevatorc.l2), 
                   new AutonCoralOuttake(coralEffector), 
                   new ElevatorToPos(elevator, Elevatorc.downPos)));    
@@ -462,14 +458,14 @@ public class RobotContainer {
       //L3 No-Dealify CMDS
       NamedCommands.registerCommand("L3 No-Dealgify Left", 
               new SequentialCommandGroup(
-                  new MoveToLeftBranch(drivetrain, limelight, elevator),
+                  new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
                   new ElevatorToPos(elevator, Elevatorc.l3), 
                   new AutonCoralOuttake(coralEffector), 
                   new ElevatorToPos(elevator, Elevatorc.downPos)));
       
       NamedCommands.registerCommand("L3 No-Dealgify Right", 
               new SequentialCommandGroup(
-                  new MoveToRightBranch(drivetrain, limelight, elevator),
+                  new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
                   new ElevatorToPos(elevator, Elevatorc.l3), 
                   new AutonCoralOuttake(coralEffector), 
                   new ElevatorToPos(elevator, Elevatorc.downPos)));    
@@ -500,19 +496,27 @@ public class RobotContainer {
       //             new ElevatorToPos(elevator, Elevatorc.downPos)));
 
       //L4 No-Backup CMDS
-      NamedCommands.registerCommand("L4 No-Backup Left", 
-              new SequentialCommandGroup(
-                  new MoveToLeftBranch(drivetrain, limelight, elevator),
-                  new ElevatorToPos(elevator, Elevatorc.l4), 
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
+      NamedCommands.registerCommand("L4 Left", 
+                new SequentialCommandGroup(
+                new MoveToAlignReef(drivetrain,limelight,elevator, false, driverRumble), 
+                new ElevatorToPos(elevator, testl4),
+                new AutonCoralOuttake(coralEffector),
+                new ParallelCommandGroup(
+                new AutonCoralFastOutake(coralEffector),
+                new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)),
+                new ElevatorToPos(elevator, Elevatorc.l1)
+                ));    
       
-      NamedCommands.registerCommand("L4 No-Backup Right", 
-              new SequentialCommandGroup(
-                  new MoveToRightBranch(drivetrain, limelight, elevator),
-                  new ElevatorToPos(elevator, Elevatorc.l4), 
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));    
+      NamedCommands.registerCommand("L4 Right", 
+                new SequentialCommandGroup(
+                new MoveToAlignReef(drivetrain,limelight,elevator, true, driverRumble), 
+                new ElevatorToPos(elevator, testl4),
+                new AutonCoralOuttake(coralEffector),
+                new ParallelCommandGroup(
+                new AutonCoralFastOutake(coralEffector),
+                new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)),
+                new ElevatorToPos(elevator, Elevatorc.l1)
+                ));    
 
 
 //-------------------------------------------------------------------------------------------
