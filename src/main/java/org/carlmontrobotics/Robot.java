@@ -47,6 +47,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.drivetrain.setDrivingIdleMode(true);
+    m_robotContainer.elevator.setElevatorIdleMode(true);
     m_robotContainer.drivetrain.resetFieldOrientation();
     //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //if (m_autonomousCommand != null) {
@@ -61,7 +63,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {}
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.drivetrain.setDrivingIdleMode(false);
+    m_robotContainer.elevator.setElevatorIdleMode(false);
+  }
 
   @Override
   public void disabledPeriodic() {}

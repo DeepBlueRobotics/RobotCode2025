@@ -136,7 +136,7 @@ public class RobotContainer {
     // private boolean hasSetupAutos = false;
     // private final String[] autoNames = new String[] {};
     private final AlgaeEffector algaeEffector = new AlgaeEffector();
-     private final Elevator elevator = new Elevator();
+     public final Elevator elevator = new Elevator();
      private final Limelight limelight = new Limelight();
      public final Drivetrain drivetrain =  new Drivetrain(elevator, limelight);
      

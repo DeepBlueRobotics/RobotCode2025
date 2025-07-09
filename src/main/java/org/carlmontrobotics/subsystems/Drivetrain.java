@@ -33,7 +33,7 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
+import com.pathplanner.lib.util.PathPlannerLogging;
 // import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -41,6 +41,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import org.carlmontrobotics.lib199.swerve.SwerveModuleSim;
 
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -51,6 +52,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.hal.SimDouble;
@@ -394,10 +396,32 @@ public class Drivetrain extends SubsystemBase {
         veryImportantCounter += 1;
     }
 
+
+    public void setDrivingIdleMode(boolean brake) {
+         IdleMode mode;
+        if (brake) {
+            mode = IdleMode.kBrake;
+        }
+        else {
+            mode = IdleMode.kCoast;
+        }
+        for (SparkMax turnMotor : turnMotors) {
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.idleMode(mode);
+            turnMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);      
+        }
+        for (SparkMax driveMotor : driveMotors) {
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.idleMode(mode);
+            driveMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);     
+        }
+    }
     @Override
     public void periodic() {
         updatePoseWithLimelight();
-        detectCollision();
+        detectCollision(); //This does nothing
+        PathPlannerLogging.logCurrentPose(getPose());
+
 
         SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
         SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
