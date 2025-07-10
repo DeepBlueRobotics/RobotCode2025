@@ -35,7 +35,7 @@ public class TeleopDrive extends Command {
   private double currentForwardVel = 0;
   private double currentStrafeVel = 0;
   private double prevTimestamp;
-  public static boolean babyMode = true;
+  public static boolean babyMode = false;
   public static BooleanSupplier babyModeSupplier = () -> babyMode;
   Elevator elevator;
   CoralEffector coralEffector;
@@ -76,7 +76,7 @@ public class TeleopDrive extends Command {
     double[] speeds = getRequestedSpeeds();
     // SmartDashboard.putNumber("Elapsed time", currentTime - prevTimestamp);
     prevTimestamp = currentTime;
-    babyMode = SmartDashboard.getBoolean("babymode", true);
+    babyMode = SmartDashboard.getBoolean("babymode", false);
     // kSlowDriveRotation = SmartDashboard.getNumber("slow turn const", kSlowDriveRotation);
     // kSlowDriveSpeed = SmartDashboard.getNumber("slow speed const", kSlowDriveSpeed);
     // kNormalDriveRotation = SmartDashboard.getNumber("normal turn const", kNormalDriveRotation);

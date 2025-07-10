@@ -41,7 +41,7 @@ public class CoralEffector extends SubsystemBase {
     public SparkFlex coralMotor = new SparkFlex(CORAL_MOTOR_PORT, MotorType.kBrushless);
     public DigitalInput coralLimitSwitch = new DigitalInput(CORAL_LIMIT_SWITCH_PORT);
     public TimeOfFlight distanceSensor = new TimeOfFlight(CORAL_DISTANCE_SENSOR_PORT);
-    public static boolean enableAutoIntake;
+    public static boolean enableAutoIntake = true;
     
     
     public final RelativeEncoder coralEncoder = coralMotor.getEncoder();
