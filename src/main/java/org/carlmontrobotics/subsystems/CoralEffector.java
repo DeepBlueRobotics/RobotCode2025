@@ -6,7 +6,6 @@ import org.carlmontrobotics.lib199.MotorControllerFactory;
 
 import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.servohub.ServoHub.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -24,21 +23,22 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import net.bytebuddy.build.Plugin;
+
 import static org.carlmontrobotics.Constants.*;
 
 import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
 import java.util.function.BooleanSupplier;
 
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase;
 
 public class CoralEffector extends SubsystemBase {
-  
-    public SparkFlex coralMotor = new SparkFlex(CORAL_MOTOR_PORT, MotorType.kBrushless);
+    public SparkFlex coralMotor =  MotorControllerFactory.createSparkFlex(CORAL_MOTOR_PORT);
+    //public SparkFlex coralMotor = new SparkFlex(CORAL_MOTOR_PORT, MotorType.kBrushless);
     public DigitalInput coralLimitSwitch = new DigitalInput(CORAL_LIMIT_SWITCH_PORT);
     public TimeOfFlight distanceSensor = new TimeOfFlight(CORAL_DISTANCE_SENSOR_PORT);
     public static boolean enableAutoIntake = true;
