@@ -979,17 +979,29 @@ public class Drivetrain extends SubsystemBase {
         return fieldOriented;
     }
 
+
     public void setFieldOriented(boolean fieldOriented) {
         this.fieldOriented = fieldOriented;
     }
-
+    /**
+     * Sets the current direction the robot is facing is to be 0
+     */
     public void resetFieldOrientation() {
         fieldOffset = gyro.getAngle();
     }
+    /**
+     * Sets the current direction the robot is facing is to be 180
+     */
     public void resetFieldOrientationBackwards() {
         fieldOffset = 180 + gyro.getAngle();
     }
-
+    /**
+     * Sets the current direction the robot is facing is plus @param angle to be 0
+     * @param angle in degrees
+     */
+    public void resetFieldOrientationWithAngle(double angle) {
+        fieldOffset = angle + gyro.getAngle();
+    }
     public void resetPoseEstimator() {
         // odometry.resetPosition(new Rotation2d(), getModulePositions(), new Pose2d());
 
@@ -1006,6 +1018,9 @@ public class Drivetrain extends SubsystemBase {
                 .toArray(SwerveModuleState[]::new));
     }
 
+    /**
+     * Changes between IdleModes
+     */
     public void toggleMode() {
         for (SwerveModule module : modules)
             module.toggleMode();
@@ -1381,12 +1396,20 @@ public class Drivetrain extends SubsystemBase {
                 rotateRoutine[3].quasistatic(direction));
     }
 
+    /**
+     * Makes sysId to run for both directions
+     * @return Command to run sysId
+     */
     public Command allTheSYSID() {
         return new SequentialCommandGroup(
                 allTheSYSID(SysIdRoutine.Direction.kForward),
                 allTheSYSID(SysIdRoutine.Direction.kReverse));
     }
-
+    /**
+     * Makes sysId to find feedforward and pid values for drivetrain
+     * @param direction SysIdRoutine.Direction.kForward or kReverse
+     * @return Command to run sysID
+     */
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return new SelectCommand<>(
                 Map.ofEntries(
@@ -1430,6 +1453,10 @@ public class Drivetrain extends SubsystemBase {
                 this::selector);
     }
 
+    /**
+     * Sets all SwerveModules to point in a certain angle
+     * @param angle in degrees
+     */
     public void keepRotateMotorsAtDegrees(int angle) {
         for (SwerveModule module : modules) {
             module.turnPeriodic();
@@ -1437,6 +1464,10 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
+    /**
+     * Gets how fast the robot is spinning from gyro
+     * @return degrees per second
+     */
     public double getGyroRate() {
         return gyro.getRate();
     }

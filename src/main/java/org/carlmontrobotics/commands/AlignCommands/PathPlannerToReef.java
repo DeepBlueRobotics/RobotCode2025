@@ -121,7 +121,7 @@ public class PathPlannerToReef extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    if (searchingState && currentPath!=null) {
+    if (currentPath!=null) {
       currentPath.cancel();
     }
   }
