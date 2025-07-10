@@ -1,5 +1,3 @@
-//Resolve 71 errors starting from Holonomics
-
 package org.carlmontrobotics.subsystems;
 
 import org.carlmontrobotics.subsystems.Elevator;
@@ -28,13 +26,11 @@ import org.carlmontrobotics.lib199.swerve.SwerveModule;
 import static org.carlmontrobotics.Config.CONFIG;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-//import com.kauailabs.navx.frc.AHRS;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.PathPlannerLogging;
-// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -70,8 +66,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-// import edu.wpi.first.units.Angle;
-// import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -83,8 +77,6 @@ import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
-// import edu.wpi.first.units.Velocity;
-// import edu.wpi.first.units.Voltage;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -117,14 +109,13 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volt;
 import static edu.wpi.first.units.Units.Meter;
-// Make sure this code is extraneous
-// import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
+
 public class Drivetrain extends SubsystemBase {
+
     private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
     private Pose2d autoGyroOffset = new Pose2d(0., 0., new Rotation2d(0.));
     // ^used by PathPlanner for chaining paths
-    
     private SwerveDriveKinematics kinematics = null;
     // private SwerveDriveOdometry odometry = null;
     private SwerveDrivePoseEstimator poseEstimator = null;
@@ -301,9 +292,6 @@ public class Drivetrain extends SubsystemBase {
 
             }
            
-            SmartDashboard.putData("Field", field);
-            SmartDashboard.putData("Odometry Field", odometryField);
-            SmartDashboard.putData("Pose with Limelight Field", poseWithLimelightField);
 
             accelX = gyro.getWorldLinearAccelX(); // Acceleration along the X-axis
             accelY = gyro.getWorldLinearAccelY(); // Acceleration along the Y-axis
@@ -392,11 +380,10 @@ public class Drivetrain extends SubsystemBase {
     // return new PrintCommand("Invalid Command");
     // }
 
-    public void click() {
-        veryImportantCounter += 1;
-    }
-
-
+    /**
+     * Sets swerveModules IdleMode both turn and drive
+     * @param brake boolean for braking, if false then coast
+     */
     public void setDrivingIdleMode(boolean brake) {
          IdleMode mode;
         if (brake) {
@@ -416,6 +403,7 @@ public class Drivetrain extends SubsystemBase {
             driveMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);     
         }
     }
+
     @Override
     public void periodic() {
         updatePoseWithLimelight();
@@ -436,12 +424,9 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Accel Y", accelY);
         SmartDashboard.putNumber("2D Acceleration ", accelXY);
 
-        field.setRobotPose(poseEstimator.getEstimatedPosition());
         //maybe add the field with the position of the robot with only limelight and the field with the position of the robot with only odometry?
         //We can compare the two fields to see if odometry is causing the pose to be inaccurate when it hits the reef.
 
-        SmartDashboard.putData(new InstantCommand(() -> click()));
-        SmartDashboard.putNumber("Clicks", veryImportantCounter);
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);
@@ -572,52 +557,9 @@ public class Drivetrain extends SubsystemBase {
                 () -> moduleBL.getModuleAngle(), null);
         builder.addDoubleProperty("BR Turn Encoder (Deg)",
                 () -> moduleBR.getModuleAngle(), null);
-        // builder.addDoubleProperty("PathKpDrive", () -> ppKpDrive, (value) -> {ppKpDrive = value; configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-        // builder.addDoubleProperty("PathKdDrive", () -> ppKiDrive, (value) -> {ppKiDrive = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-        // builder.addDoubleProperty("PathkIDrive", () -> ppKdDrive, (value) -> {ppKdDrive = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-
-// builder.addDoubleProperty("PathKpTurn", () -> ppKpTurn, (value) -> {ppKpTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-//         builder.addDoubleProperty("PathKdTurn", () -> ppKiTurn, (value) -> {ppKiTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
-//         builder.addDoubleProperty("PathkITurn", () -> ppKdTurn, (value) -> {ppKdTurn = value;  configurePP(ppKpDrive, ppKiDrive, ppKdDrive, ppKpTurn, ppKiTurn, ppKdTurn);});
     }
 
-    public void configurePP(double kpDrive,double kiDrive,double kdDrive,double kpTurn,double kiTurn,double kdTurn) {
-        RobotConfig config;
-        config = Constants.Drivetrainc.Autoc.robotConfig;
-        AutoBuilder.configure(
-            //Supplier<Pose2d> poseSupplier,
-            this::getPose, // Robot pose supplier
-            //Consumer<Pose2d> resetPose,
-            this::setPoseWithLimelight, // Method to reset odometry (will be called if your auto has a starting pose)
-            //Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-            this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            //BiConsumer<ChassisSpeeds,DriveFeedforwards> output,
-            (speeds, feedforwards) -> drive(kinematics.toSwerveModuleStates(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-            //PathFollowingController controller,
-            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    //new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
-                    //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
-                    new PIDConstants(ppKpDrive
-                    , ppKiDrive, ppKdDrive), // Translation PID constants FIXME do these need to be accurate?
-                    new PIDConstants(ppKpTurn, ppKiTurn, ppKdTurn)
-            ),
-            //RobotConfig robotConfig,
-            config, // The robot configuration
-            //BooleanSupplier shouldFlipPath,
-            () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                // This will flip the path being followed to the red side of the field.
-                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-                var alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;//stolen from official pplib
-                }
-                return false;
-            },
-            //Subsystem... driveRequirements
-            this // Reference to this subsystem to set requirements
-        );
-    }
+
     // #region Drive Methods
 
     /**
@@ -631,10 +573,21 @@ public class Drivetrain extends SubsystemBase {
     public void setExtraSpeedMult(double set) {
         extraSpeedMult=set;
     }
+    
+    /**
+     * Calculates and implements the required SwerveStates for all 4 modules to get the wanted outcome
+     * @param forward The desired forward speed, in m/s. Forward is positive.
+     * @param strafe The desired strafe speed, in m/s. Left is positive.
+     * @param rotation The desired rotation speed, in rad/s. Counter clockwise is positive.
+     */
     public void drive(double forward, double strafe, double rotation) {
         drive(getSwerveStates(forward, strafe, rotation));
     }
     
+    /**
+     * Implements the provided SwerveStates for all 4 modules to get the wanted outcome
+     * @param moduleStates SwerveModuleState[]
+     */
     public void drive(SwerveModuleState[] moduleStates) {
         //Max speed override
         double max = maxSpeed;
@@ -647,68 +600,11 @@ public class Drivetrain extends SubsystemBase {
         }
     }
     
-//    public void configurePPLAutoBuilder() {
-//     /**
-//      * PATHPLANNER SETTINGS
-//      * Robot Width (m): .91
-//      * Robot Length(m): .94
-//      * Max Module Spd (m/s): 4.30
-//      * Default Constraints
-//      * Max Vel: 1.54, Max Accel: 6.86
-//      * Max Angvel: 360, Max AngAccel: 180 (guesses!)
-//      */
-//     AutoBuilder.configure(
-//         this::getPose, // :D
-//         this::setPose, // :D
-//         this::getSpeeds, // :D
-//         (ChassisSpeeds cs) -> {
-//             //cs.vxMetersPerSecond = -cs.vxMetersPerSecond;
-//             // SmartDashboard.putNumber("chassis speeds x", cs.vxMetersPerSecond);
-//             // SmartDashboard.putNumber("chassis speeds y", cs.vyMetersPerSecond);
-//             // SmartDashboard.putNumber("chassis speeds theta", cs.omegaRadiansPerSecond);
-
-//             drive(kinematics.toSwerveModuleStates(cs));  
-//         }, // :D
-//         new PPHolonomicDriveController(
-//             new PIDConstants(xPIDController[0], xPIDController[1], xPIDController[2], 0), //translation (drive) pid vals
-//             new PIDConstants(thetaPIDController[0], thetaPIDController[1], thetaPIDController[2], 0), //rotation pid vals
-//             Robot.kDefaultPeriod//robot period
-//         ), 
-//         Autoc.robotConfig,
-//         () -> {
-//             // Boolean supplier that controls when the path will be mirrored for the red alliance
-//             // This will flip the path being followed to the red side of the field.
-//             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-//             var alliance = DriverStation.getAlliance();
-//             if (alliance.isPresent())
-//                 return alliance.get() == DriverStation.Alliance.Red;
-//             //else:
-//             return false;
-//         }, // :D
-//         this // :D
-//     );
-
-    
-//TODO: AUTOBUILDER
+    /**
+     * Configures PathPlanner AutoBuilder
+     */
     public void AutoBuilder() {
-        // System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        // All other subsystem initialization
-        // ...
-
-        // Load the RobotConfig from the GUI settings. You should probably
-        // store this in your Constants file
-        RobotConfig config;
-        // try{
-        //     config = RobotConfig.fromGUISettings();
-        // } catch (Exception e) {
-        //     config = Constants.
-        // // Handle exception as needed
-        // e.printStackTrace();
-        // }
-        config = Constants.Drivetrainc.Autoc.robotConfig;
-
-        // Configure AutoBuilder last
-
+        RobotConfig config = Constants.Drivetrainc.Autoc.robotConfig;
         AutoBuilder.configure(
                 //Supplier<Pose2d> poseSupplier,
                 this::getPose, // Robot pose supplier
@@ -830,13 +726,19 @@ public class Drivetrain extends SubsystemBase {
         return Arrays.stream(modules).map(SwerveModule::getCurrentPosition).toArray(SwerveModulePosition[]::new);
     }
 
+    /**
+     * Gets pose from {@link #poseEstimator}
+     * @return Pose2D
+     */
     public Pose2d getPose() {
         // return odometry.getPoseMeters();
         return poseEstimator.getEstimatedPosition();
     }
 
-    //You can just use getPose() to get the position with limelight since limelight is incorporated into the pose estimator with updateposewithlimelight()
-    //This method can be used to get the pose with limelight on SmartDashboard and compare it to the pose using odometry
+    /**
+     * If any limelight sees a tag, method will get visionEstimate, otherwise returns current pose from {@link #poseEstimator}
+     * @return Pose2D
+     */
     public Pose2d getPoseWithLimelight(){
         if (LimelightHelpers.getTV(REEF_LL)) {
             
@@ -885,6 +787,7 @@ public class Drivetrain extends SubsystemBase {
         simGyroOffset = pose.getRotation().minus(gyroRotation);
         
     }
+
     //This is supposed to be a constant but move it into constants.java once the actual collision threshold is found
     public final double COLLISION_ACCELERATION_THRESHOLD = 2; //The minimum acceleration that will trigger a collision detection, in m/s^2
 
@@ -895,16 +798,18 @@ public class Drivetrain extends SubsystemBase {
         return accelXY > COLLISION_ACCELERATION_THRESHOLD; // return true if collision detected
 
     }
-    //This method will update the position of the robot with limelight to help 
-    //put this method in periodic() instead of the current line that updates the position
+
+    /**
+     * Uses MegaTag1 to update {@link #poseEstimator}
+     */
     public void updatePoseWithLimelight(){
         Pose2d pose;
         Rotation2d gyroRotation = gyro.getRotation2d();
         
         boolean elevatorAtBottom = true;
-        
-        double distanceToTagReefLL = ll.getDistanceToApriltag3D(REEF_LL);
-        double distanceToTagCoralLL = ll.getDistanceToApriltag3D(CORAL_LL);
+        //Currently not being used
+        // double distanceToTagReefLL = ll.getDistanceToApriltag3D(REEF_LL);
+        // double distanceToTagCoralLL = ll.getDistanceToApriltag3D(CORAL_LL);
         //these are used to check if the limelight sees a tag and it is within the distance where limelight can provide accurate data
         boolean reefLLtagValid = ll.seesTag(REEF_LL); // ll.seesTag(REEF_LL) && distanceToTagReefLL < LL_ACCURACY_LIMIT_METERS;
         boolean coralLLtagValid = ll.seesTag(CORAL_LL); //ll.seesTag(CORAL_LL) && distanceToTagCoralLL < LL_ACCURACY_LIMIT_METERS;
@@ -960,8 +865,10 @@ public class Drivetrain extends SubsystemBase {
         
     }
 
-    // Resets the gyro, so that the direction the robotic currently faces is
-    // considered "forward"
+    /**
+     * @deprecated Use {@link #resetFieldOrientation()} instead
+     */
+    @Deprecated
     public void resetHeading() {
         gyro.reset();
         
@@ -974,12 +881,18 @@ public class Drivetrain extends SubsystemBase {
     public double getRoll() {
         return gyro.getRoll();
     }
-
+    /**
+     * true stands for fieldOriented, false stands for robotOriented
+     * @return boolean
+     */
     public boolean getFieldOriented() {
         return fieldOriented;
     }
 
-
+    /**
+     * True sets fieldOriented, false sets robotOriented
+     * @param fieldOriented boolean
+     */
     public void setFieldOriented(boolean fieldOriented) {
         this.fieldOriented = fieldOriented;
     }
