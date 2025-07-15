@@ -105,6 +105,10 @@ public class CoralEffector extends SubsystemBase {
     return distanceSensor.getRange() < CORAL_DISTANCE_SENSOR_DISTANCE;
   }
 
+  /**
+   * Makes a lambda function to check if distanceSensor sees coral
+   * @return booleanSupplier
+   */
   public BooleanSupplier distanceSensorSeesCoralSupplier(){
     return () -> distanceSensorSeesCoral();
   }
@@ -116,8 +120,20 @@ public class CoralEffector extends SubsystemBase {
   //   coralIn = coralIsInside;
   // }
 
+  /**
+   * Checks if limitswitch is activated
+   * @return boolean
+   */
   public boolean limitSwitchSeesCoral() {
     return coralLimitSwitch.get();
+  }
+
+  /**
+   * 
+   * @return If coral is fully inside the robot
+   */
+  public boolean coralSecured() {
+    return limitSwitchSeesCoral() && !distanceSensorSeesCoral();
   }
 
 

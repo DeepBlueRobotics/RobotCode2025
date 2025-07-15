@@ -76,11 +76,10 @@ public final class Constants {
 		public static final int followerPort = 21; // inverted
 		//public static final int elevatorTopLimitSwitchPort = 1;
 		public static final int elevatorBottomLimitSwitchPort = 0;
-		public static final int bottomLimitSwitchTriggerPoint = 10;// TODO: figure out the value
-		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
+		public static final int bottomLimitSwitchTriggerPoint = 10;
+		public static final double GEAR_RATIO = 1.0/20;
 
 		// Config
-		// TODO figure these parts out
 		public static final double MAX_ACCEL_RAD_P_S = 1;
 		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
@@ -337,7 +336,7 @@ public final class Constants {
 							// double wheelCOF,
 							mu,
 							// DCMotor driveMotor,
-							DCMotor.getNEO(1), // FIXME is it 1 for 1 each or 4 for 1 robot
+							DCMotor.getNEO(1),
 							// double driveGearing,
 							driveGearing,
 							// double driveCurrentLimit,
@@ -516,13 +515,12 @@ public static final class AligningCords {
 		// public static final double REEF_MOUNT_ANGLE = 15; // pitch 
         // public static final double CORAL_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; 
 		// public static final double REEF_LL_HEIGHT_FROM_GROUND_METERS = 0.206502;
-		// TODO: CHANGE NUMBERS ON LIMELIGHT INTERFACE
 
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH+Units.inchesToMeters(1);
 
-		public static final double areaPercentageGoal = 8.4; //TODO figure this out por favor
-		public static final double areaTolerance = 0.1; //TODO needs to get tuned
+		public static final double areaPercentageGoal = 8.4; 
+		public static final double areaTolerance = 0.1;
 		public static final double strafeTolerance = 0.02;
 		public static final double LL_ACCURACY_LIMIT_METERS = 5.0; //TODO: find at what distance limelight becomes inaccurate
 

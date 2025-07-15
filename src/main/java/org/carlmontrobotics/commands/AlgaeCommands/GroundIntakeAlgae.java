@@ -43,9 +43,6 @@ public class GroundIntakeAlgae extends Command {
   @Override
   public boolean isFinished() {
     //distance sensor doesn't detect coral
-    //TODO: make distance sensor stuff
-    //TODO: add smartdashboard
-    //TODO: Test different times
     return timer.get()>5; //Simulator doesnt work propperly because limiswtich is non existant (only for simulator)
   }
 }
