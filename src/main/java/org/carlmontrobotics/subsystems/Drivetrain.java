@@ -292,6 +292,9 @@ public class Drivetrain extends SubsystemBase {
 
             }
            
+            //SmartDashboard.putData("Field", field);
+            //SmartDashboard.putData("Odometry Field", odometryField);
+            //martDashboard.putData("Pose with Limelight Field", poseWithLimelightField);
 
             accelX = gyro.getWorldLinearAccelX(); // Acceleration along the X-axis
             accelY = gyro.getWorldLinearAccelY(); // Acceleration along the Y-axis
@@ -427,6 +430,8 @@ public class Drivetrain extends SubsystemBase {
         //maybe add the field with the position of the robot with only limelight and the field with the position of the robot with only odometry?
         //We can compare the two fields to see if odometry is causing the pose to be inaccurate when it hits the reef.
 
+        //SmartDashboard.putData(new InstantCommand(() -> click()));
+        //SmartDashboard.putNumber("Clicks", veryImportantCounter);
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);

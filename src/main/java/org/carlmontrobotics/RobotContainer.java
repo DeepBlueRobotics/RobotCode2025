@@ -19,6 +19,7 @@ import org.carlmontrobotics.Constants.Elevatorc;
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Driver;
 import org.carlmontrobotics.Constants.OI.Manipulator;
+import org.carlmontrobotics.commands.AlgaeCommands.ArmMove;
 import org.carlmontrobotics.commands.AlgaeCommands.ArmToPosition;
 import org.carlmontrobotics.commands.AlignCommands.GoToCoralStation;
 import org.carlmontrobotics.commands.AlignCommands.MoveToAlignReef;
@@ -96,6 +97,7 @@ import static org.carlmontrobotics.Constants.Elevatorc.l3;
 import static org.carlmontrobotics.Constants.Elevatorc.l4;
 import static org.carlmontrobotics.Constants.Elevatorc.testl4;
 import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
+import org.carlmontrobotics.commands.AlgaeCommands.ArmMove;
 //constats
 //import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import static org.carlmontrobotics.Constants.OI.Driver.*;
@@ -147,6 +149,7 @@ public class RobotContainer {
        //2. Use absolute paths from constants to reduce confusion
        
        public final CoralEffector coralEffector = new CoralEffector();
+
       //TODO activate arm
        //public final AlgaeEffector algaeEffector = new AlgaeEffector();
      
@@ -156,6 +159,8 @@ public class RobotContainer {
          public RobotContainer() {
              {
                 SmartDashboard.putData("intake", new CoralIntake(coralEffector));
+                SmartDashboard.putData("moveArm", new ArmMove(algaeEffector));
+
                 
                  // Put any configuration overrides to the dashboard and the terminal
                  // SmartDashboard.putData("CONFIG overrides", Config.CONFIG);
@@ -926,18 +931,15 @@ SHARK IN THE TANK
     }
 
     //l4 in one button
-    axisTrigger(driverController, Axis.kLeftTrigger)
+    axisTrigger(manipulatorController, Axis.kLeftTrigger)
     .onTrue(
         new SequentialCommandGroup(
             new ElevatorToPos(elevator, testl4), 
             new AutonCoralOuttake(coralEffector), 
-            new WaitCommand(.2), 
             new ParallelCommandGroup(
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight), 
                 new AutonCoralOuttake(coralEffector)), 
-            new WaitCommand(.2), 
-            new InstantCommand(() -> new CoralOuttake(coralEffector, 0))
-            //,new ElevatorToPos(elevator, Elevatorc.l1)
+            new ElevatorToPos(elevator, Elevatorc.l1)
             ));
     new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
@@ -956,20 +958,21 @@ SHARK IN THE TANK
   
   
 
-  
+
   public Command getAutonomousCommand() {
     // return Commands.print("No autonomous command configured");
-    Command cmd = autoChooser.getSelected();
-    System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
+    //Command cmd = autoChooser.getSelected();
+    //System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
     // Command cmd = new LastResortAuto(drivetrain, -1, 4, 8);
     // System.out.println("running getAutounmousCommand");
-    return cmd;
+    //return cmd;
     // return autoChooser.getSelected();
     //return new LastResortAuto(drivetrain, 1, 1, 4);
-    /*
+    
     return  new SequentialCommandGroup(
-        new LastResortAuto(drivetrain, 1, 1, 4),  
-        new MoveToRightBranch(drivetrain, limelight, elevator),
+        //
+        //new LastResortAuto(drivetrain, 1, 1, 4),  
+        new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
             new ElevatorToPos(elevator, testl4),
             new AutonCoralOuttake(coralEffector),
             new ParallelCommandGroup(
@@ -977,7 +980,7 @@ SHARK IN THE TANK
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
             ),
         new ElevatorToPos(elevator, Elevatorc.downPos));    
-        */
+        
 
   }
 

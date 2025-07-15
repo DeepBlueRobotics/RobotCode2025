@@ -122,6 +122,7 @@ public class AlgaeEffector extends SubsystemBase {
     private double KD = armKD;
     private ArmFeedforward armFeedforward = new ArmFeedforward(KS, KG, KV, KA);
     
+    
     /**
      * Updates ArmFeedForward
      * For testing purely
@@ -175,6 +176,7 @@ public class AlgaeEffector extends SubsystemBase {
         SmartDashboard.putData("(MANUAL) Dynamic FF test", new ManualDynamicForArm(this)); 
         SmartDashboard.putData("(MANUAL) Quasistatic FF test", new ManualQuasistaticForArm(this)); 
 
+
     }
     //----------------------------------------------------------------------------------------
     /**
@@ -189,15 +191,15 @@ public class AlgaeEffector extends SubsystemBase {
             ).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
         
         
-        armMotorConfig.idleMode(IdleMode.kBrake);
+        // armMotorConfig.idleMode(IdleMode.kBrake);
         armMotorConfig.inverted(true);
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
         armMotorConfig.absoluteEncoder.zeroCentered(true);
-        armMotorConfig.absoluteEncoder.inverted(true);
-        armMotorConfig.softLimit.forwardSoftLimit(UPPER_ANGLE_LIMIT);
-        armMotorConfig.softLimit.forwardSoftLimitEnabled(true);
-        armMotorConfig.softLimit.reverseSoftLimit(LOWER_ANGLE_LIMIT);
-        armMotorConfig.softLimit.reverseSoftLimitEnabled(true);
+        armMotorConfig.absoluteEncoder.inverted(false);
+        // armMotorConfig.softLimit.forwardSoftLimit(UPPER_ANGLE_LIMIT);
+        // armMotorConfig.softLimit.forwardSoftLimitEnabled(true);
+        // armMotorConfig.softLimit.reverseSoftLimit(LOWER_ANGLE_LIMIT);
+        // armMotorConfig.softLimit.reverseSoftLimitEnabled(true);
         armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG * ARM_CHAIN_GEARING);
         armMotorConfig.absoluteEncoder.positionConversionFactor(ROTATION_TO_DEG * ARM_CHAIN_GEARING);
         armMotorConfig.absoluteEncoder.velocityConversionFactor(6 * ARM_CHAIN_GEARING); // 6 is rotations/min to degrees/second
@@ -221,7 +223,7 @@ public class AlgaeEffector extends SubsystemBase {
     public void setArmPosition(double targetPos){ //this method takes in an angle and sets the arm to that angle 
         
         armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(clampedArmGoal), 0.00001*(armGoal- getArmPos()));//this calculates the amount of voltage needed to move the arm
-        sparkPIDControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+        // sparkPIDControllerArm.setReference(clampedArmGoal, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
 
     }
     /**
@@ -241,7 +243,7 @@ public class AlgaeEffector extends SubsystemBase {
 
         armSetPoint = armTrapProfile.calculate(dT, armSetPoint, armGoalState); //sets the current state of the arm to its current position and velocity
         armFeedVolts = armFeedforward.calculate(Units.degreesToRadians(armSetPoint.position), Units.degreesToRadians(armSetPoint.velocity));//this calculates the amount of voltage needed to move the arm
-        sparkPIDControllerArm.setReference(armSetPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
+        // sparkPIDControllerArm.setReference(armSetPoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, armFeedVolts); //This moves the arm to the goal angle and uses PID 
         
     }
     /**
@@ -340,7 +342,11 @@ public class AlgaeEffector extends SubsystemBase {
        builder.addDoubleProperty("arm angle (degrees)", () -> getArmPos(), null);
        builder.addDoubleProperty("arm output volts", () -> armMotor.getAppliedOutput()*armMotor.getBusVoltage(), null);
        //builder.addDoubleProperty("Set arm Goal Angle in Degrees", () -> armGoal, (value) -> {setArmTrapPosition(value); });
-       builder.addDoubleProperty("Set arm position", () -> armGoal, (value) -> {setArmPosition_2(value); });
+       builder.addDoubleProperty("Set arm position", () -> armGoal, (value) -> {armGoal = value; setArmPosition_2(value); });
+    }
+
+    public void moveArm(double speed){
+        armMotor.set(speed);
     }
 
     //Manual SysId-----------------------------------------------------------------------------------------------------------------------------------------
