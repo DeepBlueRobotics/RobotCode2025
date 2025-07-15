@@ -8,10 +8,10 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": -0.14928775922972015,
-        "y": 1.600000000000001
+        "x": 7.288889195220886,
+        "y": 3.3280252136109096
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "L3"
     },
     {
@@ -20,14 +20,14 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 7.189243352107882,
-        "y": 4.249768481850944
+        "x": 7.12960116662217,
+        "y": 3.3729048363408336
       },
       "nextControl": {
-        "x": 7.210756647892119,
-        "y": 3.7502315181490564
+        "x": 7.299701861964786,
+        "y": 4.888119198089172
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "L2"
     },
     {
@@ -36,11 +36,11 @@
         "y": 6.4
       },
       "prevControl": {
-        "x": 6.968373012191322,
-        "y": 6.647927841356004
+        "x": 6.929284315692223,
+        "y": 6.669973053464242
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "L1"
     }
   ],
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.98760341609959
+    "rotation": -132.29587010920105
   },
   "reversed": false,
   "folder": "WaypointsLink",

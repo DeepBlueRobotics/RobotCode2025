@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7647592367077038,
-        "y": 6.695650930472755
+        "x": 0.7550180773853932,
+        "y": 6.698745702305152
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.018836203447571,
-        "y": 6.160026920854062
+        "x": 2.00909504412526,
+        "y": 6.163121692686459
       },
       "isLocked": false,
       "linkedName": "LS3"
@@ -41,7 +41,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": -59.407602719504126
   },
   "reversed": false,
