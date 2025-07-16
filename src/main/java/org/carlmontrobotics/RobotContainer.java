@@ -19,6 +19,7 @@ import org.carlmontrobotics.Constants.Elevatorc;
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Driver;
 import org.carlmontrobotics.Constants.OI.Manipulator;
+import org.carlmontrobotics.commands.AlgaeCommands.AlignAndDealgifyAlgae;
 import org.carlmontrobotics.commands.AlgaeCommands.ArmMove;
 import org.carlmontrobotics.commands.AlgaeCommands.ArmToPosition;
 import org.carlmontrobotics.commands.AlignCommands.GoToCoralStation;
@@ -249,19 +250,19 @@ public class RobotContainer {
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
             .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
             .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
-        new POVButton(driverController, 180)
-            .whileTrue(new ParallelCommandGroup(
-        new InstantCommand(() -> drivetrain.stop()),
-        new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator, coralEffector, manipulatorController)));
-
-
-        
         new JoystickButton(driverController, Button.kB.value).onTrue(new SequentialCommandGroup(
             new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
                 driverRumble)));
         new JoystickButton(driverController, Button.kX.value).onTrue(new SequentialCommandGroup(
-            new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with right branch
+            new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with left branch
                 driverRumble)));
+
+        new POVButton(driverController, 180).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, false, driverRumble));
+        new POVButton(driverController, 0).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, true, driverRumble));
+        new JoystickButton(driverController, Driver.y).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, driverRumble));
+        new JoystickButton(driverController, Driver.a).whileTrue(new ParallelCommandGroup(
+            new InstantCommand(() -> drivetrain.stop()),
+            new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator, coralEffector, manipulatorController)));
         //conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
         //this is for the left branch or left station (left station refers to the coral station to the left of the driver)
         // new JoystickButton(driverController, Driver.y)
@@ -638,7 +639,8 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight), 
                 new AutonCoralOuttake(coralEffector)), 
-            new ElevatorToPos(elevator, Elevatorc.l1)
+            new ElevatorToPos(elevator, Elevatorc.l1),
+            new ElevatorToBottomLimitSwitch(elevator)
             ));
     new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
@@ -653,6 +655,8 @@ public class RobotContainer {
     new JoystickButton(manipulatorController, XboxController.Button.kStart.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_LOW_POS));
     new POVButton(manipulatorController, 90).whileTrue(new ArmMove(algaeEffector, ARM_UP_VOLTAGE));
     new POVButton(manipulatorController, 270).whileTrue(new ArmMove(algaeEffector, ARM_DOWN_VOLTAGE));
+
+
 
     //test to see if this botton works properly
     new JoystickButton(manipulatorController, Button.kRightStick.value)

@@ -14,6 +14,7 @@ import org.carlmontrobotics.subsystems.Elevator;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -43,14 +44,44 @@ public class AlignAndDealgifyAlgae extends Command {
   private double forwardClamp;
   private XboxController rumbleController;
   private boolean completedTask = false;
+  private boolean originalFieldOrientation;
+  private boolean error = false;
 
+  /** 
+   * Aligns the arm to dealgify, raises arm, raises elevator, moves forward, drops arm, and moves back
+   * Does not require a specification as this method uses the aprilTag Id to figure out which level the algae will be at
+   * @param drivetrain Provide a drivetrain
+   * @param ll provide limelight
+   * @param algaeEffector provide AlgaeEffector
+   * @param elevator Provide elevator
+   * @param rumbleController add a xBox controller for the command to rumble when does not see a AprilTag
+  */
+  public AlignAndDealgifyAlgae(Drivetrain drivetrain, Limelight ll, AlgaeEffector algaeEffector, Elevator elevator, XboxController rumbleController) {
+    addRequirements(this.drivetrain = drivetrain, this.algaeEffector = algaeEffector, this.elevator = elevator);
+    this.ll = ll;
+    this.rumbleController = rumbleController;
+    forwardErr = Double.POSITIVE_INFINITY;
+    strafeErr = Double.POSITIVE_INFINITY;
+    strafeClamp = .35; 
+    forwardClamp = 1.5; //NEED TO TUNE
+    strafeSpeedMultiplier = 5;
+    forwardSpeedMultiplier = 0.2;
+    if (getAlgaePosition()) {
+      goal = DELAGIFY_HIGH_POS;
+    }
+    else {
+      goal = DELAGIFY_LOW_POS;
+    }
+  }
+  
   /** 
    * Aligns the arm to dealgify, raises arm, raises elevator, moves forward, drops arm, and moves back
    * @param drivetrain Provide a drivetrain
    * @param ll provide limelight
    * @param algaeEffector provide AlgaeEffector
-   * @param elevator
+   * @param elevator Provide elevator
    * @param toplevel Specify which level to dealgify true for top, false for bottom
+   * @param rumbleController add a xBox controller for the command to rumble when does not see a AprilTag
   */
   public AlignAndDealgifyAlgae(Drivetrain drivetrain, Limelight ll, AlgaeEffector algaeEffector, Elevator elevator, boolean topLevel, XboxController rumbleController) {
     addRequirements(this.drivetrain = drivetrain, this.algaeEffector = algaeEffector, this.elevator = elevator);
@@ -63,26 +94,35 @@ public class AlignAndDealgifyAlgae extends Command {
     forwardClamp = 1.5; //NEED TO TUNE
     strafeSpeedMultiplier = 5;
     forwardSpeedMultiplier = 0.2;
+    if (topLevel) {
+      goal = DELAGIFY_HIGH_POS;
+   }
+   else {
+     goal = DELAGIFY_LOW_POS; //TODO tune this
+   }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    originalFieldOrientation = drivetrain.getFieldOriented();
+    drivetrain.setFieldOriented(false);
     didntseetime.reset();
     alignTimer.reset();
     moveTimer.reset();
-    if (topLevel) {
-       goal = DELAGIFY_HIGH_POS;
-    }
-    else {
-      goal = DELAGIFY_LOW_POS; //TODO tune this
-    }
     algaeEffector.moveArm(ARM_UP_VOLTAGE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    /*Code Logic
+     * Begins by raising arm up
+     * If aligned, raise elevator to the correct position, and move in blindly
+     * After a second the robot assumes it is all good and lowers the arm and drives back until it detects that its arm is down
+     * Else:
+     * Align usign the same logic as MoveToAlignReef but with other constants, once aligned report that it is aligned
+     */
     if (aligned) {
       didntseetime.stop();
       alignTimer.stop();
@@ -138,17 +178,39 @@ public class AlignAndDealgifyAlgae extends Command {
     return Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
     * ll.getDistanceToApriltagMT2(REEF_LL)+ (RIGHT_CORAL_BRANCH); //TODO will require some tuning
   }
+
+  private boolean getAlgaePosition() {
+    int target;
+    int[] topAlgae = {7,9,11,18,20,22};
+    int[] bottomAlgae = {6,8,10,17,19,21};
+    target = (int) LimelightHelpers.getTA(REEF_LL);
+    for (int id : topAlgae) {
+      if (id == target) {
+        return true;
+      }
+    }
+    for (int id : bottomAlgae) {
+      if (id == target) {
+        return false;
+      }
+    }
+    DriverStation.reportError("Aligning not with reef", false);
+    error = true;
+    return false;
+
+  }
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.stop();
+    drivetrain.drive(0,0,0);
     algaeEffector.stopArm();
     rumbleController.setRumble(RumbleType.kBothRumble, 0);
+    drivetrain.setFieldOriented(originalFieldOrientation);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (didntseetime.get() > 1.5 || completedTask || alignTimer.get() > 3);
+    return (didntseetime.get() > 1.5 || completedTask || alignTimer.get() > 3 || error);
   }
 }
