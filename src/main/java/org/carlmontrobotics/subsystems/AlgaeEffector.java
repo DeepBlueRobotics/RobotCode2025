@@ -28,11 +28,9 @@ import java.util.function.BooleanSupplier;
 
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.RobotContainer;
-import org.carlmontrobotics.commands.AlgaeCommands.DealgaficationIntake;
-import org.carlmontrobotics.commands.AlgaeCommands.GroundIntakeAlgae;
 import org.carlmontrobotics.commands.AlgaeCommands.ManualDynamicForArm;
 import org.carlmontrobotics.commands.AlgaeCommands.ManualQuasistaticForArm;
-import org.carlmontrobotics.commands.AlgaeCommands.OuttakeAlgae;
+
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
@@ -161,20 +159,17 @@ public class AlgaeEffector extends SubsystemBase {
         
         setArmPosition(0);
         updateArmPID(); 
-        SmartDashboard.putData("Algae Effector", this);
-        SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmPosition(0)));
+        // SmartDashboard.putData("Algae Effector", this);
+        // SmartDashboard.putData("Arm to Zero Degrees",new InstantCommand(() -> setArmPosition(0)));
        
-        SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmPosition(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
-        SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmPosition(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
+        // SmartDashboard.putData("Arm to Intake Angle",new InstantCommand(() -> setArmPosition(Constants.AlgaeEffectorc.ARM_INTAKE_ANGLE)));
+        // SmartDashboard.putData("Arm to Dealgafication Angle",new InstantCommand(() -> setArmPosition(Constants.AlgaeEffectorc.ARM_DEALGAFYING_ANGLE)));
         
        
-        SmartDashboard.putData("Dealgafication", new DealgaficationIntake(this));
-        SmartDashboard.putData("Intake Algae", new GroundIntakeAlgae(this));
-        SmartDashboard.putData("Outtake Algae", new OuttakeAlgae(this));
-        SmartDashboard.putData("UPDATE COMMAND",new InstantCommand(()->{updateArmPID();updateFeedforward();}));
+        // SmartDashboard.putData("UPDATE COMMAND",new InstantCommand(()->{updateArmPID();updateFeedforward();}));
 
-        SmartDashboard.putData("(MANUAL) Dynamic FF test", new ManualDynamicForArm(this)); 
-        SmartDashboard.putData("(MANUAL) Quasistatic FF test", new ManualQuasistaticForArm(this)); 
+        // SmartDashboard.putData("(MANUAL) Dynamic FF test", new ManualDynamicForArm(this)); 
+        // SmartDashboard.putData("(MANUAL) Quasistatic FF test", new ManualQuasistaticForArm(this)); 
 
 
     }

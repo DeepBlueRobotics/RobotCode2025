@@ -531,11 +531,11 @@ public static final class AligningCords {
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH+Units.inchesToMeters(1);
 
-		public static final double areaPercentageGoal = 8.4; //TODO figure this out por favor
-		public static final double areaTolerance = 0.1; //TODO needs to get tuned
+		public static final double areaPercentageGoal = 8.4;
+		public static final double areaPercentageGoalForAlgae = 4; //TODO figure this out
+		public static final double areaTolerance = 0.1;
 		public static final double strafeTolerance = 0.02;
-		public static final double LL_ACCURACY_LIMIT_METERS = 5.0; //TODO: find at what distance limelight becomes inaccurate
-
+		public static final double LL_ACCURACY_LIMIT_METERS = 5.0; 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
 		public static final double STD_DEV_Y_METERS = 0.7; // uncertainty of 0.7 meters on the field
 		public static final int STD_DEV_HEADING_RADS = 9999999; // (gyro) heading standard deviation, set extremely high

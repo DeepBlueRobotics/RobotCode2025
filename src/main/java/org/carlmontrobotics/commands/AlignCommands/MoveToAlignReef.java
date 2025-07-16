@@ -54,9 +54,9 @@ public class MoveToAlignReef extends Command {
     this.ll = ll;
     this.rightBranch = rightBranch;
     strafeClamp = .35;
-    forwardClamp = 1.5; //TODO figure this one out
-    strafeSpeedMultiplier = 5;//TODO tune it better
-    forwardSpeedMultiplier = 0.2;//TODO figure this out
+    forwardClamp = 1.5; 
+    strafeSpeedMultiplier = 5;
+    forwardSpeedMultiplier = 0.2;
     didntseetime = new Timer();
     timeoutTimer = new Timer();
   }
@@ -78,6 +78,7 @@ public class MoveToAlignReef extends Command {
     if (elevator.getCurrentHeight() <= 0.1) {
       SmartDashboard.putBoolean("LimelightFunctional", true);
       if (ll.seesTag(REEF_LL)) {
+        rumbleController.setRumble(RumbleType.kBothRumble, 0);
         SmartDashboard.putBoolean("SeeTag", true);
         SmartDashboard.putNumber("CurrentPercentage", LimelightHelpers.getTA(REEF_LL)); //To figure out goal
         didntseetime.reset();
