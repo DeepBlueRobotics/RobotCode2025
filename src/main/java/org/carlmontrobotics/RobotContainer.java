@@ -163,7 +163,7 @@ public class RobotContainer {
          public RobotContainer() {
              {
                 //SmartDashboard.putData("intake", new CoralIntake(coralEffector));
-                SmartDashboard.putData("moveArm", new ArmMove(algaeEffector));
+                //SmartDashboard.putData("moveArm", new ArmMove(algaeEffector));
 
                 
                  // Put any configuration overrides to the dashboard and the terminal
@@ -644,7 +644,12 @@ public class RobotContainer {
     new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
         new CoralOuttake(coralEffector, .15)), babyModeSupplier));  
-        
+    
+    new POVButton(manipulatorController, 90).whileTrue(new ParallelCommandGroup(
+        new ElevatorToPos(elevator, 0.8),
+        new ArmMove(algaeEffector, 0.125)
+    ));
+    new POVButton(manipulatorController, 270).whileTrue(new ArmMove(algaeEffector, -0.125));
     //test to see if this botton works properly
     new JoystickButton(manipulatorController, Button.kRightStick.value)
     .whileTrue(new ArmToPosition(algaeEffector, UPPER_ANGLE_LIMIT))

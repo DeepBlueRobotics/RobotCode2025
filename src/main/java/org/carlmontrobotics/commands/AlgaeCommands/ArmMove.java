@@ -11,17 +11,17 @@ public class ArmMove extends Command{
     AlgaeEffector algaeArm;
     private double goalPosition; //degrees - need angle for dealgfication and ground pickup
     Timer timer = new Timer();
-   
+    private double speed;
 
-    public ArmMove(AlgaeEffector algaeArm){
+    public ArmMove(AlgaeEffector algaeArm, double speed){
         addRequirements(this.algaeArm = algaeArm);
-       
+        this.speed = speed;
     }
 
     @Override
     public void initialize(){
         timer.restart();
-        algaeArm.moveArm(-1); //sets target to position in degrees
+        algaeArm.moveArm(speed); //sets target to position in degrees
 
     }
 
@@ -30,11 +30,14 @@ public class ArmMove extends Command{
 
     @Override
     public void end(boolean interrupted){
-        
-        algaeArm.moveArm(0);
+        if (speed == 0.125) {
+          algaeArm.moveArm(0.05);  
+        } else {
+         algaeArm.moveArm(0);
+        }
     }
     
     public boolean isFinished(){
-        return timer.get() > 2;
+        return false;
     }
 }

@@ -69,17 +69,18 @@ import edu.wpi.first.wpilibj.Encoder;
  */
 public final class Constants {
 	public static final double g = 9.81; // meters per second squared
-	//#region Elevator constants
+	
 	public static final class Elevatorc {
 		// ports
 		public static final int masterPort = 20;
 		public static final int followerPort = 21; // inverted
 		//public static final int elevatorTopLimitSwitchPort = 1;
 		public static final int elevatorBottomLimitSwitchPort = 0;
-		public static final int bottomLimitSwitchTriggerPoint = 10;
-		public static final double GEAR_RATIO = 1.0/20;
+		public static final int bottomLimitSwitchTriggerPoint = 10;// TODO: figure out the value
+		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
 
 		// Config
+		// TODO figure these parts out
 		public static final double MAX_ACCEL_RAD_P_S = 1;
 		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
@@ -138,11 +139,12 @@ public final class Constants {
 		public static final double elevatorOffset = 0.05; 
 
 	}// Tolerance
-	//#endregion
+	
+
 	public static final class Drivetrainc {
-		// #region Drivetrain Constants
-		public static final double wheelBase = Units.inchesToMeters(24.75); //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
-		public static final double trackWidth = Units.inchesToMeters(24.75);//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
+		// #region Subsystem Constants
+		public static final double wheelBase = 24.75; //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
+		public static final double trackWidth = 24.75;//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
 		// "swerveRadius" is the distance from the center of the robot to one of the
 		// modules
 		public static final double swerveRadius = Math.sqrt(Math.pow(wheelBase / 2, 2) + Math.pow(trackWidth / 2, 2));
@@ -158,7 +160,7 @@ public final class Constants {
 																						* correction
 																						*/;
 		public static final double mu = 1; /* 70/83.2; */ // coefficient of friction. less means less max acceleration.
-		public static final double ROBOTMASS_KG = 61.235;// max is 135 lbs
+		public static final double ROBOTMASS_KG = 135;// max is 135kg
 		// moment of inertia, kg/mm
 		// calculated by integral of mass * radius^2 for every point of the robot
 		// easy way? just do total mass * radius^2
@@ -240,10 +242,9 @@ public final class Constants {
 		public static final double[] kForwardAccels = { 0, 0, 0, 0 };//{0.31958, 0.33557, 0.70264, 0.46644};    //{ 0, 0, 0, 0 };// volts per m/s^2
 		public static final double[] kBackwardAccels = kForwardAccels;
 
-		public static final double autoMaxSpeedMps = 4; // Meters / second
+		public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
 		public static final double autoMaxAccelMps2 = mu * g; // Meters / seconds^2
 		public static final double autoMaxVolt = 10.0; // For Drivetrain voltage constraint in RobotPath.java
-		public static final double autoMaxAmps = 40.0;
 		// The maximum acceleration the robot can achieve is equal to the coefficient of
 		// static friction times the gravitational acceleration
 		// a = mu * 9.8 m/s^2
@@ -312,6 +313,7 @@ public final class Constants {
 																													// Degrees/Second
 
 		// #endregion
+		// #region Subsystem Constants
 
 		// "swerveRadius" is the distance from the center of the robot to one of the
 		// modules
@@ -320,7 +322,6 @@ public final class Constants {
 
 		public static final double driveIzone = .1;
 
-		//#region Drivetrain Auto
 		public static final class Autoc {
 			public static final RobotConfig robotConfig = new RobotConfig(
 					// Mass mass, kg
@@ -330,19 +331,19 @@ public final class Constants {
 					// ModuleConfig moduleConfig,
 					new ModuleConfig(
 							// double wheelRadiusMeters,
-							wheelDiameterMeters/2,
+							swerveRadius,
 							// double maxDriveVelocityMPS,
 							autoMaxSpeedMps,
 							// double wheelCOF,
 							mu,
 							// DCMotor driveMotor,
-							DCMotor.getNEO(1),
+							DCMotor.getNEO(4), // FIXME is it 1 for 1 each or 4 for 1 robot
 							// double driveGearing,
 							driveGearing,
 							// double driveCurrentLimit,
-							autoMaxAmps,
+							autoMaxVolt,
 							// int numMotors
-							1),
+							4),
 					// Translation2d... moduleOffsets
 					new Translation2d(wheelBase / 2, trackWidth / 2),
 					new Translation2d(wheelBase / 2, -trackWidth / 2),
@@ -359,152 +360,38 @@ public final class Constants {
 			// 0.8 // error spike threshold, in meters, that will cause the path to be
 			// replanned
 			// );
-			public static final PathConstraints pathConstraints = new PathConstraints(1, 1, 2 * Math.PI,
+			public static final PathConstraints pathConstraints = new PathConstraints(1.54, 6.86, 2 * Math.PI,
 					2 * Math.PI); // The constraints for this path. If using a differential drivetrain, the
 									// angular constraints have no effect.
 		}
 	}
-	//#endregion
-	// #region Subsystem Constants
 
-		/**
-	 * Translates either the x or y coordinate of pp by translation along a line with slope of degrees
-	 *
-	 * @param x The original x coordinate
-	 * @param y The original y coordinate
-	 * @param degrees The angle in degrees (slope direction)
-	 * @param axis The axis to output ("x" or "y"), not case sensetive
-	 * @param translation The translation distance
-	 * @return The new value of the chosen axis (x or y)
-	 */
-	public static double translatePpCords(double x, double y, double degrees, String axis, double translation) {
-		double radians = Math.toRadians(degrees); 
+	public static final class AligningCords {
+		public static final Pose2d ID6_17Right = new Pose2d(2.087,4.737, Rotation2d.fromDegrees(60));
+		public static final Pose2d ID6_17Left = new Pose2d(3.530,2.679, Rotation2d.fromDegrees(60));
+		public static final Pose2d ID6_17Search = new Pose2d(3.650,2.611, Rotation2d.fromDegrees(60));
 
-		double x2 = Math.cos(radians) * translation;
-		double y2 = Math.sin(radians) * translation;
+		public static final Pose2d ID7_18Right = new Pose2d(2.837,3.840, Rotation2d.fromDegrees(0));
+		public static final Pose2d ID7_18Left = new Pose2d(2.837,4.181, Rotation2d.fromDegrees(0));
+		public static final Pose2d ID7_18Search = new Pose2d(2.844,4, Rotation2d.fromDegrees(0));
+		
+		public static final Pose2d ID8_19Right = new Pose2d(3.539,5.361, Rotation2d.fromDegrees(-60));
+		public static final Pose2d ID8_19Left = new Pose2d(3.832,5.546, Rotation2d.fromDegrees(-60));
+		public static final Pose2d ID8_19Search = new Pose2d(3.686,5.458, Rotation2d.fromDegrees(-60));
 
-		if (axis.equalsIgnoreCase("x")) {
-			return x + x2;
-		} else if (axis.equalsIgnoreCase("y")) {
-			return y + y2;
-		} else {
-			throw new IllegalArgumentException("wdym " + axis + " for the axis??? give an axis (x or y)");
-		}
+		public static final Pose2d ID9_20Right = new Pose2d(5.148,5.546, Rotation2d.fromDegrees(-120));
+		public static final Pose2d ID9_20Left = new Pose2d(5.470,5.361, Rotation2d.fromDegrees(-120));
+		public static final Pose2d ID9_20Search = new Pose2d(5.285,5.448, Rotation2d.fromDegrees(-120));
+
+		public static final Pose2d ID10_21Right = new Pose2d(6.143,4.210, Rotation2d.fromDegrees(180));
+		public static final Pose2d ID10_21Left = new Pose2d(6.143,3.859, Rotation2d.fromDegrees(180));
+		public static final Pose2d ID10_21Search = new Pose2d(6.143,4, Rotation2d.fromDegrees(180));
+
+		public static final Pose2d ID11_22Right = new Pose2d(5, 2.8, Rotation2d.fromDegrees(120));
+		public static final Pose2d ID11_22Left = new Pose2d(5.28, 2.96, Rotation2d.fromDegrees(120));
+		public static final Pose2d ID11_22Search = new Pose2d(5.314, 2.619, Rotation2d.fromDegrees(120));
 	}
-	
-	//#endregion
-public static final class AligningCords {
-	public static final double translation = Units.inchesToMeters(8.5); 
 
-	public static final Pose2d ID6_17Right = new Pose2d(
-		translatePpCords(2.087, 4.737, 60, "x", translation),
-		translatePpCords(2.087, 4.737, 60, "y", translation),
-		Rotation2d.fromDegrees(60)
-	);
-
-	public static final Pose2d ID6_17Left = new Pose2d(
-		translatePpCords(3.530, 2.679, 60, "x", translation),
-		translatePpCords(3.530, 2.679, 60, "y", translation),
-		Rotation2d.fromDegrees(60)
-	);
-
-	public static final Pose2d ID6_17Search = new Pose2d(
-		translatePpCords(3.650, 2.611, 60, "x", translation),
-		translatePpCords(3.650, 2.611, 60, "y", translation),
-		Rotation2d.fromDegrees(60)
-	);
-
-	public static final Pose2d ID7_18Right = new Pose2d(
-		translatePpCords(2.837, 3.840, 0, "x", translation),
-		translatePpCords(2.837, 3.840, 0, "y", translation),
-		Rotation2d.fromDegrees(0)
-	);
-
-	public static final Pose2d ID7_18Left = new Pose2d(
-		translatePpCords(3.188, 4.254, 0, "x", translation),
-		translatePpCords(3.188, 4.254, 0, "y", translation),
-		Rotation2d.fromDegrees(0)
-	);
-
-	public static final Pose2d ID7_18Search = new Pose2d(
-		translatePpCords(2.844, 4, 0, "x", translation),
-		translatePpCords(2.844, 4, 0, "y", translation),
-		Rotation2d.fromDegrees(0)
-	);
-
-	public static final Pose2d ID8_19Right = new Pose2d(
-		translatePpCords(3.539, 5.361, -60, "x", translation),
-		translatePpCords(3.539, 5.361, -60, "y", translation),
-		Rotation2d.fromDegrees(-60)
-	);
-
-	public static final Pose2d ID8_19Left = new Pose2d(
-		translatePpCords(3.832, 5.546, -60, "x", translation),
-		translatePpCords(3.832, 5.546, -60, "y", translation),
-		Rotation2d.fromDegrees(-60)
-	);
-
-	public static final Pose2d ID8_19Search = new Pose2d(
-		translatePpCords(3.686, 5.458, -60, "x", translation),
-		translatePpCords(3.686, 5.458, -60, "y", translation),
-		Rotation2d.fromDegrees(-60)
-	);
-
-	public static final Pose2d ID9_20Right = new Pose2d(
-		translatePpCords(5.148, 5.546, -120, "x", translation),
-		translatePpCords(5.148, 5.546, -120, "y", translation),
-		Rotation2d.fromDegrees(-120)
-	);
-
-	public static final Pose2d ID9_20Left = new Pose2d(
-		translatePpCords(5.470, 5.361, -120, "x", translation),
-		translatePpCords(5.470, 5.361, -120, "y", translation),
-		Rotation2d.fromDegrees(-120)
-	);
-
-	public static final Pose2d ID9_20Search = new Pose2d(
-		translatePpCords(5.285, 5.448, -120, "x", translation),
-		translatePpCords(5.285, 5.448, -120, "y", translation),
-		Rotation2d.fromDegrees(-120)
-	);
-
-	public static final Pose2d ID10_21Right = new Pose2d(
-		translatePpCords(6.143, 4.210, 180, "x", translation),
-		translatePpCords(6.143, 4.210, 180, "y", translation),
-		Rotation2d.fromDegrees(180)
-	);
-
-	public static final Pose2d ID10_21Left = new Pose2d(
-		translatePpCords(6.143, 3.859, 180, "x", translation),
-		translatePpCords(6.143, 3.859, 180, "y", translation),
-		Rotation2d.fromDegrees(180)
-	);
-
-	public static final Pose2d ID10_21Search = new Pose2d(
-		translatePpCords(6.143, 4, 180, "x", translation),
-		translatePpCords(6.143, 4, 180, "y", translation),
-		Rotation2d.fromDegrees(180)
-	);
-
-	public static final Pose2d ID11_22Right = new Pose2d(
-		translatePpCords(5, 2.8, 120, "x", translation),
-		translatePpCords(5, 2.8, 120, "y", translation),
-		Rotation2d.fromDegrees(120)
-	);
-
-	public static final Pose2d ID11_22Left = new Pose2d(
-		translatePpCords(5.28, 2.96, 120, "x", translation),
-		translatePpCords(5.28, 2.96, 120, "y", translation),
-		Rotation2d.fromDegrees(120)
-	);
-
-	public static final Pose2d ID11_22Search = new Pose2d(
-		translatePpCords(5.314, 2.619, 120, "x", translation),
-		translatePpCords(5.314, 2.619, 120, "y", translation),
-		Rotation2d.fromDegrees(120)
-	);
-}
-		// #region Limelight Constants
 	public static final class Limelightc {
 		public static final String CORAL_LL = "limelight-coral";
 		public static final String REEF_LL = "limelight-reef";
@@ -515,12 +402,13 @@ public static final class AligningCords {
 		// public static final double REEF_MOUNT_ANGLE = 15; // pitch 
         // public static final double CORAL_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; 
 		// public static final double REEF_LL_HEIGHT_FROM_GROUND_METERS = 0.206502;
+		// TODO: CHANGE NUMBERS ON LIMELIGHT INTERFACE
 
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH+Units.inchesToMeters(1);
 
-		public static final double areaPercentageGoal = 8.4; 
-		public static final double areaTolerance = 0.1;
+		public static final double areaPercentageGoal = 8.4; //TODO figure this out por favor
+		public static final double areaTolerance = 0.1; //TODO needs to get tuned
 		public static final double strafeTolerance = 0.02;
 		public static final double LL_ACCURACY_LIMIT_METERS = 5.0; //TODO: find at what distance limelight becomes inaccurate
 
@@ -533,7 +421,6 @@ public static final class AligningCords {
             public static final double REEF_HEIGHT_METERS = Units.inchesToMeters(8.75); // Also center of Reef
         }
     }
-	// #endregion
 
 	public static final class OI {
 		public static final class Driver {
@@ -559,9 +446,6 @@ public static final class AligningCords {
 		public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;// woah, this is high.
 
 	}
-
-
-	//#region Coral constants
 	public static final class CoralEffectorc{
         public final static int CORAL_MOTOR_PORT = 30;
         public final static int CORAL_LIMIT_SWITCH_PORT = 0;
@@ -586,8 +470,6 @@ public static final class AligningCords {
         public final static double OUTTAKE_TIME_OUT = 10;
         public final static double MANUAL_INTAKE_TIME_OUT = 1;
     }
-	//#endregion
-	//#region Algea Constants
 	public static final class AlgaeEffectorc {
 
         //EFFECTOR
@@ -669,5 +551,5 @@ public static final class AligningCords {
 
 
 	}
-    //#endregion
+    
 }
