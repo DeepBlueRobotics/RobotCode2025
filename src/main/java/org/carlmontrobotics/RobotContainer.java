@@ -92,6 +92,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.ARM_DOWN_VOLTAGE;
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.ARM_UP_VOLTAGE;
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.DELAGIFY_HIGH_POS;
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.DELAGIFY_LOW_POS;
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.LOWER_ANGLE_LIMIT;
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.UPPER_ANGLE_LIMIT;
 import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
@@ -237,9 +241,9 @@ public class RobotContainer {
             .onFalse(new InstantCommand(()->drivetrain.setFieldOriented(true)));
 
 
-        new JoystickButton(driverController, Driver.x)
+        new JoystickButton(driverController, 7)
             .onTrue(new MoveToLeftBranch(drivetrain, limelight, elevator));
-        new JoystickButton(driverController, Driver.b)
+        new JoystickButton(driverController, 8)
             .onTrue(new MoveToRightBranch(drivetrain, limelight, elevator));
 
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
@@ -252,38 +256,38 @@ public class RobotContainer {
 
 
         
-        new JoystickButton(driverController, 8).onTrue(new SequentialCommandGroup(
+        new JoystickButton(driverController, Button.kB.value).onTrue(new SequentialCommandGroup(
             new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
                 driverRumble)));
-        new JoystickButton(driverController, 7).onTrue(new SequentialCommandGroup(
+        new JoystickButton(driverController, Button.kX.value).onTrue(new SequentialCommandGroup(
             new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with right branch
                 driverRumble)));
         //conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
         //this is for the left branch or left station (left station refers to the coral station to the left of the driver)
-        new JoystickButton(driverController, Driver.y)
-            .onTrue(new ConditionalCommand(
-                new PathPlannerToReef(drivetrain, limelight, false, 
-                () -> driverController.getRawAxis(0), 
-                () -> driverController.getRawAxis(1),
-                ()-> driverController.getRawAxis(5)), 
-                new GoToCoralStation(drivetrain, false,
-                () -> driverController.getRawAxis(0),
-                () -> driverController.getRawAxis(1),
-                ()-> driverController.getRawAxis(5)), 
-                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
+        // new JoystickButton(driverController, Driver.y)
+        //     .onTrue(new ConditionalCommand(
+        //         new PathPlannerToReef(drivetrain, limelight, false, 
+        //         () -> driverController.getRawAxis(0), 
+        //         () -> driverController.getRawAxis(1),
+        //         ()-> driverController.getRawAxis(5)), 
+        //         new GoToCoralStation(drivetrain, false,
+        //         () -> driverController.getRawAxis(0),
+        //         () -> driverController.getRawAxis(1),
+        //         ()-> driverController.getRawAxis(5)), 
+        //         () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
                 
         //this is for the right branch or right station
-        new JoystickButton(driverController, Driver.a)
-            .onTrue(new ConditionalCommand(
-                new PathPlannerToReef(drivetrain, limelight, true, 
-                () -> driverController.getRawAxis(0), 
-                () -> driverController.getRawAxis(1),
-                ()-> driverController.getRawAxis(5)), 
-                new GoToCoralStation(drivetrain, true,
-                () -> driverController.getRawAxis(0),
-                () -> driverController.getRawAxis(1),
-                ()-> driverController.getRawAxis(5)), 
-                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
+        // new JoystickButton(driverController, Driver.a)
+        //     .onTrue(new ConditionalCommand(
+        //         new PathPlannerToReef(drivetrain, limelight, true, 
+        //         () -> driverController.getRawAxis(0), 
+        //         () -> driverController.getRawAxis(1),
+        //         ()-> driverController.getRawAxis(5)), 
+        //         new GoToCoralStation(drivetrain, true,
+        //         () -> driverController.getRawAxis(0),
+        //         () -> driverController.getRawAxis(1),
+        //         ()-> driverController.getRawAxis(5)), 
+        //         () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
         
     }
    
@@ -644,11 +648,12 @@ public class RobotContainer {
     new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
         new CoralOuttake(coralEffector, .15)), babyModeSupplier));  
-    new JoystickButton(manipulatorController, XboxController.Button.kBack.value).onTrue(new ElevatorToPos(elevator, 0.8));
-    new POVButton(manipulatorController, 90).whileTrue(new ParallelCommandGroup(
-        new ArmMove(algaeEffector, 0.125)
-    ));
-    new POVButton(manipulatorController, 270).whileTrue(new ArmMove(algaeEffector, -0.125));
+
+    new JoystickButton(manipulatorController, XboxController.Button.kBack.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_HIGH_POS));
+    new JoystickButton(manipulatorController, XboxController.Button.kStart.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_LOW_POS));
+    new POVButton(manipulatorController, 90).whileTrue(new ArmMove(algaeEffector, ARM_UP_VOLTAGE));
+    new POVButton(manipulatorController, 270).whileTrue(new ArmMove(algaeEffector, ARM_DOWN_VOLTAGE));
+
     //test to see if this botton works properly
     new JoystickButton(manipulatorController, Button.kRightStick.value)
     .whileTrue(new ArmToPosition(algaeEffector, UPPER_ANGLE_LIMIT))

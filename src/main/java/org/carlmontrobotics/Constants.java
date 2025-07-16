@@ -598,7 +598,11 @@ public static final class AligningCords {
 
         //EFFECTOR
 
-        
+        public static final double ARM_UP_VOLTAGE = 0.125;
+		public static final double ARM_DOWN_VOLTAGE = -0.125*2;
+		public static final double DELAGIFY_HIGH_POS = 0.8;
+		public static final double DELAGIFY_LOW_POS = 0.456;
+
 		public static final int UPPER_MOTOR_PORT = 1; 
 		public static final int LOWER_MOTOR_PORT = 33;
         public static final int PINCH_MOTOR_PORT = 3;

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class ArmMove extends Command{
     AlgaeEffector algaeArm;
-    private double goalPosition; //degrees - need angle for dealgfication and ground pickup
     Timer timer = new Timer();
     private double speed;
 
@@ -21,7 +20,7 @@ public class ArmMove extends Command{
     @Override
     public void initialize(){
         timer.restart();
-        algaeArm.moveArm(speed); //sets target to position in degrees
+        algaeArm.moveArm(speed); 
 
     }
 
@@ -30,14 +29,14 @@ public class ArmMove extends Command{
 
     @Override
     public void end(boolean interrupted){
-        if (speed == 0.125) {
-          algaeArm.moveArm(0.05);  
-        } else {
+        if (speed > 0) { // This if statement is checking when arm moves up
+          algaeArm.moveArm(0.1);  // Small voltage to hold arm up like a kG 
+        } else { // This one is for the arm moving down
          algaeArm.moveArm(0);
         }
     }
     
     public boolean isFinished(){
-        return false;
+        return (algaeArm.getArmPos() < -10 && speed < 0); // If arm is going down past delagification angle it shuts the voltage off to stop it from hitting itself on the way down too hard
     }
 }

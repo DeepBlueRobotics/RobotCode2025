@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
 import static org.carlmontrobotics.Constants.Limelightc.*;
-
+import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
 
 public class AlignAndDealgifyAlgae extends Command {
   private Drivetrain drivetrain;
@@ -72,12 +72,12 @@ public class AlignAndDealgifyAlgae extends Command {
     alignTimer.reset();
     moveTimer.reset();
     if (topLevel) {
-       goal = 0.8;
+       goal = DELAGIFY_HIGH_POS;
     }
     else {
-      goal = 0.4; //TODO tune this
+      goal = DELAGIFY_LOW_POS; //TODO tune this
     }
-    algaeEffector.moveArm(0.125);
+    algaeEffector.moveArm(ARM_UP_VOLTAGE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -91,7 +91,7 @@ public class AlignAndDealgifyAlgae extends Command {
         moveTimer.start();
         drivetrain.drive(1,0,0);
         if (moveTimer.get() > 1) {
-          algaeEffector.moveArm(-1.25);
+          algaeEffector.moveArm(ARM_DOWN_VOLTAGE);
           drivetrain.drive(-1,0,0);
           if (Math.abs(algaeEffector.getArmPos()) < 5) {
             completedTask = true;
