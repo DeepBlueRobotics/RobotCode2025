@@ -23,7 +23,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import static org.carlmontrobotics.Config.CONFIG;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -365,33 +367,155 @@ public final class Constants {
 									// angular constraints have no effect.
 		}
 	}
+	//#endregion
+	// #region Subsystem Constants
+	/**
+	 * Translates either the x or y coordinate of pp by translation along a line with slope of degrees,
+	 * and then moves it by z along the perpendicular direction.
+	 *
+	 * @param x The original x coordinate
+	 * @param y The original y coordinate
+	 * @param degrees The angle in degrees (slope direction)
+	 * @param axis The axis to output ("x" or "y"), not case sensitive
+	 * @param translation The translation distance
+	 * @param z The distance to move perpendicularly to the slope
+	 * @return The new value of the chosen axis (x or y)
+	 */
+	public static double translatePpCords(double x, double y, double degrees, String axis, double translation, double z) {
+		double radians = Math.toRadians(degrees); 
 
-	public static final class AligningCords {
-		public static final Pose2d ID6_17Right = new Pose2d(2.087,4.737, Rotation2d.fromDegrees(60));
-		public static final Pose2d ID6_17Left = new Pose2d(3.530,2.679, Rotation2d.fromDegrees(60));
-		public static final Pose2d ID6_17Search = new Pose2d(3.650,2.611, Rotation2d.fromDegrees(60));
+		double x2 = Math.cos(radians) * translation;
+		double y2 = Math.sin(radians) * translation;
 
-		public static final Pose2d ID7_18Right = new Pose2d(2.837,3.840, Rotation2d.fromDegrees(0));
-		public static final Pose2d ID7_18Left = new Pose2d(2.837,4.181, Rotation2d.fromDegrees(0));
-		public static final Pose2d ID7_18Search = new Pose2d(2.844,4, Rotation2d.fromDegrees(0));
-		
-		public static final Pose2d ID8_19Right = new Pose2d(3.539,5.361, Rotation2d.fromDegrees(-60));
-		public static final Pose2d ID8_19Left = new Pose2d(3.832,5.546, Rotation2d.fromDegrees(-60));
-		public static final Pose2d ID8_19Search = new Pose2d(3.686,5.458, Rotation2d.fromDegrees(-60));
+		// Add perpendicular offset
+		double perpRadians = Math.toRadians(degrees + 90);
+		x2 += Math.cos(perpRadians) * z;
+		y2 += Math.sin(perpRadians) * z;
 
-		public static final Pose2d ID9_20Right = new Pose2d(5.148,5.546, Rotation2d.fromDegrees(-120));
-		public static final Pose2d ID9_20Left = new Pose2d(5.470,5.361, Rotation2d.fromDegrees(-120));
-		public static final Pose2d ID9_20Search = new Pose2d(5.285,5.448, Rotation2d.fromDegrees(-120));
-
-		public static final Pose2d ID10_21Right = new Pose2d(6.143,4.210, Rotation2d.fromDegrees(180));
-		public static final Pose2d ID10_21Left = new Pose2d(6.143,3.859, Rotation2d.fromDegrees(180));
-		public static final Pose2d ID10_21Search = new Pose2d(6.143,4, Rotation2d.fromDegrees(180));
-
-		public static final Pose2d ID11_22Right = new Pose2d(5, 2.8, Rotation2d.fromDegrees(120));
-		public static final Pose2d ID11_22Left = new Pose2d(5.28, 2.96, Rotation2d.fromDegrees(120));
-		public static final Pose2d ID11_22Search = new Pose2d(5.314, 2.619, Rotation2d.fromDegrees(120));
+		if (axis.equalsIgnoreCase("x")) {
+			return x + x2;
+		} else if (axis.equalsIgnoreCase("y")) {
+			return y + y2;
+		} else {
+			throw new IllegalArgumentException("wdym " + axis + " for the axis??? give an axis (x or y)");
+		}
 	}
 
+	//#endregion
+public static final class AligningCords {
+	public static final double translation = Units.inchesToMeters(8.5); 
+	public static final double robotLength = 0.08483;
+	public static final double HalfRobotLength = 0.08483/2;
+	//FIXME: put the actual cords for all the tags
+	public static final Pose2d ID6_17Right = new Pose2d(
+		translatePpCords(2.087, 4.737, 60, "x", translation, HalfRobotLength),
+		translatePpCords(2.087, 4.737, 60, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(60)
+	);
+
+	public static final Pose2d ID6_17Left = new Pose2d(
+		translatePpCords(3.530, 2.679, 60, "x", translation, HalfRobotLength),
+		translatePpCords(3.530, 2.679, 60, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(60)
+	);
+
+	public static final Pose2d ID6_17Search = new Pose2d(
+		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(158.5), 60, "x", translation, HalfRobotLength),
+		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(158.5),60 , "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(60)
+	);
+
+	public static final Pose2d ID7_18Right = new Pose2d(
+		translatePpCords(2.837, 3.840, 0, "x", translation, HalfRobotLength),
+		translatePpCords(2.837, 3.840, 0, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID7_18Left = new Pose2d(
+		translatePpCords(3.188, 4.254, 0, "x", translation, HalfRobotLength),
+		translatePpCords(3.188, 4.254, 0, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID7_18Search = new Pose2d(
+		translatePpCords(2.844, 4, 0, "x", translation, HalfRobotLength),
+		translatePpCords(2.844, 4, 0, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID8_19Right = new Pose2d(
+		translatePpCords(3.539, 5.361, -60, "x", translation, HalfRobotLength),
+		translatePpCords(3.539, 5.361, -60, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID8_19Left = new Pose2d(
+		translatePpCords(3.832, 5.546, -60, "x", translation, HalfRobotLength),
+		translatePpCords(3.832, 5.546, -60, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID8_19Search = new Pose2d(
+		translatePpCords(3.686, 5.458, -60, "x", translation, HalfRobotLength),
+		translatePpCords(3.686, 5.458, -60, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID9_20Right = new Pose2d(
+		translatePpCords(5.148, 5.546, -120, "x", translation, HalfRobotLength),
+		translatePpCords(5.148, 5.546, -120, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID9_20Left = new Pose2d(
+		translatePpCords(5.470, 5.361, -120, "x", translation, HalfRobotLength),
+		translatePpCords(5.470, 5.361, -120, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID9_20Search = new Pose2d(
+		translatePpCords(5.285, 5.448, -120, "x", translation, HalfRobotLength),
+		translatePpCords(5.285, 5.448, -120, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID10_21Right = new Pose2d(
+		translatePpCords(6.143, 4.210, 180, "x", translation, HalfRobotLength),
+		translatePpCords(6.143, 4.210, 180, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID10_21Left = new Pose2d(
+		translatePpCords(6.143, 3.859, 180, "x", translation, HalfRobotLength),
+		translatePpCords(6.143, 3.859, 180, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID10_21Search = new Pose2d(
+		translatePpCords(6.143, 4, 180, "x", translation, HalfRobotLength),
+		translatePpCords(6.143, 4, 180, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID11_22Right = new Pose2d(
+		translatePpCords(5, 2.8, 120, "x", translation, HalfRobotLength),
+		translatePpCords(5, 2.8, 120, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(120)
+	);
+
+	public static final Pose2d ID11_22Left = new Pose2d(
+		translatePpCords(5.28, 2.96, 120, "x", translation, HalfRobotLength),
+		translatePpCords(5.28, 2.96, 120, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(120)
+	);
+
+	public static final Pose2d ID11_22Search = new Pose2d(
+		translatePpCords(5.314, 2.619, 120, "x", translation, HalfRobotLength),
+		translatePpCords(5.314, 2.619, 120, "y", translation, HalfRobotLength),
+		Rotation2d.fromDegrees(120)
+	);
+}
+		// #region Limelight Constants
 	public static final class Limelightc {
 		public static final String CORAL_LL = "limelight-coral";
 		public static final String REEF_LL = "limelight-reef";
