@@ -426,14 +426,14 @@ public static final class AligningCords {
 	);
 
 	public static final Pose2d ID7_18Right = new Pose2d(
-		translatePpCords(2.837, 3.840, 0, "x", translation, HalfRobotLength),
-		translatePpCords(2.837, 3.840, 0, "y", translation, HalfRobotLength),
+		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(546.87), 0, "x", translation, HalfRobotLength),
+		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(546.87), 0, "y", translation, HalfRobotLength),
 		Rotation2d.fromDegrees(0)
 	);
 
 	public static final Pose2d ID7_18Left = new Pose2d(
-		translatePpCords(3.188, 4.254, 0, "x", translation, HalfRobotLength),
-		translatePpCords(3.188, 4.254, 0, "y", translation, HalfRobotLength),
+		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(546.87), 0, "x", translation, HalfRobotLength),
+		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(546.87), 0, "y", translation, HalfRobotLength),
 		Rotation2d.fromDegrees(0)
 	);
 
