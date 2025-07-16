@@ -23,7 +23,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import static org.carlmontrobotics.Config.CONFIG;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -403,7 +405,7 @@ public static final class AligningCords {
 	public static final double translation = Units.inchesToMeters(8.5); 
 	public static final double robotLength = 0.08483;
 	public static final double HalfRobotLength = 0.08483/2;
-
+	//FIXME: put the actual cords for all the tags
 	public static final Pose2d ID6_17Right = new Pose2d(
 		translatePpCords(2.087, 4.737, 60, "x", translation, HalfRobotLength),
 		translatePpCords(2.087, 4.737, 60, "y", translation, HalfRobotLength),
@@ -417,8 +419,8 @@ public static final class AligningCords {
 	);
 
 	public static final Pose2d ID6_17Search = new Pose2d(
-		translatePpCords(3.650, 2.611, 60, "x", translation, HalfRobotLength),
-		translatePpCords(3.650, 2.611, 60, "y", translation, HalfRobotLength),
+		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(158.5), 60, "x", translation, HalfRobotLength),
+		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(158.5),60 , "y", translation, HalfRobotLength),
 		Rotation2d.fromDegrees(60)
 	);
 
