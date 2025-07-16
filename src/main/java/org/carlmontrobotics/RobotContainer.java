@@ -644,9 +644,8 @@ public class RobotContainer {
     new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
         new CoralOuttake(coralEffector, .15)), babyModeSupplier));  
-    
+    new JoystickButton(manipulatorController, XboxController.Button.kBack.value).onTrue(new ElevatorToPos(elevator, 0.8));
     new POVButton(manipulatorController, 90).whileTrue(new ParallelCommandGroup(
-        new ElevatorToPos(elevator, 0.8),
         new ArmMove(algaeEffector, 0.125)
     ));
     new POVButton(manipulatorController, 270).whileTrue(new ArmMove(algaeEffector, -0.125));
