@@ -65,7 +65,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("normal speed const", kNormalDriveSpeed);
     prevTimestamp = Timer.getFPGATimestamp();
     SmartDashboard.putBoolean("babymode", babyMode);
-    new CoralIntake(coralEffector).until(() -> manipulatorController.getRawButtonPressed(Button.kLeftBumper.value)).schedule();
+    //new CoralIntake(coralEffector).until(() -> manipulatorController.getRawButtonPressed(Button.kLeftBumper.value)).schedule(); we also should not need that
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -28,6 +28,7 @@ import org.carlmontrobotics.commands.AlignCommands.MoveToRightBranch;
 import org.carlmontrobotics.commands.AlignCommands.PathPlannerToReef;
 import org.carlmontrobotics.commands.AlignCommands.RotateToTag;
 import org.carlmontrobotics.commands.AutonCommands.LastResortAuto;
+import org.carlmontrobotics.commands.AutonCommands.PushIntoStation;
 import org.carlmontrobotics.commands.CoralCommands.AutonCoralFastOutake;
 import org.carlmontrobotics.commands.CoralCommands.AutonCoralOuttake;
 import org.carlmontrobotics.commands.CoralCommands.CoralFastOutake;
@@ -57,6 +58,9 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import java.util.function.BooleanSupplier;
+
+import javax.naming.NameAlreadyBoundException;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 
@@ -158,7 +162,7 @@ public class RobotContainer {
      
          public RobotContainer() {
              {
-                SmartDashboard.putData("intake", new CoralIntake(coralEffector));
+                //SmartDashboard.putData("intake", new CoralIntake(coralEffector));
                 SmartDashboard.putData("moveArm", new ArmMove(algaeEffector));
 
                 
@@ -193,11 +197,19 @@ public class RobotContainer {
      
         RegisterAutoCommands();
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.setDefaultOption("null forward auto", new PathPlannerAuto("Center 1 Piece L4 Auto"));
+        autoChooser.setDefaultOption("ScoreL4center", new SequentialCommandGroup(
+                new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
+                new ElevatorToPos(elevator, testl4),
+                new AutonCoralOuttake(coralEffector),
+                new ParallelCommandGroup(
+                    new AutonCoralFastOutake(coralEffector),
+                    new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
+                ),
+            new ElevatorToPos(elevator, Elevatorc.downPos)));
         RegisterCustomAutos();
         SmartDashboard.putData("Auto Chooser", autoChooser);    
-        SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
-        SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
+        // SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
+        // SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
 
         SmartDashboard.putBoolean("AlignOverride", alignOverride);
         setDefaultCommands();
@@ -206,12 +218,12 @@ public class RobotContainer {
         setBindingsManipulator();
         // SmartDashboard.putData("align right", new MoveToRightBranch(drivetrain, limelight));
         // SmartDashboard.putData("align left", new MoveToLeftBranch(drivetrain, limelight));
-        SmartDashboard.putData("Battery testing go vroooom", new SequentialCommandGroup(
-             new BatteryTesting(drivetrain, elevator, limelight, l2),
-             new BatteryTesting(drivetrain, elevator, limelight, l3),
-             new BatteryTesting(drivetrain, elevator, limelight, l4)
-        ));
-        SmartDashboard.putData("Rotate Command",new RotateToTag(drivetrain, limelight));
+        // SmartDashboard.putData("Battery testing go vroooom", new SequentialCommandGroup(
+        //      new BatteryTesting(drivetrain, elevator, limelight, l2),
+        //      new BatteryTesting(drivetrain, elevator, limelight, l3),
+        //      new BatteryTesting(drivetrain, elevator, limelight, l4)
+        // ));
+        // SmartDashboard.putData("Rotate Command",new RotateToTag(drivetrain, limelight));
         SmartDashboard.putBoolean("AlignOverride", true);
     }
    
@@ -273,331 +285,73 @@ public class RobotContainer {
                 ()-> driverController.getRawAxis(5)), 
                 () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
         
-        //TODO test rotation, need to tune pid for that
-        // new POVButton(driverController, 0)
-        //     .onTrue(new RotateToNearest60(drivetrain));
-        // new POVButton(driverController, 180).onTrue(new RotateToFieldRelativeAngle(Rotation2d.fromDegrees(90), drivetrain));
-        // axisTrigger(driverController, Driver.RIGHT_TRIGGER_BUTTON)
-        //   .onTrue(new InstantCommand(() -> drivetrain.stop()))
-
-        //Dont need that
-        // new JoystickButton(driverController, Driver.a)
-        //     .onTrue(new SequentialCommandGroup(
-        //         new WaitUntilAtAngle(drivetrain),
-        //         new L4Backup(drivetrain)
-        // ));
-        /*new JoystickButton(driverController, Driver.a)
-        .onTrue(new L4Backup(drivetrain));
-        }*/
     }
-
    
-    /**
-     * Flips an axis' Y coordinates upside down, but only if the select axis is a
-     * joystick axis
-     *
-     * @param hid  The controller/plane joystick the axis is on
-     * @param axis The processed axis
-     * @return The processed value.
-     */
-   
-
-    /**
-     * Processes an input from the joystick into a value between -1 and 1,
-     * sinusoidally instead of
-     * linearly
-     *
-     * @param value The value to be processed.
-     * @return The processed value.
-     */
-   
-
-    /**
-     * Combines both getStickValue and inputProcessing into a single function for
-     * processing joystick
-     * outputs
-     *
-     * @param hid  The controller/plane joystick the axis is on
-     * @param axis The processed axis
-     * @return The processed value.
-     */
-    
-
-    // /**
-    //  * Returns zero if a axis input is inside the deadzone
-    //  *
-    //  * @param hid  The controller/plane joystick the axis is on
-    //  * @param axis The processed axis
-    //  * @return The processed value.
-    //  */
-    // private double DeadzonedAxis(double axOut) {
-    //     return (Math.abs(axOut) <= OI.JOY_THRESH) ? 0.0 : axOut;
-    // }
-
-    /**
-     * Returns a new instance of Trigger based on the given Joystick and Axis
-     * objects. The Trigger is
-     * triggered when the absolute value of the stick value on the specified axis
-     * exceeds a minimum
-     * threshold value.
-     *
-     * @param stick The Joystick object to retrieve stick value from.
-     * @param axis  The Axis object to retrieve value from the Joystick.
-     * @return A new instance of Trigger based on the given Joystick and Axis
-     *         objects. * @throws
-     *         NullPointerException if either stick or axis is null.
-     */
-   
-
     private void RegisterAutoCommands() {
-      //I made some of the constants up, so change once merged
+        //CoralEffector
+        //NamedCommands.registerCommand("AutoCoralIntake", new CoralIntake(coralEffector)); not needed cause defualt commadn
+        NamedCommands.registerCommand("CoralOutake", new AutonCoralOuttake(coralEffector));
 
-      //AlgaeEffector
-      // NamedCommands.registerCommand("GroundIntakeAlgae", new GroundIntakeAlgae(algaeEffector));
-      // NamedCommands.registerCommand("DealgaficationIntake", new DealgaficationIntake(algaeEffector));
-      // NamedCommands.registerCommand("ShootAlgae", new ShootAlgae(algaeEffector));
+        //Elevator
+        NamedCommands.registerCommand("ElevatorIntake", new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
+        NamedCommands.registerCommand("ElevatorL1", new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
+        NamedCommands.registerCommand("ElevatorL2", new ElevatorToPos(elevator, Elevatorc.l2));
+        NamedCommands.registerCommand("ElevatorL3", new ElevatorToPos(elevator, Elevatorc.l3));
 
-      //CoralEffector
-      NamedCommands.registerCommand("CoralIntake", new CoralIntake(coralEffector));
-      NamedCommands.registerCommand("CoralOutake", new AutonCoralOuttake(coralEffector));
-      
-      //AlgaeArm
-      // NamedCommands.registerCommand("ArmToDeAlgafy", new ArmToPosition(AlgaeEffector, Armc.DeAlgafy_Angle));
-      // NamedCommands.registerCommand("ArmToIntake", new ArmToPosition(AlgaeEffector, Armc.Intake_Angle));
-      // NamedCommands.registerCommand("ArmToShoot", new ArmToPosition(AlgaeEffector, Armc.Shoot_Angle));
-
-      //Elevator
-      NamedCommands.registerCommand("ElevatorIntake", new ElevatorToPos(elevator, Elevatorc.downPos));
-      NamedCommands.registerCommand("ElevatorL1", new ElevatorToPos(elevator, Elevatorc.l1));
-      NamedCommands.registerCommand("ElevatorL2", new ElevatorToPos(elevator, Elevatorc.l2));
-      NamedCommands.registerCommand("ElevatorL3", new ElevatorToPos(elevator, Elevatorc.l3));
-      NamedCommands.registerCommand("ElevatorL4", new ElevatorToPos(elevator, Elevatorc.l4));
-
-      // //Limelight
-      // NamedCommands.registerCommand("AlignToCoralStation", new AlignToCoralStation(Limelight, drivetrain));
-      // NamedCommands.registerCommand("AlignToReef", new AlignToReef(Limelight, drivetrain));
-      // NamedCommands.registerCommand("MoveToLeftBranch", new MoveToLeftBranch(Limelight, LimelightHelpers, drivetrain));
-      // NamedCommands.registerCommand("MoveToRightBranch", new MoveToRightBranch(Limelight, LimelightHelpers, drivetrain));
-
-
-      //Sequential and Parralel Commands
-      //-------------------------------------------------------------------------------------------------
-      //Intake CMD
-      NamedCommands.registerCommand("IntakeCoral",
-      new SequentialCommandGroup(
-                      new ParallelCommandGroup(
-                              new CoralIntake(coralEffector))));
-
-      //L1 CMDS
-      NamedCommands.registerCommand("L1 Right",
-              new SequentialCommandGroup(
-                  new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
-                  new AutonCoralOuttake(coralEffector)));
-
-      NamedCommands.registerCommand("L1 Left",
-              new SequentialCommandGroup(
-                  new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
-                  new AutonCoralOuttake(coralEffector)));
-
-      // //L2 Dealgify CMDs 
-      // NamedCommands.registerCommand("L2 Dealgify Left",
-      //         new SequentialCommandGroup(
-      //             new MoveToLeftBranch(drivetrain, limelight),
-      //             new ParallelCommandGroup(
-      //                   new ElevatorToPos(elevator, Elevatorc.l2), 
-      //                   new SequentialCommandGroup(
-      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-      //                       new DealgaficationIntake(algaeEffector))),
-      //             new AutonCoralOuttake(coralEffector), 
-      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
-      
-      // NamedCommands.registerCommand("L2 Dealgify Right",
-      //         new SequentialCommandGroup(
-      //             new MoveToRightBranch(drivetrain, limelight),
-      //             new ParallelCommandGroup(
-      //                   new ElevatorToPos(elevator, Elevatorc.l2), 
-      //                   new SequentialCommandGroup(
-      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-      //                       new DealgaficationIntake(algaeEffector))),
-      //             new AutonCoralOuttake(coralEffector), 
-      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
-
-      //L2 No-Dealify CMDS
-      NamedCommands.registerCommand("L2 No-Dealgify Left", 
-              new SequentialCommandGroup(
-                  new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
-                  new ElevatorToPos(elevator, Elevatorc.l2), 
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
-      
-      NamedCommands.registerCommand("L2 No-Dealgify Right", 
-              new SequentialCommandGroup(
-                  new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
-                  new ElevatorToPos(elevator, Elevatorc.l2), 
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));    
-
-      //L3 Dealgify CMDs 
-      // NamedCommands.registerCommand("L3 Dealgify Left", 
-      //         new SequentialCommandGroup(
-      //             new MoveToLeftBranch(drivetrain, limelight),
-      //             new ParallelCommandGroup(
-      //                   new ElevatorToPos(elevator, Elevatorc.l3), 
-      //                   new SequentialCommandGroup(
-      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-      //                       new DealgaficationIntake(algaeEffector))),
-      //             new AutonCoralOuttake(coralEffector), 
-      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
-      
-      // NamedCommands.registerCommand("L3 Dealgify Right", 
-      //         new SequentialCommandGroup(
-      //             new MoveToRightBranch(drivetrain, limelight),
-      //             new ParallelCommandGroup(
-      //                   new ElevatorToPos(elevator, Elevatorc.l3), 
-      //                   new SequentialCommandGroup(
-      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-      //                       new DealgaficationIntake(algaeEffector))),
-      //             new AutonCoralOuttake(coralEffector), 
-      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
-
-      //L3 No-Dealify CMDS
-      NamedCommands.registerCommand("L3 No-Dealgify Left", 
-              new SequentialCommandGroup(
-                  new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
-                  new ElevatorToPos(elevator, Elevatorc.l3), 
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));
-      
-      NamedCommands.registerCommand("L3 No-Dealgify Right", 
-              new SequentialCommandGroup(
-                  new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
-                  new ElevatorToPos(elevator, Elevatorc.l3), 
-                  new AutonCoralOuttake(coralEffector), 
-                  new ElevatorToPos(elevator, Elevatorc.downPos)));    
-
-    //  //L4 Backup CMDS
-    //   NamedCommands.registerCommand("L4 Backup Left", 
-    //           new SequentialCommandGroup(
-    //               new MoveToLeftBranch(drivetrain, limelight),
-    //               new L4BackupUsingArea(drivetrain, limelight),
-    //               new ParallelCommandGroup(
-    //                     new ElevatorToPos(elevator, Elevatorc.l4), 
-    //                     new SequentialCommandGroup(
-    //                         new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-    //                         new DealgaficationIntake(algaeEffector))),
-    //               new AutonCoralOuttake(coralEffector), 
-    //               new ElevatorToPos(elevator, Elevatorc.downPos)));
-      
-      // NamedCommands.registerCommand("L4 Backup Right", 
-      //         new SequentialCommandGroup(
-      //             new MoveToRightBranch(drivetrain, limelight),
-      //             new L4BackupUsingArea(drivetrain, limelight),
-      //             new ParallelCommandGroup(
-      //                   new ElevatorToPos(elevator, Elevatorc.l4), 
-      //                   new SequentialCommandGroup(
-      //                       new ArmToPosition(algaeEffector, AlgaeEffectorc.ARM_DEALGAFYING_ANGLE),
-      //                       new DealgaficationIntake(algaeEffector))),
-      //             new AutonCoralOuttake(coralEffector), 
-      //             new ElevatorToPos(elevator, Elevatorc.downPos)));
-
-      //L4 No-Backup CMDS
-      NamedCommands.registerCommand("L4 Left", 
-                new SequentialCommandGroup(
-                new MoveToAlignReef(drivetrain,limelight,elevator, false, driverRumble), 
-                new ElevatorToPos(elevator, testl4),
-                new AutonCoralOuttake(coralEffector),
-                new ParallelCommandGroup(
+        //Scoring Coral
+        
+        //Right
+        NamedCommands.registerCommand("ScoreL4Right", new SequentialCommandGroup(
+            new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
+            new ElevatorToPos(elevator, testl4),
+            new AutonCoralOuttake(coralEffector),
+            new ParallelCommandGroup(
                 new AutonCoralFastOutake(coralEffector),
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)),
-                new ElevatorToPos(elevator, Elevatorc.l1)
-                ));    
-      
-      NamedCommands.registerCommand("L4 Right", 
-                new SequentialCommandGroup(
-                new MoveToAlignReef(drivetrain,limelight,elevator, true, driverRumble), 
-                new ElevatorToPos(elevator, testl4),
-                new AutonCoralOuttake(coralEffector),
-                new ParallelCommandGroup(
+            new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator))
+            )
+        );
+        NamedCommands.registerCommand("ScoreL3Right", new SequentialCommandGroup(
+            new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
+            new ElevatorToPos(elevator, Elevatorc.l3),
+            new AutonCoralOuttake(coralEffector),
+            new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator))
+        ));
+        NamedCommands.registerCommand("ScoreL2Right", new SequentialCommandGroup(
+            new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
+            new ElevatorToPos(elevator, Elevatorc.l3),
+            new AutonCoralOuttake(coralEffector),
+            new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator))
+        ));
+
+        //Left
+        NamedCommands.registerCommand("ScoreL4Left", new SequentialCommandGroup(
+            new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
+            new ElevatorToPos(elevator, testl4),
+            new AutonCoralOuttake(coralEffector),
+            new ParallelCommandGroup(
                 new AutonCoralFastOutake(coralEffector),
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)),
-                new ElevatorToPos(elevator, Elevatorc.l1)
-                ));    
+            new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator))
+            )
+        );
+        NamedCommands.registerCommand("ScoreL3Left", new SequentialCommandGroup(
+            new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
+            new ElevatorToPos(elevator, Elevatorc.l3),
+            new AutonCoralOuttake(coralEffector),
+            new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator))
+        ));
+        NamedCommands.registerCommand("ScoreL2Left", new SequentialCommandGroup(
+            new MoveToAlignReef(drivetrain, limelight, elevator, false, driverRumble),
+            new ElevatorToPos(elevator, Elevatorc.l3),
+            new AutonCoralOuttake(coralEffector),
+            new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator))
+        ));
+        //For Station
+        NamedCommands.registerCommand("WaitForCoral", new PushIntoStation(drivetrain, coralEffector));
 
-
-//-------------------------------------------------------------------------------------------
-        //TODO: Make new scoring Autos
-        //TODO: Change CMDS in PP
-        /*NamedCommands.registerCommand("IntakeCoralNoLL",
-        new SequentialCommandGroup(
-                        new ParallelCommandGroup(
-                                new CoralIntake(coralEffector))));
-
-        NamedCommands.registerCommand("L1NoLL&NoAlgae", new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l1),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorToPos(elevator, Elevatorc.downPos))));
-
-        NamedCommands.registerCommand("L2NoLL&NoAlgae", new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l2),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorToPos(elevator, Elevatorc.downPos))));
-                    
-        NamedCommands.registerCommand("L3NoLL&NoAlgae", new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l3),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorToPos(elevator, Elevatorc.downPos))));
-
-        NamedCommands.registerCommand("L4NoLL&NoAlgae", new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                        new ElevatorToPos(elevator, Elevatorc.l4),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorToPos(elevator, Elevatorc.downPos))));*/                          
-
-        /*NamedCommands.registerCommand("L2LL&&NoAlgae", new SequentialCommandGroup(
-        new ParallelDeadlineGroup(
-                new WaitCommand(3.0),
-                new SequentialCommandGroup(
-                        new ParallelCommandGroup(
-                                new AlignToReef(drivetrain, limelight),
-                                new ElevatorL2(Elevator, Elevatorc.l2)),
-                                //new ArmToPos(arm, Armc.DeAlgafy_Angle),
-                                //new DealgaficationIntake(algaeEffector),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
-
-        /*NamedCommands.registerCommand("L3LL&&NoAlgae", new SequentialCommandGroup(
-        new ParallelDeadlineGroup(
-                new WaitCommand(3.0),
-                new SequentialCommandGroup(
-                        new ParallelCommandGroup(
-                                new AlignToReef(drivetrain, limelight),
-                                new ElevatorL2(Elevator, Elevatorc.l3)),
-                                //new ArmToPos(arm, Armc.DeAlgafy_Angle),
-                                //new DealgaficationIntake(algaeEffector),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
-
-        /*NamedCommands.registerCommand("L4LL&&NoAlgae", new SequentialCommandGroup(
-        new ParallelDeadlineGroup(
-                new WaitCommand(3.0),
-                new SequentialCommandGroup(
-                        new ParallelCommandGroup(
-                                new AlignToReef(drivetrain, limelight),
-                                new ElevatorL2(Elevator, Elevatorc.l4)),
-                                //new ArmToPos(arm, Armc.DeAlgafy_Angle),
-                                //new DealgaficationIntake(algaeEffector),
-                        new CoralOuttake(coralEffector),
-                        new ElevatorIntake(Elevator, Elevatorc.IntakePos)))));*/
-                                                    
-        /*NamedCommands.registerCommand("IntakeCoralLL",
-        new SequentialCommandGroup(
-                        new ParallelCommandGroup(
-                                new AlignToCoralStation(drivetrain, limelight),
-                                new IntakeCoral(coralEffector))));*/
-
+        //For ALGAE in near future
+        //TODO Algae
     }
 
     private void RegisterCustomAutos(){
@@ -840,59 +594,6 @@ public class RobotContainer {
             new ElevatorToPos(elevator, Elevatorc.downPos)));
     }
 //------------------------------------------------------------------------------------------------
-/*deep blue is what DYNAMITE 
-  deep blue is what DYNAMITE 
-  deep blue is tick tick tick tick tick tick tick tick 
-  BOOM dynamite
-  OH YEAH
-  OH YEAHHHHHHHHH*/
-//5 BIG BOOMS
-
-/*SHARK IN THE TANK 3
-1
-2
-3
-SHARK IN THE TANK 
-SHARK IN THE TANK
-SHARK IN THE TANK
- */
-
-/* deep blue is sus? Sabotage
-   deep blue is sus? Sabotage
-   deep blue is... do do do do do do do, do-do-do, Sabotage!
-   (apperently actual official cheer? ¯\_( ͡°_ʖ ͡°)_/¯)
-*/
-
-       /* autoChooser.addOption("forward4sec+autoalign+l4+Left", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4,3),
-          new MoveToLeftBranch(drivetrain, limelight),
-          new LastResortAuto(drivetrain, -1, 1, 0.33),
-          new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
-        ));
-
-        autoChooser.addOption("forward4sec+autoalign+l4", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4,4),
-          new MoveToLeftBranch(drivetrain, limelight),
-          new L4Backup(drivetrain),
-          new InstantCommand(()->elevator.setGoal(ElevatorPos.L4))
-        ));   
-        
-        autoChooser.addOption("forward4sec+autoalign+l2+Left", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4,3),
-          new MoveToRightBranch(drivetrain, limelight),
-          new LastResortAuto(drivetrain, -1, 1, 0.33),
-          new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
-        )); 
-
-        autoChooser.addOption("forward4sec+autoalign+l2+Right", new SequentialCommandGroup(
-          new LastResortAuto(drivetrain, 1, 4,3),
-          new MoveToRightBranch(drivetrain, limelight),
-          new LastResortAuto(drivetrain, -1, 1, 0.33),
-          new InstantCommand(()->elevator.setGoal(ElevatorPos.L2))
-        ));   
-    }*/
-
-    
 
   private void setDefaultCommands() {
     drivetrain.setDefaultCommand(new TeleopDrive(
@@ -905,21 +606,15 @@ SHARK IN THE TANK
         coralEffector,
         manipulatorController
       ));
+
+      coralEffector.setDefaultCommand(new CoralIntake(coralEffector));
     //   SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     // SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
   }
 
   private void setBindingsManipulator() {
-    // new JoystickButton(manipulatorController, OI.Manipulator.OUTAKE_BUTTON)
-    //   .whileTrue(new CoralOutake(coralEffector))
-    //   .whileFalse(new CoralIntake(coralEffector));P
-    // new JoystickButton(manipulatorController, OI.Manipulator.INTAKE_BUTTON)
-    //   .whileTrue(new ManualCoralIntake());
-    
-    // axisTrigger(manipulatorController, Axis.kLeftTigger)
-    // .whileTrue(new CoralOuttake(coralEffector));
     new JoystickButton(manipulatorController, Button.kRightBumper.value)
-    .whileFalse(new CoralIntake(coralEffector))
+    // .whileFalse(new CoralIntake(coralEffector)) not needed cause default command
     //.whileFalse(new ConditionalCommand(coralEffector.setMotorSpeed(0.1), new InstantCommand(), coralEffector.distanceSensorSeesCoralSupplier()))
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
