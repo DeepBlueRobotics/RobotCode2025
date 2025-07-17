@@ -646,11 +646,11 @@ public class RobotContainer {
             new ElevatorToBottomLimitSwitch(elevator)
             ));
     //old l4
-    axisTrigger(manipulatorController, Axis.kLeftTrigger).onTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ElevatorToPos(elevator, l4), babyModeSupplier)); 
-    new POVButton(manipulatorController, 180).onTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ElevatorToPos(elevator, testl4), babyModeSupplier));
-    new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ParallelCommandGroup(
+    axisTrigger(manipulatorController, Axis.kLeftTrigger).onTrue(new ElevatorToPos(elevator, l4)); 
+    new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
+    new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
-        new CoralOuttake(coralEffector, .15)), babyModeSupplier));  
+        new CoralOuttake(coralEffector, .15)));  
 
     new JoystickButton(manipulatorController, XboxController.Button.kBack.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_HIGH_POS));
     new JoystickButton(manipulatorController, XboxController.Button.kStart.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_LOW_POS));
