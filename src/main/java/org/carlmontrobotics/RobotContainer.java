@@ -113,6 +113,7 @@ import static org.carlmontrobotics.Constants.OI.Driver.*;
 import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+// import org.carlmontrobotics.subsystems.coralEffector.enableAutoIntake;;
 
 
 public class RobotContainer {
@@ -646,16 +647,29 @@ public class RobotContainer {
             new ElevatorToBottomLimitSwitch(elevator)
             ));
     //old l4
-    axisTrigger(manipulatorController, Axis.kLeftTrigger).onTrue(new ElevatorToPos(elevator, l4)); 
-    new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
-    new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
+    // axisTrigger(manipulatorController, Axis.kLeftTrigger).onTrue(new ElevatorToPos(elevator, l4)); 
+    axisTrigger(manipulatorController, Axis.kLeftTrigger).onTrue(new InstantCommand(() -> coralEffector.toggleAutoIntake())); 
+
+    new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, DELAGIFY_HIGH_POS));
+    new POVButton(manipulatorController, 0).onTrue(new ElevatorToPos(elevator, DELAGIFY_LOW_POS));
+    new POVButton(manipulatorController, 90).whileTrue(new ArmMove(algaeEffector, ARM_UP_VOLTAGE));
+    new POVButton(manipulatorController, 270).whileTrue(new ArmMove(algaeEffector, ARM_DOWN_VOLTAGE));
+
+    //manual new l4
+    new JoystickButton(manipulatorController, XboxController.Button.kBack.value).onTrue(new ElevatorToPos(elevator, testl4));
+    new JoystickButton(manipulatorController, XboxController.Button.kStart.value).whileTrue(new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
         new CoralOuttake(coralEffector, .15)));  
 
-    new JoystickButton(manipulatorController, XboxController.Button.kBack.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_HIGH_POS));
-    new JoystickButton(manipulatorController, XboxController.Button.kStart.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_LOW_POS));
-    new POVButton(manipulatorController, 90).whileTrue(new ArmMove(algaeEffector, ARM_UP_VOLTAGE));
-    new POVButton(manipulatorController, 270).whileTrue(new ArmMove(algaeEffector, ARM_DOWN_VOLTAGE));
+    //new l4
+    // new POVButton(manipulatorController, 180).onTrue(new ElevatorToPos(elevator, testl4));
+    // new POVButton(manipulatorController, 0).whileTrue(new ParallelCommandGroup(
+    //     new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
+    //     new CoralOuttake(coralEffector, .15)));  
+
+    // new JoystickButton(manipulatorController, XboxController.Button.kBack.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_HIGH_POS));
+    // new JoystickButton(manipulatorController, XboxController.Button.kStart.value).onTrue(new ElevatorToPos(elevator, DELAGIFY_LOW_POS));
+
 
 
 
