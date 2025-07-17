@@ -630,8 +630,11 @@ public class RobotContainer {
     .whileTrue(new CoralFastOutake(coralEffector));
     }
 
+    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
+    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2)); 
+    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
     //l4 in one button
-    axisTrigger(manipulatorController, Axis.kLeftTrigger)
+    new JoystickButton(manipulatorController, OI.Manipulator.Y)
     .onTrue(
         new SequentialCommandGroup(
             new ElevatorToPos(elevator, testl4), 
@@ -642,10 +645,8 @@ public class RobotContainer {
             new ElevatorToPos(elevator, Elevatorc.l1),
             new ElevatorToBottomLimitSwitch(elevator)
             ));
-    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
-    new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
-    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2)); 
-    new JoystickButton(manipulatorController, OI.Manipulator.Y).onTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ElevatorToPos(elevator, l4), babyModeSupplier));
+    //old l4
+    axisTrigger(manipulatorController, Axis.kLeftTrigger).onTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ElevatorToPos(elevator, l4), babyModeSupplier)); 
     new POVButton(manipulatorController, 180).onTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ElevatorToPos(elevator, testl4), babyModeSupplier));
     new POVButton(manipulatorController, 0).whileTrue(new ConditionalCommand(new ElevatorToPos(elevator, l1), new ParallelCommandGroup(
         new ElevatorToPos(elevator, testl4 + testl4RaiseHeight),
