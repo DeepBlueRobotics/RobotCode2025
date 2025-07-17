@@ -21,7 +21,7 @@ import org.carlmontrobotics.Constants.OI.Driver;
 import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.AlgaeCommands.AlignAndDealgifyAlgae;
 import org.carlmontrobotics.commands.AlgaeCommands.ArmMove;
-import org.carlmontrobotics.commands.AlgaeCommands.ArmToPosition;
+// import org.carlmontrobotics.commands.AlgaeCommands.ArmToPosition;
 import org.carlmontrobotics.commands.AlignCommands.GoToCoralStation;
 import org.carlmontrobotics.commands.AlignCommands.MoveToAlignReef;
 import org.carlmontrobotics.commands.AlignCommands.MoveToLeftBranch;
@@ -660,9 +660,9 @@ public class RobotContainer {
 
 
     //test to see if this botton works properly
-    new JoystickButton(manipulatorController, Button.kRightStick.value)
-    .whileTrue(new ArmToPosition(algaeEffector, UPPER_ANGLE_LIMIT))
-    .whileFalse(new ArmToPosition(algaeEffector, LOWER_ANGLE_LIMIT)); 
+//     new JoystickButton(manipulatorController, Button.kRightStick.value)
+//     .whileTrue(new ArmToPosition(algaeEffector, UPPER_ANGLE_LIMIT))
+//     .whileFalse(new ArmToPosition(algaeEffector, LOWER_ANGLE_LIMIT)); 
   }
   
   
