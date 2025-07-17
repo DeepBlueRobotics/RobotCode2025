@@ -136,6 +136,10 @@ public class CoralEffector extends SubsystemBase {
     return limitSwitchSeesCoral() && !distanceSensorSeesCoral();
   }
 
+  public void toggleAutoIntake(){
+    enableAutoIntake = !enableAutoIntake;
+  }
+
 
   @Override
   public void periodic() {
