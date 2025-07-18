@@ -6,6 +6,11 @@ package org.carlmontrobotics;
 
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
+import java.util.Map;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
+
 //import org.carlmontrobotics.commands.CoralIntake;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -46,6 +51,9 @@ public class Robot extends TimedRobot {
     .withPosition(0,1)
     .withSize(2,2)
     .withWidget(BuiltInWidgets.kBooleanBox);
+    compTab.addCamera("PhotonVision Stream", "SigmaCamera", "photonvision.local:1181")
+    .withPosition(3,2)
+    .withSize(3,3);
   }
 
   @Override

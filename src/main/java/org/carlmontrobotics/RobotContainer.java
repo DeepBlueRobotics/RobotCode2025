@@ -19,6 +19,7 @@ import org.carlmontrobotics.Constants.Elevatorc;
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.Constants.OI.Driver;
 import org.carlmontrobotics.Constants.OI.Manipulator;
+import org.carlmontrobotics.commands.RaiseAndScore;
 import org.carlmontrobotics.commands.AlgaeCommands.AlignAndDealgifyAlgae;
 import org.carlmontrobotics.commands.AlgaeCommands.ArmMove;
 // import org.carlmontrobotics.commands.AlgaeCommands.ArmToPosition;
@@ -634,18 +635,8 @@ public class RobotContainer {
     }
 
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
-    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ConditionalCommand(
-        new SequentialCommandGroup(
-            new ElevatorToPos(elevator, l2), 
-            new AutonCoralOuttake(coralEffector), 
-            new ElevatorToPos(elevator, l1),
-            new ElevatorToBottomLimitSwitch(elevator)), new ElevatorToPos(elevator, l2), () -> SmartDashboard.getBoolean("AutoScoring", autoScoring)));
-    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ConditionalCommand(
-        new SequentialCommandGroup(
-            new ElevatorToPos(elevator, l3), 
-            new AutonCoralOuttake(coralEffector), 
-            new ElevatorToPos(elevator, l1),
-            new ElevatorToBottomLimitSwitch(elevator)), new ElevatorToPos(elevator, l3), () -> SmartDashboard.getBoolean("AutoScoring", autoScoring)));
+    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new RaiseAndScore(elevator, coralEffector, false));
+    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new RaiseAndScore(elevator, coralEffector, true));
     //l4 in one button
     new JoystickButton(manipulatorController, OI.Manipulator.Y)
     .onTrue(
