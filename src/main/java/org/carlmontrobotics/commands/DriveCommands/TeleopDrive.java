@@ -15,6 +15,7 @@ import static org.carlmontrobotics.RobotContainer.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -86,6 +87,8 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("strafe", speeds[1]);
     // SmartDashboard.putNumber("turn", speeds[2]);
     if(babyMode && elevator.getCurrentHeight() < 0.05 || !babyMode){ //TODO: change this to use limit switch instead when the limit switch gets properly mounted (which is probably never :( )
+      //For debugging
+      DriverStation.reportWarning("UnprocessedJoyValues from RobotContainer " + fwd.getAsDouble() + ", " + str.getAsDouble() + ", " + rcw.getAsDouble() + "Processed " + speeds, false);
       drivetrain.drive(speeds[0], speeds[1], speeds[2]);
     }else{
       drivetrain.stop();
