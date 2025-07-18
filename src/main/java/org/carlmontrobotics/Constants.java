@@ -78,11 +78,10 @@ public final class Constants {
 		public static final int followerPort = 21; // inverted
 		//public static final int elevatorTopLimitSwitchPort = 1;
 		public static final int elevatorBottomLimitSwitchPort = 0;
-		public static final int bottomLimitSwitchTriggerPoint = 10;// TODO: figure out the value
-		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
+		public static final int bottomLimitSwitchTriggerPoint = 10;
+		public static final double GEAR_RATIO = 1.0/20; 
 
 		// Config
-		// TODO figure these parts out
 		public static final double MAX_ACCEL_RAD_P_S = 1;
 		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
@@ -339,7 +338,7 @@ public final class Constants {
 							// double wheelCOF,
 							mu,
 							// DCMotor driveMotor,
-							DCMotor.getNEO(4), // FIXME is it 1 for 1 each or 4 for 1 robot
+							DCMotor.getNEO(4),
 							// double driveGearing,
 							driveGearing,
 							// double driveCurrentLimit,

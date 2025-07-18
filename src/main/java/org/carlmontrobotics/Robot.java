@@ -4,9 +4,15 @@
 
 package org.carlmontrobotics;
 
+import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
+
 //import org.carlmontrobotics.commands.CoralIntake;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -19,10 +25,27 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private static final ShuffleboardTab compTab = Shuffleboard.getTab("Competition");
   //private int autoFirstPri = 0;
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    compTab.addDouble("Match Time", () -> Timer.getMatchTime())
+    .withPosition(0, 0)
+    .withSize(2, 1)
+    .withWidget(BuiltInWidgets.kTextView);
+    compTab.addBoolean("Sees Tag", () -> m_robotContainer.limelight.seesTag(REEF_LL))
+    .withPosition(3, 0)
+    .withSize(1, 1)
+    .withWidget(BuiltInWidgets.kBooleanBox);
+    compTab.addBoolean("ALIGNED", () -> m_robotContainer.limelight.alignedWithReef())
+    .withPosition(2,1)
+    .withSize(2, 2)
+    .withWidget(BuiltInWidgets.kBooleanBox);
+    compTab.addBoolean("CoralIntaked", () -> m_robotContainer.coralEffector.coralSecured())
+    .withPosition(0,1)
+    .withSize(2,2)
+    .withWidget(BuiltInWidgets.kBooleanBox);
   }
 
   @Override
