@@ -64,7 +64,7 @@ public class RaiseAndScore extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    CommandScheduler.getInstance().schedule(new ElevatorToBottomLimitSwitch(elevator));
+    if (shootCoral.get() > 0.5) {CommandScheduler.getInstance().schedule(new ElevatorToBottomLimitSwitch(elevator));}
   }
 
   // Returns true when the command should end.
