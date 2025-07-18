@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -117,5 +118,20 @@ public class Limelight extends SubsystemBase {
 
   public boolean seesTag(String limelightName) {
     return LimelightHelpers.getTV(limelightName);
+  }
+
+  public boolean alignedWithReef() {
+    double strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
+    * getDistanceToApriltagMT2(REEF_LL)+ (RIGHT_CORAL_BRANCH);
+    double forwardErr = - LimelightHelpers.getTA(REEF_LL) + areaPercentageGoal;
+    if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance)) {
+      return true;
+    }
+    strafeErr = Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
+    * getDistanceToApriltagMT2(REEF_LL)+ (LEFT_CORAL_BRANCH);
+    if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance)) {
+      return true;
+    }
+    return false;
   }
 }

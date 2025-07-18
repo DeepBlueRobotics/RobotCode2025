@@ -6,6 +6,16 @@
       "/SmartDashboard/SendableChooser[1]": "String Chooser"
     }
   },
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "Competition": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  },
   "NetworkTables Info": {
     "visible": true
   }
