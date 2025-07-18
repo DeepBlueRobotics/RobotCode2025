@@ -165,6 +165,7 @@ public class RobotContainer {
      
        // public final DigitalInput limitSwitch = new DigitalInput(LIMIT_SWITCH_PORT);
        public boolean alignOverride = true;
+       public boolean autoScoring = true;
      
          public RobotContainer() {
              {
@@ -218,6 +219,7 @@ public class RobotContainer {
         // SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
 
         SmartDashboard.putBoolean("AlignOverride", alignOverride);
+        SmartDashboard.putBoolean("AutoScoring", autoScoring);
         setDefaultCommands();
         setBindingsDriver();
 
@@ -632,8 +634,18 @@ public class RobotContainer {
     }
 
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
-    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2)); 
-    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
+    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ConditionalCommand(
+        new SequentialCommandGroup(
+            new ElevatorToPos(elevator, l2), 
+            new AutonCoralOuttake(coralEffector), 
+            new ElevatorToPos(elevator, l1),
+            new ElevatorToBottomLimitSwitch(elevator)), new ElevatorToPos(elevator, l2), () -> SmartDashboard.getBoolean("AutoScoring", autoScoring)));
+    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ConditionalCommand(
+        new SequentialCommandGroup(
+            new ElevatorToPos(elevator, l3), 
+            new AutonCoralOuttake(coralEffector), 
+            new ElevatorToPos(elevator, l1),
+            new ElevatorToBottomLimitSwitch(elevator)), new ElevatorToPos(elevator, l3), () -> SmartDashboard.getBoolean("AutoScoring", autoScoring)));
     //l4 in one button
     new JoystickButton(manipulatorController, OI.Manipulator.Y)
     .onTrue(
