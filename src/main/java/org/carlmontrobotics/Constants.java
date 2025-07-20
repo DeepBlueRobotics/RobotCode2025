@@ -531,9 +531,10 @@ public static final class AligningCords {
 		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH+Units.inchesToMeters(1);
 
 		public static final double areaPercentageGoal = 8.4;
-		public static final double areaPercentageGoalForAlgae = 4; //TODO figure this out
+		public static final double areaPercentageGoalForAlgae = 2.556; //TODO figure this out
 		public static final double areaTolerance = 0.1;
 		public static final double strafeTolerance = 0.02;
+		public static final double strafeToleranceAlgae = 0.1;
 		public static final double LL_ACCURACY_LIMIT_METERS = 5.0; 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
 		public static final double STD_DEV_Y_METERS = 0.7; // uncertainty of 0.7 meters on the field

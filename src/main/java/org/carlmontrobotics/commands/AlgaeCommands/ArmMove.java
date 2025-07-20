@@ -29,14 +29,14 @@ public class ArmMove extends Command{
 
     @Override
     public void end(boolean interrupted){
-        if (speed > 0) { // This if statement is checking when arm moves up
-          algaeArm.moveArm(0.1);  // Small voltage to hold arm up like a kG 
-        } else { // This one is for the arm moving down
+        //if (speed > 0) { // This if statement is checking when arm moves up
+          //algaeArm.moveArm(0.1);  // Small voltage to hold arm up like a kG 
+        //} else { // This one is for the arm moving down
          algaeArm.moveArm(0);
-        }
+        //}
     }
     
     public boolean isFinished(){
-        return (algaeArm.getArmPos() < -10 && speed < 0); // If arm is going down past delagification angle it shuts the voltage off to stop it from hitting itself on the way down too hard
+        return false; // If arm is going down past delagification angle it shuts the voltage off to stop it from hitting itself on the way down too hard
     }
 }

@@ -414,8 +414,8 @@ public class Drivetrain extends SubsystemBase {
         PathPlannerLogging.logCurrentPose(getPose());
 
 
-        SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
-        SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
+        //SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
+        //SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
         SmartDashboard.putNumber("X position with limelight", getPoseWithLimelight().getX());
         SmartDashboard.putNumber("Y position with limelight", getPoseWithLimelight().getY());
         SmartDashboard.putNumber("X position with gyro", getPose().getX());

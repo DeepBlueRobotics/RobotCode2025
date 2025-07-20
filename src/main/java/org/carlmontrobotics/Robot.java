@@ -35,25 +35,25 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    compTab.addDouble("Match Time", () -> Timer.getMatchTime())
-    .withPosition(0, 0)
-    .withSize(2, 1)
-    .withWidget(BuiltInWidgets.kTextView);
-    compTab.addBoolean("Sees Tag", () -> m_robotContainer.limelight.seesTag(REEF_LL))
-    .withPosition(3, 0)
-    .withSize(1, 1)
-    .withWidget(BuiltInWidgets.kBooleanBox);
-    compTab.addBoolean("ALIGNED", () -> m_robotContainer.limelight.alignedWithReef())
-    .withPosition(2,1)
-    .withSize(2, 2)
-    .withWidget(BuiltInWidgets.kBooleanBox);
-    compTab.addBoolean("CoralIntaked", () -> m_robotContainer.coralEffector.coralSecured())
-    .withPosition(0,1)
-    .withSize(2,2)
-    .withWidget(BuiltInWidgets.kBooleanBox);
-    compTab.addCamera("PhotonVision Stream", "SigmaCamera", "photonvision.local:1181")
-    .withPosition(3,2)
-    .withSize(3,3);
+    // compTab.addDouble("Match Time", () -> Timer.getMatchTime())
+    // .withPosition(0, 0)
+    // .withSize(2, 1)
+    // .withWidget(BuiltInWidgets.kTextView);
+    // compTab.addBoolean("Sees Tag", () -> m_robotContainer.limelight.seesTag(REEF_LL))
+    // .withPosition(3, 0)
+    // .withSize(1, 1)
+    // .withWidget(BuiltInWidgets.kBooleanBox);
+    // compTab.addBoolean("ALIGNED", () -> m_robotContainer.limelight.alignedWithReef())
+    // .withPosition(2,1)
+    // .withSize(2, 2)
+    // .withWidget(BuiltInWidgets.kBooleanBox);
+    // compTab.addBoolean("CoralIntaked", () -> m_robotContainer.coralEffector.coralSecured())
+    // .withPosition(0,1)
+    // .withSize(2,2)
+    // .withWidget(BuiltInWidgets.kBooleanBox);
+    // compTab.addCamera("PhotonVision Stream", "SigmaCamera", "photonvision.local:1181")
+    // .withPosition(3,2)
+    // .withSize(3,3);
   }
 
   @Override

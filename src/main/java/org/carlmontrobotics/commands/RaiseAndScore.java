@@ -21,10 +21,10 @@ public class RaiseAndScore extends Command {
   private Elevator elevator;
   private CoralEffector coralEffector;
   boolean thirdBranch;
-  Timer shootCoral;
+  Timer shootCoral = new Timer();
   boolean coralShot = false;
   public RaiseAndScore(Elevator elevator, CoralEffector coralEffector, boolean thirdBranch) {
-    addRequirements(this.elevator, this.coralEffector);
+    addRequirements(this.elevator = elevator, this.coralEffector = coralEffector);
     this.thirdBranch = thirdBranch;
 
   }
@@ -49,10 +49,12 @@ public class RaiseAndScore extends Command {
       if (elevator.atGoalHeight()) {
         coralEffector.setMotorSpeed(0.1);
         shootCoral.start();
+        System.out.println(shootCoral.get());
       }
-      else if(shootCoral.get() > 0.5) {
+      if(shootCoral.get() > 0.5) {
         coralEffector.setMotorSpeed(0);
         elevator.setGoal(l1);
+        
         coralShot = true;
       }
     }
@@ -64,7 +66,6 @@ public class RaiseAndScore extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (shootCoral.get() > 0.5) {CommandScheduler.getInstance().schedule(new ElevatorToBottomLimitSwitch(elevator));}
   }
 
   // Returns true when the command should end.

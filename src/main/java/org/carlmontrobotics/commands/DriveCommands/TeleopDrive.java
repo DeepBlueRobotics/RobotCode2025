@@ -88,7 +88,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("turn", speeds[2]);
     if(babyMode && elevator.getCurrentHeight() < 0.05 || !babyMode){ //TODO: change this to use limit switch instead when the limit switch gets properly mounted (which is probably never :( )
       //For debugging
-      DriverStation.reportWarning("UnprocessedJoyValues from RobotContainer " + fwd.getAsDouble() + ", " + str.getAsDouble() + ", " + rcw.getAsDouble() + "Processed " + speeds, false);
+      //DriverStation.reportWarning("UnprocessedJoyValues from RobotContainer " + fwd.getAsDouble() + ", " + str.getAsDouble() + ", " + rcw.getAsDouble() + "Processed " + speeds, false);
       drivetrain.drive(speeds[0], speeds[1], speeds[2]);
     }else{
       drivetrain.stop();

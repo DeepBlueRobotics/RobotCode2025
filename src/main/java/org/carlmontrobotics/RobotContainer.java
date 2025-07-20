@@ -645,7 +645,7 @@ public class RobotContainer {
             new AutonCoralOuttake(coralEffector), 
             new ParallelCommandGroup(
                 new ElevatorToPos(elevator, testl4 + testl4RaiseHeight), 
-                new AutonCoralOuttake(coralEffector)), 
+                new AutonCoralFastOutake(coralEffector)), 
             new ElevatorToPos(elevator, Elevatorc.l1),
             new ElevatorToBottomLimitSwitch(elevator)
             ));

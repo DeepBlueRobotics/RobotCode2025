@@ -31,9 +31,9 @@ public class AlignAndDealgifyAlgae extends Command {
   private AlgaeEffector algaeEffector;
   private Elevator elevator;
   private boolean topLevel;
-  private Timer alignTimer;
-  private Timer moveTimer;
-  private Timer didntseetime;
+  private Timer alignTimer = new Timer();
+  private Timer moveTimer = new Timer();
+  private Timer didntseetime = new Timer();
   private double goal;
   private boolean aligned = false;
   private double forwardErr;
@@ -108,9 +108,17 @@ public class AlignAndDealgifyAlgae extends Command {
     originalFieldOrientation = drivetrain.getFieldOriented();
     drivetrain.setFieldOriented(false);
     didntseetime.reset();
+    didntseetime.stop();
     alignTimer.reset();
+    alignTimer.stop();
     moveTimer.reset();
+    moveTimer.stop();
+    forwardErr = Double.POSITIVE_INFINITY;
+    strafeErr = Double.POSITIVE_INFINITY;
     algaeEffector.moveArm(ARM_UP_VOLTAGE);
+    completedTask = false;
+    error = false;
+    aligned = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -126,11 +134,12 @@ public class AlignAndDealgifyAlgae extends Command {
     if (aligned) {
       didntseetime.stop();
       alignTimer.stop();
+
       elevator.setGoal(goal);
       if (elevator.atGoalHeight()) {
         moveTimer.start();
         drivetrain.drive(1,0,0);
-        if (moveTimer.get() > 1) {
+        if (moveTimer.get() > 0.5) {
           algaeEffector.moveArm(ARM_DOWN_VOLTAGE);
           drivetrain.drive(-1,0,0);
           if (Math.abs(algaeEffector.getArmPos()) < 5) {
@@ -141,10 +150,6 @@ public class AlignAndDealgifyAlgae extends Command {
     }
     else {
       alignTimer.start();
-      if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance)) {
-        aligned = true;
-        drivetrain.stop();
-      }
       elevator.setGoal(0);
       if (elevator.getBottomLimitSwitch()) {
         elevator.zeroPosition();
@@ -168,6 +173,10 @@ public class AlignAndDealgifyAlgae extends Command {
       else {
         didntseetime.start();
         rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
+      }
+      if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeToleranceAlgae)) {
+        aligned = true;
+        drivetrain.drive(0,0,0);
       }
     }
     }
