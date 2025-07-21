@@ -66,6 +66,7 @@ public class TeleopDrive extends Command {
     // SmartDashboard.putNumber("normal speed const", kNormalDriveSpeed);
     prevTimestamp = Timer.getFPGATimestamp();
     SmartDashboard.putBoolean("babymode", babyMode);
+    babyModeSupplier = () -> babyMode;
     //new CoralIntake(coralEffector).until(() -> manipulatorController.getRawButtonPressed(Button.kLeftBumper.value)).schedule(); we also should not need that
   }
 
@@ -74,6 +75,10 @@ public class TeleopDrive extends Command {
   public void execute() {
     double currentTime = Timer.getFPGATimestamp();
     robotPeriod = currentTime - prevTimestamp;
+    if (!hasDriverInput()) {
+      drivetrain.drive(0,0,0);
+    }
+    else {
     double[] speeds = getRequestedSpeeds();
     // SmartDashboard.putNumber("Elapsed time", currentTime - prevTimestamp);
     prevTimestamp = currentTime;
@@ -91,12 +96,11 @@ public class TeleopDrive extends Command {
       //DriverStation.reportWarning("UnprocessedJoyValues from RobotContainer " + fwd.getAsDouble() + ", " + str.getAsDouble() + ", " + rcw.getAsDouble() + "Processed " + speeds, false);
       drivetrain.drive(speeds[0], speeds[1], speeds[2]);
     }else{
-      drivetrain.stop();
+      drivetrain.drive(0,0,0);
     }
-    babyModeSupplier = () -> babyMode;
+    }
     SmartDashboard.putBoolean("babysupplier", babyModeSupplier.getAsBoolean());
     SmartDashboard.putBoolean("babymode", babyMode);
-
   }
 
   public double[] getRequestedSpeeds() {

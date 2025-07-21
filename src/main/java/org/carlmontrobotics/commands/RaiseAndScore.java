@@ -32,6 +32,7 @@ public class RaiseAndScore extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    coralShot = false;
     shootCoral.reset();
     shootCoral.stop();
     if (thirdBranch) {

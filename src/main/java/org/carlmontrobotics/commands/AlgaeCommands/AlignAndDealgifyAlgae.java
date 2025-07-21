@@ -23,6 +23,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
 import static org.carlmontrobotics.Constants.Limelightc.*;
+
+import java.nio.file.FileSystemAlreadyExistsException;
+
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
 
 public class AlignAndDealgifyAlgae extends Command {
@@ -46,6 +49,7 @@ public class AlignAndDealgifyAlgae extends Command {
   private boolean completedTask = false;
   private boolean originalFieldOrientation;
   private boolean error = false;
+  private boolean flush = false;
 
   /** 
    * Aligns the arm to dealgify, raises arm, raises elevator, moves forward, drops arm, and moves back
@@ -91,14 +95,14 @@ public class AlignAndDealgifyAlgae extends Command {
     forwardErr = Double.POSITIVE_INFINITY;
     strafeErr = Double.POSITIVE_INFINITY;
     strafeClamp = .35; 
-    forwardClamp = 1.5; //NEED TO TUNE
+    forwardClamp = 1.5;
     strafeSpeedMultiplier = 5;
     forwardSpeedMultiplier = 0.2;
     if (topLevel) {
       goal = DELAGIFY_HIGH_POS;
    }
    else {
-     goal = DELAGIFY_LOW_POS; //TODO tune this
+     goal = DELAGIFY_LOW_POS; 
    }
   }
 
@@ -119,15 +123,17 @@ public class AlignAndDealgifyAlgae extends Command {
     completedTask = false;
     error = false;
     aligned = false;
+    flush = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     /*Code Logic
-     * Begins by raising arm up
+     * Begins by aligning to reef wall to be flush,
+     * then goes back to raise arm
      * If aligned, raise elevator to the correct position, and move in blindly
-     * After a second the robot assumes it is all good and lowers the arm and drives back until it detects that its arm is down
+     * After half a second the robot assumes it is all good and lowers the arm and drives back until it detects that its arm is down
      * Else:
      * Align usign the same logic as MoveToAlignReef but with other constants, once aligned report that it is aligned
      */
@@ -139,7 +145,7 @@ public class AlignAndDealgifyAlgae extends Command {
       if (elevator.atGoalHeight()) {
         moveTimer.start();
         drivetrain.drive(1,0,0);
-        if (moveTimer.get() > 0.5) {
+        if (moveTimer.get() > 0.7) {
           algaeEffector.moveArm(ARM_DOWN_VOLTAGE);
           drivetrain.drive(-1,0,0);
           if (Math.abs(algaeEffector.getArmPos()) < 5) {
@@ -148,14 +154,9 @@ public class AlignAndDealgifyAlgae extends Command {
         }
       }
     }
-    else {
+    else if (flush) {
+      algaeEffector.moveArm(ARM_UP_VOLTAGE);
       alignTimer.start();
-      elevator.setGoal(0);
-      if (elevator.getBottomLimitSwitch()) {
-        elevator.zeroPosition();
-      } else {
-        elevator.setMasterEncoder(elevatorOffset);
-      }
       if (ll.seesTag(REEF_LL)) {
         SmartDashboard.putBoolean("SeeTag", true);
         SmartDashboard.putNumber("CurrentPercentage", LimelightHelpers.getTA(REEF_LL)); //To figure out goal
@@ -179,7 +180,40 @@ public class AlignAndDealgifyAlgae extends Command {
         drivetrain.drive(0,0,0);
       }
     }
+    else {
+      elevator.setGoal(0);
+      if(elevator.atGoalHeight()) {
+        if (elevator.getBottomLimitSwitch()) {
+        elevator.zeroPosition();
+        } else {
+          elevator.setMasterEncoder(elevatorOffset);
+        }
+        if (ll.seesTag(REEF_LL)) {
+          rumbleController.setRumble(RumbleType.kBothRumble, 0);
+          didntseetime.reset();
+          didntseetime.stop();
+          //figure out errors
+          forwardErr = - LimelightHelpers.getTA(REEF_LL) + areaPercentageGoal;
+          strafeErr = getStrafeErrorMeters();
+          //find speeds
+          double strafeSpeed = MathUtil.clamp(strafeErr*strafeSpeedMultiplier, -strafeClamp, strafeClamp);
+          double forwardSpeed = MathUtil.clamp(forwardErr*forwardSpeedMultiplier, -forwardClamp, forwardClamp);
+          drivetrain.drive(forwardSpeed, strafeSpeed, 0);
+        }
+        else {
+          didntseetime.start();
+          rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
+          drivetrain.drive(0.2, -0.14, 0);
+        }
+      }
+      if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance)) {
+        flush = true;
+        drivetrain.drive(0,0,0);
+        strafeErr = Double.POSITIVE_INFINITY;
+        forwardErr = Double.POSITIVE_INFINITY;
+      }
     }
+  }
 
   
 
