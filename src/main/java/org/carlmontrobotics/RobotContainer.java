@@ -205,7 +205,8 @@ public class RobotContainer {
      
         RegisterAutoCommands();
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.setDefaultOption("ScoreL4center", new SequentialCommandGroup(
+        autoChooser.setDefaultOption("ScoreL4CenterCustom", new SequentialCommandGroup(
+                new WaitCommand(3),
                 new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
                 new ElevatorToPos(elevator, testl4),
                 new AutonCoralOuttake(coralEffector),
@@ -214,7 +215,9 @@ public class RobotContainer {
                     new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
                 ),
             new ElevatorToPos(elevator, Elevatorc.downPos)));
-        RegisterCustomAutos();
+            
+        //Outdated
+        //RegisterCustomAutos();
         SmartDashboard.putData("Auto Chooser", autoChooser);    
         // SmartDashboard.putData("Coral Intake", new CoralIntake(coralEffector));
         // SmartDashboard.putData("coral out", new AutonCoralOuttake(coralEffector));
@@ -265,7 +268,7 @@ public class RobotContainer {
         new POVButton(driverController, 0).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, true, driverRumble));
         new JoystickButton(driverController, Driver.y).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, driverRumble));
         new JoystickButton(driverController, Driver.a).whileTrue(new ParallelCommandGroup(
-            new InstantCommand(() -> drivetrain.stop()),
+            new InstantCommand(() -> drivetrain.drive(0,0,0)),
             new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator, coralEffector, manipulatorController)));
         //conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
         //this is for the left branch or left station (left station refers to the coral station to the left of the driver)
@@ -692,20 +695,20 @@ public class RobotContainer {
     // Command cmd = new LastResortAuto(drivetrain, -1, 4, 8);
     // System.out.println("running getAutounmousCommand");
     //return cmd;
-    // return autoChooser.getSelected();
+    return autoChooser.getSelected();
     //return new LastResortAuto(drivetrain, 1, 1, 4);
     
-    return  new SequentialCommandGroup(
-        //
-        //new LastResortAuto(drivetrain, 1, 1, 4),  
-        new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
-            new ElevatorToPos(elevator, testl4),
-            new AutonCoralOuttake(coralEffector),
-            new ParallelCommandGroup(
-                new AutonCoralFastOutake(coralEffector),
-                new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
-            ),
-        new ElevatorToPos(elevator, Elevatorc.downPos));    
+    // return  new SequentialCommandGroup(
+    //     //Wait for other robots to pass by
+    //     new WaitCommand(3),
+    //     new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble),
+    //         new ElevatorToPos(elevator, testl4),
+    //         new AutonCoralOuttake(coralEffector),
+    //         new ParallelCommandGroup(
+    //             new AutonCoralFastOutake(coralEffector),
+    //             new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
+    //         ),
+    //     new ElevatorToPos(elevator, Elevatorc.downPos));    
         
 
   }
