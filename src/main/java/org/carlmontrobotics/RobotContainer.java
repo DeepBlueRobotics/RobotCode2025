@@ -215,7 +215,7 @@ public class RobotContainer {
                     new ElevatorToPos(elevator, testl4 + testl4RaiseHeight)
                 ),
             new ElevatorToPos(elevator, Elevatorc.downPos)));
-            
+
         //Outdated
         //RegisterCustomAutos();
         SmartDashboard.putData("Auto Chooser", autoChooser);    
@@ -690,12 +690,12 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // return Commands.print("No autonomous command configured");
-    //Command cmd = autoChooser.getSelected();
-    //System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
+    Command cmd = autoChooser.getSelected();
+    System.out.println("RUNNING AUTO: "+cmd.getName()+" |||>str: "+cmd.toString());
     // Command cmd = new LastResortAuto(drivetrain, -1, 4, 8);
     // System.out.println("running getAutounmousCommand");
-    //return cmd;
-    return autoChooser.getSelected();
+    return cmd;
+    //return autoChooser.getSelected();
     //return new LastResortAuto(drivetrain, 1, 1, 4);
     
     // return  new SequentialCommandGroup(
