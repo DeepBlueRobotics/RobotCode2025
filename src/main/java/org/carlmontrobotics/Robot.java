@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
     .withPosition(0,1)
     .withSize(2,2)
     .withWidget(BuiltInWidgets.kBooleanBox);
-    compTab.addCamera("PhotonVision Stream", "SigmaCamera", "photonvision.local:1181")
+    compTab.addCamera("PhotonVision Stream", "SigmaCamera", "http://photonvision.local:1182/stream.mjpg")
     .withPosition(3,2)
     .withSize(3,3);
   }

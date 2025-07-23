@@ -638,8 +638,8 @@ public class RobotContainer {
     }
 
     new JoystickButton(manipulatorController, Button.kA.value).onTrue(new SequentialCommandGroup(new ElevatorToPos(elevator, l1), new ElevatorToBottomLimitSwitch(elevator)));
-    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new RaiseAndScore(elevator, coralEffector, false));
-    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new RaiseAndScore(elevator, coralEffector, true));
+    new JoystickButton(manipulatorController, Button.kX.value).onTrue(new ElevatorToPos(elevator, l2));
+    new JoystickButton(manipulatorController, Button.kB.value).onTrue(new ElevatorToPos(elevator, l3));
     //l4 in one button
     new JoystickButton(manipulatorController, OI.Manipulator.Y)
     .onTrue(

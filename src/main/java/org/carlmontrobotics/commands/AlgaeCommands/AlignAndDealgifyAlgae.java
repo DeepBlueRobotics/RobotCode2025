@@ -123,7 +123,7 @@ public class AlignAndDealgifyAlgae extends Command {
     completedTask = false;
     error = false;
     aligned = false;
-    flush = false;
+    //flush = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -154,8 +154,7 @@ public class AlignAndDealgifyAlgae extends Command {
         }
       }
     }
-    else if (flush) {
-      algaeEffector.moveArm(ARM_UP_VOLTAGE);
+    else {
       alignTimer.start();
       if (ll.seesTag(REEF_LL)) {
         SmartDashboard.putBoolean("SeeTag", true);
@@ -180,39 +179,39 @@ public class AlignAndDealgifyAlgae extends Command {
         drivetrain.drive(0,0,0);
       }
     }
-    else {
-      elevator.setGoal(0);
-      if(elevator.atGoalHeight()) {
-        if (elevator.getBottomLimitSwitch()) {
-        elevator.zeroPosition();
-        } else {
-          elevator.setMasterEncoder(elevatorOffset);
-        }
-        if (ll.seesTag(REEF_LL)) {
-          rumbleController.setRumble(RumbleType.kBothRumble, 0);
-          didntseetime.reset();
-          didntseetime.stop();
-          //figure out errors
-          forwardErr = - LimelightHelpers.getTA(REEF_LL) + areaPercentageGoal;
-          strafeErr = getStrafeErrorMeters();
-          //find speeds
-          double strafeSpeed = MathUtil.clamp(strafeErr*strafeSpeedMultiplier, -strafeClamp, strafeClamp);
-          double forwardSpeed = MathUtil.clamp(forwardErr*forwardSpeedMultiplier, -forwardClamp, forwardClamp);
-          drivetrain.drive(forwardSpeed, strafeSpeed, 0);
-        }
-        else {
-          didntseetime.start();
-          rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
-          drivetrain.drive(0.2, -0.14, 0);
-        }
-      }
-      if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance)) {
-        flush = true;
-        drivetrain.drive(0,0,0);
-        strafeErr = Double.POSITIVE_INFINITY;
-        forwardErr = Double.POSITIVE_INFINITY;
-      }
-    }
+    // else {
+    //   elevator.setGoal(0);
+    //   if(elevator.atGoalHeight()) {
+    //     if (elevator.getBottomLimitSwitch()) {
+    //     elevator.zeroPosition();
+    //     } else {
+    //       elevator.setMasterEncoder(elevatorOffset);
+    //     }
+    //     if (ll.seesTag(REEF_LL)) {
+    //       rumbleController.setRumble(RumbleType.kBothRumble, 0);
+    //       didntseetime.reset();
+    //       didntseetime.stop();
+    //       //figure out errors
+    //       forwardErr = - LimelightHelpers.getTA(REEF_LL) + areaPercentageGoal;
+    //       strafeErr = getStrafeErrorMeters();
+    //       //find speeds
+    //       double strafeSpeed = MathUtil.clamp(strafeErr*strafeSpeedMultiplier, -strafeClamp, strafeClamp);
+    //       double forwardSpeed = MathUtil.clamp(forwardErr*forwardSpeedMultiplier, -forwardClamp, forwardClamp);
+    //       drivetrain.drive(forwardSpeed, strafeSpeed, 0);
+    //     }
+    //     else {
+    //       didntseetime.start();
+    //       rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
+    //       drivetrain.drive(0.2, -0.14, 0);
+    //     }
+    //   }
+    //   if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance)) {
+    //     flush = true;
+    //     drivetrain.drive(0,0,0);
+    //     strafeErr = Double.POSITIVE_INFINITY;
+    //     forwardErr = Double.POSITIVE_INFINITY;
+    //   }
+    // }
   }
 
   
