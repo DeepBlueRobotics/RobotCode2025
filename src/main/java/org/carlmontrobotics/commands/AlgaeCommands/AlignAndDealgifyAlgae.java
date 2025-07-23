@@ -174,7 +174,7 @@ public class AlignAndDealgifyAlgae extends Command {
         didntseetime.start();
         rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
       }
-      if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeToleranceAlgae)) {
+      if ((Math.abs(forwardErr) <= areaTolerance) && (Math.abs(strafeErr) <= strafeToleranceAlgae)) {
         aligned = true;
         drivetrain.drive(0,0,0);
       }

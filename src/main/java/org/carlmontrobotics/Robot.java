@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private static final ShuffleboardTab compTab = Shuffleboard.getTab("Competition");
+  private final boolean atComp = true;
   //private int autoFirstPri = 0;
   @Override
   public void robotInit() {
@@ -64,6 +65,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    m_robotContainer.drivetrain.setDrivingIdleMode(true);
+    m_robotContainer.elevator.setElevatorIdleMode(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     System.out.print(m_robotContainer.getAutonomousCommand().toString());
     //autoFirstPri = Thread.currentThread().getPriority();
@@ -96,8 +99,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    if (!atComp) {
     m_robotContainer.drivetrain.setDrivingIdleMode(false);
     m_robotContainer.elevator.setElevatorIdleMode(false);
+    }
   }
 
   @Override
