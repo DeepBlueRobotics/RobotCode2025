@@ -119,11 +119,10 @@ public class AlignAndDealgifyAlgae extends Command {
     moveTimer.stop();
     forwardErr = Double.POSITIVE_INFINITY;
     strafeErr = Double.POSITIVE_INFINITY;
-    algaeEffector.moveArm(ARM_UP_VOLTAGE);
     completedTask = false;
     error = false;
     aligned = false;
-    //flush = false;
+    flush = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -137,6 +136,131 @@ public class AlignAndDealgifyAlgae extends Command {
      * Else:
      * Align usign the same logic as MoveToAlignReef but with other constants, once aligned report that it is aligned
      */
+    workingLogic();
+  }
+
+  
+
+  private double getStrafeErrorMeters() {
+    return Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
+    * ll.getDistanceToApriltagMT2(REEF_LL)+ (RIGHT_CORAL_BRANCH); //TODO will require some tuning
+  }
+
+  private boolean getAlgaePosition() {
+    int target;
+    int[] topAlgae = {7,9,11,18,20,22};
+    int[] bottomAlgae = {6,8,10,17,19,21};
+    target = (int) LimelightHelpers.getFiducialID(REEF_LL); //lil oopsie
+    for (int id : topAlgae) {
+      if (id == target) {
+        return true;
+      }
+    }
+    for (int id : bottomAlgae) {
+      if (id == target) {
+        return false;
+      }
+    }
+    DriverStation.reportError("Aligning not with reef", false);
+    error = true;
+    return false;
+
+  }
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    drivetrain.drive(0,0,0);
+    algaeEffector.stopArm();
+    rumbleController.setRumble(RumbleType.kBothRumble, 0);
+    drivetrain.setFieldOriented(originalFieldOrientation);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return (didntseetime.get() > 1.5 || completedTask || alignTimer.get() > 3 || error);
+  }
+
+  private void testingLogic() {
+    if (aligned) {
+      didntseetime.stop();
+      alignTimer.stop();
+
+      elevator.setGoal(goal);
+      if (elevator.atGoalHeight()) {
+        moveTimer.start();
+        drivetrain.drive(1,0,0);
+        if (moveTimer.get() > 0.7) {
+          algaeEffector.moveArm(ARM_DOWN_VOLTAGE);
+          drivetrain.drive(-1,0,0);
+          if (Math.abs(algaeEffector.getArmPos()) < 5) {
+            completedTask = true;
+          }
+        }
+      }
+    }
+    else if (flush) {
+      alignTimer.start();
+      if (ll.seesTag(REEF_LL)) {
+        SmartDashboard.putBoolean("SeeTag", true);
+        SmartDashboard.putNumber("CurrentPercentage", LimelightHelpers.getTA(REEF_LL)); //To figure out goal
+        rumbleController.setRumble(RumbleType.kBothRumble, 0);
+        didntseetime.reset();
+        didntseetime.stop();
+        //figure out errors
+        forwardErr = - LimelightHelpers.getTA(REEF_LL) + areaPercentageGoalForAlgae;
+        strafeErr = getStrafeErrorMeters();
+        //find speeds
+        double strafeSpeed = MathUtil.clamp(strafeErr*strafeSpeedMultiplier, -strafeClamp, strafeClamp);
+        double forwardSpeed = MathUtil.clamp(forwardErr*forwardSpeedMultiplier, -forwardClamp, forwardClamp);
+        drivetrain.drive(forwardSpeed, strafeSpeed, 0);
+      }
+      else {
+        didntseetime.start();
+        rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
+      }
+      if ((Math.abs(forwardErr) <= areaTolerance) && (Math.abs(strafeErr) <= strafeToleranceAlgae)) {
+        aligned = true;
+        drivetrain.drive(0,0,0);
+      }
+    }
+    else {
+      elevator.setGoal(0);
+      if(elevator.atGoalHeight()) {
+        if (elevator.getBottomLimitSwitch()) {
+        elevator.zeroPosition();
+        } else {
+          elevator.setMasterEncoder(elevatorOffset);
+        }
+        if (ll.seesTag(REEF_LL)) {
+          rumbleController.setRumble(RumbleType.kBothRumble, 0);
+          didntseetime.reset();
+          didntseetime.stop();
+          //figure out errors
+          forwardErr = - LimelightHelpers.getTA(REEF_LL) + areaPercentageGoal;
+          strafeErr = getStrafeErrorMeters();
+          //find speeds
+          double strafeSpeed = MathUtil.clamp(strafeErr*strafeSpeedMultiplier, -strafeClamp, strafeClamp);
+          double forwardSpeed = MathUtil.clamp(forwardErr*forwardSpeedMultiplier, -forwardClamp, forwardClamp);
+          drivetrain.drive(forwardSpeed, strafeSpeed, 0);
+        }
+        else {
+          didntseetime.start();
+          rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
+          drivetrain.drive(0.2, -0.14, 0);
+        }
+      }
+      if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance)) {
+        flush = true;
+        drivetrain.drive(0,0,0);
+        strafeErr = Double.POSITIVE_INFINITY;
+        forwardErr = Double.POSITIVE_INFINITY;
+      }
+    }
+  }
+
+  private void workingLogic() {
+    algaeEffector.moveArm(ARM_UP_VOLTAGE);
     if (aligned) {
       didntseetime.stop();
       alignTimer.stop();
@@ -179,80 +303,5 @@ public class AlignAndDealgifyAlgae extends Command {
         drivetrain.drive(0,0,0);
       }
     }
-    // else {
-    //   elevator.setGoal(0);
-    //   if(elevator.atGoalHeight()) {
-    //     if (elevator.getBottomLimitSwitch()) {
-    //     elevator.zeroPosition();
-    //     } else {
-    //       elevator.setMasterEncoder(elevatorOffset);
-    //     }
-    //     if (ll.seesTag(REEF_LL)) {
-    //       rumbleController.setRumble(RumbleType.kBothRumble, 0);
-    //       didntseetime.reset();
-    //       didntseetime.stop();
-    //       //figure out errors
-    //       forwardErr = - LimelightHelpers.getTA(REEF_LL) + areaPercentageGoal;
-    //       strafeErr = getStrafeErrorMeters();
-    //       //find speeds
-    //       double strafeSpeed = MathUtil.clamp(strafeErr*strafeSpeedMultiplier, -strafeClamp, strafeClamp);
-    //       double forwardSpeed = MathUtil.clamp(forwardErr*forwardSpeedMultiplier, -forwardClamp, forwardClamp);
-    //       drivetrain.drive(forwardSpeed, strafeSpeed, 0);
-    //     }
-    //     else {
-    //       didntseetime.start();
-    //       rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
-    //       drivetrain.drive(0.2, -0.14, 0);
-    //     }
-    //   }
-    //   if ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance)) {
-    //     flush = true;
-    //     drivetrain.drive(0,0,0);
-    //     strafeErr = Double.POSITIVE_INFINITY;
-    //     forwardErr = Double.POSITIVE_INFINITY;
-    //   }
-    // }
-  }
-
-  
-
-  private double getStrafeErrorMeters() {
-    return Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
-    * ll.getDistanceToApriltagMT2(REEF_LL)+ (RIGHT_CORAL_BRANCH); //TODO will require some tuning
-  }
-
-  private boolean getAlgaePosition() {
-    int target;
-    int[] topAlgae = {7,9,11,18,20,22};
-    int[] bottomAlgae = {6,8,10,17,19,21};
-    target = (int) LimelightHelpers.getTA(REEF_LL);
-    for (int id : topAlgae) {
-      if (id == target) {
-        return true;
-      }
-    }
-    for (int id : bottomAlgae) {
-      if (id == target) {
-        return false;
-      }
-    }
-    DriverStation.reportError("Aligning not with reef", false);
-    error = true;
-    return false;
-
-  }
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    drivetrain.drive(0,0,0);
-    algaeEffector.stopArm();
-    rumbleController.setRumble(RumbleType.kBothRumble, 0);
-    drivetrain.setFieldOriented(originalFieldOrientation);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return (didntseetime.get() > 1.5 || completedTask || alignTimer.get() > 3 || error);
   }
 }

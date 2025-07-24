@@ -43,19 +43,20 @@ public class Robot extends TimedRobot {
     .withWidget(BuiltInWidgets.kTextView);
     compTab.addBoolean("Sees Tag", () -> m_robotContainer.limelight.seesTag(REEF_LL))
     .withPosition(3, 0)
-    .withSize(1, 1)
-    .withWidget(BuiltInWidgets.kBooleanBox);
-    compTab.addBoolean("ALIGNED", () -> m_robotContainer.limelight.alignedWithReef())
-    .withPosition(2,1)
-    .withSize(2, 2)
-    .withWidget(BuiltInWidgets.kBooleanBox);
-    compTab.addBoolean("CoralIntaked", () -> m_robotContainer.coralEffector.coralSecured())
-    .withPosition(0,1)
     .withSize(2,2)
     .withWidget(BuiltInWidgets.kBooleanBox);
+    // compTab.addBoolean("ALIGNED", () -> m_robotContainer.limelight.alignedWithReef())
+    // .withPosition(2,1)
+    // .withSize(2, 2)
+    // .withWidget(BuiltInWidgets.kBooleanBox);
+    // compTab.addBoolean("CoralIntaked", () -> m_robotContainer.coralEffector.coralSecured())
+    // .withPosition(0,1)
+    // .withSize(2,2)
+    // .withWidget(BuiltInWidgets.kBooleanBox);
     compTab.addCamera("PhotonVision Stream", "SigmaCamera", "http://photonvision.local:1182/stream.mjpg")
     .withPosition(3,2)
     .withSize(3,3);
+    compTab.addCamera("Limelight Stream", "REEF", "http://limelight.local:5801");
   }
 
   @Override
