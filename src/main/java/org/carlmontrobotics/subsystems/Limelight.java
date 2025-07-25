@@ -134,4 +134,9 @@ public class Limelight extends SubsystemBase {
     }
     return false;
   }
+
+  public double strafeAmount() {
+    return Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
+    * getDistanceToApriltagMT2(REEF_LL);
+  }
 }
