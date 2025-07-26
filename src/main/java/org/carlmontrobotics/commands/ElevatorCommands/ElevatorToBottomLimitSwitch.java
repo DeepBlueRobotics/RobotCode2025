@@ -22,6 +22,7 @@ public class ElevatorToBottomLimitSwitch extends Command {
     public void execute() {
         if (elevator.getBottomLimitSwitch()) {
             elevator.zeroPosition();
+            elevator.setGoal(-0.02);
         } else {
             elevator.setMasterEncoder(elevatorOffset);
         }

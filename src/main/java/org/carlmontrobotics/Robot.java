@@ -109,8 +109,13 @@ public class Robot extends TimedRobot {
     m_robotContainer.drivetrain.setDrivingIdleMode(true);
     m_robotContainer.elevator.setElevatorIdleMode(true);
     //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
-    //For comp: remove when done
+    //For center
     m_robotContainer.drivetrain.resetFieldOrientationBackwards();
+    //for right
+    //m_robotContainer.drivetrain.resetFieldOrientationWithAngle(-120);
+    //for left
+    //m_robotContainer.drivetrain.resetFieldOrientationWithAngle(120);
+
     //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //if (m_autonomousCommand != null) {
       //Thread.currentThread().setPriority(autoFirstPri);
