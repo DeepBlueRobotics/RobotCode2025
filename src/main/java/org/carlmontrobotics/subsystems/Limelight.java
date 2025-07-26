@@ -139,4 +139,18 @@ public class Limelight extends SubsystemBase {
     return Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
     * getDistanceToApriltagMT2(REEF_LL);
   }
+
+  public boolean seesTagId(int redId, int blueId) {
+    if (seesTag(REEF_LL)) {
+      if ((int) LimelightHelpers.getFiducialID(REEF_LL) == redId || (int) LimelightHelpers.getFiducialID(REEF_LL) == blueId) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      return false;
+    }
+  }
 }

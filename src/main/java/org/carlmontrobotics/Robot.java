@@ -57,7 +57,28 @@ public class Robot extends TimedRobot {
     compTab.addCamera("PhotonVision Stream", "SigmaCamera", "http://photonvision.local:1182/stream.mjpg")
     .withPosition(3,2)
     .withSize(3,3);
-    compTab.addCamera("Limelight Stream", "REEF", "http://limelight.local:5801");
+    compTab.addCamera("Limelight Stream", "REEF", "10.1.99.12");
+    compTab.addBoolean("FC", () -> m_robotContainer.limelight.seesTagId(7,18))
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withSize(1, 1);
+    compTab.addBoolean("FR", () -> m_robotContainer.limelight.seesTagId(6,17))
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withSize(1, 1);
+    compTab.addBoolean("FL", () -> m_robotContainer.limelight.seesTagId(8,19))
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withSize(1, 1);
+    compTab.addBoolean("BR", () -> m_robotContainer.limelight.seesTagId(11,22))
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withSize(1, 1);
+    compTab.addBoolean("BC", () -> m_robotContainer.limelight.seesTagId(10,21))
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withSize(1, 1);
+    compTab.addBoolean("BL", () -> m_robotContainer.limelight.seesTagId(9,20))
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withSize(1, 1);
+    compTab.addBoolean("CoralIN", () -> m_robotContainer.coralEffector.limitSwitchSeesCoral())
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withSize(2, 2);
   }
 
   @Override
@@ -87,7 +108,9 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     m_robotContainer.drivetrain.setDrivingIdleMode(true);
     m_robotContainer.elevator.setElevatorIdleMode(true);
-    m_robotContainer.drivetrain.resetFieldOrientation();
+    //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
+    //For comp: remove when done
+    m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //if (m_autonomousCommand != null) {
       //Thread.currentThread().setPriority(autoFirstPri);
