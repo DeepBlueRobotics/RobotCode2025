@@ -845,10 +845,10 @@ public class Drivetrain extends SubsystemBase {
             Pose2d llpose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
             poseEstimator.addVisionMeasurement(llpose, Timer.getFPGATimestamp() - latencyReefLL);
         }
-        if (coralLLtagValid) { 
-            Pose2d llpose2 = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-            poseEstimator.addVisionMeasurement(llpose2, Timer.getFPGATimestamp() - latencyCoralLL);
-        }
+        // if (coralLLtagValid) { 
+        //     Pose2d llpose2 = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        //     poseEstimator.addVisionMeasurement(llpose2, Timer.getFPGATimestamp() - latencyCoralLL);
+        // }
                 
             
         // } 
