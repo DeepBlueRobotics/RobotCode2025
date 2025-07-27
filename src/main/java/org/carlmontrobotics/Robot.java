@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
     compTab.addCamera("PhotonVision Stream", "SigmaCamera", "http://photonvision.local:1182/stream.mjpg")
     .withPosition(3,2)
     .withSize(3,3);
-    compTab.addCamera("Limelight Stream", "REEF", "10.1.99.12");
+    compTab.addCamera("Limelight Stream", "REEF", "10.1.99.12:5800");
     compTab.addBoolean("FC", () -> m_robotContainer.limelight.seesTagId(7,18))
     .withWidget(BuiltInWidgets.kBooleanBox)
     .withSize(1, 1);
@@ -110,11 +110,11 @@ public class Robot extends TimedRobot {
     m_robotContainer.elevator.setElevatorIdleMode(true);
     //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //For center
-    m_robotContainer.drivetrain.resetFieldOrientationBackwards();
+    //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //for right
     //m_robotContainer.drivetrain.resetFieldOrientationWithAngle(-120);
     //for left
-    //m_robotContainer.drivetrain.resetFieldOrientationWithAngle(120);
+    m_robotContainer.drivetrain.resetFieldOrientationWithAngle(120);
 
     //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //if (m_autonomousCommand != null) {
