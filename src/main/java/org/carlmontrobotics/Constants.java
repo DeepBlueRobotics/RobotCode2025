@@ -407,15 +407,15 @@ public static final class AligningCords {
 	public static final double robotLength = 0.08483;
 	public static final double HalfRobotLength = 0.08483/2;
 	//FIXME: put the actual cords for all the tags
-	public static final Pose2d ID6_17Right = new Pose2d(
-		translatePpCords(2.087, 4.737, 60, "x", translation, HalfRobotLength),
-		translatePpCords(2.087, 4.737, 60, "y", translation, HalfRobotLength),
+	public static final Pose2d ID8_17Right = new Pose2d(
+		3.960,
+		2.800,
 		Rotation2d.fromDegrees(60)
 	);
 
-	public static final Pose2d ID6_17Left = new Pose2d(
-		translatePpCords(3.530, 2.679, 60, "x", translation, HalfRobotLength),
-		translatePpCords(3.530, 2.679, 60, "y", translation, HalfRobotLength),
+	public static final Pose2d ID8_17Left = new Pose2d(
+		3.687,
+		2.950,
 		Rotation2d.fromDegrees(60)
 	);
 
@@ -426,14 +426,14 @@ public static final class AligningCords {
 	);
 
 	public static final Pose2d ID7_18Right = new Pose2d(
-		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(546.87), 0, "x", translation, HalfRobotLength),
-		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(546.87), 0, "y", translation, HalfRobotLength),
+		3.158,
+		3.860,
 		Rotation2d.fromDegrees(0)
 	);
 
 	public static final Pose2d ID7_18Left = new Pose2d(
-		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(546.87), 0, "x", translation, HalfRobotLength),
-		translatePpCords(Units.inchesToMeters(546.87), Units.inchesToMeters(546.87), 0, "y", translation, HalfRobotLength),
+		3.158,
+		4.185,
 		Rotation2d.fromDegrees(0)
 	);
 
@@ -443,15 +443,15 @@ public static final class AligningCords {
 		Rotation2d.fromDegrees(0)
 	);
 
-	public static final Pose2d ID8_19Right = new Pose2d(
-		translatePpCords(3.539, 5.361, -60, "x", translation, HalfRobotLength),
-		translatePpCords(3.539, 5.361, -60, "y", translation, HalfRobotLength),
+	public static final Pose2d ID6_19Right = new Pose2d(
+		3.687,
+		5.094,
 		Rotation2d.fromDegrees(-60)
 	);
 
-	public static final Pose2d ID8_19Left = new Pose2d(
-		translatePpCords(3.832, 5.546, -60, "x", translation, HalfRobotLength),
-		translatePpCords(3.832, 5.546, -60, "y", translation, HalfRobotLength),
+	public static final Pose2d ID6_19Left = new Pose2d(
+		3.960,
+		5.259,
 		Rotation2d.fromDegrees(-60)
 	);
 
@@ -461,15 +461,15 @@ public static final class AligningCords {
 		Rotation2d.fromDegrees(-60)
 	);
 
-	public static final Pose2d ID9_20Right = new Pose2d(
-		translatePpCords(5.148, 5.546, -120, "x", translation, HalfRobotLength),
-		translatePpCords(5.148, 5.546, -120, "y", translation, HalfRobotLength),
+	public static final Pose2d ID11_20Right = new Pose2d(
+		5.014,
+		5.259,
 		Rotation2d.fromDegrees(-120)
 	);
 
-	public static final Pose2d ID9_20Left = new Pose2d(
-		translatePpCords(5.470, 5.361, -120, "x", translation, HalfRobotLength),
-		translatePpCords(5.470, 5.361, -120, "y", translation, HalfRobotLength),
+	public static final Pose2d ID11_20Left = new Pose2d(
+		5.299,
+		5.094,
 		Rotation2d.fromDegrees(-120)
 	);
 
@@ -480,14 +480,14 @@ public static final class AligningCords {
 	);
 
 	public static final Pose2d ID10_21Right = new Pose2d(
-		translatePpCords(6.143, 4.210, 180, "x", translation, HalfRobotLength),
-		translatePpCords(6.143, 4.210, 180, "y", translation, HalfRobotLength),
+		5.817,
+		4.190,
 		Rotation2d.fromDegrees(180)
 	);
 
 	public static final Pose2d ID10_21Left = new Pose2d(
-		translatePpCords(6.143, 3.859, 180, "x", translation, HalfRobotLength),
-		translatePpCords(6.143, 3.859, 180, "y", translation, HalfRobotLength),
+		5.817,
+		3.864,
 		Rotation2d.fromDegrees(180)
 	);
 
@@ -497,15 +497,15 @@ public static final class AligningCords {
 		Rotation2d.fromDegrees(180)
 	);
 
-	public static final Pose2d ID11_22Right = new Pose2d(
-		translatePpCords(5, 2.8, 120, "x", translation, HalfRobotLength),
-		translatePpCords(5, 2.8, 120, "y", translation, HalfRobotLength),
+	public static final Pose2d ID9_22Right = new Pose2d(
+		5.292,
+		2.965,
 		Rotation2d.fromDegrees(120)
 	);
 
-	public static final Pose2d ID11_22Left = new Pose2d(
-		translatePpCords(5.28, 2.96, 120, "x", translation, HalfRobotLength),
-		translatePpCords(5.28, 2.96, 120, "y", translation, HalfRobotLength),
+	public static final Pose2d ID9_22Left = new Pose2d(
+		5.014,
+		2.792,
 		Rotation2d.fromDegrees(120)
 	);
 

@@ -48,8 +48,8 @@ public class PathPlannerToReef extends Command {
   private final Pose2d[] searchPoses = {ID6_17Search, ID7_18Search, ID8_19Search, ID9_20Search, ID10_21Search, ID11_22Search};
   private final List<Integer> blueIDs = List.of(17,18,19,20,21,22);
   private final List<Integer> redIDs = List.of(8,7,6,11,10,9);//I cannot do a freakin array cause it has no indexing option
-  private final Pose2d[] rightPoses = {ID6_17Right, ID7_18Right, ID8_19Right, ID9_20Right, ID10_21Right, ID11_22Right};
-  private final Pose2d[] leftPoses = {ID6_17Left, ID7_18Left, ID8_19Left, ID9_20Left, ID10_21Left, ID11_22Left};
+  private final Pose2d[] rightPoses = {ID8_17Right, ID7_18Right, ID6_19Right, ID11_20Right, ID10_21Right, ID9_22Right};
+  private final Pose2d[] leftPoses = {ID8_17Left, ID7_18Left, ID6_19Left, ID11_20Left, ID10_21Left, ID9_22Left};
   private Pose2d targetLocation;
   private int targetID;
   private boolean rightBranch;
