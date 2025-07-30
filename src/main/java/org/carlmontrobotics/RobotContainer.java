@@ -642,14 +642,14 @@ public class RobotContainer {
         manipulatorController
       ));
 
-      coralEffector.setDefaultCommand(new CoralIntake(coralEffector));
+      //coralEffector.setDefaultCommand(new CoralIntake(coralEffector));
     //   SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     // SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
   }
 
   private void setBindingsManipulator() {
     new JoystickButton(manipulatorController, Button.kRightBumper.value)
-    // .whileFalse(new CoralIntake(coralEffector)) not needed cause default command
+        .whileFalse(new CoralIntake(coralEffector)) //1not needed cause default command
     //.whileFalse(new ConditionalCommand(coralEffector.setMotorSpeed(0.1), new InstantCommand(), coralEffector.distanceSensorSeesCoralSupplier()))
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)

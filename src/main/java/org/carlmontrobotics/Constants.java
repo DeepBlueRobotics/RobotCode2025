@@ -576,7 +576,7 @@ public static final class AligningCords {
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
 
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
-		public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0.2 ; 
+		public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0.1 ; 
         public final static double KP = 0.1; 
         public final static double KI = 0;
         public final static double KD = 0;
