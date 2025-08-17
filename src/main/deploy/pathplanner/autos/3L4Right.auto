@@ -51,7 +51,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "FR1RS2"
+                        "pathName": "FR1RS1"
                       }
                     },
                     {
@@ -63,7 +63,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RS2FR"
+                        "pathName": "RS1FR"
                       }
                     },
                     {
@@ -75,7 +75,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "FR0RS3"
+                        "pathName": "FR0RS1"
                       }
                     },
                     {
