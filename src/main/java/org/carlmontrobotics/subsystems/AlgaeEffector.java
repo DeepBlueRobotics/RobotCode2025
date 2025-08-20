@@ -67,7 +67,7 @@ public class AlgaeEffector extends SubsystemBase {
         armMotorConfig.inverted(true);
         armMotorConfig.absoluteEncoder.zeroOffset(ARM_ZERO_ROT);
         armMotorConfig.absoluteEncoder.zeroCentered(true);
-        armMotorConfig.absoluteEncoder.inverted(false);
+        armMotorConfig.absoluteEncoder.inverted(true);
         armMotorConfig.encoder.positionConversionFactor(ROTATION_TO_DEG * ARM_CHAIN_GEARING);
         armMotorConfig.absoluteEncoder.positionConversionFactor(ROTATION_TO_DEG * ARM_CHAIN_GEARING);
         armMotorConfig.absoluteEncoder.velocityConversionFactor(6 * ARM_CHAIN_GEARING); // 6 is rotations/min to degrees/second
@@ -106,7 +106,8 @@ public class AlgaeEffector extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Velocity", armAbsoluteEncoder.getVelocity());        
+        SmartDashboard.putNumber("Arm Velocity", armAbsoluteEncoder.getVelocity());  
+        SmartDashboard.putNumber("Arm Pos", getArmPos());      
         }
         
     public void initSendable(SendableBuilder builder){

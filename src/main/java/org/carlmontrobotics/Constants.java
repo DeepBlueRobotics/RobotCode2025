@@ -10,9 +10,7 @@
 
 package org.carlmontrobotics;
 
-import edu.wpi.first.wpilibj.StadiaController.Button;
-
-import edu.wpi.first.wpilibj.StadiaController.Button;
+import static org.carlmontrobotics.Config.CONFIG;
 
 import org.carlmontrobotics.lib199.swerve.SwerveConfig;
 
@@ -21,40 +19,16 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import static org.carlmontrobotics.Config.CONFIG;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.StadiaController.Button;
-
-import edu.wpi.first.wpilibj.StadiaController.Button;
-
-import org.carlmontrobotics.lib199.swerve.SwerveConfig;
-
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.path.PathConstraints;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import static org.carlmontrobotics.Config.CONFIG;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.StadiaController.Button;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-//import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.Encoder;
 
 
 /**
@@ -150,7 +124,7 @@ public final class Constants {
 		// modules
 		public static final double swerveRadius = Math.sqrt(Math.pow(wheelBase / 2, 2) + Math.pow(trackWidth / 2, 2));
 		// The gearing reduction from the drive motor controller to the wheels
-		// Gearing for the Swerve Modules is 6.75 : 1e
+		// Gearing for the Swerve Modules is 6.75 : 1
 		public static final double driveGearing = 6.75;
 		// Turn motor shaft to "module shaft"
 		public static final double turnGearing = 150.0 / 7;
@@ -165,7 +139,10 @@ public final class Constants {
 		// moment of inertia, kg/mm
 		// calculated by integral of mass * radius^2 for every point of the robot
 		// easy way? just do total mass * radius^2
+		// This seems to be relying that all the mass is located in the corners
 		public static final double MOI = ROBOTMASS_KG * swerveRadius * swerveRadius;
+		//This spreads it out more evenly
+		public static final double betterMOI = 1/12.0 * ROBOTMASS_KG * (wheelBase*wheelBase + trackWidth*trackWidth) * 0.00064516; //conversion factor from kg per square inch to kg per metersquared
 
 		public static final double NEOFreeSpeed = 5676 * (2 * Math.PI) / 60; // radians/s
 		// Angular speed to translational speed --> v = omega * r / gearing
@@ -243,7 +220,7 @@ public final class Constants {
 		public static final double[] kForwardAccels = { 0, 0, 0, 0 };//{0.31958, 0.33557, 0.70264, 0.46644};    //{ 0, 0, 0, 0 };// volts per m/s^2
 		public static final double[] kBackwardAccels = kForwardAccels;
 
-		public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
+		public static final double autoMaxSpeedMps = 0.6 * 4.4; // Meters / second
 		public static final double autoMaxAccelMps2 = mu * g; // Meters / seconds^2
 		public static final double autoMaxVolt = 10.0;
 		public static final double autoMaxAmps = 40.0; // For Drivetrain voltage constraint in RobotPath.java
@@ -329,7 +306,7 @@ public final class Constants {
 					// Mass mass, kg
 					ROBOTMASS_KG,
 					// double Moment Oof Inertia, kg/mm
-					MOI, // ==1
+					betterMOI, // ==1
 					// ModuleConfig moduleConfig,
 					new ModuleConfig(
 							// double wheelRadiusMeters,
@@ -340,11 +317,13 @@ public final class Constants {
 							mu,
 							// DCMotor driveMotor,
 							DCMotor.getNEO(1),
+							DCMotor.getNEO(1),
 							// double driveGearing,
 							driveGearing,
 							// double driveCurrentLimit,
 							autoMaxAmps,
 							// int numMotors
+							1),
 							1),
 					// Translation2d... moduleOffsets
 					new Translation2d(wheelBase / 2, trackWidth / 2),
@@ -577,7 +556,7 @@ public static final class AligningCords {
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
 
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
-		public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0.2 ; 
+		public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0.1 ; 
         public final static double KP = 0.1; 
         public final static double KI = 0;
         public final static double KD = 0;

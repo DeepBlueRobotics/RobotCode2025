@@ -268,9 +268,9 @@ public class RobotContainer {
         new POVButton(driverController, 180).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, false, driverRumble));
         new POVButton(driverController, 0).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, true, driverRumble));
         new JoystickButton(driverController, Driver.y).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, driverRumble));
-        new JoystickButton(driverController, Driver.a).whileTrue(new ParallelCommandGroup(
-            new InstantCommand(() -> drivetrain.drive(0,0,0)),
-            new TeleopDrive(drivetrain, ()->0, ()->0, ()->0, ()->true, elevator, coralEffector, manipulatorController)));
+        new JoystickButton(driverController, Driver.a).whileTrue(
+            new InstantCommand(() -> drivetrain.drive(0,0,0)));
+            //Teleop drive thing might a bad idea 
         //conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
         //this is for the left branch or left station (left station refers to the coral station to the left of the driver)
         // new JoystickButton(driverController, Driver.y)
@@ -642,14 +642,14 @@ public class RobotContainer {
         manipulatorController
       ));
 
-      coralEffector.setDefaultCommand(new CoralIntake(coralEffector));
+      //coralEffector.setDefaultCommand(new CoralIntake(coralEffector));
     //   SmartDashboard.putString("Camera Video Stream", "http://wpilibpi.local:1181/stream.mjpg");
     // SmartDashboard.putString("Camera Settings page", "http://wpilibpi.local");
   }
 
   private void setBindingsManipulator() {
     new JoystickButton(manipulatorController, Button.kRightBumper.value)
-    // .whileFalse(new CoralIntake(coralEffector)) not needed cause default command
+        .whileFalse(new CoralIntake(coralEffector)) //1not needed cause default command
     //.whileFalse(new ConditionalCommand(coralEffector.setMotorSpeed(0.1), new InstantCommand(), coralEffector.distanceSensorSeesCoralSupplier()))
     .whileTrue(new CoralIntakeManual(coralEffector));
     new JoystickButton(manipulatorController, Button.kLeftBumper.value)
