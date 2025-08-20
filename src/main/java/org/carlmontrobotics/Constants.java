@@ -317,13 +317,11 @@ public final class Constants {
 							mu,
 							// DCMotor driveMotor,
 							DCMotor.getNEO(1),
-							DCMotor.getNEO(1),
 							// double driveGearing,
 							driveGearing,
 							// double driveCurrentLimit,
 							autoMaxAmps,
 							// int numMotors
-							1),
 							1),
 					// Translation2d... moduleOffsets
 					new Translation2d(wheelBase / 2, trackWidth / 2),
