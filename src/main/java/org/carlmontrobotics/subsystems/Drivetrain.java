@@ -141,13 +141,13 @@ public class Drivetrain extends SubsystemBase {
     private final Field2d odometryField = new Field2d();
     private final Field2d poseWithLimelightField = new Field2d();
 
-    private double ppKpDrive = 5;
-    private double ppKiDrive = 0;
-    private double ppKdDrive = 0;
+    public double ppKpDrive = 5.0;
+    public double ppKiDrive = 0;
+    public double ppKdDrive = 0;
 
-    private double ppKpTurn = 5;
-    private double ppKiTurn = 0;
-    private double ppKdTurn = 0;
+    public double ppKpTurn = 3;
+    public double ppKiTurn = 0;
+    public double ppKdTurn = 0;
 
     private double veryImportantCounter = 0;
 
@@ -623,9 +623,9 @@ public class Drivetrain extends SubsystemBase {
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
                         //new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
                         //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
-                        new PIDConstants(ppKpDrive
+                        new PIDConstants(4
                         , ppKiDrive, ppKdDrive), // Translation PID constants FIXME do these need to be accurate?
-                        new PIDConstants(ppKpTurn, ppKiTurn, ppKdTurn)
+                        new PIDConstants(0.1, ppKiTurn, ppKdTurn)
                 ),
                 //RobotConfig robotConfig,
                 config, // The robot configuration
