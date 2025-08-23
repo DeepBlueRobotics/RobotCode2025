@@ -142,7 +142,7 @@ public final class Constants {
 		// This seems to be relying that all the mass is located in the corners
 		public static final double MOI = ROBOTMASS_KG * swerveRadius * swerveRadius;
 		//This spreads it out more evenly
-		public static final double betterMOI = 1/12.0 * ROBOTMASS_KG * (wheelBase*wheelBase + trackWidth*trackWidth) * 0.00064516; //conversion factor from kg per square inch to kg per metersquared
+		public static final double betterMOI = 1/12.0 * ROBOTMASS_KG * (wheelBase*wheelBase + trackWidth*trackWidth); // not needed any more since using meters now* 0.00064516; //conversion factor from kg per square inch to kg per metersquared
 
 		public static final double NEOFreeSpeed = 5676 * (2 * Math.PI) / 60; // radians/s
 		// Angular speed to translational speed --> v = omega * r / gearing
