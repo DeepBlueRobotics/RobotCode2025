@@ -625,7 +625,7 @@ public class Drivetrain extends SubsystemBase {
                         //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
                         new PIDConstants(4
                         , ppKiDrive, ppKdDrive), // Translation PID constants FIXME do these need to be accurate?
-                        new PIDConstants(0.1, ppKiTurn, ppKdTurn)
+                        new PIDConstants(1, ppKiTurn, ppKdTurn)
                 ),
                 //RobotConfig robotConfig,
                 config, // The robot configuration

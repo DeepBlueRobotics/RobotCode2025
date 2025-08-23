@@ -258,45 +258,46 @@ public class RobotContainer {
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
             .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
             .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
-        new JoystickButton(driverController, Button.kB.value).onTrue(new SequentialCommandGroup(
-            new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
-                driverRumble)));
+        new JoystickButton(driverController, Button.kB.value).onTrue(new SequentialCommandGroup());
+        
+            //new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
+            //    driverRumble)));
         new JoystickButton(driverController, Button.kX.value).onTrue(new SequentialCommandGroup(
             new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with left branch
                 driverRumble)));
 
         new POVButton(driverController, 180).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, false, driverRumble));
         new POVButton(driverController, 0).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, true, driverRumble));
-        new JoystickButton(driverController, Driver.y).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, driverRumble));
-        new JoystickButton(driverController, Driver.a).whileTrue(
-            new InstantCommand(() -> drivetrain.drive(0,0,0)));
-            //Teleop drive thing might a bad idea 
-        //conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
-        //this is for the left branch or left station (left station refers to the coral station to the left of the driver)
-        // new JoystickButton(driverController, Driver.y)
-        //     .onTrue(new ConditionalCommand(
-        //         new PathPlannerToReef(drivetrain, limelight, false, 
-        //         () -> driverController.getRawAxis(0), 
-        //         () -> driverController.getRawAxis(1),
-        //         ()-> driverController.getRawAxis(5)), 
-        //         new GoToCoralStation(drivetrain, false,
-        //         () -> driverController.getRawAxis(0),
-        //         () -> driverController.getRawAxis(1),
-        //         ()-> driverController.getRawAxis(5)), 
-        //         () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
+        // new JoystickButton(driverController, Driver.y).onTrue(new AlignAndDealgifyAlgae(drivetrain, limelight, algaeEffector, elevator, driverRumble));
+        // new JoystickButton(driverController, Driver.a).whileTrue(
+        //     new InstantCommand(() -> drivetrain.drive(0,0,0)));
+        //     //Teleop drive thing might a bad idea 
+        // conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
+        // this is for the left branch or left station (left station refers to the coral station to the left of the driver)
+        new JoystickButton(driverController, Driver.y)
+            .onTrue(new ConditionalCommand(
+                new PathPlannerToReef(drivetrain, limelight, false, 
+                () -> driverController.getRawAxis(0), 
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                new GoToCoralStation(drivetrain, false,
+                () -> driverController.getRawAxis(0),
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
                 
-        //this is for the right branch or right station
-        // new JoystickButton(driverController, Driver.a)
-        //     .onTrue(new ConditionalCommand(
-        //         new PathPlannerToReef(drivetrain, limelight, true, 
-        //         () -> driverController.getRawAxis(0), 
-        //         () -> driverController.getRawAxis(1),
-        //         ()-> driverController.getRawAxis(5)), 
-        //         new GoToCoralStation(drivetrain, true,
-        //         () -> driverController.getRawAxis(0),
-        //         () -> driverController.getRawAxis(1),
-        //         ()-> driverController.getRawAxis(5)), 
-        //         () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
+        // this is for the right branch or right station
+        new JoystickButton(driverController, Driver.a)
+            .onTrue(new ConditionalCommand(
+                new PathPlannerToReef(drivetrain, limelight, true, 
+                () -> driverController.getRawAxis(0), 
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                new GoToCoralStation(drivetrain, true,
+                () -> driverController.getRawAxis(0),
+                () -> driverController.getRawAxis(1),
+                ()-> driverController.getRawAxis(5)), 
+                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
         
     }
    

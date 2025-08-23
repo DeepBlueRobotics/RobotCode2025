@@ -339,7 +339,7 @@ public final class Constants {
 			// 0.8 // error spike threshold, in meters, that will cause the path to be
 			// replanned
 			// );
-			public static final PathConstraints pathConstraints = new PathConstraints(3.5, 2.5, 2*Math.PI-0.5, 2*Math.PI-0.5); // The constraints for this path. If using a differential drivetrain, the
+			public static final PathConstraints pathConstraints = new PathConstraints(3.5, 2.5, Math.PI-0.5, Math.PI-0.5); // The constraints for this path. If using a differential drivetrain, the
 									// angular constraints have no effect.
 		}
 	}

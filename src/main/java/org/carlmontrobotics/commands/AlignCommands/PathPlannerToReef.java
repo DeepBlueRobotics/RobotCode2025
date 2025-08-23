@@ -13,6 +13,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import org.carlmontrobotics.Constants;
+import org.carlmontrobotics.Constants.Drivetrainc;
 import org.carlmontrobotics.subsystems.Drivetrain;
 
 import org.carlmontrobotics.subsystems.Limelight;
@@ -57,7 +58,7 @@ public class PathPlannerToReef extends Command {
   private DoubleSupplier yStick;
   private DoubleSupplier rStick;
   private Command currentPath; 
-  private PathConstraints constraints = new PathConstraints(3.5, 2.5, 2*Math.PI-0.5, 2*Math.PI-0.5); //TODO tune this for fastest possible alignment
+  private PathConstraints constraints = Drivetrainc.Autoc.pathConstraints; //TODO tune this for fastest possible alignment
 
   public PathPlannerToReef(Drivetrain drivetrain, Limelight limelight, boolean rightBranch,
     DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
