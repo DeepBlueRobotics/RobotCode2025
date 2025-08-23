@@ -1099,9 +1099,9 @@ public class Drivetrain extends SubsystemBase {
         sysIdTab.add(name, sysIdQuasistatic(dir)).withSize(2, 1);
     }
 
-    void sysidtabshorthand_dyn(String name, SysIdRoutine.Direction dir) {
-        sysIdTab.add(name, sysIdDynamic(dir)).withSize(2, 1);
-    }
+    // void sysidtabshorthand_dyn(String name, SysIdRoutine.Direction dir) {
+    //     sysIdTab.add(name, sysIdDynamic(dir)).withSize(2, 1);
+    // }
 
     private void sysIdSetup() {
         // SysId Setup
@@ -1149,10 +1149,10 @@ public class Drivetrain extends SubsystemBase {
              * ));
              */
 
-            sysidtabshorthand_qsi("Quasistatic Forward", SysIdRoutine.Direction.kForward);
-            sysidtabshorthand_qsi("Quasistatic Backward", SysIdRoutine.Direction.kReverse);
-            sysidtabshorthand_dyn("Dynamic Forward", SysIdRoutine.Direction.kForward);
-            sysidtabshorthand_dyn("Dynamic Backward", SysIdRoutine.Direction.kReverse);
+            // sysidtabshorthand_qsi("Quasistatic Forward", SysIdRoutine.Direction.kForward);
+            // sysidtabshorthand_qsi("Quasistatic Backward", SysIdRoutine.Direction.kReverse);
+            // sysidtabshorthand_dyn("Dynamic Forward", SysIdRoutine.Direction.kForward);
+            // sysidtabshorthand_dyn("Dynamic Backward", SysIdRoutine.Direction.kReverse);
 
 
             sysIdTab
@@ -1328,48 +1328,48 @@ public class Drivetrain extends SubsystemBase {
      * @param direction SysIdRoutine.Direction.kForward or kReverse
      * @return Command to run sysID
      */
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return new SelectCommand<>(
-                Map.ofEntries(
-                        // DRIVE
-                        Map.entry(SysIdTest.FRONT_DRIVE, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running front only dynamic forward")
-                                        : new PrintCommand("Running front only dynamic backward"),
-                                frontOnlyDriveRoutine.dynamic(direction))),
-                        Map.entry(SysIdTest.BACK_DRIVE, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running back only dynamic forward")
-                                        : new PrintCommand("Running back only dynamic backward"),
-                                backOnlyDriveRoutine.dynamic(direction))),
-                        Map.entry(SysIdTest.ALL_DRIVE, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running all wheels dynamic forward")
-                                        : new PrintCommand("Running all wheels dynamic backward"),
-                                allWheelsDriveRoutine.dynamic(direction))),
-                        // ROTATE
-                        Map.entry(SysIdTest.FL_ROT, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running FL rotate dynamic forward")
-                                        : new PrintCommand("Running FL rotate dynamic backward"),
-                                rotateRoutine[0].dynamic(direction))),
-                        Map.entry(SysIdTest.FR_ROT, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running FR rotate dynamic forward")
-                                        : new PrintCommand("Running FR rotate dynamic backward"),
-                                rotateRoutine[1].dynamic(direction))),
-                        Map.entry(SysIdTest.BL_ROT, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running BL rotate dynamic forward")
-                                        : new PrintCommand("Running BL rotate dynamic backward"),
-                                rotateRoutine[2].dynamic(direction))),
-                        Map.entry(SysIdTest.BR_ROT, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running BR rotate dynamic forward")
-                                        : new PrintCommand("Running BR rotate dynamic backward"),
-                                rotateRoutine[3].dynamic(direction)))),
-                this::selector);
-    }
+    // public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    //     return new SelectCommand<>(
+    //             Map.ofEntries(
+    //                     // DRIVE
+    //                     Map.entry(SysIdTest.FRONT_DRIVE, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running front only dynamic forward")
+    //                                     : new PrintCommand("Running front only dynamic backward"),
+    //                             frontOnlyDriveRoutine.dynamic(direction))),
+    //                     Map.entry(SysIdTest.BACK_DRIVE, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running back only dynamic forward")
+    //                                     : new PrintCommand("Running back only dynamic backward"),
+    //                             backOnlyDriveRoutine.dynamic(direction))),
+    //                     Map.entry(SysIdTest.ALL_DRIVE, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running all wheels dynamic forward")
+    //                                     : new PrintCommand("Running all wheels dynamic backward"),
+    //                             allWheelsDriveRoutine.dynamic(direction))),
+    //                     // ROTATE
+    //                     Map.entry(SysIdTest.FL_ROT, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running FL rotate dynamic forward")
+    //                                     : new PrintCommand("Running FL rotate dynamic backward"),
+    //                             rotateRoutine[0].dynamic(direction))),
+    //                     Map.entry(SysIdTest.FR_ROT, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running FR rotate dynamic forward")
+    //                                     : new PrintCommand("Running FR rotate dynamic backward"),
+    //                             rotateRoutine[1].dynamic(direction))),
+    //                     Map.entry(SysIdTest.BL_ROT, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running BL rotate dynamic forward")
+    //                                     : new PrintCommand("Running BL rotate dynamic backward"),
+    //                             rotateRoutine[2].dynamic(direction))),
+    //                     Map.entry(SysIdTest.BR_ROT, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running BR rotate dynamic forward")
+    //                                     : new PrintCommand("Running BR rotate dynamic backward"),
+    //                             rotateRoutine[3].dynamic(direction)))),
+    //             this::selector);
+    // }
 
     /**
      * Sets all SwerveModules to point in a certain angle

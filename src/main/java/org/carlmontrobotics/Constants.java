@@ -118,8 +118,8 @@ public final class Constants {
 
 	public static final class Drivetrainc {
 		// #region Subsystem Constants
-		public static final double wheelBase = 24.75; //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
-		public static final double trackWidth = 24.75;//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
+		public static final double wheelBase = Units.inchesToMeters(24.75); //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
+		public static final double trackWidth = Units.inchesToMeters(24.75);//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
 		// "swerveRadius" is the distance from the center of the robot to one of the
 		// modules
 		public static final double swerveRadius = Math.sqrt(Math.pow(wheelBase / 2, 2) + Math.pow(trackWidth / 2, 2));
@@ -220,7 +220,7 @@ public final class Constants {
 		public static final double[] kForwardAccels = { 0, 0, 0, 0 };//{0.31958, 0.33557, 0.70264, 0.46644};    //{ 0, 0, 0, 0 };// volts per m/s^2
 		public static final double[] kBackwardAccels = kForwardAccels;
 
-		public static final double autoMaxSpeedMps = 0.6 * 4.4; // Meters / second
+		public static final double autoMaxSpeedMps = 4;//0.6 * 4.4; // Meters / second
 		public static final double autoMaxAccelMps2 = mu * g; // Meters / seconds^2
 		public static final double autoMaxVolt = 10.0;
 		public static final double autoMaxAmps = 40.0; // For Drivetrain voltage constraint in RobotPath.java
@@ -339,8 +339,7 @@ public final class Constants {
 			// 0.8 // error spike threshold, in meters, that will cause the path to be
 			// replanned
 			// );
-			public static final PathConstraints pathConstraints = new PathConstraints(1, 1, 2 * Math.PI,
-					2 * Math.PI); // The constraints for this path. If using a differential drivetrain, the
+			public static final PathConstraints pathConstraints = new PathConstraints(3.5, 2.5, 2*Math.PI-0.5, 2*Math.PI-0.5); // The constraints for this path. If using a differential drivetrain, the
 									// angular constraints have no effect.
 		}
 	}
