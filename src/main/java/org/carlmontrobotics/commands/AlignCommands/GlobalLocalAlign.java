@@ -6,47 +6,51 @@ package org.carlmontrobotics.commands.AlignCommands;
 
 
 
-import static org.carlmontrobotics.Constants.Elevatorc.testl4;
-import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
-import static org.carlmontrobotics.Constants.OI.Driver.b;
-import static org.carlmontrobotics.Constants.Limelightc.*;
-
-import java.lang.annotation.ElementType;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.carlmontrobotics.Constants.Drivetrainc;
-import org.carlmontrobotics.subsystems.CoralEffector;
-import org.carlmontrobotics.subsystems.Drivetrain;
-import org.carlmontrobotics.subsystems.Elevator;
-import org.carlmontrobotics.subsystems.Limelight;
-import org.carlmontrobotics.subsystems.LimelightHelpers;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.FlippingUtil;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-
 import static org.carlmontrobotics.Constants.AligningCords.ID10_21Search;
 import static org.carlmontrobotics.Constants.AligningCords.ID11_22Search;
 import static org.carlmontrobotics.Constants.AligningCords.ID6_17Search;
 import static org.carlmontrobotics.Constants.AligningCords.ID7_18Search;
 import static org.carlmontrobotics.Constants.AligningCords.ID8_19Search;
 import static org.carlmontrobotics.Constants.AligningCords.ID9_20Search;
-import static org.carlmontrobotics.Constants.Drivetrainc.*;
+import static org.carlmontrobotics.Constants.Drivetrainc.positionTolerance;
+import static org.carlmontrobotics.Constants.Drivetrainc.thetaPIDController;
+import static org.carlmontrobotics.Constants.Drivetrainc.velocityTolerance;
+import static org.carlmontrobotics.Constants.Elevatorc.testl4;
+import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
+import static org.carlmontrobotics.Constants.Limelightc.LEFT_CORAL_BRANCH;
+import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
+import static org.carlmontrobotics.Constants.Limelightc.RIGHT_CORAL_BRANCH;
+import static org.carlmontrobotics.Constants.Limelightc.areaPercentageGoal;
+import static org.carlmontrobotics.Constants.Limelightc.areaTolerance;
+import static org.carlmontrobotics.Constants.Limelightc.strafeTolerance;
+
+import java.util.List;
+
+import org.carlmontrobotics.Constants.Drivetrainc;
+import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
+import org.carlmontrobotics.subsystems.CoralEffector;
+import org.carlmontrobotics.subsystems.Drivetrain;
+import org.carlmontrobotics.subsystems.Elevator;
+import org.carlmontrobotics.subsystems.Limelight;
+import org.carlmontrobotics.subsystems.LimelightHelpers;
+
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
+import com.pathplanner.lib.util.FlippingUtil;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class GlobalLocalAlign extends Command {
@@ -77,10 +81,14 @@ public class GlobalLocalAlign extends Command {
   boolean scoredCoral;
   int targetID;
   private State currentState;
-  private Command currentPath;
+  private PoseEstimator poseEstimator = dt.getPoseEstimator();
+  //private Command currentPath;
   private PathConstraints constraints = Drivetrainc.Autoc.pathConstraints;
   private Timer scoringTimer;
   private Timer scoringTimerFinalL4;
+  private PathPlannerTrajectory currentTrajectory;  // the path you want to follow   
+  Timer pathTimer = new Timer();
+  private boolean pathCompleted = false;
   //alignment vars
   private Timer didntseetime;
   private Timer timeoutTimer;
@@ -212,9 +220,6 @@ public class GlobalLocalAlign extends Command {
      * Should stop any path from running, any drivetrain from running, and any timers
      */
     dt.setFieldOriented(originalFieldOrientation);
-    if (currentPath != null) {
-      currentPath.cancel();
-    }
     dt.drive(0,0,0);
   }
 
@@ -231,7 +236,7 @@ public class GlobalLocalAlign extends Command {
    */
   private void resetVars() {
     currentState = State.NULL;
-    currentPath = null;
+    currentTrajectory = null;
     scoredCoral = false;
     didntseetime.reset();
     didntseetime.stop();
@@ -241,9 +246,12 @@ public class GlobalLocalAlign extends Command {
     scoringTimer.reset();
     scoringTimerFinalL4.stop();
     scoringTimerFinalL4.reset();
+    pathTimer.reset();
+    pathTimer.stop();
     strafeErr = Double.POSITIVE_INFINITY;
     forwardErr = Double.POSITIVE_INFINITY;
     targetID = -1;
+    pathCompleted = false;
   }
 
   /**
@@ -319,7 +327,7 @@ public class GlobalLocalAlign extends Command {
         }
         break;
       case 1: // global
-        if (currentPath != null && currentPath.isFinished()) {
+        if (currentTrajectory != null && false) {
           currentState = currentState.nextState();
         }
         break;
@@ -394,10 +402,10 @@ public class GlobalLocalAlign extends Command {
      */
     double goodDistanceMeters = 3; //maybe 4 or even 5
     if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      return dt.getPoseEstimator().getEstimatedPosition().getTranslation().getDistance(new Translation2d(4.500,4.000)) < goodDistanceMeters;
+      return poseEstimator.getEstimatedPosition().getTranslation().getDistance(new Translation2d(4.500,4.000)) < goodDistanceMeters;
     }
     else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-      return dt.getPoseEstimator().getEstimatedPosition().getTranslation().getDistance(new Translation2d(13.050,4.000)) < goodDistanceMeters;
+      return poseEstimator.getEstimatedPosition().getTranslation().getDistance(new Translation2d(13.050,4.000)) < goodDistanceMeters;
     }
     else {
       DriverStation.reportError("ERM no alliance", null);
@@ -520,7 +528,7 @@ public class GlobalLocalAlign extends Command {
     rotationPID.enableContinuousInput(-180, 180);
     rotationPID.setSetpoint(MathUtil.inputModulus(getAngleToReefWall(), -180, 180));
     rotationPID.setTolerance(positionTolerance[2], velocityTolerance[2]);
-    dt.drive(0, 0, rotationPID.calculate(dt.getPoseEstimator().getEstimatedPosition().getRotation().getDegrees()));
+    dt.drive(0, 0, rotationPID.calculate(poseEstimator.getEstimatedPosition().getRotation().getDegrees()));
   }
   
   private double getAngleToReefWall() {
@@ -560,13 +568,13 @@ public class GlobalLocalAlign extends Command {
     }
     else {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        int sector = getSector(dt.getPoseEstimator().getEstimatedPosition().getX(), 
-                              dt.getPoseEstimator().getEstimatedPosition().getY(), 4.5, 4.0, 150);
+        int sector = getSector(poseEstimator.getEstimatedPosition().getX(), 
+                              poseEstimator.getEstimatedPosition().getY(), 4.5, 4.0, 150);
         return sector + 17;
       }
       else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
-        int sector = getSector(dt.getPoseEstimator().getEstimatedPosition().getX(), 
-                              dt.getPoseEstimator().getEstimatedPosition().getY(), 13.05, 4.0, 30);
+        int sector = getSector(poseEstimator.getEstimatedPosition().getX(), 
+                              poseEstimator.getEstimatedPosition().getY(), 13.05, 4.0, 30);
         return sector + 6;
       }
       else {
@@ -595,19 +603,53 @@ public class GlobalLocalAlign extends Command {
    * 
    */
   private void runGlobalSearchAlignment() {
-    if (currentPath == null) {
+    if (currentTrajectory == null) {
       Pose2d targetLocation = calculateSearchPose();
       PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
-        List.of(dt.getPoseEstimator().getEstimatedPosition(), targetLocation)),
+        List.of(poseEstimator.getEstimatedPosition(), targetLocation)),
         constraints, 
         null, 
         new GoalEndState(0, targetLocation.getRotation()));
       path.preventFlipping = true;
-      currentPath = AutoBuilder.followPath(path); 
-      currentPath.schedule();
+      // Create a trajectory manually
+      currentTrajectory = path.generateTrajectory(dt.getSpeeds(), poseEstimator.getEstimatedPosition().getRotation(), Autoc.robotConfig);
+      pathTimer.start();; // start time for trajectory tracking
     }
+    followTrajectoryManually();
+    checkCompletionOfPath();
   }
+  private void checkCompletionOfPath() {
+    Pose2d endPose = currentTrajectory.getEndState().pose;
+    Pose2d currentPose = poseEstimator.getEstimatedPosition();
+    Translation2d delta = endPose.getTranslation().minus(currentPose.getTranslation());
+    double distanceToGoal = delta.getNorm(); // meters
 
+    // Rotation difference
+    double angleDifference = endPose.getRotation().minus(currentPose.getRotation()).getRadians();
+    double positionTolerance = 0.05; // meters
+    double angleTolerance = 0.05; // radians (~3 degrees)
+
+    pathCompleted = (distanceToGoal < positionTolerance) && (Math.abs(angleDifference) < angleTolerance);
+  }
+  
+  private void followTrajectoryManually() {
+    double t = pathTimer.get(); // time since starting path
+    PathPlannerTrajectoryState state = currentTrajectory.sample(t);
+    Pose2d currentPose = poseEstimator.getEstimatedPosition();
+    Pose2d errorPose = currentPose.relativeTo(state.pose);
+    Translation2d error = errorPose.getTranslation();
+
+    double heading = currentPose.getRotation().getRadians();
+    double forward =  Math.cos(heading) * error.getX() + Math.sin(heading) * error.getY();
+    double left    = -Math.sin(heading) * error.getX() + Math.cos(heading) * error.getY();
+
+    forward *= 4.0; //KP
+    left    *= 4.0;//KP
+
+    double rotation = (state.heading.getRadians() - currentPose.getRotation().getRadians()) * 1; //kP
+
+    dt.drive(forward, left, rotation);
+  }
   /**
    * 
    * @return Pose2d Search Pose
