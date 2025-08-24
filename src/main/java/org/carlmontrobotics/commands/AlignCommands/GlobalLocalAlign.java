@@ -34,6 +34,7 @@ import org.carlmontrobotics.subsystems.Elevator;
 import org.carlmontrobotics.subsystems.Limelight;
 import org.carlmontrobotics.subsystems.LimelightHelpers;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -81,8 +82,7 @@ public class GlobalLocalAlign extends Command {
   boolean scoredCoral;
   int targetID;
   private State currentState;
-  private PoseEstimator poseEstimator = dt.getPoseEstimator();
-  //private Command currentPath;
+  private Command currentPath;
   private PathConstraints constraints = Drivetrainc.Autoc.pathConstraints;
   private Timer scoringTimer;
   private Timer scoringTimerFinalL4;
@@ -98,6 +98,7 @@ public class GlobalLocalAlign extends Command {
   private double forwardSpeedMultiplier;
   private double strafeErr;
   private double forwardErr;
+  private PoseEstimator poseEstimator;
 
   //Teleop bypassing
   private boolean originalFieldOrientation;
@@ -127,6 +128,7 @@ public class GlobalLocalAlign extends Command {
     timeoutTimer = new Timer();
     scoringTimer = new Timer();
     scoringTimerFinalL4 = new Timer();
+    poseEstimator = dt.getPoseEstimator();
   }
 
   /**
@@ -151,7 +153,8 @@ public class GlobalLocalAlign extends Command {
     didntseetime = new Timer();
     timeoutTimer = new Timer();
     scoringTimer = new Timer();
-    scoringTimerFinalL4 = new Timer();;
+    scoringTimerFinalL4 = new Timer();
+    poseEstimator = dt.getPoseEstimator();
   }
 
   // Called when the command is initially scheduled.
@@ -210,6 +213,7 @@ public class GlobalLocalAlign extends Command {
      */
     updateState();
     executeState();
+    if (currentPath != null ) currentPath.cancel();
     SmartDashboard.putString("AlignmentState", currentState.toString());
   }
 
@@ -236,7 +240,7 @@ public class GlobalLocalAlign extends Command {
    */
   private void resetVars() {
     currentState = State.NULL;
-    currentTrajectory = null;
+    currentPath = null;
     scoredCoral = false;
     didntseetime.reset();
     didntseetime.stop();
@@ -327,7 +331,7 @@ public class GlobalLocalAlign extends Command {
         }
         break;
       case 1: // global
-        if (currentTrajectory != null && false) {
+        if (currentPath != null && currentPath.isFinished()) {
           currentState = currentState.nextState();
         }
         break;
@@ -364,23 +368,23 @@ public class GlobalLocalAlign extends Command {
   private void executeState() {
     int index = currentState.ordinal();
     switch (index) {
-      case 0: //elevatornot down
+      case 1: //elevatornot down
         elevator.setGoal(0);
         break;
-      case 1: //global 
+      case 2: //global 
         runGlobalSearchAlignment();
         break;
-      case 2: // rotate
+      case 3: // rotate
         rotateAlign();
         break;
-      case 3: //local
+      case 4: //local
         localAlignment();
         break;
-      case 4: // raise elevator
+      case 5: // raise elevator
         dt.drive(0,0,0);
         elevator.setGoal(reefLevel);
         break;
-      case 5: //score
+      case 6: //score
         if (reefLevel == testl4) {
           scoreL4();
         }
@@ -527,7 +531,7 @@ public class GlobalLocalAlign extends Command {
   private void rotateAlign() {
     rotationPID.enableContinuousInput(-180, 180);
     rotationPID.setSetpoint(MathUtil.inputModulus(getAngleToReefWall(), -180, 180));
-    rotationPID.setTolerance(positionTolerance[2], velocityTolerance[2]);
+    rotationPID.setTolerance(0.1, 0.1);
     dt.drive(0, 0, rotationPID.calculate(poseEstimator.getEstimatedPosition().getRotation().getDegrees()));
   }
   
@@ -603,7 +607,7 @@ public class GlobalLocalAlign extends Command {
    * 
    */
   private void runGlobalSearchAlignment() {
-    if (currentTrajectory == null) {
+    if (currentPath == null) {
       Pose2d targetLocation = calculateSearchPose();
       PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
         List.of(poseEstimator.getEstimatedPosition(), targetLocation)),
@@ -612,11 +616,14 @@ public class GlobalLocalAlign extends Command {
         new GoalEndState(0, targetLocation.getRotation()));
       path.preventFlipping = true;
       // Create a trajectory manually
-      currentTrajectory = path.generateTrajectory(dt.getSpeeds(), poseEstimator.getEstimatedPosition().getRotation(), Autoc.robotConfig);
-      pathTimer.start();; // start time for trajectory tracking
+      currentPath = AutoBuilder.followPath(path);
+      currentPath.schedule();
+     // currentTrajectory = path.generateTrajectory(dt.getSpeeds(), poseEstimator.getEstimatedPosition().getRotation(), Autoc.robotConfig);
+    //  pathTimer.start();; // start time for trajectory tracking
     }
-    followTrajectoryManually();
-    checkCompletionOfPath();
+   // DriverStation.reportError("DoingSOMETHINGCOOL", false);
+   // followTrajectoryManually();
+    //checkCompletionOfPath();
   }
   private void checkCompletionOfPath() {
     Pose2d endPose = currentTrajectory.getEndState().pose;

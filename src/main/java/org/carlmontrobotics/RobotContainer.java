@@ -22,6 +22,7 @@ import org.carlmontrobotics.Constants.OI.Manipulator;
 import org.carlmontrobotics.commands.RaiseAndScore;
 import org.carlmontrobotics.commands.AlgaeCommands.AlignAndDealgifyAlgae;
 import org.carlmontrobotics.commands.AlgaeCommands.ArmMove;
+import org.carlmontrobotics.commands.AlignCommands.GlobalLocalAlign;
 // import org.carlmontrobotics.commands.AlgaeCommands.ArmToPosition;
 import org.carlmontrobotics.commands.AlignCommands.GoToCoralStation;
 import org.carlmontrobotics.commands.AlignCommands.MoveToAlignReef;
@@ -251,14 +252,14 @@ public class RobotContainer {
 
 
         new JoystickButton(driverController, 7)
-            .onTrue(new MoveToLeftBranch(drivetrain, limelight, elevator));
+            .onTrue(new GlobalLocalAlign(drivetrain, limelight, elevator, coralEffector, false));
         new JoystickButton(driverController, 8)
-            .onTrue(new MoveToRightBranch(drivetrain, limelight, elevator));
+            .onTrue(new GlobalLocalAlign(drivetrain, limelight, elevator, coralEffector, true));
 
         axisTrigger(driverController, Driver.LEFT_TRIGGER_BUTTON)
             .onTrue(new InstantCommand(() -> drivetrain.setExtraSpeedMult(.5)))//normal max turn is .5
             .onFalse(new InstantCommand(() -> drivetrain.setExtraSpeedMult(0)));
-        new JoystickButton(driverController, Button.kB.value).onTrue(new SequentialCommandGroup());
+        new JoystickButton(driverController, Button.kB.value).onTrue(new MoveToAlignReef(drivetrain, limelight, elevator, true, driverRumble));
         
             //new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
             //    driverRumble)));
