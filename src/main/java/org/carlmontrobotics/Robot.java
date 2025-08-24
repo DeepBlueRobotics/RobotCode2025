@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private static final ShuffleboardTab compTab = Shuffleboard.getTab("Competition");
-  private final boolean atComp = true;
+  private final boolean atComp = false;
   //private int autoFirstPri = 0;
   @Override
   public void robotInit() {
@@ -108,13 +108,13 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     m_robotContainer.drivetrain.setDrivingIdleMode(true);
     m_robotContainer.elevator.setElevatorIdleMode(true);
-    //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
+    m_robotContainer.drivetrain.resetFieldOrientation();
     //For center
     //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //for right
     //m_robotContainer.drivetrain.resetFieldOrientationWithAngle(-120);
     //for left
-    m_robotContainer.drivetrain.resetFieldOrientationWithAngle(120);
+    //m_robotContainer.drivetrain.resetFieldOrientationWithAngle(120);
 
     //m_robotContainer.drivetrain.resetFieldOrientationBackwards();
     //if (m_autonomousCommand != null) {
