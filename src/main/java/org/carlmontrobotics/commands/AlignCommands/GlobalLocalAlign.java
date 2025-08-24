@@ -212,7 +212,9 @@ public class GlobalLocalAlign extends Command {
      * Should stop any path from running, any drivetrain from running, and any timers
      */
     dt.setFieldOriented(originalFieldOrientation);
-    currentPath.cancel();
+    if (currentPath != null) {
+      currentPath.cancel();
+    }
     dt.drive(0,0,0);
   }
 
@@ -313,23 +315,23 @@ public class GlobalLocalAlign extends Command {
     switch (index) {
       case 0: //Elevator not down
         if (elevator.getBottomLimitSwitch()) {
-          currentState.nextState();
+          currentState = currentState.nextState();
         }
         break;
       case 1: // global
         if (currentPath != null && currentPath.isFinished()) {
-          currentState.nextState();
+          currentState = currentState.nextState();
         }
         break;
       case 2: // rotate
         if (checkRotation()) {
-          currentState.nextState();
+          currentState = currentState.nextState();
         }
         break;
       case 3: // local
         if (checkLocalAlignment()) {
           if (selfScore)
-            currentState.nextState();
+            currentState = currentState.nextState();
           else {
             currentState = State.COMPLETE;
           }
@@ -337,12 +339,12 @@ public class GlobalLocalAlign extends Command {
         break;
       case 4: // raise elevator
         if (elevator.getGoal() == reefLevel && elevator.atGoalHeight()) {
-          currentState.nextState();
+          currentState = currentState.nextState();
         }
         break;
       case 5: //score
         if (scoredCoral) {
-          currentState.nextState();
+          currentState = currentState.nextState();
         }
         break;
       default:
@@ -433,9 +435,11 @@ public class GlobalLocalAlign extends Command {
    */
   private void scoreL4() {
     scoringTimer.start();
+    //Begin phase 1 move coral on branch
     if (scoringTimer.hasElapsed(0.7)) {
       elevator.setGoal(testl4 + testl4RaiseHeight);
       scoringTimerFinalL4.start();
+      //begin phase 2 raise and score
       if (scoringTimerFinalL4.hasElapsed(0.7)) {
         coralEffector.setMotorSpeed(0);
         scoredCoral = true;
