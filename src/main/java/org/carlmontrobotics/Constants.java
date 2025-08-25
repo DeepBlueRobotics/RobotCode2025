@@ -10,9 +10,7 @@
 
 package org.carlmontrobotics;
 
-import edu.wpi.first.wpilibj.StadiaController.Button;
-
-import edu.wpi.first.wpilibj.StadiaController.Button;
+import static org.carlmontrobotics.Config.CONFIG;
 
 import org.carlmontrobotics.lib199.swerve.SwerveConfig;
 
@@ -20,39 +18,17 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import static org.carlmontrobotics.Config.CONFIG;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.StadiaController.Button;
-
-import edu.wpi.first.wpilibj.StadiaController.Button;
-
-import org.carlmontrobotics.lib199.swerve.SwerveConfig;
-
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.path.PathConstraints;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import static org.carlmontrobotics.Config.CONFIG;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.StadiaController.Button;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-//import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.Encoder;
 
 
 /**
@@ -76,11 +52,10 @@ public final class Constants {
 		public static final int followerPort = 21; // inverted
 		//public static final int elevatorTopLimitSwitchPort = 1;
 		public static final int elevatorBottomLimitSwitchPort = 0;
-		public static final int bottomLimitSwitchTriggerPoint = 10;// TODO: figure out the value
-		public static final double GEAR_RATIO = 1.0/20; //TODO: CHANGE TO ACTUAL GEAR RATIO
+		public static final int bottomLimitSwitchTriggerPoint = 10;
+		public static final double GEAR_RATIO = 1.0/20; 
 
 		// Config
-		// TODO figure these parts out
 		public static final double MAX_ACCEL_RAD_P_S = 1;
 		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
@@ -143,13 +118,13 @@ public final class Constants {
 
 	public static final class Drivetrainc {
 		// #region Subsystem Constants
-		public static final double wheelBase = 24.75; //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
-		public static final double trackWidth = 24.75;//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
+		public static final double wheelBase = Units.inchesToMeters(24.75); //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
+		public static final double trackWidth = Units.inchesToMeters(24.75);//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
 		// "swerveRadius" is the distance from the center of the robot to one of the
 		// modules
 		public static final double swerveRadius = Math.sqrt(Math.pow(wheelBase / 2, 2) + Math.pow(trackWidth / 2, 2));
 		// The gearing reduction from the drive motor controller to the wheels
-		// Gearing for the Swerve Modules is 6.75 : 1e
+		// Gearing for the Swerve Modules is 6.75 : 1
 		public static final double driveGearing = 6.75;
 		// Turn motor shaft to "module shaft"
 		public static final double turnGearing = 150.0 / 7;
@@ -160,11 +135,14 @@ public final class Constants {
 																						* correction
 																						*/;
 		public static final double mu = 1; /* 70/83.2; */ // coefficient of friction. less means less max acceleration.
-		public static final double ROBOTMASS_KG = 135;// max is 135kg
+		public static final double ROBOTMASS_KG = 63.5;// max is 135kg
 		// moment of inertia, kg/mm
 		// calculated by integral of mass * radius^2 for every point of the robot
 		// easy way? just do total mass * radius^2
+		// This seems to be relying that all the mass is located in the corners
 		public static final double MOI = ROBOTMASS_KG * swerveRadius * swerveRadius;
+		//This spreads it out more evenly
+		public static final double betterMOI = 1/12.0 * ROBOTMASS_KG * (wheelBase*wheelBase + trackWidth*trackWidth); // not needed any more since using meters now* 0.00064516; //conversion factor from kg per square inch to kg per metersquared
 
 		public static final double NEOFreeSpeed = 5676 * (2 * Math.PI) / 60; // radians/s
 		// Angular speed to translational speed --> v = omega * r / gearing
@@ -242,9 +220,10 @@ public final class Constants {
 		public static final double[] kForwardAccels = { 0, 0, 0, 0 };//{0.31958, 0.33557, 0.70264, 0.46644};    //{ 0, 0, 0, 0 };// volts per m/s^2
 		public static final double[] kBackwardAccels = kForwardAccels;
 
-		public static final double autoMaxSpeedMps = 0.35 * 4.4; // Meters / second
+		public static final double autoMaxSpeedMps = 4;//0.6 * 4.4; // Meters / second
 		public static final double autoMaxAccelMps2 = mu * g; // Meters / seconds^2
-		public static final double autoMaxVolt = 10.0; // For Drivetrain voltage constraint in RobotPath.java
+		public static final double autoMaxVolt = 10.0;
+		public static final double autoMaxAmps = 40.0; // For Drivetrain voltage constraint in RobotPath.java
 		// The maximum acceleration the robot can achieve is equal to the coefficient of
 		// static friction times the gravitational acceleration
 		// a = mu * 9.8 m/s^2
@@ -327,23 +306,23 @@ public final class Constants {
 					// Mass mass, kg
 					ROBOTMASS_KG,
 					// double Moment Oof Inertia, kg/mm
-					MOI, // ==1
+					betterMOI, // ==1
 					// ModuleConfig moduleConfig,
 					new ModuleConfig(
 							// double wheelRadiusMeters,
-							swerveRadius,
+							wheelDiameterMeters/2,
 							// double maxDriveVelocityMPS,
 							autoMaxSpeedMps,
 							// double wheelCOF,
 							mu,
 							// DCMotor driveMotor,
-							DCMotor.getNEO(4), // FIXME is it 1 for 1 each or 4 for 1 robot
+							DCMotor.getNEO(1),
 							// double driveGearing,
 							driveGearing,
 							// double driveCurrentLimit,
-							autoMaxVolt,
+							autoMaxAmps,
 							// int numMotors
-							4),
+							1),
 					// Translation2d... moduleOffsets
 					new Translation2d(wheelBase / 2, trackWidth / 2),
 					new Translation2d(wheelBase / 2, -trackWidth / 2),
@@ -360,38 +339,159 @@ public final class Constants {
 			// 0.8 // error spike threshold, in meters, that will cause the path to be
 			// replanned
 			// );
-			public static final PathConstraints pathConstraints = new PathConstraints(1.54, 6.86, 2 * Math.PI,
-					2 * Math.PI); // The constraints for this path. If using a differential drivetrain, the
+			public static final PathConstraints pathConstraints = new PathConstraints(3.5, 2.5, Math.PI-0.5, Math.PI-0.5); // The constraints for this path. If using a differential drivetrain, the
 									// angular constraints have no effect.
 		}
 	}
+	//#endregion
+	// #region Subsystem Constants
+	/**
+	 * Translates either the x or y coordinate of pp by translation along a line with slope of degrees,
+	 * and then moves it by z along the perpendicular direction.
+	 *
+	 * @param x The original x coordinate
+	 * @param y The original y coordinate
+	 * @param degrees The angle in degrees (slope direction)
+	 * @param axis The axis to output ("x" or "y"), not case sensitive
+	 * @param translation The translation distance
+	 * @param z The distance to move perpendicularly to the slope
+	 * @return The new value of the chosen axis (x or y)
+	 */
+	public static double translatePpCords(double x, double y, double degrees, String axis, double translation, double z) {
+		double radians = Math.toRadians(degrees); 
 
-	public static final class AligningCords {
-		public static final Pose2d ID6_17Right = new Pose2d(2.087,4.737, Rotation2d.fromDegrees(60));
-		public static final Pose2d ID6_17Left = new Pose2d(3.530,2.679, Rotation2d.fromDegrees(60));
-		public static final Pose2d ID6_17Search = new Pose2d(3.650,2.611, Rotation2d.fromDegrees(60));
+		double x2 = Math.cos(radians) * translation;
+		double y2 = Math.sin(radians) * translation;
 
-		public static final Pose2d ID7_18Right = new Pose2d(2.837,3.840, Rotation2d.fromDegrees(0));
-		public static final Pose2d ID7_18Left = new Pose2d(2.837,4.181, Rotation2d.fromDegrees(0));
-		public static final Pose2d ID7_18Search = new Pose2d(2.844,4, Rotation2d.fromDegrees(0));
-		
-		public static final Pose2d ID8_19Right = new Pose2d(3.539,5.361, Rotation2d.fromDegrees(-60));
-		public static final Pose2d ID8_19Left = new Pose2d(3.832,5.546, Rotation2d.fromDegrees(-60));
-		public static final Pose2d ID8_19Search = new Pose2d(3.686,5.458, Rotation2d.fromDegrees(-60));
+		// Add perpendicular offset
+		double perpRadians = Math.toRadians(degrees + 90);
+		x2 += Math.cos(perpRadians) * z;
+		y2 += Math.sin(perpRadians) * z;
 
-		public static final Pose2d ID9_20Right = new Pose2d(5.148,5.546, Rotation2d.fromDegrees(-120));
-		public static final Pose2d ID9_20Left = new Pose2d(5.470,5.361, Rotation2d.fromDegrees(-120));
-		public static final Pose2d ID9_20Search = new Pose2d(5.285,5.448, Rotation2d.fromDegrees(-120));
-
-		public static final Pose2d ID10_21Right = new Pose2d(6.143,4.210, Rotation2d.fromDegrees(180));
-		public static final Pose2d ID10_21Left = new Pose2d(6.143,3.859, Rotation2d.fromDegrees(180));
-		public static final Pose2d ID10_21Search = new Pose2d(6.143,4, Rotation2d.fromDegrees(180));
-
-		public static final Pose2d ID11_22Right = new Pose2d(5, 2.8, Rotation2d.fromDegrees(120));
-		public static final Pose2d ID11_22Left = new Pose2d(5.28, 2.96, Rotation2d.fromDegrees(120));
-		public static final Pose2d ID11_22Search = new Pose2d(5.314, 2.619, Rotation2d.fromDegrees(120));
+		if (axis.equalsIgnoreCase("x")) {
+			return x + x2;
+		} else if (axis.equalsIgnoreCase("y")) {
+			return y + y2;
+		} else {
+			throw new IllegalArgumentException("wdym " + axis + " for the axis??? give an axis (x or y)");
+		}
 	}
 
+	//#endregion
+public static final class AligningCords {
+	public static final double translation = Units.inchesToMeters(8.5); 
+	public static final double robotLength = 0.08483;
+	public static final double HalfRobotLength = 0.08483/2;
+	//FIXME: put the actual cords for all the tags
+	public static final Pose2d ID6_17Right = new Pose2d(
+		3.960,
+		2.800,
+		Rotation2d.fromDegrees(60)
+	);
+
+	public static final Pose2d ID6_17Left = new Pose2d(
+		3.687,
+		2.950,
+		Rotation2d.fromDegrees(60)
+	);
+
+	public static final Pose2d ID6_17Search = new Pose2d(
+		3.685,
+		2.595,
+		Rotation2d.fromDegrees(60)
+	);
+
+	public static final Pose2d ID7_18Right = new Pose2d(
+		3.158,
+		3.860,
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID7_18Left = new Pose2d(
+		3.158,
+		4.185,
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID7_18Search = new Pose2d(
+		2.821,
+		4.000,
+		Rotation2d.fromDegrees(0)
+	);
+
+	public static final Pose2d ID8_19Right = new Pose2d(
+		3.687,
+		5.094,
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID8_19Left = new Pose2d(
+		3.960,
+		5.259,
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID8_19Search = new Pose2d(
+		3.658,
+		5.470,
+		Rotation2d.fromDegrees(-60)
+	);
+
+	public static final Pose2d ID9_20Right = new Pose2d(
+		5.014,
+		5.259,
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID9_20Left = new Pose2d(
+		5.299,
+		5.094,
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID9_20Search = new Pose2d(
+		5.377,
+		5.470,
+		Rotation2d.fromDegrees(-120)
+	);
+
+	public static final Pose2d ID10_21Right = new Pose2d(
+		5.817,
+		4.190,
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID10_21Left = new Pose2d(
+		5.817,
+		3.864,
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID10_21Search = new Pose2d(
+		6.158,
+		4.000,
+		Rotation2d.fromDegrees(180)
+	);
+
+	public static final Pose2d ID11_22Right = new Pose2d(
+		5.292,
+		2.965,
+		Rotation2d.fromDegrees(120)
+	);
+
+	public static final Pose2d ID11_22Left = new Pose2d(
+		5.014,
+		2.792,
+		Rotation2d.fromDegrees(120)
+	);
+
+	public static final Pose2d ID11_22Search = new Pose2d(
+		5.340,
+		2.595,
+		Rotation2d.fromDegrees(120)
+	);
+}
+		// #region Limelight Constants
 	public static final class Limelightc {
 		public static final String CORAL_LL = "limelight-coral";
 		public static final String REEF_LL = "limelight-reef";
@@ -407,11 +507,12 @@ public final class Constants {
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH+Units.inchesToMeters(1);
 
-		public static final double areaPercentageGoal = 8.4; //TODO figure this out por favor
-		public static final double areaTolerance = 0.1; //TODO needs to get tuned
+		public static final double areaPercentageGoal = 8.4;
+		public static final double areaPercentageGoalForAlgae = 2.556; //TODO figure this out
+		public static final double areaTolerance = 0.1;
 		public static final double strafeTolerance = 0.02;
-		public static final double LL_ACCURACY_LIMIT_METERS = 5.0; //TODO: find at what distance limelight becomes inaccurate
-
+		public static final double strafeToleranceAlgae = 0.1;
+		public static final double LL_ACCURACY_LIMIT_METERS = 5.0; 
         public static final double STD_DEV_X_METERS = 0.7; // uncertainty of 0.7 meters on the field
 		public static final double STD_DEV_Y_METERS = 0.7; // uncertainty of 0.7 meters on the field
 		public static final int STD_DEV_HEADING_RADS = 9999999; // (gyro) heading standard deviation, set extremely high
@@ -452,16 +553,20 @@ public final class Constants {
         public final static int CORAL_DISTANCE_SENSOR_PORT = 6;
 
         public final static int CORAL_DISTANCE_SENSOR_DISTANCE = 150; //mm
+		public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0.1 ; 
+        public final static double KP = 0.1; 
+        public final static double KI = 0;
+        public final static double KD = 0;
+
+
         public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
+
         public final static double INPUT_FAST_SPEED =0.07; 
 		public final static double INTAKE_BACKWARDS_SPEED = -0.06; 
         public final static double INPUT_SLOW_SPEED = 0.04; 
         public final static double OUTPUT_SPEED = 0.4; 
 		public final static double FAST_OUTPUT_SPEED = 0.6;
-        public final static double CORAL_EFFECTOR_DISTANCE_SENSOR_OFFSET = 0.2 ; 
-        public final static double KP = 0.1; 
-        public final static double KI = 0;
-        public final static double KD = 0;
+
         public final static double INTAKE_TIME_OUT = 0.5;
         public final static double OUTTAKE_TIME_OUT = 10;
         public final static double MANUAL_INTAKE_TIME_OUT = 1;
@@ -470,7 +575,11 @@ public final class Constants {
 
         //EFFECTOR
 
-        
+        public static final double ARM_UP_VOLTAGE = 0.125;
+		public static final double ARM_DOWN_VOLTAGE = -0.125*2;
+		public static final double DELAGIFY_HIGH_POS = 0.8;
+		public static final double DELAGIFY_LOW_POS = 0.456;
+
 		public static final int UPPER_MOTOR_PORT = 1; 
 		public static final int LOWER_MOTOR_PORT = 33;
         public static final int PINCH_MOTOR_PORT = 3;

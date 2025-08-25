@@ -54,9 +54,9 @@ public class MoveToAlignReef extends Command {
     this.ll = ll;
     this.rightBranch = rightBranch;
     strafeClamp = .35;
-    forwardClamp = 1.5; //TODO figure this one out
-    strafeSpeedMultiplier = 5;//TODO tune it better
-    forwardSpeedMultiplier = 0.2;//TODO figure this out
+    forwardClamp = 1.5; 
+    strafeSpeedMultiplier = 5;
+    forwardSpeedMultiplier = 0.2;
     didntseetime = new Timer();
     timeoutTimer = new Timer();
   }
@@ -75,9 +75,10 @@ public class MoveToAlignReef extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (elevator.getCurrentHeight() <= 0.05) {
+    if (elevator.getCurrentHeight() <= 0.1) {
       SmartDashboard.putBoolean("LimelightFunctional", true);
       if (ll.seesTag(REEF_LL)) {
+        rumbleController.setRumble(RumbleType.kBothRumble, 0);
         SmartDashboard.putBoolean("SeeTag", true);
         SmartDashboard.putNumber("CurrentPercentage", LimelightHelpers.getTA(REEF_LL)); //To figure out goal
         didntseetime.reset();
@@ -92,7 +93,7 @@ public class MoveToAlignReef extends Command {
       else {
         rumbleController.setRumble(RumbleType.kBothRumble, 0.5);
         SmartDashboard.putBoolean("SeeTag", false);
-        dt.drive(0, 0.14 * (rightBranch ? 0 : 1), 0);
+        dt.drive(0.14, 0.14 * (rightBranch ? -1 : 1), 0);
       }
     }
     else {
@@ -115,7 +116,7 @@ public class MoveToAlignReef extends Command {
     boolean aligned_with_tag = ((forwardErr <= areaTolerance) && (Math.abs(strafeErr) <= strafeTolerance));
     return (aligned_with_tag) //Aligned with tag
           || (didntseetime.get() > 1.5) //Does not see tag
-          || (timeoutTimer.get() > 5.0); //Worst case scenrio
+          || (timeoutTimer.get() > 3.0); //Worst case scenrio
   }
   
   public double getStrafeErrorMeters(){

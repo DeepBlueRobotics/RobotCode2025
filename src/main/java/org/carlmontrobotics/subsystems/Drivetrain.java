@@ -1,5 +1,3 @@
-//Resolve 71 errors starting from Holonomics
-
 package org.carlmontrobotics.subsystems;
 
 import org.carlmontrobotics.subsystems.Elevator;
@@ -28,19 +26,18 @@ import org.carlmontrobotics.lib199.swerve.SwerveModule;
 import static org.carlmontrobotics.Config.CONFIG;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-//import com.kauailabs.navx.frc.AHRS;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
-// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 
 import org.carlmontrobotics.lib199.swerve.SwerveModuleSim;
 
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -51,6 +48,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.hal.SimDouble;
@@ -68,8 +66,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-// import edu.wpi.first.units.Angle;
-// import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -81,8 +77,6 @@ import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
-// import edu.wpi.first.units.Velocity;
-// import edu.wpi.first.units.Voltage;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -115,14 +109,13 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volt;
 import static edu.wpi.first.units.Units.Meter;
-// Make sure this code is extraneous
-// import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
+
 public class Drivetrain extends SubsystemBase {
+
     private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
     private Pose2d autoGyroOffset = new Pose2d(0., 0., new Rotation2d(0.));
     // ^used by PathPlanner for chaining paths
-    
     private SwerveDriveKinematics kinematics = null;
     // private SwerveDriveOdometry odometry = null;
     private SwerveDrivePoseEstimator poseEstimator = null;
@@ -145,6 +138,23 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModule moduleBR;
 
     private final Field2d field = new Field2d();
+    private final Field2d odometryField = new Field2d();
+    private final Field2d poseWithLimelightField = new Field2d();
+
+    public double ppKpDrive = 5.0;
+    public double ppKiDrive = 0;
+    public double ppKdDrive = 0;
+
+    public double ppKpTurn = 3;
+    public double ppKiTurn = 0;
+    public double ppKdTurn = 0;
+
+    private double veryImportantCounter = 0;
+
+    double accelX;
+    double accelY;
+    double accelXY;
+
     private SwerveModuleSim[] moduleSims;
     private SimDouble gyroYawSim;
     private Timer simTimer = new Timer();
@@ -282,7 +292,13 @@ public class Drivetrain extends SubsystemBase {
 
             }
            
-            SmartDashboard.putData("Field", field);
+            //SmartDashboard.putData("Field", field);
+            //SmartDashboard.putData("Odometry Field", odometryField);
+            //martDashboard.putData("Pose with Limelight Field", poseWithLimelightField);
+
+            accelX = gyro.getWorldLinearAccelX(); // Acceleration along the X-axis
+            accelY = gyro.getWorldLinearAccelY(); // Acceleration along the Y-axis
+            accelXY = Math.sqrt(gyro.getWorldLinearAccelX() * gyro.getWorldLinearAccelX() + gyro.getWorldLinearAccelY() * gyro.getWorldLinearAccelY());
 
             // for(SparkMax driveMotor : driveMotors)
             // driveMotor.setSmartCurrentLimit(80);
@@ -367,14 +383,55 @@ public class Drivetrain extends SubsystemBase {
     // return new PrintCommand("Invalid Command");
     // }
 
+    /**
+     * Sets swerveModules IdleMode both turn and drive
+     * @param brake boolean for braking, if false then coast
+     */
+    public void setDrivingIdleMode(boolean brake) {
+         IdleMode mode;
+        if (brake) {
+            mode = IdleMode.kBrake;
+        }
+        else {
+            mode = IdleMode.kCoast;
+        }
+        for (SparkMax turnMotor : turnMotors) {
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.idleMode(mode);
+            turnMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);      
+        }
+        for (SparkMax driveMotor : driveMotors) {
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.idleMode(mode);
+            driveMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);     
+        }
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
-        SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
+        updatePoseWithLimelight();
+        detectCollision(); //This does nothing
+        PathPlannerLogging.logCurrentPose(getPose());
+
+
+        //SmartDashboard.putNumber("LimeLight TH", LimelightHelpers.getThor(REEF_LL));
+        //SmartDashboard.putNumber("Limelight TV", LimelightHelpers.getTvert(REEF_LL));
         SmartDashboard.putNumber("X position with limelight", getPoseWithLimelight().getX());
         SmartDashboard.putNumber("Y position with limelight", getPoseWithLimelight().getY());
         SmartDashboard.putNumber("X position with gyro", getPose().getX());
         SmartDashboard.putNumber("Y position with gyro", getPose().getY());
+        SmartDashboard.putData(CONFIG);
+        
+        //For finding acceleration of drivetrain for collision detector
+        SmartDashboard.putNumber("Accel X", accelX);
+        SmartDashboard.putNumber("Accel Y", accelY);
+        SmartDashboard.putNumber("2D Acceleration ", accelXY);
+
+        //maybe add the field with the position of the robot with only limelight and the field with the position of the robot with only odometry?
+        //We can compare the two fields to see if odometry is causing the pose to be inaccurate when it hits the reef.
+
+        //SmartDashboard.putData(new InstantCommand(() -> click()));
+        //SmartDashboard.putNumber("Clicks", veryImportantCounter);
         // SmartDashboard.getNumber("GoalPos", turnEncoders[0].getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("FL Motor Val", turnMotors[0].getEncoder().getPosition());
         // double goal = SmartDashboard.getNumber("GoalPos", 0);
@@ -429,12 +486,12 @@ public class Drivetrain extends SubsystemBase {
 
         // field.setRobotPose(odometry.getPoseMeters());
 
-        field.setRobotPose(poseEstimator.getEstimatedPosition());
+        
 
         // odometry.update(gyro.getRotation2d(), getModulePositions());
 
         // poseEstimator.update(gyro.getRotation2d(), getModulePositions());
-        updatePoseWithLimelight();
+        
         //odometry.update(Rotation2d.fromDegrees(getHeading()), getModulePositions());
 
         // updateMT2PoseEstimator();
@@ -505,8 +562,8 @@ public class Drivetrain extends SubsystemBase {
                 () -> moduleBL.getModuleAngle(), null);
         builder.addDoubleProperty("BR Turn Encoder (Deg)",
                 () -> moduleBR.getModuleAngle(), null);
-
     }
+
 
     // #region Drive Methods
 
@@ -521,10 +578,21 @@ public class Drivetrain extends SubsystemBase {
     public void setExtraSpeedMult(double set) {
         extraSpeedMult=set;
     }
+    
+    /**
+     * Calculates and implements the required SwerveStates for all 4 modules to get the wanted outcome
+     * @param forward The desired forward speed, in m/s. Forward is positive.
+     * @param strafe The desired strafe speed, in m/s. Left is positive.
+     * @param rotation The desired rotation speed, in rad/s. Counter clockwise is positive.
+     */
     public void drive(double forward, double strafe, double rotation) {
         drive(getSwerveStates(forward, strafe, rotation));
     }
     
+    /**
+     * Implements the provided SwerveStates for all 4 modules to get the wanted outcome
+     * @param moduleStates SwerveModuleState[]
+     */
     public void drive(SwerveModuleState[] moduleStates) {
         //Max speed override
         double max = maxSpeed;
@@ -537,68 +605,11 @@ public class Drivetrain extends SubsystemBase {
         }
     }
     
-//    public void configurePPLAutoBuilder() {
-//     /**
-//      * PATHPLANNER SETTINGS
-//      * Robot Width (m): .91
-//      * Robot Length(m): .94
-//      * Max Module Spd (m/s): 4.30
-//      * Default Constraints
-//      * Max Vel: 1.54, Max Accel: 6.86
-//      * Max Angvel: 360, Max AngAccel: 180 (guesses!)
-//      */
-//     AutoBuilder.configure(
-//         this::getPose, // :D
-//         this::setPose, // :D
-//         this::getSpeeds, // :D
-//         (ChassisSpeeds cs) -> {
-//             //cs.vxMetersPerSecond = -cs.vxMetersPerSecond;
-//             // SmartDashboard.putNumber("chassis speeds x", cs.vxMetersPerSecond);
-//             // SmartDashboard.putNumber("chassis speeds y", cs.vyMetersPerSecond);
-//             // SmartDashboard.putNumber("chassis speeds theta", cs.omegaRadiansPerSecond);
-
-//             drive(kinematics.toSwerveModuleStates(cs));  
-//         }, // :D
-//         new PPHolonomicDriveController(
-//             new PIDConstants(xPIDController[0], xPIDController[1], xPIDController[2], 0), //translation (drive) pid vals
-//             new PIDConstants(thetaPIDController[0], thetaPIDController[1], thetaPIDController[2], 0), //rotation pid vals
-//             Robot.kDefaultPeriod//robot period
-//         ), 
-//         Autoc.robotConfig,
-//         () -> {
-//             // Boolean supplier that controls when the path will be mirrored for the red alliance
-//             // This will flip the path being followed to the red side of the field.
-//             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-//             var alliance = DriverStation.getAlliance();
-//             if (alliance.isPresent())
-//                 return alliance.get() == DriverStation.Alliance.Red;
-//             //else:
-//             return false;
-//         }, // :D
-//         this // :D
-//     );
-
-    
-//TODO: AUTOBUILDER
+    /**
+     * Configures PathPlanner AutoBuilder
+     */
     public void AutoBuilder() {
-        // System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        // All other subsystem initialization
-        // ...
-
-        // Load the RobotConfig from the GUI settings. You should probably
-        // store this in your Constants file
-        RobotConfig config;
-        // try{
-        //     config = RobotConfig.fromGUISettings();
-        // } catch (Exception e) {
-        //     config = Constants.
-        // // Handle exception as needed
-        // e.printStackTrace();
-        // }
-        config = Constants.Drivetrainc.Autoc.robotConfig;
-
-        // Configure AutoBuilder last
-
+        RobotConfig config = Constants.Drivetrainc.Autoc.robotConfig;
         AutoBuilder.configure(
                 //Supplier<Pose2d> poseSupplier,
                 this::getPose, // Robot pose supplier
@@ -612,8 +623,9 @@ public class Drivetrain extends SubsystemBase {
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
                         //new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
                         //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants FIXME do these need to be accurate?
-                        new PIDConstants(5.0, 0.0, 0.0)
+                        new PIDConstants(4
+                        , ppKiDrive, ppKdDrive), // Translation PID constants FIXME do these need to be accurate?
+                        new PIDConstants(1, ppKiTurn, ppKdTurn)
                 ),
                 //RobotConfig robotConfig,
                 config, // The robot configuration
@@ -719,13 +731,19 @@ public class Drivetrain extends SubsystemBase {
         return Arrays.stream(modules).map(SwerveModule::getCurrentPosition).toArray(SwerveModulePosition[]::new);
     }
 
+    /**
+     * Gets pose from {@link #poseEstimator}
+     * @return Pose2D
+     */
     public Pose2d getPose() {
         // return odometry.getPoseMeters();
         return poseEstimator.getEstimatedPosition();
     }
 
-    //You can just use getPose() to get the position with limelight since limelight is incorporated into the pose estimator with updateposewithlimelight()
-    //This method can be used to get the pose with limelight on SmartDashboard and compare it to the pose using odometry
+    /**
+     * If any limelight sees a tag, method will get visionEstimate, otherwise returns current pose from {@link #poseEstimator}
+     * @return Pose2D
+     */
     public Pose2d getPoseWithLimelight(){
         if (LimelightHelpers.getTV(REEF_LL)) {
             
@@ -777,52 +795,88 @@ public class Drivetrain extends SubsystemBase {
         simGyroOffset = pose.getRotation().minus(gyroRotation);
         
     }
-    //This method will update the position of the robot with limelight to help 
-    //put this method in periodic() instead of the current line that updates the position
+
+    //This is supposed to be a constant but move it into constants.java once the actual collision threshold is found
+    public final double COLLISION_ACCELERATION_THRESHOLD = 2; //The minimum acceleration that will trigger a collision detection, in m/s^2
+
+    public boolean detectCollision(){ //We can implement this method into updatePoseWithLimelight so that if there is a collision it stops using odometry
+        accelX = gyro.getWorldLinearAccelX(); // Acceleration along the X-axis
+        accelY = gyro.getWorldLinearAccelY(); // Acceleration along the Y-axis
+        accelXY = Math.sqrt(accelX * accelX + accelY * accelY); // 2D Acceleration
+        return accelXY > COLLISION_ACCELERATION_THRESHOLD; // return true if collision detected
+
+    }
+
+    /**
+     * Uses MegaTag1 to update {@link #poseEstimator}
+     */
     public void updatePoseWithLimelight(){
         Pose2d pose;
         Rotation2d gyroRotation = gyro.getRotation2d();
         
-        boolean elevatorAtBottom = elevator.getBottomLimitSwitch();
-        
-        double distanceToTagReefLL = ll.getDistanceToApriltag3D(REEF_LL);
-        double distanceToTagCoralLL = ll.getDistanceToApriltag3D(CORAL_LL);
+        boolean elevatorAtBottom = true;
+        //Currently not being used
+        // double distanceToTagReefLL = ll.getDistanceToApriltag3D(REEF_LL);
+        // double distanceToTagCoralLL = ll.getDistanceToApriltag3D(CORAL_LL);
         //these are used to check if the limelight sees a tag and it is within the distance where limelight can provide accurate data
-        boolean reefLLtagValid = ll.seesTag(REEF_LL) && distanceToTagReefLL < LL_ACCURACY_LIMIT_METERS;
-        boolean coralLLtagValid = ll.seesTag(CORAL_LL) && distanceToTagCoralLL < LL_ACCURACY_LIMIT_METERS;
+        boolean reefLLtagValid = ll.seesTag(REEF_LL); // ll.seesTag(REEF_LL) && distanceToTagReefLL < LL_ACCURACY_LIMIT_METERS;
+        boolean coralLLtagValid = ll.seesTag(CORAL_LL); //ll.seesTag(CORAL_LL) && distanceToTagCoralLL < LL_ACCURACY_LIMIT_METERS;
         //the time delay of the limelight when it gives data is accounted for here
         double latencyReefLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(REEF_LL) + LimelightHelpers.getLatency_Pipeline(REEF_LL)); 
         double latencyCoralLL = Units.millisecondsToSeconds(LimelightHelpers.getLatency_Capture(CORAL_LL) + LimelightHelpers.getLatency_Pipeline(CORAL_LL));
-        if (reefLLtagValid && elevatorAtBottom && coralLLtagValid){ //This is for if both limelights see a tag
-            
-            if (distanceToTagReefLL < distanceToTagCoralLL) { //if the reef limelight's tag is closer than the coral limelight's tag then it will use the reef limelight's tag to update the pose
-                pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
-                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyReefLL);
-            } else {
-                pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-                poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyCoralLL);
-            }
-        } 
-        else if (reefLLtagValid && elevatorAtBottom) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
-            // Get the pose of the robot relative to the tag
-            pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
-            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyReefLL); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
 
-        } 
-        else if (coralLLtagValid) {
+        // if (detectCollision()){ //This if for if there is a collision
+        //     if (reefLLtagValid && elevatorAtBottom){ //This is for if both limelights see a tag
+        //         pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+        //         poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose); 
+        //         return;
+        //     } else if (coralLLtagValid) {
+        //         pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        //         poseEstimator.resetPosition(gyroRotation, getModulePositions(), pose); 
+        //         return;
+        //     } else {
+        //         return; //if there is a collision and no tag is detected then it will not update the pose
+        //     }
+        // }
+        //If there is no collision:
+        //Sorry for all of the conditionals I didnt want to use switch statements
+        poseEstimator.update(gyroRotation, getModulePositions());
+        odometryField.setRobotPose(poseEstimator.getEstimatedPosition());
+        SmartDashboard.putData("Odometry Field", odometryField);
 
-            pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
-            poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyCoralLL); //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
-
-        } 
-        else {
-            poseEstimator.update(gyroRotation, getModulePositions()); //if the limelights don't see a tag then it will just update the pose using odometry
+        if (reefLLtagValid && elevatorAtBottom){
+            Pose2d llpose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+            poseEstimator.addVisionMeasurement(llpose, Timer.getFPGATimestamp() - latencyReefLL);
         }
+        // if (coralLLtagValid) { 
+        //     Pose2d llpose2 = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        //     poseEstimator.addVisionMeasurement(llpose2, Timer.getFPGATimestamp() - latencyCoralLL);
+        // }
+                
+            
+        // } 
+        // else if (reefLLtagValid && elevatorAtBottom) { //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
+        //     // Get the pose of the robot relative to the tag
+        //     pose = LimelightHelpers.getBotPose2d_wpiBlue(REEF_LL);
+        //     poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyReefLL); //addVisionMeasurement() will incorporate the limelight tracking when updating the pose
+
+        // } 
+        // else if (coralLLtagValid) {
+
+        //     pose = LimelightHelpers.getBotPose2d_wpiBlue(CORAL_LL);
+        //     poseEstimator.addVisionMeasurement(pose, Timer.getFPGATimestamp() - latencyCoralLL); //if the limelight sees a tag and the elevator is at the bottom then it will check with this limelight
+
+        // } 
+        
+         //if the limelights don't see a tag then it will just update the pose using odometry
+        
         
     }
 
-    // Resets the gyro, so that the direction the robotic currently faces is
-    // considered "forward"
+    /**
+     * @deprecated Use {@link #resetFieldOrientation()} instead
+     */
+    @Deprecated
     public void resetHeading() {
         gyro.reset();
         
@@ -835,22 +889,40 @@ public class Drivetrain extends SubsystemBase {
     public double getRoll() {
         return gyro.getRoll();
     }
-
+    /**
+     * true stands for fieldOriented, false stands for robotOriented
+     * @return boolean
+     */
     public boolean getFieldOriented() {
         return fieldOriented;
     }
 
+    /**
+     * True sets fieldOriented, false sets robotOriented
+     * @param fieldOriented boolean
+     */
     public void setFieldOriented(boolean fieldOriented) {
         this.fieldOriented = fieldOriented;
     }
-
+    /**
+     * Sets the current direction the robot is facing is to be 0
+     */
     public void resetFieldOrientation() {
         fieldOffset = gyro.getAngle();
     }
+    /**
+     * Sets the current direction the robot is facing is to be 180
+     */
     public void resetFieldOrientationBackwards() {
         fieldOffset = 180 + gyro.getAngle();
     }
-
+    /**
+     * Sets the current direction the robot is facing is plus @param angle to be 0
+     * @param angle in degrees
+     */
+    public void resetFieldOrientationWithAngle(double angle) {
+        fieldOffset = angle + gyro.getAngle();
+    }
     public void resetPoseEstimator() {
         // odometry.resetPosition(new Rotation2d(), getModulePositions(), new Pose2d());
 
@@ -867,6 +939,9 @@ public class Drivetrain extends SubsystemBase {
                 .toArray(SwerveModuleState[]::new));
     }
 
+    /**
+     * Changes between IdleModes
+     */
     public void toggleMode() {
         for (SwerveModule module : modules)
             module.toggleMode();
@@ -1027,9 +1102,9 @@ public class Drivetrain extends SubsystemBase {
         sysIdTab.add(name, sysIdQuasistatic(dir)).withSize(2, 1);
     }
 
-    void sysidtabshorthand_dyn(String name, SysIdRoutine.Direction dir) {
-        sysIdTab.add(name, sysIdDynamic(dir)).withSize(2, 1);
-    }
+    // void sysidtabshorthand_dyn(String name, SysIdRoutine.Direction dir) {
+    //     sysIdTab.add(name, sysIdDynamic(dir)).withSize(2, 1);
+    // }
 
     private void sysIdSetup() {
         // SysId Setup
@@ -1077,10 +1152,10 @@ public class Drivetrain extends SubsystemBase {
              * ));
              */
 
-            sysidtabshorthand_qsi("Quasistatic Forward", SysIdRoutine.Direction.kForward);
-            sysidtabshorthand_qsi("Quasistatic Backward", SysIdRoutine.Direction.kReverse);
-            sysidtabshorthand_dyn("Dynamic Forward", SysIdRoutine.Direction.kForward);
-            sysidtabshorthand_dyn("Dynamic Backward", SysIdRoutine.Direction.kReverse);
+            // sysidtabshorthand_qsi("Quasistatic Forward", SysIdRoutine.Direction.kForward);
+            // sysidtabshorthand_qsi("Quasistatic Backward", SysIdRoutine.Direction.kReverse);
+            // sysidtabshorthand_dyn("Dynamic Forward", SysIdRoutine.Direction.kForward);
+            // sysidtabshorthand_dyn("Dynamic Backward", SysIdRoutine.Direction.kReverse);
 
 
             sysIdTab
@@ -1242,55 +1317,67 @@ public class Drivetrain extends SubsystemBase {
                 rotateRoutine[3].quasistatic(direction));
     }
 
+    /**
+     * Makes sysId to run for both directions
+     * @return Command to run sysId
+     */
     public Command allTheSYSID() {
         return new SequentialCommandGroup(
                 allTheSYSID(SysIdRoutine.Direction.kForward),
                 allTheSYSID(SysIdRoutine.Direction.kReverse));
     }
+    /**
+     * Makes sysId to find feedforward and pid values for drivetrain
+     * @param direction SysIdRoutine.Direction.kForward or kReverse
+     * @return Command to run sysID
+     */
+    // public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    //     return new SelectCommand<>(
+    //             Map.ofEntries(
+    //                     // DRIVE
+    //                     Map.entry(SysIdTest.FRONT_DRIVE, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running front only dynamic forward")
+    //                                     : new PrintCommand("Running front only dynamic backward"),
+    //                             frontOnlyDriveRoutine.dynamic(direction))),
+    //                     Map.entry(SysIdTest.BACK_DRIVE, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running back only dynamic forward")
+    //                                     : new PrintCommand("Running back only dynamic backward"),
+    //                             backOnlyDriveRoutine.dynamic(direction))),
+    //                     Map.entry(SysIdTest.ALL_DRIVE, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running all wheels dynamic forward")
+    //                                     : new PrintCommand("Running all wheels dynamic backward"),
+    //                             allWheelsDriveRoutine.dynamic(direction))),
+    //                     // ROTATE
+    //                     Map.entry(SysIdTest.FL_ROT, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running FL rotate dynamic forward")
+    //                                     : new PrintCommand("Running FL rotate dynamic backward"),
+    //                             rotateRoutine[0].dynamic(direction))),
+    //                     Map.entry(SysIdTest.FR_ROT, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running FR rotate dynamic forward")
+    //                                     : new PrintCommand("Running FR rotate dynamic backward"),
+    //                             rotateRoutine[1].dynamic(direction))),
+    //                     Map.entry(SysIdTest.BL_ROT, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running BL rotate dynamic forward")
+    //                                     : new PrintCommand("Running BL rotate dynamic backward"),
+    //                             rotateRoutine[2].dynamic(direction))),
+    //                     Map.entry(SysIdTest.BR_ROT, new ParallelCommandGroup(
+    //                             direction == SysIdRoutine.Direction.kForward
+    //                                     ? new PrintCommand("Running BR rotate dynamic forward")
+    //                                     : new PrintCommand("Running BR rotate dynamic backward"),
+    //                             rotateRoutine[3].dynamic(direction)))),
+    //             this::selector);
+    // }
 
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return new SelectCommand<>(
-                Map.ofEntries(
-                        // DRIVE
-                        Map.entry(SysIdTest.FRONT_DRIVE, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running front only dynamic forward")
-                                        : new PrintCommand("Running front only dynamic backward"),
-                                frontOnlyDriveRoutine.dynamic(direction))),
-                        Map.entry(SysIdTest.BACK_DRIVE, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running back only dynamic forward")
-                                        : new PrintCommand("Running back only dynamic backward"),
-                                backOnlyDriveRoutine.dynamic(direction))),
-                        Map.entry(SysIdTest.ALL_DRIVE, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running all wheels dynamic forward")
-                                        : new PrintCommand("Running all wheels dynamic backward"),
-                                allWheelsDriveRoutine.dynamic(direction))),
-                        // ROTATE
-                        Map.entry(SysIdTest.FL_ROT, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running FL rotate dynamic forward")
-                                        : new PrintCommand("Running FL rotate dynamic backward"),
-                                rotateRoutine[0].dynamic(direction))),
-                        Map.entry(SysIdTest.FR_ROT, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running FR rotate dynamic forward")
-                                        : new PrintCommand("Running FR rotate dynamic backward"),
-                                rotateRoutine[1].dynamic(direction))),
-                        Map.entry(SysIdTest.BL_ROT, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running BL rotate dynamic forward")
-                                        : new PrintCommand("Running BL rotate dynamic backward"),
-                                rotateRoutine[2].dynamic(direction))),
-                        Map.entry(SysIdTest.BR_ROT, new ParallelCommandGroup(
-                                direction == SysIdRoutine.Direction.kForward
-                                        ? new PrintCommand("Running BR rotate dynamic forward")
-                                        : new PrintCommand("Running BR rotate dynamic backward"),
-                                rotateRoutine[3].dynamic(direction)))),
-                this::selector);
-    }
-
+    /**
+     * Sets all SwerveModules to point in a certain angle
+     * @param angle in degrees
+     */
     public void keepRotateMotorsAtDegrees(int angle) {
         for (SwerveModule module : modules) {
             module.turnPeriodic();
@@ -1298,6 +1385,10 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
+    /**
+     * Gets how fast the robot is spinning from gyro
+     * @return degrees per second
+     */
     public double getGyroRate() {
         return gyro.getRate();
     }

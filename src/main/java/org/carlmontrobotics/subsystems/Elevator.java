@@ -38,6 +38,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -268,6 +269,20 @@ public class Elevator extends SubsystemBase {
 
   }
 
+
+  public void setElevatorIdleMode(boolean brake) {
+    IdleMode mode;
+    if (brake) {
+      mode = IdleMode.kBrake;
+    }
+    else {
+      mode = IdleMode.kCoast;
+    }
+    masterConfig.idleMode(mode);
+    followerConfig.idleMode(mode);
+    masterMotor.configure(masterConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    followerMotor.configure(followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+  }
   // private boolean isEncoderDisconnected() {
   //   double currentElevPos = getCurrentHeight();
   //   double currentRelativeElevVel = masterEncoder.getVelocity();

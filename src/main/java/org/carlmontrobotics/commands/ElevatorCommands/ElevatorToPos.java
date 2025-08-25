@@ -25,16 +25,17 @@ public class ElevatorToPos extends Command {
     }
     @Override
     public void execute() {
-        if (true){
-            if (babyMode) { if (distanceSensor.getRange() > CORAL_DISTANCE_SENSOR_DISTANCE) {
-                elevator.setGoal(pos); }
-                else {elevator.stopElevator();}
-            }
+        elevator.setGoal(pos);
+        // if (true){
+        //     if (babyMode) { if (distanceSensor.getRange() > CORAL_DISTANCE_SENSOR_DISTANCE) {
+        //         elevator.setGoal(pos); }
+        //         else {elevator.stopElevator();}
+        //     }
             
-            else {
-                elevator.setGoal(pos);
-            }
-    }
+        //     else {
+        //         elevator.setGoal(pos);
+        //     }
+    //}
     }
     public boolean isFinished() {
         return elevator.atGoalHeight();
