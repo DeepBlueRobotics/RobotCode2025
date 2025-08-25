@@ -32,53 +32,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private static final ShuffleboardTab compTab = Shuffleboard.getTab("Competition");
   private final boolean atComp = false;
   //private int autoFirstPri = 0;
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    compTab.addDouble("Match Time", () -> Timer.getMatchTime())
-    .withPosition(0, 0)
-    .withSize(2, 1)
-    .withWidget(BuiltInWidgets.kTextView);
-    compTab.addBoolean("Sees Tag", () -> m_robotContainer.limelight.seesTag(REEF_LL))
-    .withPosition(3, 0)
-    .withSize(2,2)
-    .withWidget(BuiltInWidgets.kBooleanBox);
-    // compTab.addBoolean("ALIGNED", () -> m_robotContainer.limelight.alignedWithReef())
-    // .withPosition(2,1)
-    // .withSize(2, 2)
-    // .withWidget(BuiltInWidgets.kBooleanBox);
-    // compTab.addBoolean("CoralIntaked", () -> m_robotContainer.coralEffector.coralSecured())
-    // .withPosition(0,1)
-    // .withSize(2,2)
-    // .withWidget(BuiltInWidgets.kBooleanBox);
-    compTab.addCamera("PhotonVision Stream", "SigmaCamera", "http://photonvision.local:1182/stream.mjpg")
-    .withPosition(3,2)
-    .withSize(3,3);
-    compTab.addCamera("Limelight Stream", "REEF", "10.1.99.12:5800");
-    compTab.addBoolean("FC", () -> m_robotContainer.limelight.seesTagId(7,18))
-    .withWidget(BuiltInWidgets.kBooleanBox)
-    .withSize(1, 1);
-    compTab.addBoolean("FR", () -> m_robotContainer.limelight.seesTagId(6,17))
-    .withWidget(BuiltInWidgets.kBooleanBox)
-    .withSize(1, 1);
-    compTab.addBoolean("FL", () -> m_robotContainer.limelight.seesTagId(8,19))
-    .withWidget(BuiltInWidgets.kBooleanBox)
-    .withSize(1, 1);
-    compTab.addBoolean("BR", () -> m_robotContainer.limelight.seesTagId(11,22))
-    .withWidget(BuiltInWidgets.kBooleanBox)
-    .withSize(1, 1);
-    compTab.addBoolean("BC", () -> m_robotContainer.limelight.seesTagId(10,21))
-    .withWidget(BuiltInWidgets.kBooleanBox)
-    .withSize(1, 1);
-    compTab.addBoolean("BL", () -> m_robotContainer.limelight.seesTagId(9,20))
-    .withWidget(BuiltInWidgets.kBooleanBox)
-    .withSize(1, 1);
-    compTab.addBoolean("CoralIN", () -> m_robotContainer.coralEffector.limitSwitchSeesCoral())
-    .withWidget(BuiltInWidgets.kBooleanBox)
-    .withSize(2, 2);
   }
 
   @Override

@@ -76,9 +76,13 @@ import edu.wpi.first.wpilibj.DigitalInput;
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //commands
@@ -116,6 +120,9 @@ import static org.carlmontrobotics.Constants.OI.Driver.*;
 import static org.carlmontrobotics.Constants.OI.Manipulator.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
+
+
 // import org.carlmontrobotics.subsystems.coralEffector.enableAutoIntake;;
 
 
@@ -129,6 +136,9 @@ public class RobotContainer {
     public final XboxController driverRumble = new XboxController(Driver.port); //For rumbling the controller
 
     public final GenericHID manipulatorController = new GenericHID(Manipulator.port);
+
+    private static final ShuffleboardTab compTab = Shuffleboard.getTab("Competition");
+
 
     
     //public final AlgaeEffector algaeEffector = new AlgaeEffector();
@@ -203,6 +213,47 @@ public class RobotContainer {
      
                  // ShuffleboardTab autoSelectorTab = Shuffleboard.getTab("Auto Chooser Tab");
                  // autoSelectorTab.add(autoSelector).withSize(2, 1);
+                compTab.addDouble("Match Time", () -> Timer.getMatchTime())
+                .withPosition(0, 0)
+                .withSize(2, 1)
+                .withWidget(BuiltInWidgets.kTextView);
+                compTab.addBoolean("Sees Tag", () -> limelight.seesTag(REEF_LL))
+                .withPosition(3, 0)
+                .withSize(2,2)
+                .withWidget(BuiltInWidgets.kBooleanBox);
+                // compTab.addBoolean("ALIGNED", () -> limelight.alignedWithReef())
+                // .withPosition(2,1)
+                // .withSize(2, 2)
+                // .withWidget(BuiltInWidgets.kBooleanBox);
+                // compTab.addBoolean("CoralIntaked", () -> coralEffector.coralSecured())
+                // .withPosition(0,1)
+                // .withSize(2,2)
+                // .withWidget(BuiltInWidgets.kBooleanBox);
+                compTab.addCamera("PhotonVision Stream", "SigmaCamera", "http://photonvision.local:1182/stream.mjpg")
+                .withPosition(3,2)
+                .withSize(3,3);
+                compTab.addCamera("Limelight Stream", "REEF", "10.1.99.12:5800");
+                compTab.addBoolean("FC", () -> limelight.seesTagId(7,18))
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withSize(1, 1);
+                compTab.addBoolean("FR", () -> limelight.seesTagId(6,17))
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withSize(1, 1);
+                compTab.addBoolean("FL", () -> limelight.seesTagId(8,19))
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withSize(1, 1);
+                compTab.addBoolean("BR", () -> limelight.seesTagId(11,22))
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withSize(1, 1);
+                compTab.addBoolean("BC", () -> limelight.seesTagId(10,21))
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withSize(1, 1);
+                compTab.addBoolean("BL", () -> limelight.seesTagId(9,20))
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withSize(1, 1);
+                compTab.addBoolean("CoralIN", () -> coralEffector.limitSwitchSeesCoral())
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withSize(2, 2);
              }
      
         RegisterAutoCommands();
