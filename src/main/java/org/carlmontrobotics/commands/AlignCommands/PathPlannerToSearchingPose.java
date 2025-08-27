@@ -8,6 +8,7 @@ import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 import static org.carlmontrobotics.Constants.AligningCords.*;
 
 import java.lang.reflect.Field;
+import java.sql.Driver;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -15,7 +16,7 @@ import java.util.function.DoubleSupplier;
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Drivetrainc;
 import org.carlmontrobotics.subsystems.Drivetrain;
-
+import org.carlmontrobotics.subsystems.Elevator;
 import org.carlmontrobotics.subsystems.Limelight;
 import org.carlmontrobotics.subsystems.LimelightHelpers;
 
@@ -27,18 +28,23 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class PathPlannerToReef extends Command {
+public class PathPlannerToSearchingPose extends Command {
   private Drivetrain dt;
   private Limelight ll;
   private boolean searchingState = true;
@@ -59,21 +65,33 @@ public class PathPlannerToReef extends Command {
   private DoubleSupplier rStick;
   private Command currentPath; 
   private PathConstraints constraints = Drivetrainc.Autoc.pathConstraints; //TODO tune this for fastest possible alignment
+  Timer timer;
+  private Command moveToAlign;
+  private PathPlannerTrajectory currentTrajectory;
+  private boolean pathCompleted;
+  private XboxController driveRumble;
+  Timer pathTimer;
 
-  public PathPlannerToReef(Drivetrain drivetrain, Limelight limelight, boolean rightBranch,
+  public PathPlannerToSearchingPose(Drivetrain dt, Elevator elevator, XboxController driveRumble, boolean rightBranch, Limelight limelight,
     DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
     ) {
-    addRequirements(dt=drivetrain, ll=limelight);
+    this.dt = dt;
+    addRequirements(ll=limelight);
+    this.driveRumble = driveRumble;
+    this.rightBranch = rightBranch;
+    moveToAlign = new MoveToAlignReef(dt, ll, elevator, rightBranch, driveRumble);
+    poseEstimator = dt.getPoseEstimator();
+   
     this.xStick = xStick;
     this.yStick = yStick;
     this.rStick = rStick;
-    this.rightBranch = rightBranch;
     targetID = -1;
-    poseEstimator = dt.getPoseEstimator();
     targetField = new Field2d();
     SmartDashboard.putBoolean("target location is null",targetLocation == null);
     System.out.println(targetLocation);
     System.out.println(targetLocation == null);
+    timer = new Timer();
+    pathTimer = new Timer();
 
   }
 
@@ -83,17 +101,41 @@ public class PathPlannerToReef extends Command {
     SmartDashboard.putBoolean("target location is null",targetLocation == null);
     SmartDashboard.putBoolean("searchisyes", searchingState);
     setIfBlueAlliance(); 
-    
-    // if (ll.seesTag(REEF_LL)) {
-    //   runPathToClosestReef();
-    //   searchingState = false;
-    // } 
-    // else {
-    //   // runToClosestSearchingPosition();
-    //   searchingState = true;
-    //   System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    timer.restart();
+    goToClosestReef_NoLimelightNeeded();
+  }
   
-    // }
+    private void checkCompletionOfPath() {
+    Pose2d endPose = currentTrajectory.getEndState().pose;
+    Pose2d currentPose = poseEstimator.getEstimatedPosition();
+    Translation2d delta = endPose.getTranslation().minus(currentPose.getTranslation());
+    double distanceToGoal = delta.getNorm(); // meters
+
+    // Rotation difference
+    double angleDifference = endPose.getRotation().minus(currentPose.getRotation()).getRadians();
+    double positionTolerance = 0.05; // meters
+    double angleTolerance = 0.05; // radians (~3 degrees)
+
+    pathCompleted = (distanceToGoal < positionTolerance) && (Math.abs(angleDifference) < angleTolerance);
+  }
+  
+  private void followTrajectoryManually() {
+    double t = pathTimer.get(); // time since starting path
+    PathPlannerTrajectoryState state = currentTrajectory.sample(t);
+    Pose2d currentPose = poseEstimator.getEstimatedPosition();
+    Pose2d errorPose = currentPose.relativeTo(state.pose);
+    Translation2d error = errorPose.getTranslation();
+
+    double heading = currentPose.getRotation().getRadians();
+    double forward =  Math.cos(heading) * error.getX() + Math.sin(heading) * error.getY();
+    double left    = -Math.sin(heading) * error.getX() + Math.cos(heading) * error.getY();
+
+    forward *= 4.0; //KP
+    left    *= 4.0;//KP
+
+    double rotation = (state.heading.getRadians() - currentPose.getRotation().getRadians()) * 1; //kP
+
+    dt.drive(forward, left, rotation);
   }
 
   @Override
@@ -105,10 +147,11 @@ public class PathPlannerToReef extends Command {
     //   runPathToClosestReef();
     //   searchingState = false;
     if (first == false) {
-      goToClosestReef_NoLimelightNeeded();
+      
       first = true;
     }
     
+
     // }
     // else if (searchingState && ll.seesTag(REEF_LL)) {
     //   searchingState = false; // what does this do? Turns off searching state so that the other function wont turn on
@@ -129,6 +172,7 @@ public class PathPlannerToReef extends Command {
     if (currentPath!=null) {
       currentPath.cancel();
     }
+    moveToAlign.schedule();
   }
 
   @Override
@@ -137,7 +181,8 @@ public class PathPlannerToReef extends Command {
       currentPath.isFinished()) || 
       (Math.abs(xStick.getAsDouble()) > 0.1 ) || 
       (Math.abs(yStick.getAsDouble()) > 0.1 ) || 
-      (Math.abs(rStick.getAsDouble()) > 0.1 );
+      (Math.abs(rStick.getAsDouble()) > 0.1 ) ||
+      timer.get() > 3;
   }
 
   private boolean setIfBlueAlliance(){
@@ -152,136 +197,31 @@ public class PathPlannerToReef extends Command {
     return blueAlliance;
   }
 
-  private void runPathToClosestReef() {
-      targetID = (int) LimelightHelpers.getFiducialID(REEF_LL);
-      SmartDashboard.putNumber("TargetId", targetID);
-      if (rightBranch) {
-        if (blueIDs.contains(targetID)) {
-          targetLocation = rightPoses[blueIDs.indexOf(targetID)];
-        }
-        else if ( redIDs.contains(targetID)) {
-          targetLocation = rightPoses[redIDs.indexOf(targetID)];
-        }
-      }
-      else {
-        if (blueIDs.contains(targetID)) {
-          targetLocation = leftPoses[blueIDs.indexOf(targetID)];
-        }
-        else if (redIDs.contains(targetID)) {
-          targetLocation = leftPoses[redIDs.indexOf(targetID)];
-        }
-      }
-      if (targetLocation != null) {
-      targetField.setRobotPose(targetLocation);
-      //double poopy = targetLocation.getY();
-      if (redIDs.contains(targetID)) {
-        targetLocation = FlippingUtil.flipFieldPose(targetLocation);
-      }
-    
-      //targetLocation = new Pose2d(0,0);
-      PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(
-        List.of(poseEstimator.getEstimatedPosition(), targetLocation)),
-        constraints, 
-        null, 
-        new GoalEndState(0, targetLocation.getRotation()));
-        path.preventFlipping = true;
-      //SmartDashboard.putBoolean("mehappy", blueAlliance);
-  
-      // FollowPathCommand command = new FollowPathCommand(
-      //   path, 
-      //   () -> poseEstimator.getEstimatedPosition(), 
-      //   () -> dt.getSpeeds(),  
-      //   (speeds, feedforwards) -> dt.drive(dt.getSwerveStates(speeds)),
-      //   new PPHolonomicDriveController(
-      //     new PIDConstants(5.0, 0.0, 0.0),
-      //     new PIDConstants(5.0, 0.0, 0.0)), 
-      //   Constants.Drivetrainc.Autoc.robotConfig, 
-      //   () -> false
-      //   ); // Not sure if dt should be added here as a requirement (extra parameter) since it is already a requirement in the pathplanneralign command
-      currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
-      currentPath.schedule();
-  }
-
-  
-  // private void runToClosestSearchingPosition() {
-  //   targetLocation = findClosestPose(poseEstimator.getEstimatedPosition(), searchPoses);
-  //   if (rightBranch) {
-  //       if (blueIDs.contains(targetID)) {
-  //         finalLocation = rightPoses[blueIDs.indexOf(targetID)];
-  //       }
-  //       else if (redIDs.contains(targetID)) {
-  //         finalLocation = rightPoses[redIDs.indexOf(targetID)];
-  //       }
-  //     }
-  //   else {
-  //     if (blueIDs.contains(targetID)) {
-  //       finalLocation = leftPoses[blueIDs.indexOf(targetID)];
-  //     }
-  //     else if (redIDs.contains(targetID)) {
-  //       finalLocation = leftPoses[redIDs.indexOf(targetID)];
-  //     }
-  //   }
-  //   PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(List.of(poseEstimator.getEstimatedPosition(), targetLocation, finalLocation)), 
-  //   constraints, 
-  //   null, 
-  //   new GoalEndState(0, finalLocation.getRotation()));
-  //   currentPath = AutoBuilder.followPath(path); //works like this with already built autobuilder
-  //   currentPath.schedule();
-  // }
-
-  // public Pose2d findClosestPose(Pose2d target, Pose2d[] poses) {
-  //   int closestIndex = -1;
-  //   double minDistance = Double.MAX_VALUE;
-
-  //   for (int i = 0; i < poses.length; i++) {
-  //     Pose2d pose = poses[i];
-  //     double distance = pose.getTranslation().getDistance(target.getTranslation());
-  
-  //     if (distance < minDistance) {
-  //         minDistance = distance;
-  //         closestIndex = i;
-  //     }
-  //   }
-  //   if (closestIndex != -1) {
-  //     if (blueAlliance) {
-  //       targetID = blueIDs.get(closestIndex);
-  //     }
-  //     else if (!blueAlliance) {
-  //       targetID = redIDs.get(closestIndex);
-  //     }
-  //     return poses[closestIndex];
-  //   } 
-  //   else {
-  //     return null;
-  //   }
-    
-  }
-
   private void goToClosestReef_NoLimelightNeeded(){
 
     Pose2d currentPose = poseEstimator.getEstimatedPosition();
-    Pose2d[] branchPoses = rightBranch ? rightPoses : leftPoses;
+    Pose2d[] searchingPoses = searchPoses;
 
     double closestDistance = Double.MAX_VALUE;
-    Pose2d closestBranch = null;
+    Pose2d cloestPose = null;
 
-    for (Pose2d branchPose : branchPoses) {
+    for (Pose2d searchPose : searchingPoses) {
 
       if (setIfBlueAlliance() == false || currentPose.getX() > 10){ //when the robot's x coordinate is greater than 10 then it should not try to move to its own reef (10 is just a rough estimate)
         //If the alliance is red or the robot is on the opposite side of the field then it will flip the coordinates so that it looks at the reef coordinates on the opposite side
-        branchPose = FlippingUtil.flipFieldPose(branchPose); 
+        searchPose = FlippingUtil.flipFieldPose(searchPose); 
       }
 
       //get the distance from the current pose to the branch pose
-      double distance = currentPose.getTranslation().getDistance(branchPose.getTranslation());
+      double distance = currentPose.getTranslation().getDistance(searchPose.getTranslation());
       //if the distance is less than any of the other distances checked it will set the closest branch to that pose
       if (distance < closestDistance) {
         closestDistance = distance;
-        closestBranch = branchPose;
+        cloestPose = searchPose;
       }
     }
 
-    targetLocation = closestBranch;
+    targetLocation = cloestPose;
     targetField.setRobotPose(targetLocation);
 
     PathPlannerPath path = new PathPlannerPath(PathPlannerPath.waypointsFromPoses(

@@ -29,6 +29,7 @@ import org.carlmontrobotics.commands.AlignCommands.MoveToAlignReef;
 import org.carlmontrobotics.commands.AlignCommands.MoveToLeftBranch;
 import org.carlmontrobotics.commands.AlignCommands.MoveToRightBranch;
 import org.carlmontrobotics.commands.AlignCommands.PathPlannerToReef;
+import org.carlmontrobotics.commands.AlignCommands.PathPlannerToSearchingPose;
 import org.carlmontrobotics.commands.AlignCommands.RotateToTag;
 import org.carlmontrobotics.commands.AutonCommands.DriveUntilSeeTag;
 import org.carlmontrobotics.commands.AutonCommands.LastResortAuto;
@@ -327,29 +328,51 @@ public class RobotContainer {
         // conditional buttons for going to coral station or branch depending on if the robot has a coral inside or not
         // this is for the left branch or left station (left station refers to the coral station to the left of the driver)
         new JoystickButton(driverController, Driver.y)
-            .onTrue(new ConditionalCommand(
-                new PathPlannerToReef(drivetrain, limelight, false, 
-                () -> driverController.getRawAxis(0), 
-                () -> driverController.getRawAxis(1),
-                ()-> driverController.getRawAxis(5)), 
-                new GoToCoralStation(drivetrain, false,
-                () -> driverController.getRawAxis(0),
-                () -> driverController.getRawAxis(1),
-                ()-> driverController.getRawAxis(5)), 
-                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
+            .onTrue(
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> System.out.print("hi")),
+                    new PathPlannerToSearchingPose(drivetrain, elevator, driverRumble, false, limelight, 
+                        () -> driverController.getRawAxis(0), 
+                        () -> driverController.getRawAxis(1),
+                        ()-> driverController.getRawAxis(5))
+                    // new MoveToAlignReef(drivetrain, limelight, elevator, false, //To align with left branch
+                    // driverRumble)
+            ));
+            new JoystickButton(driverController, Driver.a)
+            .onTrue(
+                new SequentialCommandGroup(
+                    new PathPlannerToSearchingPose(drivetrain, elevator, driverRumble, true, limelight, 
+                        () -> driverController.getRawAxis(0), 
+                        () -> driverController.getRawAxis(1),
+                        ()-> driverController.getRawAxis(5))
+                    // new MoveToAlignReef(drivetrain, limelight, elevator, true, //To align with right branch
+                    // driverRumble)
+                )
+            );
+        // new JoystickButton(driverController, Driver.y)
+        //     .onTrue(new ConditionalCommand(
+        //         new PathPlannerToReef(drivetrain, limelight, false, 
+        //         () -> driverController.getRawAxis(0), 
+        //         () -> driverController.getRawAxis(1),
+        //         ()-> driverController.getRawAxis(5)), 
+        //         new GoToCoralStation(drivetrain, false,
+        //         () -> driverController.getRawAxis(0),
+        //         () -> driverController.getRawAxis(1),
+        //         ()-> driverController.getRawAxis(5)), 
+        //         () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
                 
-        // this is for the right branch or right station
-        new JoystickButton(driverController, Driver.a)
-            .onTrue(new ConditionalCommand(
-                new PathPlannerToReef(drivetrain, limelight, true, 
-                () -> driverController.getRawAxis(0), 
-                () -> driverController.getRawAxis(1),
-                ()-> driverController.getRawAxis(5)), 
-                new GoToCoralStation(drivetrain, true,
-                () -> driverController.getRawAxis(0),
-                () -> driverController.getRawAxis(1),
-                ()-> driverController.getRawAxis(5)), 
-                () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
+        // // this is for the right branch or right station
+        // new JoystickButton(driverController, Driver.a)
+        //     .onTrue(new ConditionalCommand(
+        //         new PathPlannerToReef(drivetrain, limelight, true, 
+        //         () -> driverController.getRawAxis(0), 
+        //         () -> driverController.getRawAxis(1),
+        //         ()-> driverController.getRawAxis(5)), 
+        //         new GoToCoralStation(drivetrain, true,
+        //         () -> driverController.getRawAxis(0),
+        //         () -> driverController.getRawAxis(1),
+        //         ()-> driverController.getRawAxis(5)), 
+        //         () -> coralEffector.limitSwitchSeesCoral() || SmartDashboard.getBoolean("AlignOverride", true)));
         
     }
    

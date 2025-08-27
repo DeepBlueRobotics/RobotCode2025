@@ -196,7 +196,7 @@ public final class Constants {
 		: new double[] {2.54-1.99, 2.54-1.99, 2.54-1.99 , 2.54-1.99};//trust guys //{2.2319, 2.2462, 2.4136, 3.6862}; // {1.82/100, 1.815/100, 2.015/100,
 																// 1.915/100};
 		public static final double[] drivekI = CONFIG.isHammerHead()? new double[] {0,0,0,0} :
-			new double[] { 0.1, 0.1, 0.1, 0.1 };
+			new double[] { 0, 0, 0, 0 };
 		public static final double[] drivekD = CONFIG.isHammerHead()? new double[] {0.005,0.005,0.005,0.005}:
 			new double[] { 0,0,0,0 };
 		public static final boolean[] driveInversion = (CONFIG.isHammerHead()
