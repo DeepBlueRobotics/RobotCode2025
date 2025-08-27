@@ -116,7 +116,8 @@ public class GlobalLocalAlign extends Command {
    */
   public GlobalLocalAlign(Drivetrain dt, Limelight ll, Elevator elevator, CoralEffector coralEffector, boolean rightStick) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(this.dt = dt, this.elevator = elevator, this.coralEffector = coralEffector);
+    addRequirements(this.elevator = elevator, this.coralEffector = coralEffector);
+    this.dt = dt;
     this.ll = ll;
     this.rightStick = rightStick;
     selfScore = false;
@@ -141,7 +142,8 @@ public class GlobalLocalAlign extends Command {
    */
   public GlobalLocalAlign(Drivetrain dt, Limelight ll, Elevator elevator, CoralEffector coralEffector, boolean rightStick, double reefLevel) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(this.dt = dt, this.elevator = elevator, this.coralEffector = coralEffector);
+    addRequirements(this.elevator = elevator, this.coralEffector = coralEffector);
+    this.dt = dt;
     this.ll = ll;
     this.rightStick = rightStick;
     this.reefLevel = reefLevel;
@@ -156,7 +158,6 @@ public class GlobalLocalAlign extends Command {
     scoringTimerFinalL4 = new Timer();
     poseEstimator = dt.getPoseEstimator();
   }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
