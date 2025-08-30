@@ -235,5 +235,15 @@ public class PathPlannerToSearchingPose extends Command {
     currentPath.schedule();
 
   }
-
+  public boolean maneImCloseEnoughToTheGoalStateForPathPlanner() {
+    if (targetLocation != null) {
+      double xDist = Math.abs(poseEstimator.getEstimatedPosition().getX() - targetLocation.getX());
+      double yDist = Math.abs(poseEstimator.getEstimatedPosition().getY() - targetLocation.getY());
+      double rotDist = Math.abs(poseEstimator.getEstimatedPosition().getRotation().getDegrees() - targetLocation.getRotation().getDegrees());
+      if (xDist < 0.1 && yDist < 0.1 && rotDist < 2) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
