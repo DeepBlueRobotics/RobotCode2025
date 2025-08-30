@@ -182,7 +182,8 @@ public class PathPlannerToSearchingPose extends Command {
       (Math.abs(xStick.getAsDouble()) > 0.1 ) || 
       (Math.abs(yStick.getAsDouble()) > 0.1 ) || 
       (Math.abs(rStick.getAsDouble()) > 0.1 ) ||
-      timer.get() > 3;
+      timer.get() > 3
+      || maneImCloseEnoughToTheGoalStateForPathPlanner(); // If thingy no worky remove this 
   }
 
   private boolean setIfBlueAlliance(){
@@ -236,12 +237,14 @@ public class PathPlannerToSearchingPose extends Command {
 
   }
   public boolean maneImCloseEnoughToTheGoalStateForPathPlanner() {
-    if (targetLocation != null) {
-      double xDist = Math.abs(poseEstimator.getEstimatedPosition().getX() - targetLocation.getX());
-      double yDist = Math.abs(poseEstimator.getEstimatedPosition().getY() - targetLocation.getY());
-      double rotDist = Math.abs(poseEstimator.getEstimatedPosition().getRotation().getDegrees() - targetLocation.getRotation().getDegrees());
-      if (xDist < 0.1 && yDist < 0.1 && rotDist < 2) {
-        return true;
+    if (LimelightHelpers.getTV(REEF_LL)) {
+      if (targetLocation != null) {
+        double xDist = Math.abs(poseEstimator.getEstimatedPosition().getX() - targetLocation.getX());
+        double yDist = Math.abs(poseEstimator.getEstimatedPosition().getY() - targetLocation.getY());
+        double rotDist = Math.abs(poseEstimator.getEstimatedPosition().getRotation().getDegrees() - targetLocation.getRotation().getDegrees());
+        if (xDist < 0.1 && yDist < 0.1 && rotDist < 2) {
+          return true;
+        }
       }
     }
     return false;
