@@ -229,7 +229,7 @@ public class PathPlannerToSearchingPose extends Command {
       List.of(poseEstimator.getEstimatedPosition(), targetLocation)),
       constraints, 
       null, 
-      new GoalEndState(1.0, targetLocation.getRotation()));
+      new GoalEndState(1.497, targetLocation.getRotation()));
     path.preventFlipping = true;
     
     currentPath = AutoBuilder.followPath(path); 
