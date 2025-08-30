@@ -4,6 +4,7 @@
 
 package org.carlmontrobotics.subsystems;
 
+import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -38,6 +39,7 @@ public class PhotonVision extends SubsystemBase {
   private final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0)); 
   //transformation from the camera to the center of the robot
   private final Transform3d kCamToRobot = kRobotToCam.inverse();
+  private List<PhotonPipelineResult> latestPipelineResult = new ArrayList<>();
   /**
     * estimates the robot's pose on the field using the apriltags
     * uses MULTI_TAG_PNP_ON_COPROCESSOR which takes in account all the apriltags that the camera can sees and uses all of them to estiamte the position 
@@ -45,11 +47,35 @@ public class PhotonVision extends SubsystemBase {
    */
   private PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
   public PhotonVision() {
-    List<PhotonPipelineResult> latestResult;
+  }
+  /** 
+   * do NOT use this method anywhere except once in the periodic method in the photonvision subsytem, there is a reason why it is private.
+   * use getResultList instead
+   * @return all the apriltag targets that the camera can see 
+   */
+  private List<PhotonPipelineResult> getUnreadResultsList() {
+    return camera.getAllUnreadResults();
+  }
+
+  private List<PhotonPipelineResult> getResultList() { 
+    return latestPipelineResult;
+  }
+
+  /**
+   * @return true if any of the latest pipeline results have targets, false otherwise
+   */
+  public boolean hasTarget() {
+    for (PhotonPipelineResult result : latestPipelineResult) { //loops through all the results (I think "reults" are cameras)
+      if (result.hasTargets()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    latestPipelineResult = getUnreadResultsList();
   }
 }
