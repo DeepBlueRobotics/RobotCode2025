@@ -21,9 +21,9 @@ public class DriveRaiseAutonl4 extends Command {
   private int dir;
 
   int MAX_SECONDS_DRIVE = 4;
-
+  @Deprecated
   public DriveRaiseAutonl4(Drivetrain drivetrain2, Elevator elevator2, int i) {
-    //TODO Auto-generated constructor stub
+
   }
 
   public void LastResortAuto(Drivetrain drivetrain, Elevator elevator, int direction) {

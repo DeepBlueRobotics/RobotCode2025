@@ -22,7 +22,11 @@ public class L4Backup extends Command {
   Timer t = new Timer();
   double vel;
   double distance;
-  /** Creates a new L4Backup. */
+  /** 
+   * @deprecated Robot does not work like this anymore
+   * Creates a new L4Backup. 
+   */
+  @Deprecated
   public L4Backup(Drivetrain dt) {
     addRequirements(this.dt = dt);
     SmartDashboard.putNumber("dist", distance);

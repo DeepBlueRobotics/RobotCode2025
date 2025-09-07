@@ -5,7 +5,6 @@
 package org.carlmontrobotics.commands.AlignCommands;
 
 import org.carlmontrobotics.subsystems.Limelight;
-import org.carlmontrobotics.subsystems.LimelightHelpers;
 
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
@@ -15,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+
 public class Flush extends Command {
   private Drivetrain dt;
   private Limelight ll;
@@ -28,7 +28,12 @@ public class Flush extends Command {
   double degreesOff;
   double desiredWidth = 1; // placeholder
   double distanceToTag;
-
+  /**
+   * @deprecated Does not work very well, focuses on tag instead of wall.
+   * @param ll
+   * @param dt
+   */
+  @Deprecated
   public Flush(Limelight ll, Drivetrain dt) {
     addRequirements(this.dt = dt, this.ll = ll);
   }

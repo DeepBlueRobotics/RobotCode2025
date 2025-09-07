@@ -24,8 +24,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
 import static org.carlmontrobotics.Constants.Limelightc.*;
 
-import java.nio.file.FileSystemAlreadyExistsException;
-
 import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
 
 public class AlignAndDealgifyAlgae extends Command {
@@ -98,12 +96,12 @@ public class AlignAndDealgifyAlgae extends Command {
     forwardClamp = 1.5;
     strafeSpeedMultiplier = 5;
     forwardSpeedMultiplier = 0.2;
-    if (topLevel) {
+    if (this.topLevel) {
       goal = DELAGIFY_HIGH_POS;
-   }
-   else {
+    }
+    else {
      goal = DELAGIFY_LOW_POS; 
-   }
+    }
   }
 
   // Called when the command is initially scheduled.
@@ -143,7 +141,7 @@ public class AlignAndDealgifyAlgae extends Command {
 
   private double getStrafeErrorMeters() {
     return Math.sin(Units.degreesToRadians(LimelightHelpers.getTX(REEF_LL)))
-    * ll.getDistanceToApriltagMT2(REEF_LL)+ (RIGHT_CORAL_BRANCH); //TODO will require some tuning
+    * ll.getDistanceToApriltagMT2(REEF_LL)+ (RIGHT_CORAL_BRANCH);
   }
 
   private boolean getAlgaePosition() {

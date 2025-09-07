@@ -72,6 +72,17 @@ public class PathPlannerToSearchingPose extends Command {
   private XboxController driveRumble;
   Timer pathTimer;
 
+  /**
+   * As of Sep 6, 2025 best alignment for Team 199's Leviathan
+   * @param dt
+   * @param elevator
+   * @param driveRumble
+   * @param rightBranch
+   * @param limelight
+   * @param xStick
+   * @param yStick
+   * @param rStick
+   */
   public PathPlannerToSearchingPose(Drivetrain dt, Elevator elevator, XboxController driveRumble, boolean rightBranch, Limelight limelight,
     DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
     ) {

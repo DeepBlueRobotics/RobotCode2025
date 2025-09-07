@@ -27,7 +27,6 @@ import static org.carlmontrobotics.Constants.Limelightc.strafeTolerance;
 import java.util.List;
 
 import org.carlmontrobotics.Constants.Drivetrainc;
-import org.carlmontrobotics.Constants.Drivetrainc.Autoc;
 import org.carlmontrobotics.subsystems.CoralEffector;
 import org.carlmontrobotics.subsystems.Drivetrain;
 import org.carlmontrobotics.subsystems.Elevator;

@@ -21,7 +21,10 @@ public class RotateToTag extends Command {
   private Drivetrain drivetrain;
   private Limelight limelight;
   private Timer t = new Timer();
-  /** Creates a new RotateToTag. */
+  /** 
+   * @param drivetrain
+   * @param limelight
+   */
   public RotateToTag(Drivetrain drivetrain, Limelight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.drivetrain = drivetrain, this.limelight = limelight);

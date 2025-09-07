@@ -35,7 +35,7 @@ public class PhotonVision extends SubsystemBase {
   //layout of the field
   private final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField); 
   //transation from the center of the robot to the camera position
-  //FIXME ask design what is the translation
+  //TODO ask design for translation
   private final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0)); 
   //transformation from the camera to the center of the robot
   private final Transform3d kCamToRobot = kRobotToCam.inverse();

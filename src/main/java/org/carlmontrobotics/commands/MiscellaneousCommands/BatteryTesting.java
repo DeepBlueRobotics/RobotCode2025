@@ -19,18 +19,8 @@ import org.carlmontrobotics.subsystems.Drivetrain;
 import org.carlmontrobotics.subsystems.Elevator;
 //import static org.carlmontrobotics.Constants.AlgaeEffectorc.*;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import static org.carlmontrobotics.Constants.Elevatorc.elevatorOffset;
 import static org.carlmontrobotics.Constants.Elevatorc.l1;
-import static org.carlmontrobotics.Constants.Elevatorc.l2;
-import static org.carlmontrobotics.Constants.Elevatorc.l3;
-import static org.carlmontrobotics.Constants.Elevatorc.l4;
-import static org.carlmontrobotics.Constants.Elevatorc.testl4;
-import static org.carlmontrobotics.Constants.Elevatorc.testl4RaiseHeight;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class BatteryTesting extends Command {

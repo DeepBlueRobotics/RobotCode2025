@@ -35,12 +35,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class GoToCoralStation extends Command {
   private Drivetrain dt;
-
-  
-  
-  
-
-
   private final SwerveDrivePoseEstimator poseEstimator;
 
   private Pose2d targetLocation;
@@ -52,6 +46,14 @@ public class GoToCoralStation extends Command {
   private Command currentPath; 
   private PathConstraints constraints = new PathConstraints(1, 1, 1, 1); //TODO tune this for fastest possible alignment
 
+  /**
+   * Untested code! Do not use unless want to actually test
+   * @param drivetrain
+   * @param rightStation
+   * @param xStick
+   * @param yStick
+   * @param rStick
+   */
   public GoToCoralStation(Drivetrain drivetrain , boolean rightStation,
     DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
     ) {

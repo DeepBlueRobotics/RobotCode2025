@@ -1,12 +1,10 @@
 package org.carlmontrobotics.subsystems;
 
-import org.carlmontrobotics.subsystems.Elevator;
 import static org.carlmontrobotics.Constants.Drivetrainc.*;
 import static org.carlmontrobotics.Constants.Limelightc.CORAL_LL;
 import static org.carlmontrobotics.Constants.Limelightc.LL_ACCURACY_LIMIT_METERS;
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 
-import java.sql.Time;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -20,7 +18,6 @@ import org.carlmontrobotics.commands.DriveCommands.RotateToFieldRelativeAngle;
 import org.carlmontrobotics.commands.DriveCommands.TeleopDrive;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
-import org.carlmontrobotics.lib199.MotorErrors;
 import org.carlmontrobotics.lib199.SensorFactory;
 import org.carlmontrobotics.lib199.swerve.SwerveModule;
 import static org.carlmontrobotics.Config.CONFIG;
@@ -53,7 +50,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -82,7 +78,6 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -621,10 +616,8 @@ public class Drivetrain extends SubsystemBase {
                 (speeds, feedforwards) -> drive(kinematics.toSwerveModuleStates(speeds)), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
                 //PathFollowingController controller,
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                        //new PIDConstants(4.4/*4.4 */, 0.0, 0.5), // Translation PID constants FIXME do these need to be accurate?
-                        //new PIDConstants(0.005, 0.01, 0.0) // Rotation PID constants
                         new PIDConstants(4
-                        , ppKiDrive, ppKdDrive), // Translation PID constants FIXME do these need to be accurate?
+                        , ppKiDrive, ppKdDrive), // Translation PID constants
                         new PIDConstants(1, ppKiTurn, ppKdTurn)
                 ),
                 //RobotConfig robotConfig,
@@ -636,7 +629,7 @@ public class Drivetrain extends SubsystemBase {
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;//stolen from official pplib
+                        return alliance.get() == DriverStation.Alliance.Red;
                     }
                     return false;
                 },

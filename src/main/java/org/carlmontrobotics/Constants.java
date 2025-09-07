@@ -44,18 +44,20 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
 	public static final double g = 9.81; // meters per second squared
-	
+
+	//#region Elevator
 	public static final class Elevatorc {
-		// ports
+		
 		public static final int masterPort = 20;
-		public static final int followerPort = 21; // inverted
-		//public static final int elevatorTopLimitSwitchPort = 1;
+		public static final int followerPort = 21;
 		public static final int elevatorBottomLimitSwitchPort = 0;
+
 		public static final int bottomLimitSwitchTriggerPoint = 10;
+		
 		public static final double GEAR_RATIO = 1.0/20; 
 
-		// Config
 		public static final double MAX_ACCEL_RAD_P_S = 1;
 		public static final IdleMode masterIdleMode = IdleMode.kBrake;
 		public static final IdleMode followerIdleMode = IdleMode.kBrake;
@@ -66,16 +68,15 @@ public final class Constants {
 		public static final double maxElevatorHeight = 1.33; // Meters
 		public static final double minElevatorHeightInches = 0;
 		
-        //PID
         public static final double kP = 34;//45.476;
         public static final double kI = 0.003;
         public static final double kD = 0;//5.305-3;
-		//Feedforward
+
         public static final double kS = 0.0; //.12666
 		public static final double kG = 0.177;
 		public static final double kV = 8.9921;
 		public static final double kA = 1.4586;
-        //Positions
+
         public static final double downPos = 0;
         public static final double l1 = 0;
         public static final double l2 = Units.inchesToMeters(6.5-1.236220+1); 
@@ -87,7 +88,7 @@ public final class Constants {
         public static final double processor = 0;
         public static final double bottomAlgaeRemoval = Units.inchesToMeters(22.5-1.236220);
         public static final double uppperAlgaeRemoval = Units.inchesToMeters(38.35-1.236220);
-        //ScoreENUM
+
         public enum ElevatorPos {
             DOWN(downPos),
             L1(l1),
@@ -113,11 +114,10 @@ public final class Constants {
 		public static final double elevatorTolerance = 0.02;
 		public static final double elevatorOffset = 0.05; 
 
-	}// Tolerance
-	
-
+	}
+	//#endregion
+	//#region Drivetrain
 	public static final class Drivetrainc {
-		// #region Subsystem Constants
 		public static final double wheelBase = Units.inchesToMeters(24.75); //CONFIG.isSwimShady() ? Units.inchesToMeters(19.75) : Units.inchesToMeters(16.75);
 		public static final double trackWidth = Units.inchesToMeters(24.75);//CONFIG.isSwimShady() ? Units.inchesToMeters(28.75) : Units.inchesToMeters(23.75);
 		// "swerveRadius" is the distance from the center of the robot to one of the
@@ -243,13 +243,6 @@ public final class Constants {
 		kBackwardAccels, drivekP, drivekI, drivekD, turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, turnZeroDeg,
 		driveInversion, reversed, driveModifier, turnInversion);
 
-		// public static final Limelight.Transform limelightTransformForPoseEstimation =
-		// Transform.BOTPOSE_WPIBLUE;
-
-		// #endregion
-
-		// #region Ports
-		//I think all of these are right
 		public static final int driveFrontLeftPort = CONFIG.isHammerHead() ? 1 : 1;
 		public static final int driveFrontRightPort = CONFIG.isHammerHead() ? 2 : 2;
 		public static final int driveBackLeftPort = CONFIG.isHammerHead() ? 3 : 3;
@@ -259,15 +252,11 @@ public final class Constants {
 		public static final int turnFrontRightPort = CONFIG.isHammerHead() ? 12 : 12;
 		public static final int turnBackLeftPort = CONFIG.isHammerHead() ? 17 : 13;
 		public static final int turnBackRightPort = CONFIG.isHammerHead() ? 14 : 14;
-		//to be configured
+		
 		public static final int canCoderPortFL = CONFIG.isHammerHead() ? 0 : 1; 
 		public static final int canCoderPortFR = CONFIG.isHammerHead() ? 3 : 2; 
 		public static final int canCoderPortBL = CONFIG.isHammerHead() ? 2 : 3;
 		public static final int canCoderPortBR = CONFIG.isHammerHead() ? 1 : 0; 
-
-		// #endregion
-
-		// #region Command Constants
 
 		public static double kNormalDriveSpeed = 1; // Percent Multiplier	
 		public static double kNormalDriveRotation = 0.5; // Percent Multiplier
@@ -291,11 +280,6 @@ public final class Constants {
 																													// Meters,
 																													// Degrees/Second
 
-		// #endregion
-		// #region Subsystem Constants
-
-		// "swerveRadius" is the distance from the center of the robot to one of the
-		// modules
 		public static final double turnkP_avg = (turnkP[0] + turnkP[1] + turnkP[2] + turnkP[3]) / 4;
 		public static final double turnIzone = .1;
 
@@ -344,7 +328,7 @@ public final class Constants {
 		}
 	}
 	//#endregion
-	// #region Subsystem Constants
+	
 	/**
 	 * Translates either the x or y coordinate of pp by translation along a line with slope of degrees,
 	 * and then moves it by z along the perpendicular direction.
@@ -376,122 +360,122 @@ public final class Constants {
 			throw new IllegalArgumentException("wdym " + axis + " for the axis??? give an axis (x or y)");
 		}
 	}
+	//#region Alignment
+	public static final class AligningCords {
+		public static final double translation = Units.inchesToMeters(8.5); 
+		public static final double robotLength = 0.08483;
+		public static final double HalfRobotLength = 0.08483/2;
+	
+		public static final Pose2d ID6_17Right = new Pose2d(
+			3.960,
+			2.800,
+			Rotation2d.fromDegrees(60)
+		);
 
+		public static final Pose2d ID6_17Left = new Pose2d(
+			3.687,
+			2.950,
+			Rotation2d.fromDegrees(60)
+		);
+
+		public static final Pose2d ID6_17Search = new Pose2d(
+			3.685,
+			2.595,
+			Rotation2d.fromDegrees(60)
+		);
+
+		public static final Pose2d ID7_18Right = new Pose2d(
+			3.158,
+			3.860,
+			Rotation2d.fromDegrees(0)
+		);
+
+		public static final Pose2d ID7_18Left = new Pose2d(
+			3.158,
+			4.185,
+			Rotation2d.fromDegrees(0)
+		);
+
+		public static final Pose2d ID7_18Search = new Pose2d(
+			2.821,
+			4.000,
+			Rotation2d.fromDegrees(0)
+		);
+
+		public static final Pose2d ID8_19Right = new Pose2d(
+			3.687,
+			5.094,
+			Rotation2d.fromDegrees(-60)
+		);
+
+		public static final Pose2d ID8_19Left = new Pose2d(
+			3.960,
+			5.259,
+			Rotation2d.fromDegrees(-60)
+		);
+
+		public static final Pose2d ID8_19Search = new Pose2d(
+			3.658,
+			5.470,
+			Rotation2d.fromDegrees(-60)
+		);
+
+		public static final Pose2d ID9_20Right = new Pose2d(
+			5.014,
+			5.259,
+			Rotation2d.fromDegrees(-120)
+		);
+
+		public static final Pose2d ID9_20Left = new Pose2d(
+			5.299,
+			5.094,
+			Rotation2d.fromDegrees(-120)
+		);
+
+		public static final Pose2d ID9_20Search = new Pose2d(
+			5.377,
+			5.470,
+			Rotation2d.fromDegrees(-120)
+		);
+
+		public static final Pose2d ID10_21Right = new Pose2d(
+			5.817,
+			4.190,
+			Rotation2d.fromDegrees(180)
+		);
+
+		public static final Pose2d ID10_21Left = new Pose2d(
+			5.817,
+			3.864,
+			Rotation2d.fromDegrees(180)
+		);
+
+		public static final Pose2d ID10_21Search = new Pose2d(
+			6.158,
+			4.000,
+			Rotation2d.fromDegrees(180)
+		);
+
+		public static final Pose2d ID11_22Right = new Pose2d(
+			5.292,
+			2.965,
+			Rotation2d.fromDegrees(120)
+		);
+
+		public static final Pose2d ID11_22Left = new Pose2d(
+			5.014,
+			2.792,
+			Rotation2d.fromDegrees(120)
+		);
+
+		public static final Pose2d ID11_22Search = new Pose2d(
+			5.340,
+			2.595,
+			Rotation2d.fromDegrees(120)
+		);
+	}
 	//#endregion
-public static final class AligningCords {
-	public static final double translation = Units.inchesToMeters(8.5); 
-	public static final double robotLength = 0.08483;
-	public static final double HalfRobotLength = 0.08483/2;
-	//FIXME: put the actual cords for all the tags
-	public static final Pose2d ID6_17Right = new Pose2d(
-		3.960,
-		2.800,
-		Rotation2d.fromDegrees(60)
-	);
-
-	public static final Pose2d ID6_17Left = new Pose2d(
-		3.687,
-		2.950,
-		Rotation2d.fromDegrees(60)
-	);
-
-	public static final Pose2d ID6_17Search = new Pose2d(
-		3.685,
-		2.595,
-		Rotation2d.fromDegrees(60)
-	);
-
-	public static final Pose2d ID7_18Right = new Pose2d(
-		3.158,
-		3.860,
-		Rotation2d.fromDegrees(0)
-	);
-
-	public static final Pose2d ID7_18Left = new Pose2d(
-		3.158,
-		4.185,
-		Rotation2d.fromDegrees(0)
-	);
-
-	public static final Pose2d ID7_18Search = new Pose2d(
-		2.821,
-		4.000,
-		Rotation2d.fromDegrees(0)
-	);
-
-	public static final Pose2d ID8_19Right = new Pose2d(
-		3.687,
-		5.094,
-		Rotation2d.fromDegrees(-60)
-	);
-
-	public static final Pose2d ID8_19Left = new Pose2d(
-		3.960,
-		5.259,
-		Rotation2d.fromDegrees(-60)
-	);
-
-	public static final Pose2d ID8_19Search = new Pose2d(
-		3.658,
-		5.470,
-		Rotation2d.fromDegrees(-60)
-	);
-
-	public static final Pose2d ID9_20Right = new Pose2d(
-		5.014,
-		5.259,
-		Rotation2d.fromDegrees(-120)
-	);
-
-	public static final Pose2d ID9_20Left = new Pose2d(
-		5.299,
-		5.094,
-		Rotation2d.fromDegrees(-120)
-	);
-
-	public static final Pose2d ID9_20Search = new Pose2d(
-		5.377,
-		5.470,
-		Rotation2d.fromDegrees(-120)
-	);
-
-	public static final Pose2d ID10_21Right = new Pose2d(
-		5.817,
-		4.190,
-		Rotation2d.fromDegrees(180)
-	);
-
-	public static final Pose2d ID10_21Left = new Pose2d(
-		5.817,
-		3.864,
-		Rotation2d.fromDegrees(180)
-	);
-
-	public static final Pose2d ID10_21Search = new Pose2d(
-		6.158,
-		4.000,
-		Rotation2d.fromDegrees(180)
-	);
-
-	public static final Pose2d ID11_22Right = new Pose2d(
-		5.292,
-		2.965,
-		Rotation2d.fromDegrees(120)
-	);
-
-	public static final Pose2d ID11_22Left = new Pose2d(
-		5.014,
-		2.792,
-		Rotation2d.fromDegrees(120)
-	);
-
-	public static final Pose2d ID11_22Search = new Pose2d(
-		5.340,
-		2.595,
-		Rotation2d.fromDegrees(120)
-	);
-}
-		// #region Limelight Constants
+	// #region Limelight
 	public static final class Limelightc {
 		public static final String CORAL_LL = "limelight-coral";
 		public static final String REEF_LL = "limelight-reef";
@@ -502,13 +486,12 @@ public static final class AligningCords {
 		// public static final double REEF_MOUNT_ANGLE = 15; // pitch 
         // public static final double CORAL_LL_HEIGHT_FROM_GROUND_METERS = 0.206502; 
 		// public static final double REEF_LL_HEIGHT_FROM_GROUND_METERS = 0.206502;
-		// TODO: CHANGE NUMBERS ON LIMELIGHT INTERFACE
 
 		public static final double LEFT_CORAL_BRANCH = Units.inchesToMeters(-6.593);
 		public static final double RIGHT_CORAL_BRANCH = -LEFT_CORAL_BRANCH+Units.inchesToMeters(1);
 
 		public static final double areaPercentageGoal = 8.4;
-		public static final double areaPercentageGoalForAlgae = 2.556; //TODO figure this out
+		public static final double areaPercentageGoalForAlgae = 2.556;
 		public static final double areaTolerance = 0.1;
 		public static final double strafeTolerance = 0.02;
 		public static final double strafeToleranceAlgae = 0.1;
@@ -522,7 +505,8 @@ public static final class AligningCords {
             public static final double REEF_HEIGHT_METERS = Units.inchesToMeters(8.75); // Also center of Reef
         }
     }
-
+	//#endregion
+	//#region Controller
 	public static final class OI {
 		public static final class Driver {
 			public static final int port = 0;
@@ -547,6 +531,8 @@ public static final class AligningCords {
 		public static final double MIN_AXIS_TRIGGER_VALUE = 0.2;// woah, this is high.
 
 	}
+	//#endregion
+	//#region CoralEffector
 	public static final class CoralEffectorc{
         public final static int CORAL_MOTOR_PORT = 30;
         public final static int CORAL_LIMIT_SWITCH_PORT = 0;
@@ -557,7 +543,6 @@ public static final class AligningCords {
         public final static double KP = 0.1; 
         public final static double KI = 0;
         public final static double KD = 0;
-
 
         public final static double CORAL_INTAKE_ERR = .1;//encoder units - rotations
 
@@ -571,18 +556,18 @@ public static final class AligningCords {
         public final static double OUTTAKE_TIME_OUT = 10;
         public final static double MANUAL_INTAKE_TIME_OUT = 1;
     }
+	//#endregion
+	//#region AlgaeEffector
 	public static final class AlgaeEffectorc {
-
-        //EFFECTOR
-
         public static final double ARM_UP_VOLTAGE = 0.125;
 		public static final double ARM_DOWN_VOLTAGE = -0.125*2;
 		public static final double DELAGIFY_HIGH_POS = 0.8;
 		public static final double DELAGIFY_LOW_POS = 0.456;
 
-		public static final int UPPER_MOTOR_PORT = 1; 
-		public static final int LOWER_MOTOR_PORT = 33;
-        public static final int PINCH_MOTOR_PORT = 3;
+		// public static final int UPPER_MOTOR_PORT = 1; 
+		// public static final int LOWER_MOTOR_PORT = 33;
+        // public static final int PINCH_MOTOR_PORT = 3;
+
         public static final int ARM_MOTOR_PORT = 34;
         public static final int aChannelEnc = 0;
         public static final int bChannelEnc = 1;
@@ -591,21 +576,13 @@ public static final class AligningCords {
 		public static final int BOTTOM_ARRAY_ORDER = 1;
 		public static final int PINCHER_ARRAY_ORDER = 2;
         public static final int ARM_ARRAY_ORDER = 3;
-        //the ArrayOrder variables replaced the ones for the kS since they just indicate the order and are the same for all PID values
-        //TODO find these values out 
         
-        public static double INTAKE_PINCHER_RPM = 1000;  
-        public static double BOTTOM_MOTOR_SPEED = 0.3;
-
-        
-        public static double OUTTAKE_PINCHER_RPM = -2100; 
-         
-        public static double SHOOT_PINCHER_RPM = -2100; 
-
-         
-        public static double DEALGAFY_PINCHER_RPM = 1000; 
-
-        public static double RPM_ALLOWED_ERROR = 150;//rpm
+        // public static double INTAKE_PINCHER_RPM = 1000;  
+        // public static double BOTTOM_MOTOR_SPEED = 0.3;
+        // public static double OUTTAKE_PINCHER_RPM = -2100; 
+        // public static double SHOOT_PINCHER_RPM = -2100; 
+        // public static double DEALGAFY_PINCHER_RPM = 1000; 
+        // public static double RPM_ALLOWED_ERROR = 150;//rpm
 
         public static final int TBE_CPR = 8192; //Through-Bore Encoder
         public static final double TBE_DPP = 360.0/TBE_CPR; //Degrees per pulse
@@ -614,20 +591,12 @@ public static final class AligningCords {
         
         public static final double ARM_CHAIN_GEARING = 16.0/34;
         public static final double ARM_GEAR_RATIO = 1.0/3;
-        //TODO figure the zero out once encoder is on
-        
-        //TODO ask samo for angle to intake algae from pure vertical down
         public static final double ARM_INTAKE_ANGLE = 0;
-        //TODO Figure these two out 
         public static final double ARM_RAMP_UP_ANGLE = 0;
         public static final double ARM_OUTTAKE_ANGLE = 0;
-        
-        //TODO Figure angle for dealgafying
         public static final double ARM_DEALGAFYING_ANGLE = 0;
-        //TODO figure out resting angle of the arm while algae inside
         public static final double ARM_HOLDING_ALGAE_ANGLE = 0.0;
-        //TODO figure out current threshold for pincher wheels
-        public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
+        // public static final double PINCHER_CURRENT_THRESHOLD = 15.0;
 
 		public static final double ARM_ZERO_ROT = Units.degreesToRotations(0); //Change for actual robot
         public static final double UPPER_ANGLE_LIMIT = 20;
@@ -641,9 +610,9 @@ public static final class AligningCords {
 		public static final double MAX_FF_ACCEL_RAD_P_S = (53.728 / 4)/2;
         public static final double ARM_ERROR_MARGIN = 5;
 
-        public static final double ARM_SYS_ID_START_COMMAND_ANGLE = -22; //TODO:
+        public static final double ARM_SYS_ID_START_COMMAND_ANGLE = -22;
 
-		//TODO: figure out the values for these
+		//figure out the values for these
 		public static final double armKP = 0.0;
     	public static final double armKI = 0.0;
     	public static final double armKD = 0.0;
@@ -652,9 +621,6 @@ public static final class AligningCords {
     	public static final double armKV = 0.0;
     	public static final double armKA = 0.0;
     	public static final double armKG = 0.0;
-
-
-
-	}
-    
+	}   
+	//#endregion
 }

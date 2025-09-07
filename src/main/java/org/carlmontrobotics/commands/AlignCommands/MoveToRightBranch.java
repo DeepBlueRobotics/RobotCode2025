@@ -12,16 +12,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.math.MathUtil;
-
 import static org.carlmontrobotics.Constants.Limelightc.*;
-
-import java.text.NumberFormat.Style;
 
 public class MoveToRightBranch extends Command {
   private final Drivetrain dt;
@@ -37,7 +29,10 @@ public class MoveToRightBranch extends Command {
   Timer timeouttimer;
   Elevator elevator;
 
-  /** Creates a new MoveToLeftBranch. */
+  /** 
+   * @deprecated Use {@link #MoveToAlignReef} instead.
+  */
+  @Deprecated
   public MoveToRightBranch(Drivetrain dt, Limelight ll, Elevator elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.dt=dt, this.elevator = elevator);
@@ -73,7 +68,7 @@ public class MoveToRightBranch extends Command {
     if (elevator.getCurrentHeight() <= 0.05) {
     if (dt.isAtAngle(90, 10)){
       // didntseetime += 1.0/50.0;
-      if (ll.seesTag(REEF_LL)) { //TODO: test with getdistancetoapriltag vs getdistancetoapriltagmt2
+      if (ll.seesTag(REEF_LL)) {
         didntseetime.reset();
         strafeErr = getStrafeErrorMeters();
         double speed = MathUtil.clamp(strafeErr*speedMultiplier, -clampNumber, clampNumber);

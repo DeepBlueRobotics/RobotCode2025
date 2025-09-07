@@ -4,19 +4,12 @@
 
 package org.carlmontrobotics.subsystems;
 
-import static edu.wpi.first.units.Units.InchesPerSecond;
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.util.Units;
-
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 
 import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Elevatorc.ElevatorPos;
@@ -28,8 +21,6 @@ import static org.carlmontrobotics.Constants.Elevatorc.*;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
 
-import com.pathplanner.lib.path.GoalEndState;
-import com.playingwithfusion.CANVenom.BrakeCoastMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;

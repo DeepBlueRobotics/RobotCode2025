@@ -7,12 +7,8 @@ package org.carlmontrobotics.commands.AlignCommands;
 import static org.carlmontrobotics.Constants.Limelightc.REEF_LL;
 import static org.carlmontrobotics.Constants.AligningCords.*;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-
-import org.carlmontrobotics.Constants;
 import org.carlmontrobotics.Constants.Drivetrainc;
 import org.carlmontrobotics.subsystems.Drivetrain;
 
@@ -20,19 +16,14 @@ import org.carlmontrobotics.subsystems.Limelight;
 import org.carlmontrobotics.subsystems.LimelightHelpers;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.DoubleSubscriber;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,8 +49,13 @@ public class PathPlannerToReef extends Command {
   private DoubleSupplier yStick;
   private DoubleSupplier rStick;
   private Command currentPath; 
-  private PathConstraints constraints = Drivetrainc.Autoc.pathConstraints; //TODO tune this for fastest possible alignment
+  private PathConstraints constraints = Drivetrainc.Autoc.pathConstraints; 
 
+  /** 
+   * PathPlannerToSearching works better
+   * @deprecated Use {@link PathPlannerToSearchingPose} instead.
+   */ 
+  @Deprecated
   public PathPlannerToReef(Drivetrain drivetrain, Limelight limelight, boolean rightBranch,
     DoubleSupplier xStick, DoubleSupplier yStick, DoubleSupplier rStick //For cancellation purposes
     ) {
