@@ -31,7 +31,7 @@ public class MoveToLeftBranch extends Command {
   Elevator elevator;
 
   /** 
-   * @deprecated Use {@link #MoveToAlignReef} instead.
+   * @deprecated Use {@link MoveToAlignReef} instead.
   */
   @Deprecated
   public MoveToLeftBranch(Drivetrain dt, Limelight ll, Elevator elevator) {
