@@ -1,19 +1,16 @@
 package org.carlmontrobotics.commands.CoralCommands;
 
-import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 import org.carlmontrobotics.subsystems.CoralEffector;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-import org.carlmontrobotics.subsystems.CoralEffector;
+import static org.carlmontrobotics.commands.CoralCommands.CoralIntake.coralMotorPosition;;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CoralIntakeManual extends Command {
   /** Creates a new CoralIntakeManual. */
   private CoralEffector coralEffector;
-  public static double coralMotorPosition;
   Timer timer = new Timer();
   public CoralIntakeManual(CoralEffector coralEffector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -35,7 +32,7 @@ public class CoralIntakeManual extends Command {
   @Override
   public void end(boolean interrupted) {
     coralEffector.setMotorSpeed(0);
-    coralEffector.setReferencePosition(coralEffector.getEncoderPos());
+    coralEffector.setReferencePosition(coralMotorPosition);
   }
 
   // Returns true when the command should end.

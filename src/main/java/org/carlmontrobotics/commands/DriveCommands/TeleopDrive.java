@@ -36,7 +36,7 @@ public class TeleopDrive extends Command {
   private double currentForwardVel = 0;
   private double currentStrafeVel = 0;
   private double prevTimestamp;
-  public static boolean babyMode = false;
+  public static boolean babyMode = true;
   public static BooleanSupplier babyModeSupplier = () -> babyMode;
   Elevator elevator;
   CoralEffector coralEffector;
