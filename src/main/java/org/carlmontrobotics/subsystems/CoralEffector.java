@@ -3,6 +3,7 @@ package org.carlmontrobotics.subsystems;
 import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
@@ -16,11 +17,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.carlmontrobotics.Constants.CoralEffectorc.*;
 
 import java.util.function.BooleanSupplier;
+
+import org.carlmontrobotics.lib199.MotorConfig;
+import org.carlmontrobotics.lib199.MotorControllerFactory;
+
 import com.revrobotics.spark.SparkBase;
 
 public class CoralEffector extends SubsystemBase {
     //public SparkFlex coralMotor =  MotorControllerFactory.createSparkFlex(CORAL_MOTOR_PORT);
-    public SparkFlex coralMotor = new SparkFlex(CORAL_MOTOR_PORT, MotorType.kBrushless);
+    private SparkMax coralMotor = MotorControllerFactory.createSparkMax(CORAL_MOTOR_PORT, MotorConfig.NEO_VORTEX);
     public DigitalInput coralLimitSwitch = new DigitalInput(CORAL_LIMIT_SWITCH_PORT);
     public TimeOfFlight distanceSensor = new TimeOfFlight(CORAL_DISTANCE_SENSOR_PORT);
     public static boolean enableAutoIntake = true;
