@@ -147,7 +147,7 @@ public class CoralEffector extends SubsystemBase {
     enableAutoIntake = SmartDashboard.getBoolean("autoIntake", enableAutoIntake);
     if (distanceSensor.getRange() == 0){
       //DriverStation.reportWarning("The distance sensor no worky (it at 0)", true);
-      DriverStation.reportError("The distance sensor no worky (it at 0), autoIntake is disabled", true);
+      DriverStation.reportWarning("The distance sensor no worky (it at 0), autoIntake is disabled", true);
       enableAutoIntake = false;
     }
   }
