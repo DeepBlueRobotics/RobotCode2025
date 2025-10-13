@@ -41,9 +41,10 @@ public class CoralEffector extends SubsystemBase {
     public CoralEffector(){
     config
         .inverted(true)
-        .idleMode(IdleMode.kBrake)
-        .voltageCompensation(12)
-        .smartCurrentLimit(50);
+        .idleMode(IdleMode.kBrake);
+        //already done by lib199
+        // .voltageCompensation(12)
+        // .smartCurrentLimit(50);
     config.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(KP, KI, KD);
