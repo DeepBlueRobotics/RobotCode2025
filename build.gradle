@@ -85,7 +85,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    implementation "com.github.DeepBlueRobotics:lib199:d8512e6d608a0df423c5c5d2658f3be882dbf098"
+    implementation "com.github.DeepBlueRobotics:lib199:2025SparkFlexDrivetrain-SNAPSHOT"
 }
 
 test {
