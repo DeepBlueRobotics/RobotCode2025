@@ -33,3 +33,7 @@ pluginManagement {
 
 Properties props = System.getProperties();
 props.setProperty("org.gradle.internal.native.headers.unresolved.dependencies.ignore", "true");
+
+//Uncomment to use a local version of lib199
+// include ':lib199'
+// project(':lib199').projectDir = new File(settingsDir, '../lib199')

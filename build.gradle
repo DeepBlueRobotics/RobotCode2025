@@ -85,7 +85,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    implementation "com.github.DeepBlueRobotics:lib199:244a4369e94af1fdceff1a37837943cdceb4a809"
+    implementation "com.github.DeepBlueRobotics:lib199:2025-SNAPSHOT"
+    //Uncomment to use a local version of lib199
+    // implementation project(':lib199')
+
 }
 
 test {
